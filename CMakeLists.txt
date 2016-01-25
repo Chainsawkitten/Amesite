@@ -34,6 +34,21 @@ endfunction()
 
 include_directories(src)
 
+# Doxygen documentation
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    add_custom_target(EngineDoc ALL
+        ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/EngineDoxyfile
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen" VERBATIM
+    )
+    add_custom_target(GameDoc ALL
+        ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/GameDoxyfile
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen" VERBATIM
+    )
+endif(DOXYGEN_FOUND)
+
 ## TARGETS ##
 
 ## Engine ##
