@@ -4,13 +4,14 @@
 #include <MainWindow.hpp>
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
+#include <Util/FileSystem.hpp>
 
 using namespace std;
 
 int main() {
     // Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
-        freopen("GameLog.txt", "a", stderr);
+        freopen(FileSystem::SavePath("Modership", "GameLog.txt").c_str(), "a", stderr);
     
     Log() << "Game started - " << time(nullptr) << "\n";
     
