@@ -6,10 +6,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-/** @ingroup Core
- * @{
- */
-
 /// Logging class.
 /**
  * Usage:
@@ -88,5 +84,3 @@ void ErrorCallback(int error, const char* description);
  * @see <a href="https://www.opengl.org/wiki/Debug_Output">OpenGL Debug Output</a>
  */
 void APIENTRY DebugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
-
-/** @} */

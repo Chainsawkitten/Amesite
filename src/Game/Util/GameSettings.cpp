@@ -7,6 +7,7 @@ GameSettings::GameSettings() {
     mIni.LoadFile(FileSystem::SavePath("Modership", "GameSettings.ini").c_str());
     
     AddBoolSetting("Logging", "Debug", "Logging", false);
+    AddBoolSetting("Debug Context", "Debug", "Debug Context", false);
     
     AddLongSetting("Screen Width", "Graphics", "Width", 800);
 	AddLongSetting("Screen Height", "Graphics", "Height", 600);

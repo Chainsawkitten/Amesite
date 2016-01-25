@@ -1,11 +1,16 @@
 #include "MainWindow.hpp"
+#include "Util/Log.hpp"
 #include <GLFW/glfw3.h>
 
-MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, const char* title) {
+MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, const char* title, bool debugContext) {
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     
     if (borderless)
         glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+    
+    mDebugContext = debugContext;
+    if (debugContext)
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
     
     GLFWmonitor* monitor = fullscreen ? glfwGetPrimaryMonitor() : nullptr;
     
@@ -16,6 +21,9 @@ MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, 
     }
     
     glfwMakeContextCurrent(mWindow);
+    
+    // Setup error callbacks.
+    glfwSetErrorCallback(ErrorCallback);
 }
 
 MainWindow::~MainWindow() {
@@ -24,6 +32,9 @@ MainWindow::~MainWindow() {
 
 void MainWindow::Init() {
     glEnable(GL_DEPTH_TEST);
+    
+    if (mDebugContext)
+        glDebugMessageCallback(DebugMessageCallback, nullptr);
 }
 
 bool MainWindow::ShouldClose() const {
