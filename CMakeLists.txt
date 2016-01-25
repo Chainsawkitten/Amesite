@@ -90,11 +90,13 @@ endif(DOXYGEN_FOUND)
 set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
         src/Engine/Util/Log.cpp
+        src/Engine/Util/Settings.cpp
     )
 
 set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
         src/Engine/Util/Log.hpp
+        src/Engine/Util/Settings.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
