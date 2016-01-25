@@ -89,12 +89,14 @@ endif(DOXYGEN_FOUND)
 ## Engine ##
 set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
+        src/Engine/Util/FileSystem.cpp
         src/Engine/Util/Log.cpp
         src/Engine/Util/Settings.cpp
     )
 
 set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
+        src/Engine/Util/FileSystem.hpp
         src/Engine/Util/Log.hpp
         src/Engine/Util/Settings.hpp
     )
