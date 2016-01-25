@@ -36,6 +36,21 @@ include_directories(src)
 
 ## TARGETS ##
 
+## Engine ##
+set(ENGINE_SRCS
+        src/Engine/MainWindow.cpp
+    )
+
+set(ENGINE_HEADERS
+        src/Engine/MainWindow.hpp
+    )
+
+create_directory_groups(${ENGINE_SRCS} ${GAME_HEADERS})
+
+add_library(Engine STATIC ${ENGINE_SRCS} ${GAME_HEADERS})
+set_property(TARGET Engine PROPERTY CXX_STANDARD 11)
+set_property(TARGET Engine PROPERTY CXX_STANDARD_REQUIRED ON)
+
 ## Game ##
 set(GAME_SRCS
         src/Game/main.cpp
@@ -48,6 +63,8 @@ set(GAME_HEADERS
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
 
 add_executable(Modership ${GAME_SRCS} ${GAME_HEADERS})
+target_link_libraries(Modership Engine)
+target_include_directories(Modership PUBLIC src/Engine)
 target_link_libraries(Modership glew glfw ${GLFW_LIBRARIES})
 set_property(TARGET Modership PROPERTY CXX_STANDARD 11)
 set_property(TARGET Modership PROPERTY CXX_STANDARD_REQUIRED ON)

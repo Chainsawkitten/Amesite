@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <iostream>
 #include <GLFW/glfw3.h>
+#include <MainWindow.hpp>
 
 using namespace std;
 
@@ -8,25 +9,17 @@ int main() {
     if (!glfwInit())
         return 1;
     
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Modership", nullptr, nullptr);
-    if (!window) {
-        glfwTerminate();
-        /// @todo Print error to log.
-    }
-    glfwMakeContextCurrent(window);
-    
+    MainWindow* window = new MainWindow(800, 600, "Modership");
     glewInit();
+    window->Init();
     
-    glEnable(GL_DEPTH_TEST);
-    
-    while (glfwWindowShouldClose(window) == GL_FALSE) {
+    while (!window->ShouldClose()) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glfwSwapBuffers(window);
+        window->SwapBuffers();
         glfwPollEvents();
     }
     
-    glfwDestroyWindow(window);
+    delete window;
     glfwTerminate();
     
     return 0;
