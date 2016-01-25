@@ -18,7 +18,7 @@ int main() {
     if (!glfwInit())
         return 1;
     
-    MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), "Modership");
+    MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), "Modership");
     glewInit();
     window->Init();
     

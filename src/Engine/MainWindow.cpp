@@ -1,10 +1,12 @@
 #include "MainWindow.hpp"
 #include <GLFW/glfw3.h>
 
-MainWindow::MainWindow(int width, int height, const char* title) {
+MainWindow::MainWindow(int width, int height, bool fullscreen, const char* title) {
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     
-    mWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
+    GLFWmonitor* monitor = fullscreen ? glfwGetPrimaryMonitor() : nullptr;
+    
+    mWindow = glfwCreateWindow(width, height, title, monitor, nullptr);
     if (!mWindow) {
         glfwTerminate();
         /// @todo Print error to log.

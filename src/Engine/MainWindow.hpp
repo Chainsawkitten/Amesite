@@ -9,9 +9,10 @@ public:
     /**
      * @param width Width of the window in pixels.
      * @param height Height of the window in pixels.
+     * @param fullscreen Whether to start in fullscreen mode.
      * @param title Window title.
      */
-    MainWindow(int width, int height, const char* title = "");
+    MainWindow(int width, int height, bool fullscreen = false, const char* title = "");
     
     /// Destructor.
     ~MainWindow();
