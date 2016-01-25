@@ -16,6 +16,9 @@ include_directories(externals/glfw/include)
 add_subdirectory(externals/glew/build/cmake)
 include_directories(externals/glew/include)
 
+# SimpleIni
+include_directories(externals/simpleini)
+
 # GLM
 include_directories(externals/glm)
 
