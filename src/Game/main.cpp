@@ -2,10 +2,13 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 #include <MainWindow.hpp>
+#include <Util/Log.hpp>
 
 using namespace std;
 
 int main() {
+    Log() << "Game started - " << time(nullptr) << "\n";
+    
     if (!glfwInit())
         return 1;
     
@@ -21,6 +24,9 @@ int main() {
     
     delete window;
     glfwTerminate();
+    
+    
+    Log() << "Game ended - " << time(nullptr) << "\n";
     
     return 0;
 }
