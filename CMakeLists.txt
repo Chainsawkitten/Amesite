@@ -16,6 +16,9 @@ include_directories(externals/glfw/include)
 add_subdirectory(externals/glew/build/cmake)
 include_directories(externals/glew/include)
 
+# GLM
+include_directories(externals/glm)
+
 # This function should be passed a list of all files in a target. It will automatically generate
 # file groups following the directory hierarchy, so that the layout of the files in IDEs matches the
 # one in the filesystem.
@@ -31,6 +34,35 @@ function(create_directory_groups)
         source_group("${group_name}" FILES "${file_name}")
     endforeach()
 endfunction()
+
+# Setup embedded source
+set(EMBEDDED_INPUT
+    
+)
+
+# Headerize
+find_program(HEADERIZE_EXE Headerize
+    DOC "Location of the Headerize executable"
+)
+
+macro(ProcessWithHeaderize headervar sourcevar inputfile outdir)
+    get_filename_component(basefile ${inputfile} NAME)
+    set(outputfile ${outdir}/${basefile})
+    set_source_files_properties(${outputfile} PROPERTIES HEADER_ONLY TRUE)
+    add_custom_command(
+        OUTPUT ${outputfile}.hpp ${outputfile}.cpp
+        COMMAND ${HEADERIZE_EXE} ${inputfile} ${outputfile}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        DEPENDS ${inputfile}
+        COMMENT "Generating headers for ${inputfile}"
+    )
+    list(APPEND ${headervar} ${outputfile}.hpp)
+    list(APPEND ${sourcevar} ${outputfile}.cpp)
+endmacro()
+
+foreach(item ${EMBEDDED_INPUT})
+    ProcessWithHeaderize(EMBEDDED_HEADER EMBEDDED_SOURCE ${item} ${CMAKE_CURRENT_BINARY_DIR})
+endforeach()
 
 include_directories(src)
 
@@ -64,9 +96,9 @@ set(ENGINE_HEADERS
 		src/Engine/Core/Geometry/Geometry3D.hpp
     )
 
-create_directory_groups(${ENGINE_SRCS} ${GAME_HEADERS})
+create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
 
-add_library(Engine STATIC ${ENGINE_SRCS} ${GAME_HEADERS})
+add_library(Engine STATIC ${ENGINE_SRCS} ${ENGINE_HEADERS} ${EMBEDDED_SOURCE})
 set_property(TARGET Engine PROPERTY CXX_STANDARD 11)
 set_property(TARGET Engine PROPERTY CXX_STANDARD_REQUIRED ON)
 
