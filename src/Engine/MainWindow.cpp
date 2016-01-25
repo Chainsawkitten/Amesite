@@ -1,8 +1,11 @@
 #include "MainWindow.hpp"
 #include <GLFW/glfw3.h>
 
-MainWindow::MainWindow(int width, int height, bool fullscreen, const char* title) {
+MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, const char* title) {
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    
+    if (borderless)
+        glfwWindowHint(GLFW_DECORATED, GL_FALSE);
     
     GLFWmonitor* monitor = fullscreen ? glfwGetPrimaryMonitor() : nullptr;
     

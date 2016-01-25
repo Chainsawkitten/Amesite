@@ -11,6 +11,7 @@
  * Screen Width        | Width of the game window.           | long   | 800
  * Screen Height       | Height of the game window.          | long   | 600
  * Fullscreen          | Play in fullscreen mode.            | bool   | false
+ * Borderless          | Use a borderless window.            | bool   | false
  */
 class GameSettings : public Settings {
     public:

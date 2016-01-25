@@ -11,6 +11,7 @@ GameSettings::GameSettings() {
     AddLongSetting("Screen Width", "Graphics", "Width", 800);
 	AddLongSetting("Screen Height", "Graphics", "Height", 600);
     AddBoolSetting("Fullscreen", "Graphics", "Fullscreen", false);
+    AddBoolSetting("Borderless", "Graphics", "Borderless Window", false);
 }
 
 GameSettings& GameSettings::GetInstance() {
