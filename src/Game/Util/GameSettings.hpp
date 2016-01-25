@@ -8,6 +8,8 @@
  * Name                | Description                         | Type   | Default Value
  * ------------------- | ----------------------------------- | ------ | -------------
  * Logging             | Output a log file.                  | bool   | false
+ * Screen Width        | Width of the game window.           | long   | 800
+ * Screen Height       | Height of the game window.          | long   | 600
  */
 class GameSettings : public Settings {
     public:
