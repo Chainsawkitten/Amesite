@@ -7,3 +7,6 @@
 [submodule "externals/glm"]
 	path = externals/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "externals/Headerize"]
+	path = externals/Headerize
+	url = https://github.com/Chainsawkitten/Headerize.git
