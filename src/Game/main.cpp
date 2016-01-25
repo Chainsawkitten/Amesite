@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 #include <iostream>
 #include <GLFW/glfw3.h>
 
@@ -15,7 +16,13 @@ int main() {
     }
     glfwMakeContextCurrent(window);
     
+    glewInit();
+    
+    glEnable(GL_DEPTH_TEST);
+    
     while (glfwWindowShouldClose(window) == GL_FALSE) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glfwSwapBuffers(window);
         glfwPollEvents();
     }
     

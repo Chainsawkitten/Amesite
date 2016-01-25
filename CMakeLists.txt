@@ -12,6 +12,10 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "Don't build GLFW tests" FORCE)
 add_subdirectory(externals/glfw)
 include_directories(externals/glfw/include)
 
+# GLEW
+add_subdirectory(externals/glew/build/cmake)
+include_directories(externals/glew/include)
+
 # This function should be passed a list of all files in a target. It will automatically generate
 # file groups following the directory hierarchy, so that the layout of the files in IDEs matches the
 # one in the filesystem.
@@ -44,6 +48,6 @@ set(GAME_HEADERS
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
 
 add_executable(Modership ${GAME_SRCS} ${GAME_HEADERS})
-target_link_libraries(Modership glfw ${GLFW_LIBRARIES})
+target_link_libraries(Modership glew glfw ${GLFW_LIBRARIES})
 set_property(TARGET Modership PROPERTY CXX_STANDARD 11)
 set_property(TARGET Modership PROPERTY CXX_STANDARD_REQUIRED ON)
