@@ -22,6 +22,19 @@ include_directories(externals/simpleini)
 # GLM
 include_directories(externals/glm)
 
+# STB
+include_directories(externals/stb)
+
+# OpenAL Soft
+set(ALSOFT_EXAMPLES OFF CACHE BOOL "Don't build OpenAL Soft examples" FORCE)
+add_subdirectory(externals/openal-soft)
+include_directories(externals/openal-soft/include)
+if(WIN32)
+    set(OPENAL_LIB OpenAL32)
+else()
+    set(OPENAL_LIB openal)
+endif()
+
 # This function should be passed a list of all files in a target. It will automatically generate
 # file groups following the directory hierarchy, so that the layout of the files in IDEs matches the
 # one in the filesystem.
@@ -90,6 +103,7 @@ endif(DOXYGEN_FOUND)
 ## Engine ##
 set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
+        src/Engine/Resources.cpp
         src/Engine/Geometry/Cube.cpp
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Shader/Shader.cpp
@@ -101,6 +115,7 @@ set(ENGINE_SRCS
 
 set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
+        src/Engine/Resources.hpp
         src/Engine/Geometry/Cube.hpp
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Shader/Shader.hpp

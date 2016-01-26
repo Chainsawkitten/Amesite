@@ -6,12 +6,15 @@
 #include <Engine\Shader\Shader.hpp>
 #include <Engine\Shader\ShaderProgram.hpp>
 
+#include <Resources.hpp>
 #include "Default3D.frag.hpp"
 #include "Default3D.vert.hpp"
 
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
 #include <Util/FileSystem.hpp>
+#include <thread>
+
 using namespace std;
 
 int main() {
@@ -28,28 +31,49 @@ int main() {
     glewInit();
     window->Init();
 
-    Geometry::Cube cubeDefenderOfThePolyverse;
+    Geometry::Cube* cubeDefenderOfThePolyverse = Resources().CreateCube();
     
-    Shader* vertShader = new Shader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragShader = new Shader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    ShaderProgram* shaderProgram = new ShaderProgram( {vertShader, fragShader} );
+    Shader* vertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
+    Shader* fragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    ShaderProgram* shaderProgram = Resources().CreateShaderProgram( {vertShader, fragShader} );
     
     shaderProgram->Use();
 
-    glBindVertexArray(cubeDefenderOfThePolyverse.GetVertexArray());
-
+    glBindVertexArray(cubeDefenderOfThePolyverse->GetVertexArray());
+    
+    // Main game loop.
+    double lastTime = glfwGetTime();
+    double lastTimeRender = glfwGetTime();
     while (!window->ShouldClose()) {
+        lastTime = glfwGetTime();
+        
+        // Render.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        glDrawElements(GL_TRIANGLES, cubeDefenderOfThePolyverse.GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
-
+        glDrawElements(GL_TRIANGLES, cubeDefenderOfThePolyverse->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+        
+        // Set window title to reflect screen update and render times.
+        std::string title = "Modership";
+        if (GameSettings::GetInstance().GetBool("Show Frame Times"))
+            title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0) + " ms";
+        window->SetTitle(title.c_str());
+        
+        // Swap buffers and wait until next frame.
         window->SwapBuffers();
+        
+        long wait = static_cast<long>((1.0 / GameSettings::GetInstance().GetLong("Target FPS") + lastTimeRender - glfwGetTime()) * 1000000.0);
+        if (wait > 0)
+            std::this_thread::sleep_for(std::chrono::microseconds(wait));
+        lastTimeRender = glfwGetTime();
+        
         glfwPollEvents();
     }
-
-    delete vertShader;
-    delete fragShader;
-    delete shaderProgram;
+    
+    Resources().FreeShaderProgram(shaderProgram);
+    Resources().FreeShader(vertShader);
+    Resources().FreeShader(fragShader);
+    
+    Resources().FreeCube();
     
     delete window;
 
