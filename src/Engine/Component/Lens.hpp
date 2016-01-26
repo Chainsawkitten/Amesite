@@ -16,7 +16,7 @@ namespace Component {
             *@param screenSize
             *@return mat4 containing projection matrix
             */
-            glm::mat4 Projection(const glm::vec2& screenSize) const;
+            glm::mat4 GetProjection(const glm::vec2& screenSize) const;
 
             float mFieldOfView;
             float mZNear;

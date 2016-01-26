@@ -12,6 +12,11 @@
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
 #include <Util/FileSystem.hpp>
+
+#include <Engine\Entity\Entity.hpp>
+#include <Engine\Component\Transform.hpp>
+#include <Engine\Component\Lens.hpp>
+
 using namespace std;
 
 int main() {
@@ -34,7 +39,19 @@ int main() {
     Shader* fragShader = new Shader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     ShaderProgram* shaderProgram = new ShaderProgram( {vertShader, fragShader} );
     
+    Entity testCamera;
+    testCamera.CreateLens();
+    testCamera.CreateTransform();
+
+    testCamera.mTransform->Move(-1.f, 1.f, -1.f);
+    testCamera.mTransform->Rotate(-30.f, -20.f, 0.f);
+
     shaderProgram->Use();
+
+    //TODO: RENDERING PERSPECTIVE.
+    glUniformMatrix4fv(shaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &model[0][0]);
+    glUniformMatrix4fv(shaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &model[0][0]);
+    glUniformMatrix4fv(shaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &model[0][0]);
 
     glBindVertexArray(cubeDefenderOfThePolyverse.GetVertexArray());
 

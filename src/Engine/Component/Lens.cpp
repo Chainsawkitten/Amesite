@@ -14,6 +14,6 @@ Lens::~Lens() {
 
 }
 
-glm::mat4 Lens::Projection(const glm::vec2& screenSize) const {
+glm::mat4 Lens::GetProjection(const glm::vec2& screenSize) const {
     return glm::perspective(glm::radians(mFieldOfView), screenSize.x/screenSize.y, mZNear, mZFar);
 }

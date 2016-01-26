@@ -17,7 +17,6 @@ void Entity::CreateTransform() {
 }
 
 
-
 Entity::~Entity() {
     if (mLens != nullptr)
         delete mLens;
