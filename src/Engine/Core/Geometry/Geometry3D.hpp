@@ -33,25 +33,25 @@ namespace Geometry {
             /**
              * @return Array of vertices
              */
-            virtual Vertex* Vertices() const = 0;
+            virtual Vertex* GetVertices() const = 0;
     
             /// Get the number of vertices.
             /**
              * @return The number of vertices
              */
-            virtual unsigned int VertexCount() const = 0;
+            virtual unsigned int GetVertexCount() const = 0;
     
             /// Get all the vertex indices.
             /**
              * @return Array of vertex indices
              */
-            virtual unsigned int* Indices() const = 0;
+            virtual unsigned int* GetIndices() const = 0;
     
             /// Get the number of indicies.
             /**
              * @return The number of vertex indices.
              */
-            virtual unsigned int IndexCount() const = 0;
+            virtual unsigned int GetIndexCount() const = 0;
     
             /// Get the vertex array.
             /**

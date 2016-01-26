@@ -17,12 +17,12 @@ namespace Geometry {
         // Vertex buffer
         glGenBuffers(1, &mVertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, VertexCount() * sizeof(Vertex), Vertices(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, GetVertexCount() * sizeof(Vertex), GetVertices(), GL_STATIC_DRAW);
     
         // Index buffer
         glGenBuffers(1, &mIndexBuffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexCount() * sizeof(unsigned int), Indices(), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, GetIndexCount() * sizeof(unsigned int), GetIndices(), GL_STATIC_DRAW);
     }
     
     void Geometry3D::GenerateVertexArray() {

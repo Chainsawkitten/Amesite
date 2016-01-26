@@ -1,0 +1,9 @@
+/*
+Simple pass-through vertex shader - Vertex Shader
+*/
+#version 400
+layout(location = 0) in vec3 vertexPosition;
+
+void main () {
+	gl_Position = vec4(vertexPosition, 1.0);
+}

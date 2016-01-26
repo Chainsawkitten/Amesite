@@ -37,7 +37,8 @@ endfunction()
 
 # Setup embedded source
 set(EMBEDDED_INPUT
-    
+    shaders/Default3D.frag
+	shaders/Default3D.vert
 )
 
 # Headerize
@@ -88,12 +89,16 @@ set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
 		src/Engine/Core/Geometry/Cube.cpp
 		src/Engine/Core/Geometry/Geometry3D.cpp
+		src/Engine/Core/Shader/Shader.cpp
+		src/Engine/Core/Shader/ShaderProgram.cpp
     )
 
 set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
 		src/Engine/Core/Geometry/Cube.hpp
 		src/Engine/Core/Geometry/Geometry3D.hpp
+		src/Engine/Core/Shader/Shader.hpp
+		src/Engine/Core/Shader/ShaderProgram.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
