@@ -14,6 +14,7 @@
  * Screen Height       | Height of the game window.          | long   | 600
  * Fullscreen          | Play in fullscreen mode.            | bool   | false
  * Borderless          | Use a borderless window.            | bool   | false
+ * Target FPS          | FPS to aim for when rendering.      | long   | 60
  */
 class GameSettings : public Settings {
     public:

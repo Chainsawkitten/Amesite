@@ -60,7 +60,7 @@ int main() {
         // Swap buffers and wait until next frame.
         window->SwapBuffers();
         
-        long wait = static_cast<long>((1.0 / 60.0 + lastTimeRender - glfwGetTime()) * 1000000.0);
+        long wait = static_cast<long>((1.0 / GameSettings::GetInstance().GetLong("Target FPS") + lastTimeRender - glfwGetTime()) * 1000000.0);
         if (wait > 0)
             std::this_thread::sleep_for(std::chrono::microseconds(wait));
         lastTimeRender = glfwGetTime();
