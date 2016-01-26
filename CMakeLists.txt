@@ -40,8 +40,9 @@ endfunction()
 
 # Setup embedded source
 set(EMBEDDED_INPUT
-    
-)
+        shaders/Default3D.frag
+        shaders/Default3D.vert
+    )
 
 # Headerize
 find_program(HEADERIZE_EXE Headerize
@@ -89,6 +90,10 @@ endif(DOXYGEN_FOUND)
 ## Engine ##
 set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
+        src/Engine/Geometry/Cube.cpp
+        src/Engine/Geometry/Geometry3D.cpp
+        src/Engine/Shader/Shader.cpp
+        src/Engine/Shader/ShaderProgram.cpp
         src/Engine/Util/FileSystem.cpp
         src/Engine/Util/Log.cpp
         src/Engine/Util/Settings.cpp
@@ -96,6 +101,10 @@ set(ENGINE_SRCS
 
 set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
+        src/Engine/Geometry/Cube.hpp
+        src/Engine/Geometry/Geometry3D.hpp
+        src/Engine/Shader/Shader.hpp
+        src/Engine/Shader/ShaderProgram.hpp
         src/Engine/Util/FileSystem.hpp
         src/Engine/Util/Log.hpp
         src/Engine/Util/Settings.hpp
