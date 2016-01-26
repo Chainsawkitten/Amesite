@@ -39,7 +39,6 @@ InputHandler::InputHandler(GLFWwindow* window) {
 InputHandler::~InputHandler() {
 	delete[] keyboardBindings;
     delete[] joystickBindings;
-    delete[] joystickAxis;
 }
 
 InputHandler* InputHandler::GetActiveInstance() {
