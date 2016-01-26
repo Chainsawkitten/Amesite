@@ -29,17 +29,19 @@ int main() {
     window->Init();
 
     Geometry::Cube cubeDefenderOfThePolyverse;
-
+    
     Shader* vertShader = new Shader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     Shader* fragShader = new Shader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     ShaderProgram* shaderProgram = new ShaderProgram( {vertShader, fragShader} );
     
     shaderProgram->Use();
 
+    glBindVertexArray(cubeDefenderOfThePolyverse.GetVertexArray());
+
     while (!window->ShouldClose()) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        glDrawArrays(GL_TRIANGLES, cubeDefenderOfThePolyverse.GetVertexArray(), cubeDefenderOfThePolyverse.GetVertexCount());
+        glDrawElements(GL_TRIANGLES, cubeDefenderOfThePolyverse.GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
 
         window->SwapBuffers();
         glfwPollEvents();
