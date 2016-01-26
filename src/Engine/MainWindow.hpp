@@ -1,6 +1,6 @@
 #pragma once
 
-class GLFWwindow;
+struct GLFWwindow;
 
 /// The main game window in which the game is contained.
 class MainWindow {
