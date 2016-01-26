@@ -6,6 +6,7 @@
 #include <Engine\Shader\Shader.hpp>
 #include <Engine\Shader\ShaderProgram.hpp>
 
+#include <Resources.hpp>
 #include "Default3D.frag.hpp"
 #include "Default3D.vert.hpp"
 
@@ -30,15 +31,15 @@ int main() {
     glewInit();
     window->Init();
 
-    Geometry::Cube cubeDefenderOfThePolyverse;
+    Geometry::Cube* cubeDefenderOfThePolyverse = Resources().CreateCube();
     
-    Shader* vertShader = new Shader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragShader = new Shader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    ShaderProgram* shaderProgram = new ShaderProgram( {vertShader, fragShader} );
+    Shader* vertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
+    Shader* fragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    ShaderProgram* shaderProgram = Resources().CreateShaderProgram( {vertShader, fragShader} );
     
     shaderProgram->Use();
 
-    glBindVertexArray(cubeDefenderOfThePolyverse.GetVertexArray());
+    glBindVertexArray(cubeDefenderOfThePolyverse->GetVertexArray());
     
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -49,7 +50,7 @@ int main() {
         // Render.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        glDrawElements(GL_TRIANGLES, cubeDefenderOfThePolyverse.GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+        glDrawElements(GL_TRIANGLES, cubeDefenderOfThePolyverse->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
@@ -67,10 +68,12 @@ int main() {
         
         glfwPollEvents();
     }
-
-    delete vertShader;
-    delete fragShader;
-    delete shaderProgram;
+    
+    Resources().FreeShaderProgram(shaderProgram);
+    Resources().FreeShader(vertShader);
+    Resources().FreeShader(fragShader);
+    
+    Resources().FreeCube();
     
     delete window;
 
