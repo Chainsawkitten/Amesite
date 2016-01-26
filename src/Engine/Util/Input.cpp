@@ -29,6 +29,8 @@ InputHandler::InputHandler(GLFWwindow* window) {
 
 	keyboardBindings = new std::vector<int>[BUTTONS];
 
+    joystickBindings = new std::vector<int>[JOYSTICK_BUTTONS];
+
 	glfwSetCharCallback(window, characterCallback);
 	text = "";
 	tempText = "";
@@ -36,6 +38,8 @@ InputHandler::InputHandler(GLFWwindow* window) {
 
 InputHandler::~InputHandler() {
 	delete[] keyboardBindings;
+    delete[] joystickBindings;
+    delete[] joystickAxis;
 }
 
 InputHandler* InputHandler::GetActiveInstance() {
@@ -69,6 +73,17 @@ void InputHandler::Update() {
 		buttonReleased[button] = buttonDown[button] && !pressed;
 		buttonDown[button] = pressed;
 	}
+
+    // Update joystick axis.
+    int axisCount = 0;
+    joystickAxisData = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axisCount);
+    Log() << axisCount;
+
+    // Update joystick buttons.
+    int buttonCount = 0;
+    joystickButtonPressed = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+    Log() << buttonCount;
+
 
 	// Update text.
 	text = tempText;
@@ -111,20 +126,37 @@ void InputHandler::CenterCursor() {
 	cursorX = static_cast<double>(width / 2);
 	cursorY = static_cast<double>(height / 2);
 }
+void InputHandler::AssignJoystick(JoystickButton button, bool axis, int index) {
+    joystickBindings[button].push_back(index);
+    joystickAxis[button]= axis;
+}
 
-void InputHandler::AssignKeyboard(Button button, int key) {
+const float InputHandler::JoystickButtonValue(JoystickButton button) const {
+    if (joystickAxis[button] == true) {
+        if (joystickButtonPressed[button] == GLFW_PRESS)
+            return 1.0f;
+        else {
+            return 0.0f;
+        }
+    }
+    else {
+        return joystickAxisData[button];
+    }
+}
+
+void InputHandler::AssignKeyboard(KeyboardButton button, int key) {
 	keyboardBindings[button].push_back(key);
 }
 
-bool InputHandler::Pressed(Button button) {
+bool InputHandler::Pressed(KeyboardButton button) {
 	return buttonDown[button];
 }
 
-bool InputHandler::Triggered(Button button) {
+bool InputHandler::Triggered(KeyboardButton button) {
 	return buttonTriggered[button];
 }
 
-bool InputHandler::Released(Button button) {
+bool InputHandler::Released(KeyboardButton button) {
 	return buttonReleased[button];
 }
 
