@@ -9,9 +9,12 @@ public:
     /**
      * @param width Width of the window in pixels.
      * @param height Height of the window in pixels.
+     * @param fullscreen Whether to start in fullscreen mode.
+     * @param borderless Whether to use a borderless window.
      * @param title Window title.
+     * @param debugContext Whether to activate OpenGL debug context.
      */
-    MainWindow(int width, int height, const char* title = "");
+    MainWindow(int width, int height, bool fullscreen = false, bool borderless = false, const char* title = "", bool debugContext = false);
     
     /// Destructor.
     ~MainWindow();
@@ -30,4 +33,5 @@ public:
     
 private:
     GLFWwindow* mWindow;
+    bool mDebugContext;
 };

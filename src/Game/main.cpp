@@ -1,22 +1,30 @@
 #include <GL/glew.h>
-#include <iostream>
 #include <GLFW/glfw3.h>
 #include <MainWindow.hpp>
-#include <Engine\Core\Geometry\Cube.hpp>
-#include <Engine\Core\Shader\Shader.hpp>
-#include <Engine\Core\Shader\ShaderProgram.hpp>
-#include <iostream>
-#include <fstream>
+
+#include <Engine\Geometry\Cube.hpp>
+#include <Engine\Shader\Shader.hpp>
+#include <Engine\Shader\ShaderProgram.hpp>
+
 #include "Default3D.frag.hpp"
 #include "Default3D.vert.hpp"
 
+#include <Util/Log.hpp>
+#include "Util/GameSettings.hpp"
+#include <Util/FileSystem.hpp>
 using namespace std;
 
 int main() {
+    // Enable logging if requested.
+    if (GameSettings::GetInstance().GetBool("Logging"))
+        freopen(FileSystem::SavePath("Modership", "GameLog.txt").c_str(), "a", stderr);
+    
+    Log() << "Game started - " << time(nullptr) << "\n";
+    
     if (!glfwInit())
         return 1;
     
-    MainWindow* window = new MainWindow(800, 600, "Modership");
+    MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Modership", GameSettings::GetInstance().GetBool("Debug Context"));
     glewInit();
     window->Init();
 
@@ -39,6 +47,10 @@ int main() {
     
     delete window;
     glfwTerminate();
+    
+    GameSettings::GetInstance().Save();
+    
+    Log() << "Game ended - " << time(nullptr) << "\n";
     
     return 0;
 }

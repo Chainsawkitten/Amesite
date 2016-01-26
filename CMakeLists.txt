@@ -16,6 +16,9 @@ include_directories(externals/glfw/include)
 add_subdirectory(externals/glew/build/cmake)
 include_directories(externals/glew/include)
 
+# SimpleIni
+include_directories(externals/simpleini)
+
 # GLM
 include_directories(externals/glm)
 
@@ -87,18 +90,24 @@ endif(DOXYGEN_FOUND)
 ## Engine ##
 set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
-		src/Engine/Core/Geometry/Cube.cpp
-		src/Engine/Core/Geometry/Geometry3D.cpp
-		src/Engine/Core/Shader/Shader.cpp
-		src/Engine/Core/Shader/ShaderProgram.cpp
+		src/Engine/Geometry/Cube.cpp
+		src/Engine/Geometry/Geometry3D.cpp
+		src/Engine/Shader/Shader.cpp
+		src/Engine/Shader/ShaderProgram.cpp
+        src/Engine/Util/FileSystem.cpp
+        src/Engine/Util/Log.cpp
+        src/Engine/Util/Settings.cpp
     )
 
 set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
-		src/Engine/Core/Geometry/Cube.hpp
-		src/Engine/Core/Geometry/Geometry3D.hpp
-		src/Engine/Core/Shader/Shader.hpp
-		src/Engine/Core/Shader/ShaderProgram.hpp
+		src/Engine/Geometry/Cube.hpp
+		src/Engine/Geometry/Geometry3D.hpp
+		src/Engine/Shader/Shader.hpp
+		src/Engine/Shader/ShaderProgram.hpp
+        src/Engine/Util/FileSystem.hpp
+        src/Engine/Util/Log.hpp
+        src/Engine/Util/Settings.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
@@ -110,10 +119,11 @@ set_property(TARGET Engine PROPERTY CXX_STANDARD_REQUIRED ON)
 ## Game ##
 set(GAME_SRCS
         src/Game/main.cpp
+        src/Game/Util/GameSettings.cpp
     )
 
 set(GAME_HEADERS
-        
+        src/Game/Util/GameSettings.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
