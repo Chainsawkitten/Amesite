@@ -3,10 +3,6 @@
 #include <GL/glew.h>
 #include <string>
 
-/** @ingroup Core
- * @{
- */
-
 /// A GLSL shader.
 /**
  * Compiles and handles a GLSL shader. Shaders should be linked together into a ShaderProgram.
@@ -41,5 +37,3 @@ class Shader {
 		GLuint mShader;
 		GLenum mShaderType;
 };
-
-/** @} */
