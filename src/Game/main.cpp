@@ -5,6 +5,7 @@
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
 #include <Util/FileSystem.hpp>
+#include <thread>
 
 using namespace std;
 
@@ -22,9 +23,18 @@ int main() {
     glewInit();
     window->Init();
     
+    // Main game loop.
+    double lastTimeRender = glfwGetTime();
     while (!window->ShouldClose()) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
         window->SwapBuffers();
+        
+        long wait = static_cast<long>((1.0 / 60.0 + lastTimeRender - glfwGetTime()) * 1000000.0);
+        if (wait > 0)
+            std::this_thread::sleep_for(std::chrono::microseconds(wait));
+        lastTimeRender = glfwGetTime();
+        
         glfwPollEvents();
     }
     
