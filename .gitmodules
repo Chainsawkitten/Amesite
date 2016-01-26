@@ -13,3 +13,6 @@
 [submodule "externals/simpleini"]
 	path = externals/simpleini
 	url = https://github.com/brofield/simpleini.git
+[submodule "externals/stb"]
+	path = externals/stb
+	url = https://github.com/nothings/stb.git
