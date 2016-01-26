@@ -3,10 +3,6 @@
 #include <initializer_list>
 #include "Shader.hpp"
 
-/** @ingroup Core
- * @{
- */
-
 /// A GLSL shader program.
 class ShaderProgram {
 	public:
@@ -53,5 +49,3 @@ class ShaderProgram {
 	private:
 		GLuint mShaderProgram;
 };
-
-/** @} */

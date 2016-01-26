@@ -46,13 +46,17 @@ int main() {
         window->SwapBuffers();
         glfwPollEvents();
     }
+
+    delete vertShader;
+    delete fragShader;
+    delete shaderProgram;
     
     delete window;
+
     glfwTerminate();
     
     GameSettings::GetInstance().Save();
     
     Log() << "Game ended - " << time(nullptr) << "\n";
-    
     return 0;
 }

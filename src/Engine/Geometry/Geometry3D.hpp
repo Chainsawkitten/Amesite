@@ -3,10 +3,6 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-/** @ingroup Core
- * @{
- */
-
 namespace Geometry {
     /// Interface for renderable 3D geometry.
     /**
@@ -73,4 +69,3 @@ namespace Geometry {
     };
 }
 
-/** @} */

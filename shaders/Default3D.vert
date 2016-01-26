@@ -8,5 +8,5 @@ layout(location = 2) in vec3 normal;
 layout(location = 3) in vec3 tangent;
 
 void main () {
-	gl_Position = vec4(vertexPosition, 1.0);
+    gl_Position = vec4(vertexPosition, 1.0);
 }

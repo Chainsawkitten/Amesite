@@ -2,9 +2,6 @@
 
 #include "Geometry3D.hpp"
 
-/** @ingroup Core
- * @{
- */
 
 namespace Geometry {
     /// A cube.
@@ -48,5 +45,3 @@ namespace Geometry {
             unsigned int mIndexNr = 0;
     };
 }
-
-/** @} */
