@@ -92,6 +92,7 @@ set(ENGINE_SRCS
         src/Engine/Util/FileSystem.cpp
         src/Engine/Util/Log.cpp
         src/Engine/Util/Settings.cpp
+	src/Engine/Util/Input.cpp
     )
 
 set(ENGINE_HEADERS
@@ -99,6 +100,7 @@ set(ENGINE_HEADERS
         src/Engine/Util/FileSystem.hpp
         src/Engine/Util/Log.hpp
         src/Engine/Util/Settings.hpp
+	src/Engine/Util/Input.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
