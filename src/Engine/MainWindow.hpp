@@ -22,6 +22,12 @@ class MainWindow {
         /// Initialize components.
         void Init();
         
+        /// Set window title.
+        /**
+         * @param title New window title.
+         */
+        void SetTitle(const char* title);
+        
         /// Get whether the window should close.
         /**
          * @return Whether the window should close

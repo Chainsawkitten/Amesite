@@ -41,12 +41,23 @@ int main() {
     glBindVertexArray(cubeDefenderOfThePolyverse.GetVertexArray());
     
     // Main game loop.
+    double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
     while (!window->ShouldClose()) {
+        lastTime = glfwGetTime();
+        
+        // Render.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         glDrawElements(GL_TRIANGLES, cubeDefenderOfThePolyverse.GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
-
+        
+        // Set window title to reflect screen update and render times.
+        std::string title = "Modership";
+        if (GameSettings::GetInstance().GetBool("Show Frame Times"))
+            title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0) + " ms";
+        window->SetTitle(title.c_str());
+        
+        // Swap buffers and wait until next frame.
         window->SwapBuffers();
         
         long wait = static_cast<long>((1.0 / 60.0 + lastTimeRender - glfwGetTime()) * 1000000.0);
