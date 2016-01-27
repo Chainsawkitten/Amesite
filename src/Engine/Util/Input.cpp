@@ -27,7 +27,15 @@ InputHandler::InputHandler(GLFWwindow* window) {
 	lastScroll = 0.0;
 	scroll = 0.0;
 
-
+    // Init button states.
+    for (int player = 0; player < PLAYERS; player++) {
+        for (int button = 0; button < BUTTONS; button++) {
+            buttonReleased[player][button] = true;
+            buttonTriggered[player][button] = false;
+            buttonValue[player][button] = 0.0;
+            joystickAxis[player][button] = false;
+        }
+    }
 
     bindings = new std::vector<int>[PLAYERS*BUTTONS];
 
@@ -37,6 +45,7 @@ InputHandler::InputHandler(GLFWwindow* window) {
 }
 
 InputHandler::~InputHandler() {
+    delete[] bindings;
 }
 
 InputHandler* InputHandler::GetActiveInstance() {
