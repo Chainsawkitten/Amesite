@@ -16,21 +16,24 @@
 class InputHandler {
     public:
         /// Button codes.
-        enum KeyboardButton {
-            FORWARD = 0, ///< Forward button
-            BACKWARD, ///< Backward button
-            LEFT, ///< Left button
-            RIGHT, ///< Right button
-			SHOOT,
-            QUIT, ///< Quit game
-            BUTTONS, ///< Total number of buttons
-        };
-        enum JoystickButton {
+        enum Button {
             MOVE_X = 0, ///< Move in X axis
-            MOVE_Z, ///< Move in X axis
+            MOVE_Z, ///< Move in Z axis
             AIM_X, ///< Aim in X axis
             SHOOT, ///< Fire bullet
-            JOYSTICK_BUTTONS, ///< Total number of inputs - joystick
+            QUIT, ///< Quit game
+            BUTTONS, ///< Total number of inputs - joystick
+        };
+        enum Player {
+            PLAYER_ONE = 0,
+            PLAYER_TWO,
+            ANYONE,
+            PLAYERS,
+        };
+        enum InputDevices {
+            KEYBOARD = 0,
+            JOYSTICK,
+            INPUT_DEVICES,
         };
         
         /// Create new input handler.
@@ -106,46 +109,52 @@ class InputHandler {
         /**
         * @param button The button to assign a key to.
         * @param axis - is it an axis (==TRUE)? or is it a button (==FALSE).
-        * @param index of the key in GLFW. 
+        * @param index of the key in GLFW - 
+        * @param player to check (0 player 1, 1 is player2, 2 is player3)
         */
-        void AssignJoystick(JoystickButton button, bool axis, int index);
+        void AssignJoystick(Button button, bool axis, int index, Player player);
 
         /// Gets the value of an axis on joystick
         /**
         * @param button The button to check.
+        * @param player to check (0 player 1, 1 is player2, 2 is player3)
         * @return a float with a value between -1 and 1 - representing axis value.
         */
-        const float JoystickButtonValue(JoystickButton button) const;
+        double ButtonValue(Button button, Player player) const;
 
         /// Assign a keyboard key to a button.
         /**
          * @param button The button to assign a key to.
          * @param key The <a href="http://www.glfw.org/docs/latest/group__keys.html">keyboard key</a> to assign.
+         * @param playerNum - the player to check (0 is anyone, 1 is player1, 2 is player2)
          */
-        void AssignKeyboard(KeyboardButton button, int key);
+        void AssignKeyboard(Button button, int key, Player player);
         
         /// Gets whether a button is currently down.
         /**
          * @param button The button to check.
+         * @param player to check (0 player 1, 1 is player2, 2 is player3)
          * @return Whether the button is down
          */
-        bool Pressed(KeyboardButton button);
+        bool Pressed(Button button, Player player);
         
         /// Gets whether a button was just pressed.
         /**
          * Checks whether a button was pressed between the last two calls to update().
          * @param button The button to check.
+         * @param player to check (0 player 1, 1 is player2, 2 is player3)
          * @return Whether the button was pressed
          */
-        bool Triggered(KeyboardButton button);
+        bool Triggered(Button button, Player player);
         
         /// Gets whether a button was just released.
         /**
          * Checks whether a button was released between the last two calls to update().
          * @param button The button to check.
+         * @param player to check (0 player 1, 1 is player2, 2 is player3)
          * @return Whether the button was released
          */
-        bool Released(KeyboardButton button);
+        bool Released(Button button, Player player);
         
         /// Get text input since last frame.
         /**
@@ -179,18 +188,20 @@ class InputHandler {
         double scroll;
         
         std::string text, tempText;
-        
-        // Keyboard
-        std::vector<int>* keyboardBindings;
-        bool buttonDown[BUTTONS];
-        bool buttonTriggered[BUTTONS];
-        bool buttonReleased[BUTTONS];
+
+        // Binding information, differentiate input devices.
+        int bindingDevice[PLAYERS][BUTTONS];
+
+        // Bindings
+        std::vector<int>* bindings;
+        double buttonValue[PLAYERS][BUTTONS];
+        bool buttonReleased[PLAYERS][BUTTONS];
+        bool buttonTriggered[PLAYERS][BUTTONS];
 
         // Joystick
-        std::vector<int>* joystickBindings;
-        bool joystickAxis[JOYSTICK_BUTTONS];
-        const float* joystickAxisData;
-        const unsigned char* joystickButtonPressed;
+        bool joystickAxis[PLAYERS][BUTTONS];
+        const float* joystickAxisData[PLAYERS];
+        const unsigned char* joystickButtonPressed[PLAYERS];
 
 
 };

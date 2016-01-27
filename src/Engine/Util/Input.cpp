@@ -27,9 +27,7 @@ InputHandler::InputHandler(GLFWwindow* window) {
 	lastScroll = 0.0;
 	scroll = 0.0;
 
-	keyboardBindings = new std::vector<int>[BUTTONS];
-
-    joystickBindings = new std::vector<int>[JOYSTICK_BUTTONS];
+    bindings = new std::vector<int>[PLAYERS*BUTTONS];
 
 	glfwSetCharCallback(window, characterCallback);
 	text = "";
@@ -37,8 +35,6 @@ InputHandler::InputHandler(GLFWwindow* window) {
 }
 
 InputHandler::~InputHandler() {
-	delete[] keyboardBindings;
-    delete[] joystickBindings;
 }
 
 InputHandler* InputHandler::GetActiveInstance() {
@@ -60,29 +56,65 @@ void InputHandler::Update() {
 
 	glfwGetCursorPos(window, &cursorX, &cursorY);
 
-	// Update keyboard.
-	for (int button = 0; button < BUTTONS; button++) {
-		bool pressed = false;
-		for (auto &key : keyboardBindings[button]) {
-			if (glfwGetKey(window, key) == GLFW_PRESS)
-				pressed = true;
-		}
-
-		buttonTriggered[button] = !buttonDown[button] && pressed;
-		buttonReleased[button] = buttonDown[button] && !pressed;
-		buttonDown[button] = pressed;
-	}
-
     // Update joystick axis.
-    int axisCount = 0;
-    joystickAxisData = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axisCount);
-    Log() << axisCount;
+    int axisOneCount = 0;
+    joystickAxisData[PLAYER_ONE] = glfwGetJoystickAxes(PLAYER_ONE, &axisOneCount);
+    //Log() << axisOneCount;
 
     // Update joystick buttons.
-    int buttonCount = 0;
-    joystickButtonPressed = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
-    Log() << buttonCount;
+    int buttonOneCount = 0;
+    joystickButtonPressed[PLAYER_ONE] = glfwGetJoystickButtons(PLAYER_ONE, &buttonOneCount);
+    //Log() << buttonOneCount;
 
+    // Update joystick axis.
+    int axisTwoCount = 0;
+    joystickAxisData[PLAYER_TWO] = glfwGetJoystickAxes(PLAYER_TWO, &axisTwoCount);
+    //Log() << axisTwoCount;
+
+    // Update joystick buttons.
+    int buttonTwoCount = 0;
+    joystickButtonPressed[PLAYER_ONE] = glfwGetJoystickButtons(PLAYER_TWO, &buttonTwoCount);
+    //Log() << buttonTwoCount;
+
+	// Update button states depending on bindings.
+    for (int player = 0; player < (PLAYERS-1); player++) {
+        for (int button = 0; button < BUTTONS; button++) {
+            double value = 0.0;
+            for (auto &key : bindings[player*BUTTONS + button]) {
+                switch (bindingDevice[player][button]) {
+                case KEYBOARD:
+                    if (glfwGetKey(window, key) == GLFW_PRESS)
+                        value = 1.0;
+                case JOYSTICK:
+                    if (joystickAxis[player][button]) {
+                        value = joystickAxisData[player][key];
+                    } else {
+                        if (joystickButtonPressed[player][button] == GLFW_PRESS) {
+                            value = 1.0;
+                        } else {
+                            value = 0.0;
+                        }
+                    }
+                default:
+                    value = 0.0;
+                }
+
+            }
+            buttonTriggered[player][button] = (buttonValue[player][button] == 1.0) && (value == 1.0);
+            buttonReleased[player][button] = (buttonValue[player][button] == 0.0) && (value == 0.0);
+            buttonValue[player][button] = value;           
+        }
+    }
+    for (int button = 0; button < BUTTONS; button++) {
+        buttonTriggered[ANYONE][button] = buttonTriggered[PLAYER_ONE][button] || buttonTriggered[PLAYER_TWO][button];
+        buttonReleased[ANYONE][button] = buttonReleased[PLAYER_ONE][button] || buttonReleased[PLAYER_TWO][button];
+        if (buttonValue[PLAYER_ONE][button] == 1.0 || buttonValue[PLAYER_ONE][button] == 1.0) {
+            buttonValue[ANYONE][button] = 1.0;
+        }
+        else {
+            buttonValue[ANYONE][button] = 0.0;
+        }
+    }
 
 	// Update text.
 	text = tempText;
@@ -125,38 +157,37 @@ void InputHandler::CenterCursor() {
 	cursorX = static_cast<double>(width / 2);
 	cursorY = static_cast<double>(height / 2);
 }
-void InputHandler::AssignJoystick(JoystickButton button, bool axis, int index) {
-    joystickBindings[button].push_back(index);
-    joystickAxis[button]= axis;
+void InputHandler::AssignJoystick(Button button, bool axis, int index, Player player) {
+    bindings[BUTTONS*player + button].push_back(index);
+    joystickAxis[player][button]= axis;
+    bindingDevice[player][button] = JOYSTICK;
 }
 
-const float InputHandler::JoystickButtonValue(JoystickButton button) const {
-    if (joystickAxis[button] == true) {
-        if (joystickButtonPressed[button] == GLFW_PRESS)
-            return 1.0f;
-        else {
-            return 0.0f;
-        }
-    }
-    else {
-        return joystickAxisData[button];
-    }
+double InputHandler::ButtonValue(Button button, Player player) const {
+    return buttonValue[player][button];
 }
 
-void InputHandler::AssignKeyboard(KeyboardButton button, int key) {
-	keyboardBindings[button].push_back(key);
+void InputHandler::AssignKeyboard(Button button, int key, Player player) {
+    bindings[BUTTONS*player + button].push_back(key);
+    bindingDevice[player][button] = KEYBOARD;
 }
 
-bool InputHandler::Pressed(KeyboardButton button) {
-	return buttonDown[button];
+bool InputHandler::Pressed(Button button, Player player) {
+    if (joystickAxis[player][button])
+        Log() << "You are checking if a scalar axis is pressed or not - this will almost never be true.";
+	return buttonValue[player][button] == 1.0;
 }
 
-bool InputHandler::Triggered(KeyboardButton button) {
-	return buttonTriggered[button];
+bool InputHandler::Triggered(Button button, Player player) {
+    if (joystickAxis[player][button])
+        Log() << "You are checking if a scalar axis is triggered or not - this will almost never be true.";
+	return buttonTriggered[player][button];
 }
 
-bool InputHandler::Released(KeyboardButton button) {
-	return buttonReleased[button];
+bool InputHandler::Released(Button button, Player player) {
+    if (joystickAxis[player][button])
+        Log() << "You are checking if a scalar axis is released or not - this is almost always true.";
+	return buttonReleased[player][button];
 }
 
 const std::string& InputHandler::Text() const {
