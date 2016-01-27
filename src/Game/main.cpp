@@ -39,10 +39,6 @@ int main() {
     glewInit();
     window->Init();
 
-    Entity cubeEntity;
-    cubeEntity.AddComponent<Component::Mesh>();
-    cubeEntity.AddComponent<Component::Transform>();
-    cubeEntity.GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     
     Shader* vertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     Shader* fragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
@@ -53,35 +49,31 @@ int main() {
     testCamera.AddComponent<Component::Transform>();
 
 
-    testCamera.GetComponent<Component::Transform>()->Move(-3.f, 0.5f, 5.f);
-    testCamera.GetComponent<Component::Transform>()->Rotate(-15.f, 0.f, 0.f);
+    testCamera.GetComponent<Component::Transform>()->Move(0.f, 15.0f, 0.f);
+    testCamera.GetComponent<Component::Transform>()->Rotate(0.f, 90.f, 0.f);
 
     shaderProgram->Use();
-
-    glBindVertexArray(cubeEntity.GetComponent<Component::Mesh>()->geometry->GetVertexArray());
-    
     
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
     while (!window->ShouldClose()) {
         lastTime = glfwGetTime();
-
-        testCamera.GetComponent<Component::Transform>()->Move(0.01f, 0.0f, 0.f);
-
-        glm::mat4 model = glm::translate(glm::mat4(), cubeEntity.GetComponent<Component::Transform>()->mPosition) * cubeEntity.GetComponent<Component::Transform>()->GetOrientation() * glm::scale(glm::mat4(), cubeEntity.GetComponent<Component::Transform>()->mScale);
-        glm::mat4 view = testCamera.GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -testCamera.GetComponent<Component::Transform>()->mPosition);
-        glm::mat4 projection = testCamera.GetComponent<Component::Lens>()->GetProjection(glm::vec2(800, 600));
-
-        glUniformMatrix4fv(shaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &model[0][0]);
-        glUniformMatrix4fv(shaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &view[0][0]);
-        glUniformMatrix4fv(shaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projection[0][0]);
-
-        // Render.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        for (int i = 0; i < nrOfCubes; i++){
+            glBindVertexArray(caveSystem[i].GetComponent<Component::Mesh>()->geometry->GetVertexArray());
+
+            glm::mat4 model = glm::translate(glm::mat4(), caveSystem[i].GetComponent<Component::Transform>()->mPosition) * caveSystem[i].GetComponent<Component::Transform>()->GetOrientation() * glm::scale(glm::mat4(), caveSystem[i].GetComponent<Component::Transform>()->mScale);
+            glm::mat4 view = testCamera.GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -testCamera.GetComponent<Component::Transform>()->mPosition);
+            glm::mat4 projection = testCamera.GetComponent<Component::Lens>()->GetProjection(glm::vec2(800, 600));
+
+            glUniformMatrix4fv(shaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &model[0][0]);
+            glUniformMatrix4fv(shaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &view[0][0]);
+            glUniformMatrix4fv(shaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projection[0][0]);
         
-        glDrawElements(GL_TRIANGLES, cubeEntity.GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
-        
+            glDrawElements(GL_TRIANGLES, caveSystem[i].GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+        }
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))

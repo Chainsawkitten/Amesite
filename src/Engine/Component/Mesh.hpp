@@ -3,6 +3,7 @@
 #include "../Geometry/Geometry3D.hpp"
 
 namespace Component {
+    ///Component providing geometry to entity
     class Mesh
     {
         public:
@@ -10,6 +11,7 @@ namespace Component {
             
             ~Mesh();
 
+            ///Geometry data
             Geometry::Geometry3D* geometry;
     };
 }
