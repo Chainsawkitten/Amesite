@@ -3,10 +3,10 @@
 using namespace Component;
 
 Mesh::Mesh() {
-    mGeometry = nullptr;
+    geometry = nullptr;
 }
 
 Mesh::~Mesh() {
-    if (mGeometry != nullptr)
-        delete mGeometry;
+    if (geometry != nullptr)
+        delete geometry;
 }

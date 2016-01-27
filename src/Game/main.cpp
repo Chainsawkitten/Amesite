@@ -42,7 +42,7 @@ int main() {
     Entity cubeEntity;
     cubeEntity.AddComponent<Component::Mesh>();
     cubeEntity.AddComponent<Component::Transform>();
-    cubeEntity.GetComponent<Component::Mesh>()->mGeometry = Resources().CreateCube();
+    cubeEntity.GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     
     Shader* vertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     Shader* fragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
@@ -58,7 +58,7 @@ int main() {
 
     shaderProgram->Use();
 
-    glBindVertexArray(cubeEntity.GetComponent<Component::Mesh>()->mGeometry->GetVertexArray());
+    glBindVertexArray(cubeEntity.GetComponent<Component::Mesh>()->geometry->GetVertexArray());
     
     
     // Main game loop.
@@ -80,7 +80,7 @@ int main() {
         // Render.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        glDrawElements(GL_TRIANGLES, cubeEntity.GetComponent<Component::Mesh>()->mGeometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+        glDrawElements(GL_TRIANGLES, cubeEntity.GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";

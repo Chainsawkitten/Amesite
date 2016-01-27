@@ -10,6 +10,6 @@ namespace Component {
             
             ~Mesh();
 
-            Geometry::Geometry3D* mGeometry;
+            Geometry::Geometry3D* geometry;
     };
 }
