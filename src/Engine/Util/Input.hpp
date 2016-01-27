@@ -24,16 +24,20 @@ class InputHandler {
             QUIT, ///< Quit game
             BUTTONS, ///< Total number of inputs - joystick
         };
+
+        /// Player codes
         enum Player {
-            PLAYER_ONE = 0,
-            PLAYER_TWO,
-            ANYONE,
-            PLAYERS,
+            PLAYER_ONE = 0, ///< Player one
+            PLAYER_TWO, ///< Player two
+            ANYONE, ///< Any of the two players
+            PLAYERS, ///< Number of players
         };
-        enum InputDevices {
-            KEYBOARD = 0,
-            JOYSTICK,
-            INPUT_DEVICES,
+
+        /// Input device codes
+        enum Device {
+            KEYBOARD = 0, ///< Keyboard input
+            JOYSTICK, ///< Joystick input
+            INPUT_DEVICES, ///< Number of input devices
         };
         
         /// Create new input handler.

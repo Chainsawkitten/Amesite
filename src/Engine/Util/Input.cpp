@@ -27,6 +27,8 @@ InputHandler::InputHandler(GLFWwindow* window) {
 	lastScroll = 0.0;
 	scroll = 0.0;
 
+
+
     bindings = new std::vector<int>[PLAYERS*BUTTONS];
 
 	glfwSetCharCallback(window, characterCallback);
@@ -81,13 +83,17 @@ void InputHandler::Update() {
         for (int button = 0; button < BUTTONS; button++) {
             double value = 0.0;
             for (auto &key : bindings[player*BUTTONS + button]) {
+
+                // Switch the different input devices.
                 switch (bindingDevice[player][button]) {
                 case KEYBOARD:
                     if (glfwGetKey(window, key) == GLFW_PRESS)
                         value = 1.0;
                 case JOYSTICK:
+                    // Scalar axis of joystick.
                     if (joystickAxis[player][button]) {
                         value = joystickAxisData[player][key];
+                    // Buttons of joystick.
                     } else {
                         if (joystickButtonPressed[player][button] == GLFW_PRESS) {
                             value = 1.0;
@@ -105,6 +111,7 @@ void InputHandler::Update() {
             buttonValue[player][button] = value;           
         }
     }
+    // Update the 'Anyone' input section
     for (int button = 0; button < BUTTONS; button++) {
         buttonTriggered[ANYONE][button] = buttonTriggered[PLAYER_ONE][button] || buttonTriggered[PLAYER_TWO][button];
         buttonReleased[ANYONE][button] = buttonReleased[PLAYER_ONE][button] || buttonReleased[PLAYER_TWO][button];
