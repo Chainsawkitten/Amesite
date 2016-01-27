@@ -7,19 +7,27 @@
 Entity::Entity() {
     mLens = nullptr;
     mTransform = nullptr;
+    mMesh = nullptr;
 }
 
-void Entity::CreateLens() {
-    mLens = new Component::Lens();
+Component::Lens* Entity::CreateLens() {
+    if (mLens == nullptr)
+        return mLens = new Component::Lens();
+    return nullptr;
 }
 
-void Entity::CreateTransform() {
-    mTransform = new Component::Transform();
+Component::Transform* Entity::CreateTransform() {
+    if (mTransform == nullptr)
+        return mTransform = new Component::Transform();
+    return nullptr;
 }
 
-void Entity::CreateMesh() {
-    mMesh = new Component::Mesh();
+Component::Mesh* Entity::CreateMesh() {
+    if (mMesh == nullptr)
+        return mMesh = new Component::Mesh();
+    return nullptr;
 }
+
 
 
 Entity::~Entity() {
@@ -28,4 +36,7 @@ Entity::~Entity() {
 
     if (mTransform != nullptr)
         delete mTransform;
+
+    if (mMesh != nullptr)
+        delete mMesh;
 }
