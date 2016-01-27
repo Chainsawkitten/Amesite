@@ -1,7 +1,6 @@
 #include "RenderSystem.hpp"
 
 #include <Engine/Entity/Entity.hpp>
-//#include "../../Engine/Entity/Entity.hpp"
 
 RenderSystem::RenderSystem() {
 
