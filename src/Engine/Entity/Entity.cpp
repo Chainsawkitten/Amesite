@@ -8,12 +8,16 @@ Entity::Entity() {
     mTransform = nullptr;
 }
 
-void Entity::CreateLens() {
-    mLens = new Component::Lens();
+Component::Lens* Entity::CreateLens() {
+    if (mLens == nullptr)
+        return mLens = new Component::Lens();
+    return nullptr;
 }
 
-void Entity::CreateTransform() {
-    mTransform = new Component::Transform();
+Component::Transform* Entity::CreateTransform() {
+    if (mTransform == nullptr)
+        return mTransform = new Component::Transform();
+    return nullptr;
 }
 
 
