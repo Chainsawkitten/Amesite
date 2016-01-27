@@ -7,6 +7,7 @@
 #include <Engine/Shader/Shader.hpp>
 #include <Engine/Shader/ShaderProgram.hpp>
 
+#include <Resources.hpp>
 #include "Default3D.frag.hpp"
 #include "Default3D.vert.hpp"
 
@@ -17,6 +18,8 @@
 #include <Engine/Entity/Entity.hpp>
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Lens.hpp>
+
+#include <thread>
 
 using namespace std;
 
@@ -36,42 +39,66 @@ int main() {
 
     Geometry::Cube cubeDefenderOfThePolyverse;
     Component::Transform cubeTransform;
+
     
-    Shader* vertShader = new Shader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragShader = new Shader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    ShaderProgram* shaderProgram = new ShaderProgram( {vertShader, fragShader} );
+    Shader* vertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
+    Shader* fragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    ShaderProgram* shaderProgram = Resources().CreateShaderProgram( {vertShader, fragShader} );
     
     Entity testCamera;
     testCamera.CreateLens();
     testCamera.CreateTransform();
 
-    testCamera.mTransform->Move(2.f, 0.5f, 5.f);
+    testCamera.mTransform->Move(-3.f, 0.5f, 5.f);
     testCamera.mTransform->Rotate(-15.f,0.f,0.f);
 
     shaderProgram->Use();
 
-    glm::mat4 model = glm::translate(glm::mat4(), cubeTransform.mPosition) * cubeTransform.GetOrientation() * glm::scale(glm::mat4(), cubeTransform.mScale);
-    glm::mat4 view = testCamera.mTransform->GetOrientation()*glm::translate(glm::mat4(),-testCamera.mTransform->mPosition);
-    glm::mat4 projection = testCamera.mLens->GetProjection(glm::vec2(800,600));
-
     glBindVertexArray(cubeDefenderOfThePolyverse.GetVertexArray());
-
-    glUniformMatrix4fv(shaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &model[0][0]);
-    glUniformMatrix4fv(shaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &view[0][0]);
-    glUniformMatrix4fv(shaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projection[0][0]);
-
+    
+    // Main game loop.
+    double lastTime = glfwGetTime();
+    double lastTimeRender = glfwGetTime();
     while (!window->ShouldClose()) {
+        lastTime = glfwGetTime();
+
+        testCamera.mTransform->Move(0.01f, 0.0f, 0.f);
+
+        glm::mat4 model = glm::translate(glm::mat4(), cubeTransform.mPosition) * cubeTransform.GetOrientation() * glm::scale(glm::mat4(), cubeTransform.mScale);
+        glm::mat4 view = testCamera.mTransform->GetOrientation()*glm::translate(glm::mat4(), -testCamera.mTransform->mPosition);
+        glm::mat4 projection = testCamera.mLens->GetProjection(glm::vec2(800, 600));
+
+        glUniformMatrix4fv(shaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &model[0][0]);
+        glUniformMatrix4fv(shaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &view[0][0]);
+        glUniformMatrix4fv(shaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projection[0][0]);
+
+        // Render.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         glDrawElements(GL_TRIANGLES, cubeDefenderOfThePolyverse.GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
-
+        
+        // Set window title to reflect screen update and render times.
+        std::string title = "Modership";
+        if (GameSettings::GetInstance().GetBool("Show Frame Times"))
+            title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0) + " ms";
+        window->SetTitle(title.c_str());
+        
+        // Swap buffers and wait until next frame.
         window->SwapBuffers();
+        
+        long wait = static_cast<long>((1.0 / GameSettings::GetInstance().GetLong("Target FPS") + lastTimeRender - glfwGetTime()) * 1000000.0);
+        if (wait > 0)
+            std::this_thread::sleep_for(std::chrono::microseconds(wait));
+        lastTimeRender = glfwGetTime();
+        
         glfwPollEvents();
     }
-
-    delete vertShader;
-    delete fragShader;
-    delete shaderProgram;
+    
+    Resources().FreeShaderProgram(shaderProgram);
+    Resources().FreeShader(vertShader);
+    Resources().FreeShader(fragShader);
+    
+    Resources().FreeCube();
     
     delete window;
 
