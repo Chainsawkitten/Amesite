@@ -7,6 +7,4 @@ Mesh::Mesh() {
 }
 
 Mesh::~Mesh() {
-    if (geometry != nullptr)
-        delete geometry;
 }
