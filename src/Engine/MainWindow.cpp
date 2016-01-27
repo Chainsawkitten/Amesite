@@ -37,6 +37,10 @@ void MainWindow::Init() {
         glDebugMessageCallback(DebugMessageCallback, nullptr);
 }
 
+void MainWindow::SetTitle(const char *title) {
+    glfwSetWindowTitle(mWindow, title);
+}
+
 bool MainWindow::ShouldClose() const {
     return glfwWindowShouldClose(mWindow) != GL_FALSE;
 }
