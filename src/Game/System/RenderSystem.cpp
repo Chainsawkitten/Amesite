@@ -43,7 +43,7 @@ void RenderSystem::Render(Scene* scene) {
 
     // Render from camera.
     if (camera != nullptr) {
-        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->mPosition);
+        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
         glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(glm::vec2(800, 600));
 
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
@@ -57,7 +57,7 @@ void RenderSystem::Render(Scene* scene) {
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
 
                 // Render model.
-                glm::mat4 modelMat = glm::translate(glm::mat4(), model->GetComponent<Component::Transform>()->mPosition) * model->GetComponent<Component::Transform>()->GetOrientation() * glm::scale(glm::mat4(), model->GetComponent<Component::Transform>()->mScale);
+                glm::mat4 modelMat = glm::translate(glm::mat4(), model->GetComponent<Component::Transform>()->position) * model->GetComponent<Component::Transform>()->GetOrientation() * glm::scale(glm::mat4(), model->GetComponent<Component::Transform>()->scale);
                 glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
 
                 glDrawElements(GL_TRIANGLES, model->GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
