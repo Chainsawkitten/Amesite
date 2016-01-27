@@ -3,6 +3,7 @@
 namespace Component {
     class Transform;
     class Lens;
+    class Mesh;
 }
 
 class Entity {
@@ -28,9 +29,11 @@ class Entity {
     private:
         Component::Lens* CreateLens();
         Component::Transform* CreateTransform();
+        Component::Mesh* CreateMesh();
 
         Component::Lens* mLens;
         Component::Transform* mTransform;
+        Component::Mesh* mMesh;
 };
 
 template<> inline Component::Lens* Entity::AddComponent<Component::Lens>() {
@@ -41,10 +44,18 @@ template<> inline Component::Transform* Entity::AddComponent<Component::Transfor
     return CreateTransform();
 }
 
+template<> inline Component::Mesh* Entity::AddComponent<Component::Mesh>() {
+    return CreateMesh();
+}
+
 template<> inline Component::Lens* Entity::GetComponent<Component::Lens>() {
     return mLens;
 }
 
 template<> inline Component::Transform* Entity::GetComponent<Component::Transform>() {
     return mTransform;
+}
+
+template<> inline Component::Mesh* Entity::GetComponent<Component::Mesh>() {
+    return mMesh;
 }
