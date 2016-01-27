@@ -2,6 +2,7 @@
 
 #include "../Component/Transform.hpp"
 #include "../Component/Lens.hpp"
+#include "../Component/Mesh.hpp"
 
 Entity::Entity() {
     mLens = nullptr;
@@ -14,6 +15,10 @@ void Entity::CreateLens() {
 
 void Entity::CreateTransform() {
     mTransform = new Component::Transform();
+}
+
+void Entity::CreateMesh() {
+    mMesh = new Component::Mesh();
 }
 
 

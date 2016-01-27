@@ -16,8 +16,10 @@
 #include <Util/FileSystem.hpp>
 
 #include <Engine/Entity/Entity.hpp>
+
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Lens.hpp>
+#include <Engine/Component/Mesh.hpp>
 
 #include <thread>
 
@@ -37,9 +39,10 @@ int main() {
     glewInit();
     window->Init();
 
-    Geometry::Cube cubeDefenderOfThePolyverse;
-    Component::Transform cubeTransform;
-
+    Entity cubeDefenderOfThePolyverseEntity;
+    cubeDefenderOfThePolyverseEntity.CreateTransform();
+    cubeDefenderOfThePolyverseEntity.CreateMesh();
+    cubeDefenderOfThePolyverseEntity.mMesh->mGeometry = Resources().CreateCube();
     
     Shader* vertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     Shader* fragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
@@ -49,12 +52,12 @@ int main() {
     testCamera.CreateLens();
     testCamera.CreateTransform();
 
-    testCamera.mTransform->Move(-3.f, 0.5f, 5.f);
+    testCamera.mTransform->Move(0.f, 0.0f, 5.f);
     testCamera.mTransform->Rotate(-15.f,0.f,0.f);
 
     shaderProgram->Use();
 
-    glBindVertexArray(cubeDefenderOfThePolyverse.GetVertexArray());
+    glBindVertexArray(cubeDefenderOfThePolyverseEntity.mMesh->mGeometry->GetVertexArray());
     
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -62,9 +65,9 @@ int main() {
     while (!window->ShouldClose()) {
         lastTime = glfwGetTime();
 
-        testCamera.mTransform->Move(0.01f, 0.0f, 0.f);
+        testCamera.mTransform->Move(0.1f,0.f,0.f);
 
-        glm::mat4 model = glm::translate(glm::mat4(), cubeTransform.mPosition) * cubeTransform.GetOrientation() * glm::scale(glm::mat4(), cubeTransform.mScale);
+        glm::mat4 model = glm::translate(glm::mat4(), cubeDefenderOfThePolyverseEntity.mTransform->mPosition) * cubeDefenderOfThePolyverseEntity.mTransform->GetOrientation() * glm::scale(glm::mat4(), cubeDefenderOfThePolyverseEntity.mTransform->mScale);
         glm::mat4 view = testCamera.mTransform->GetOrientation()*glm::translate(glm::mat4(), -testCamera.mTransform->mPosition);
         glm::mat4 projection = testCamera.mLens->GetProjection(glm::vec2(800, 600));
 
@@ -75,7 +78,7 @@ int main() {
         // Render.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        glDrawElements(GL_TRIANGLES, cubeDefenderOfThePolyverse.GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+        glDrawElements(GL_TRIANGLES, cubeDefenderOfThePolyverseEntity.mMesh->mGeometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";

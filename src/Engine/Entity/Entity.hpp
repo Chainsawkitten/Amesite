@@ -3,6 +3,7 @@
 namespace Component {
     class Transform;
     class Lens;
+    class Mesh;
 }
 
 class Entity {
@@ -14,6 +15,9 @@ class Entity {
 
             void CreateTransform();
 
+            void CreateMesh();
+
             Component::Lens* mLens;
             Component::Transform* mTransform;
+            Component::Mesh* mMesh;
 };
