@@ -120,7 +120,8 @@ set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
         src/Engine/Resources.hpp
         src/Engine/Audio/Listener.hpp
-        src/Engine/Audio/SoundSystem.cpp
+        src/Engine/Audio/SoundFile.hpp
+        src/Engine/Audio/SoundSystem.hpp
         src/Engine/Geometry/Cube.hpp
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Shader/Shader.hpp
