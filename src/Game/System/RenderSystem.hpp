@@ -2,6 +2,7 @@
 
 class Entity;
 class ShaderProgram;
+class Scene;
 
 class RenderSystem {
     public:
@@ -15,12 +16,11 @@ class RenderSystem {
         /// Initialize components.
         void Init(ShaderProgram* shaderProgram);
 
-        /// Render array of Entities .
+        /// Render Scene containing entities.
         /**
-        * @param entityArr Array of Entities.
-        * @param nrOfEntities Number of entities in entityArr.
+        * @param scene Contains a bunch of entities.
         */
-        void Render(Entity** entityArr, unsigned int nrOfEntities);
+        void Render(Scene* scene);
 
     private:
         ShaderProgram* mShaderProgram;

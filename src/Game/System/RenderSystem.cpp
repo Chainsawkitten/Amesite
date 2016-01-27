@@ -13,6 +13,7 @@
 #include "Default3D.frag.hpp"
 #include "Default3D.vert.hpp"
 
+#include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
 #include <Engine/Component/Lens.hpp>
 #include <Engine/Component/Transform.hpp>
@@ -30,32 +31,32 @@ void RenderSystem::Init(ShaderProgram* shaderProgram) {
     mShaderProgram = shaderProgram;
 }
 
-void RenderSystem::Render(Entity** entityArr, unsigned int nrOfEntities) {
+void RenderSystem::Render(Scene* scene) {
     Entity* camera = nullptr;
-    
-    // Finds camera in scene
-    for (unsigned int i = 0; i < nrOfEntities && camera == nullptr; i++) {
-        if (entityArr[i]->GetComponent<Component::Lens>() != nullptr && entityArr[i]->GetComponent<Component::Transform>() != nullptr) {
-            camera = entityArr[i];
+
+    // Finds camera in scene.
+    for (unsigned int i = 0; i < scene->Size() && camera == nullptr; i++) {
+        if ((*scene)[i]->GetComponent<Component::Lens>() != nullptr && (*scene)[i]->GetComponent<Component::Transform>() != nullptr) {
+            camera = (*scene)[i];
         }
     }
 
-    // Render from camera
-    if(camera != nullptr) {
+    // Render from camera.
+    if (camera != nullptr) {
         glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->mPosition);
         glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(glm::vec2(800, 600));
 
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
 
-        // Finds models in scene
-        for (unsigned int i = 0; i < nrOfEntities; i++) {
-            if (entityArr[i]->GetComponent<Component::Transform>() != nullptr && entityArr[i]->GetComponent<Component::Mesh>()) {
-                Entity* model = entityArr[i];
+        // Finds models in scene.
+        for (unsigned int i = 0; i < scene->Size(); i++) {
+            if ((*scene)[i]->GetComponent<Component::Transform>() != nullptr && (*scene)[i]->GetComponent<Component::Mesh>()) {
+                Entity* model = (*scene)[i];
                 
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
 
-                // Render model
+                // Render model.
                 glm::mat4 modelMat = glm::translate(glm::mat4(), model->GetComponent<Component::Transform>()->mPosition) * model->GetComponent<Component::Transform>()->GetOrientation() * glm::scale(glm::mat4(), model->GetComponent<Component::Transform>()->mScale);
                 glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
 

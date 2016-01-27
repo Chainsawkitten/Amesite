@@ -115,6 +115,7 @@ set(ENGINE_SRCS
         src/Engine/Component/Transform.cpp
         src/Engine/Component/Mesh.cpp
         src/Engine/Entity/Entity.cpp
+		src/Engine/Scene/Scene.cpp
     )
 
 set(ENGINE_HEADERS
@@ -131,6 +132,7 @@ set(ENGINE_HEADERS
         src/Engine/Component/Transform.hpp
         src/Engine/Component/Mesh.hpp
         src/Engine/Entity/Entity.hpp
+		src/Engine/Scene/Scene.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})

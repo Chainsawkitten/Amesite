@@ -17,6 +17,7 @@
 
 #include "System/RenderSystem.hpp"
 
+#include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
 
 #include <Engine/Component/Transform.hpp>
@@ -47,23 +48,22 @@ int main() {
     shaderProgram->Use();
 
     // RenderSystem.
-    RenderSystem renderSystem = RenderSystem(shaderProgram);
+    RenderSystem renderSystem(shaderProgram);
 
-    // --- Scene. --- 
-    Entity cubeEntity;
-    cubeEntity.AddComponent<Component::Mesh>();
-    cubeEntity.AddComponent<Component::Transform>();
-    cubeEntity.GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    // Scene and Entites. 
+    Scene scene;
 
-    Entity cameraEntity;
-    cameraEntity.AddComponent<Component::Lens>();
-    cameraEntity.AddComponent<Component::Transform>();
+    Entity* cubeEntity = scene.CreateEntity();
+    cubeEntity->AddComponent<Component::Mesh>();
+    cubeEntity->AddComponent<Component::Transform>();
+    cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
 
-    cameraEntity.GetComponent<Component::Transform>()->Move(-3.f, 0.5f, 5.f);
-    cameraEntity.GetComponent<Component::Transform>()->Rotate(-15.f, 0.f, 0.f);
+    Entity* cameraEntity = scene.CreateEntity();
+    cameraEntity->AddComponent<Component::Lens>();
+    cameraEntity->AddComponent<Component::Transform>();
 
-    Entity* scene[2] = { &cubeEntity, &cameraEntity };
-    // --------
+    cameraEntity->GetComponent<Component::Transform>()->Move(-3.f, 0.5f, 5.f);
+    cameraEntity->GetComponent<Component::Transform>()->Rotate(-15.f, 0.f, 0.f);
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -72,11 +72,11 @@ int main() {
         lastTime = glfwGetTime();
 
         // Move camera
-        cameraEntity.GetComponent<Component::Transform>()->Move(0.01f, 0.0f, 0.f);
+        cameraEntity->GetComponent<Component::Transform>()->Move(0.01f, 0.0f, 0.f);
 
         // Render.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        renderSystem.Render(scene, 2);
+        renderSystem.Render(&scene);
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
