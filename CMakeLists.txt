@@ -101,6 +101,8 @@ endif(DOXYGEN_FOUND)
 set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
         src/Engine/Resources.cpp
+        src/Engine/Audio/Listener.cpp
+        src/Engine/Audio/SoundSystem.cpp
         src/Engine/Geometry/Cube.cpp
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Shader/Shader.cpp
@@ -117,6 +119,8 @@ set(ENGINE_SRCS
 set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
         src/Engine/Resources.hpp
+        src/Engine/Audio/Listener.hpp
+        src/Engine/Audio/SoundSystem.cpp
         src/Engine/Geometry/Cube.hpp
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Shader/Shader.hpp
