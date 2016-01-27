@@ -15,6 +15,8 @@
 #include "Util/GameSettings.hpp"
 #include <Util/FileSystem.hpp>
 
+#include "System/RenderSystem.hpp"
+
 #include <Engine/Entity/Entity.hpp>
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Lens.hpp>
@@ -39,7 +41,6 @@ int main() {
 
     Geometry::Cube cubeDefenderOfThePolyverse;
     Component::Transform cubeTransform;
-
     
     Shader* vertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     Shader* fragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
@@ -53,6 +54,9 @@ int main() {
     testCamera.GetComponent<Component::Transform>()->Rotate(-15.f, 0.f, 0.f);
 
     shaderProgram->Use();
+
+    //RenderSystem renderSystem;
+    //renderSystem.Render(&testCamera, 1);
 
     glBindVertexArray(cubeDefenderOfThePolyverse.GetVertexArray());
     
