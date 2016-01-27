@@ -38,7 +38,7 @@ int main() {
     MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Modership", GameSettings::GetInstance().GetBool("Debug Context"));
     glewInit();
     window->Init();
-
+    
     Entity cubeEntity;
     cubeEntity.AddComponent<Component::Mesh>();
     cubeEntity.AddComponent<Component::Transform>();
@@ -51,13 +51,13 @@ int main() {
     Entity testCamera;
     testCamera.AddComponent<Component::Lens>();
     testCamera.AddComponent<Component::Transform>();
-
-
+    
+    
     testCamera.GetComponent<Component::Transform>()->Move(-3.f, 0.5f, 5.f);
     testCamera.GetComponent<Component::Transform>()->Rotate(-15.f, 0.f, 0.f);
-
+    
     shaderProgram->Use();
-
+    
     glBindVertexArray(cubeEntity.GetComponent<Component::Mesh>()->geometry->GetVertexArray());
     
     
@@ -66,17 +66,18 @@ int main() {
     double lastTimeRender = glfwGetTime();
     while (!window->ShouldClose()) {
         lastTime = glfwGetTime();
-
+        
         testCamera.GetComponent<Component::Transform>()->Move(0.01f, 0.0f, 0.f);
-
-        glm::mat4 model = glm::translate(glm::mat4(), cubeEntity.GetComponent<Component::Transform>()->mPosition) * cubeEntity.GetComponent<Component::Transform>()->GetOrientation() * glm::scale(glm::mat4(), cubeEntity.GetComponent<Component::Transform>()->mScale);
-        glm::mat4 view = testCamera.GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -testCamera.GetComponent<Component::Transform>()->mPosition);
+        
+        Component::Transform* cubeTransform = cubeEntity.GetComponent<Component::Transform>();
+        glm::mat4 model = glm::translate(glm::mat4(), cubeTransform->position) * cubeTransform->GetOrientation() * glm::scale(glm::mat4(), cubeTransform->scale);
+        glm::mat4 view = testCamera.GetComponent<Component::Transform>()->GetOrientation() * glm::translate(glm::mat4(), -testCamera.GetComponent<Component::Transform>()->position);
         glm::mat4 projection = testCamera.GetComponent<Component::Lens>()->GetProjection(glm::vec2(800, 600));
-
+        
         glUniformMatrix4fv(shaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &model[0][0]);
         glUniformMatrix4fv(shaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &view[0][0]);
         glUniformMatrix4fv(shaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projection[0][0]);
-
+        
         // Render.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
@@ -102,11 +103,11 @@ int main() {
     Resources().FreeShaderProgram(shaderProgram);
     Resources().FreeShader(vertShader);
     Resources().FreeShader(fragShader);
-
+    
     Resources().FreeCube();
     
     delete window;
-
+    
     glfwTerminate();
     
     GameSettings::GetInstance().Save();
