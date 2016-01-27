@@ -103,6 +103,7 @@ set(ENGINE_SRCS
         src/Engine/Resources.cpp
         src/Engine/Audio/Listener.cpp
         src/Engine/Audio/SoundSystem.cpp
+        src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
         src/Engine/Geometry/Cube.cpp
         src/Engine/Geometry/Geometry3D.cpp
@@ -123,6 +124,7 @@ set(ENGINE_HEADERS
         src/Engine/Audio/Listener.hpp
         src/Engine/Audio/SoundFile.hpp
         src/Engine/Audio/SoundSystem.hpp
+        src/Engine/Audio/VorbisFile.hpp
         src/Engine/Audio/WaveFile.hpp
         src/Engine/Geometry/Cube.hpp
         src/Engine/Geometry/Geometry3D.hpp
