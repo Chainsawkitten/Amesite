@@ -39,6 +39,62 @@ int main() {
     glewInit();
     window->Init();
 
+    const int nrOfCubes = 10;
+    Entity caveSystem[nrOfCubes];
+    caveSystem[0].AddComponent<Component::Mesh>();
+    caveSystem[0].AddComponent<Component::Transform>();
+    caveSystem[0].GetComponent<Component::Transform>()->Move(glm::vec3(4.f, 0.f, 4.f));
+    caveSystem[0].GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
+    caveSystem[1].AddComponent<Component::Mesh>();
+    caveSystem[1].AddComponent<Component::Transform>();
+    caveSystem[1].GetComponent<Component::Transform>()->Move(glm::vec3(4.f, 0.f, 3.f));
+    caveSystem[1].GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
+    caveSystem[2].AddComponent<Component::Mesh>();
+    caveSystem[2].AddComponent<Component::Transform>();
+    caveSystem[2].GetComponent<Component::Transform>()->Move(glm::vec3(4.f, 0.f, 2.f));
+    caveSystem[2].GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
+    caveSystem[2].AddComponent<Component::Mesh>();
+    caveSystem[2].AddComponent<Component::Transform>();
+    caveSystem[2].GetComponent<Component::Transform>()->Move(glm::vec3(4.f, 0.f, 1.f));
+    caveSystem[2].GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
+    caveSystem[3].AddComponent<Component::Mesh>();
+    caveSystem[3].AddComponent<Component::Transform>();
+    caveSystem[3].GetComponent<Component::Transform>()->Move(glm::vec3(4.f, 0.f, 0.f));
+    caveSystem[3].GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
+    caveSystem[4].AddComponent<Component::Mesh>();
+    caveSystem[4].AddComponent<Component::Transform>();
+    caveSystem[4].GetComponent<Component::Transform>()->Move(glm::vec3(4.f, 0.f, -1.f));
+    caveSystem[4].GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
+    caveSystem[5].AddComponent<Component::Mesh>();
+    caveSystem[5].AddComponent<Component::Transform>();
+    caveSystem[5].GetComponent<Component::Transform>()->Move(glm::vec3(4.f, 0.f, -2.f));
+    caveSystem[5].GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
+    caveSystem[6].AddComponent<Component::Mesh>();
+    caveSystem[6].AddComponent<Component::Transform>();
+    caveSystem[6].GetComponent<Component::Transform>()->Move(glm::vec3(4.f, 0.f, -3.f));
+    caveSystem[6].GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
+    caveSystem[7].AddComponent<Component::Mesh>();
+    caveSystem[7].AddComponent<Component::Transform>();
+    caveSystem[7].GetComponent<Component::Transform>()->Move(glm::vec3(3.f, 0.f, -3.f));
+    caveSystem[7].GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
+    caveSystem[8].AddComponent<Component::Mesh>();
+    caveSystem[8].AddComponent<Component::Transform>();
+    caveSystem[8].GetComponent<Component::Transform>()->Move(glm::vec3(2.f, 0.f, -3.f));
+    caveSystem[8].GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
+    caveSystem[9].AddComponent<Component::Mesh>();
+    caveSystem[9].AddComponent<Component::Transform>();
+    caveSystem[9].GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0.f, -3.f));
+    caveSystem[9].GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     
     Shader* vertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     Shader* fragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
