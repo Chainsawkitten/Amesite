@@ -22,7 +22,7 @@ Entity* Scene::CreateEntity() {
     return entity;
 }
 
-unsigned int Scene::Size() {
+unsigned int Scene::Size() const {
     return mEntityVec.size();
 }
 

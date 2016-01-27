@@ -16,7 +16,7 @@ class Scene {
         Entity* CreateEntity();
 
         /// Return number of Entities in Scene.
-        unsigned int Size();
+        unsigned int Size() const;
 
         /// Clear Scene of all entities
         void Clear();
