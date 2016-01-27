@@ -4,12 +4,12 @@
 using namespace Component;
 
 Transform::Transform() {
-    mPosition = glm::vec3(0.f, 0.f, 0.f);
-    mScale = glm::vec3(1.f, 1.f, 1.f);
+    position = glm::vec3(0.f, 0.f, 0.f);
+    scale = glm::vec3(1.f, 1.f, 1.f);
 
-    mHorizontalAngle = 0.f;
-    mVerticalAngle = 0.f;
-    mTiltAngle = 0.f;
+    yaw = 0.f;
+    pitch = 0.f;
+    roll = 0.f;
 }
 
 Transform::~Transform() {
@@ -18,30 +18,30 @@ Transform::~Transform() {
 
 glm::mat4 Transform::GetOrientation() const {
     glm::mat4 orientation;
-    orientation = glm::rotate(orientation, glm::radians(mHorizontalAngle), glm::vec3(0, 1, 0));
-    orientation = glm::rotate(orientation, glm::radians(mVerticalAngle), glm::vec3(1, 0, 0));
-    orientation = glm::rotate(orientation, glm::radians(mTiltAngle), glm::vec3(0, 0, 1));
+    orientation = glm::rotate(orientation, glm::radians(yaw), glm::vec3(0, 1, 0));
+    orientation = glm::rotate(orientation, glm::radians(pitch), glm::vec3(1, 0, 0));
+    orientation = glm::rotate(orientation, glm::radians(roll), glm::vec3(0, 0, 1));
     return orientation;
 }
 
-void Transform::Rotate(float horizontalAngle, float verticalAngle, float tiltAngle) {
-    mHorizontalAngle = fmodf(horizontalAngle + mHorizontalAngle, 360.f);
-    if (mHorizontalAngle < 0.f)
-        mHorizontalAngle += 360.f;
+void Transform::Rotate(float yaw, float pitch, float roll) {
+    this->yaw = fmodf(yaw + this->yaw, 360.f);
+    if (this->yaw < 0.f)
+        this->yaw += 360.f;
 
-    mVerticalAngle = fmodf(verticalAngle + mVerticalAngle, 360.f);
-    if (mVerticalAngle < 0.f)
-        mVerticalAngle += 360.f;
+    this->pitch = fmodf(pitch + this->pitch, 360.f);
+    if (this->pitch < 0.f)
+        this->pitch += 360.f;
 
-    mTiltAngle = fmodf(tiltAngle + mTiltAngle, 360.f);
-    if (mTiltAngle < 0.f)
-        mTiltAngle += 360.f;
+    this->roll = fmodf(roll + this->roll, 360.f);
+    if (this->roll < 0.f)
+        this->roll += 360.f;
 }
 
 void Transform::Move(const glm::vec3 &offset) {
-    mPosition += offset;
+    position += offset;
 }
 
 void Transform::Move(float x, float y, float z) {
-    mPosition += glm::vec3(x,y,z);
+    position += glm::vec3(x, y, z);
 }

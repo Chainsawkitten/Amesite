@@ -22,11 +22,11 @@ namespace Component{
         /// Set rotation by an offset.
         /**
          * Rotate the object relative to its current rotation.
-         * @param horizontalAngle Relative horizontal rotation (in degrees).
-         * @param verticalAngle Relative vertical rotation (in degrees).
-         * @param tiltAngle Relative tilt rotation (in degrees).
+         * @param yaw Relative yaw (in degrees).
+         * @param pitch Relative pitch (in degrees).
+         * @param roll Relative roll (in degrees).
          */
-        void Rotate(float horizontalAngle, float verticalAngle, float tiltAngle);
+        void Rotate(float yaw, float pitch, float roll);
 
         /// Move the current position by an offset.
         /**
@@ -45,19 +45,19 @@ namespace Component{
         void Move(float x, float y, float z);
         
         /// Position in the world.
-        glm::vec3 mPosition;
+        glm::vec3 position;
         
         /// Scale.
-        glm::vec3 mScale;
+        glm::vec3 scale;
         
         /// Yaw (in degrees).
-        float mHorizontalAngle;
+        float yaw;
         
         /// Pitch (in degrees).
-        float mVerticalAngle;
+        float pitch;
         
         /// Roll (in degrees).
-        float mTiltAngle;
+        float roll;
 
     };
 
