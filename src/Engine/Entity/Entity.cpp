@@ -2,10 +2,12 @@
 
 #include "../Component/Transform.hpp"
 #include "../Component/Lens.hpp"
+#include "../Component/Mesh.hpp"
 
 Entity::Entity() {
     mLens = nullptr;
     mTransform = nullptr;
+    mMesh = nullptr;
 }
 
 Component::Lens* Entity::CreateLens() {
@@ -20,6 +22,13 @@ Component::Transform* Entity::CreateTransform() {
     return nullptr;
 }
 
+Component::Mesh* Entity::CreateMesh() {
+    if (mMesh == nullptr)
+        return mMesh = new Component::Mesh();
+    return nullptr;
+}
+
+
 
 Entity::~Entity() {
     if (mLens != nullptr)
@@ -27,4 +36,7 @@ Entity::~Entity() {
 
     if (mTransform != nullptr)
         delete mTransform;
+
+    if (mMesh != nullptr)
+        delete mMesh;
 }

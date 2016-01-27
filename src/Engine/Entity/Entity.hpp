@@ -3,6 +3,7 @@
 namespace Component {
     class Transform;
     class Lens;
+    class Mesh;
 }
 
 class Entity {
@@ -20,6 +21,7 @@ class Entity {
         template<typename T> T* AddComponent() { return nullptr; }
         template<> Component::Lens* AddComponent<Component::Lens>() { return CreateLens(); }
         template<> Component::Transform* AddComponent<Component::Transform>() { return CreateTransform(); }
+        template<> Component::Mesh* AddComponent<Component::Mesh>() { return CreateMesh(); }
 
         /// Get Component of Entity
         /**
@@ -28,11 +30,14 @@ class Entity {
         template<typename T> T* GetComponent() { return nullptr; }
         template<> Component::Lens* GetComponent<Component::Lens>() { return mLens; }
         template<> Component::Transform* GetComponent<Component::Transform>() { return mTransform; }
+        template<> Component::Mesh* GetComponent<Component::Mesh>() { return mMesh; }
 
     private:
         Component::Lens* CreateLens();
         Component::Transform* CreateTransform();
+        Component::Mesh* CreateMesh();
 
         Component::Lens* mLens;
         Component::Transform* mTransform;
+        Component::Mesh* mMesh;
 };
