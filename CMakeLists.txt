@@ -103,6 +103,7 @@ set(ENGINE_SRCS
         src/Engine/Resources.cpp
         src/Engine/Audio/Listener.cpp
         src/Engine/Audio/SoundBuffer.cpp
+        src/Engine/Audio/SoundSource.cpp
         src/Engine/Audio/SoundSystem.cpp
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
@@ -125,6 +126,7 @@ set(ENGINE_HEADERS
         src/Engine/Audio/Listener.hpp
         src/Engine/Audio/SoundBuffer.hpp
         src/Engine/Audio/SoundFile.hpp
+        src/Engine/Audio/SoundSource.hpp
         src/Engine/Audio/SoundSystem.hpp
         src/Engine/Audio/VorbisFile.hpp
         src/Engine/Audio/WaveFile.hpp
