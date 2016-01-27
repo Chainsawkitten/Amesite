@@ -46,11 +46,11 @@ int main() {
     ShaderProgram* shaderProgram = Resources().CreateShaderProgram( {vertShader, fragShader} );
     
     Entity testCamera;
-    testCamera.CreateLens();
-    testCamera.CreateTransform();
+    testCamera.AddComponent<Component::Lens>();
+    testCamera.AddComponent<Component::Transform>();
 
-    testCamera.mTransform->Move(-3.f, 0.5f, 5.f);
-    testCamera.mTransform->Rotate(-15.f,0.f,0.f);
+    testCamera.GetComponent<Component::Transform>()->Move(-3.f, 0.5f, 5.f);
+    testCamera.GetComponent<Component::Transform>()->Rotate(-15.f, 0.f, 0.f);
 
     shaderProgram->Use();
 
@@ -62,11 +62,11 @@ int main() {
     while (!window->ShouldClose()) {
         lastTime = glfwGetTime();
 
-        testCamera.mTransform->Move(0.01f, 0.0f, 0.f);
+        testCamera.GetComponent<Component::Transform>()->Move(0.01f, 0.0f, 0.f);
 
         glm::mat4 model = glm::translate(glm::mat4(), cubeTransform.mPosition) * cubeTransform.GetOrientation() * glm::scale(glm::mat4(), cubeTransform.mScale);
-        glm::mat4 view = testCamera.mTransform->GetOrientation()*glm::translate(glm::mat4(), -testCamera.mTransform->mPosition);
-        glm::mat4 projection = testCamera.mLens->GetProjection(glm::vec2(800, 600));
+        glm::mat4 view = testCamera.GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -testCamera.GetComponent<Component::Transform>()->mPosition);
+        glm::mat4 projection = testCamera.GetComponent<Component::Lens>()->GetProjection(glm::vec2(800, 600));
 
         glUniformMatrix4fv(shaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &model[0][0]);
         glUniformMatrix4fv(shaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &view[0][0]);
