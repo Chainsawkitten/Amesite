@@ -114,6 +114,7 @@ set(ENGINE_SRCS
         src/Engine/Util/FileSystem.cpp
         src/Engine/Util/Log.cpp
         src/Engine/Util/Settings.cpp
+        src/Engine/Util/Input.cpp
         src/Engine/Component/Lens.cpp
         src/Engine/Component/Transform.cpp
         src/Engine/Component/Mesh.cpp
@@ -137,6 +138,7 @@ set(ENGINE_HEADERS
         src/Engine/Util/FileSystem.hpp
         src/Engine/Util/Log.hpp
         src/Engine/Util/Settings.hpp
+        src/Engine/Util/Input.hpp
         src/Engine/Component/Lens.hpp
         src/Engine/Component/Transform.hpp
         src/Engine/Component/Mesh.hpp
