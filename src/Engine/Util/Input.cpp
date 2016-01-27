@@ -103,12 +103,10 @@ void InputHandler::Update() {
                     if (mJoystickAxis[player][button]) {
                         value = mJoystickAxisData[player][key];
                         // Buttons of joystick.
-                    }
-                    else {
+                    } else {
                         if (mJoystickButtonPressed[player][button] == GLFW_PRESS) {
                             value = 1.0;
-                        }
-                        else {
+                        } else {
                             value = 0.0;
                         }
                     }
@@ -128,8 +126,7 @@ void InputHandler::Update() {
         mButtonReleased[ANYONE][button] = mButtonReleased[PLAYER_ONE][button] || mButtonReleased[PLAYER_TWO][button];
         if (mButtonValue[PLAYER_ONE][button] == 1.0 || mButtonValue[PLAYER_ONE][button] == 1.0) {
             mButtonValue[ANYONE][button] = 1.0;
-        }
-        else {
+        } else {
             mButtonValue[ANYONE][button] = 0.0;
         }
     }
