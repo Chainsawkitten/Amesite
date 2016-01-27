@@ -209,5 +209,3 @@ private:
 * @return The currently active input handler or nullptr.
 */
 InputHandler* Input();
-
-/** @} */
