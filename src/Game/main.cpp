@@ -45,15 +45,14 @@ int main() {
     testCamera.CreateLens();
     testCamera.CreateTransform();
 
-    testCamera.mTransform->Move(-1.f, 1.f, -1.f);
-    testCamera.mTransform->Rotate(30.f, 20.f, 0.f);
+    testCamera.mTransform->Move(2.f, 0.5f, 5.f);
+    testCamera.mTransform->Rotate(-15.f,0.f,0.f);
 
     shaderProgram->Use();
 
     glm::mat4 model = glm::translate(glm::mat4(), cubeTransform.mPosition) * cubeTransform.GetOrientation() * glm::scale(glm::mat4(), cubeTransform.mScale);
-
     glm::mat4 view = testCamera.mTransform->GetOrientation()*glm::translate(glm::mat4(),-testCamera.mTransform->mPosition);
-    glm::mat4 projection = testCamera.mLens->GetProjection(glm::vec2(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height")));
+    glm::mat4 projection = testCamera.mLens->GetProjection(glm::vec2(800,600));
 
     glBindVertexArray(cubeDefenderOfThePolyverse.GetVertexArray());
 
