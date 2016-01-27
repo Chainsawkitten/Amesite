@@ -13,7 +13,7 @@ namespace Component {
 
             ///Create projection matrix
             /**
-            *@param screenSize
+            *@param vec2 screen size in pixels
             *@return mat4 containing projection matrix
             */
             glm::mat4 GetProjection(const glm::vec2& screenSize) const;

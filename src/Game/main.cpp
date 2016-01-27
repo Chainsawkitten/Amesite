@@ -97,7 +97,7 @@ int main() {
     Resources().FreeShaderProgram(shaderProgram);
     Resources().FreeShader(vertShader);
     Resources().FreeShader(fragShader);
-    
+
     Resources().FreeCube();
     
     delete window;
