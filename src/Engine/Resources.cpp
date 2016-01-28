@@ -3,6 +3,7 @@
 #include "Shader/ShaderProgram.hpp"
 #include "Shader/Shader.hpp"
 #include "Geometry/Cube.hpp"
+#include "Geometry/Square.hpp"
 
 using namespace std;
 
@@ -133,6 +134,21 @@ void ResourceManager::FreeCube() {
     
     if (mCubeCount <= 0)
         delete mCube;
+}
+
+Geometry::Square* ResourceManager::CreateSquare() {
+    if (mSquareCount == 0)
+        mSquare = new Geometry::Square();
+    
+    mSquareCount++;
+    return mSquare;
+}
+
+void ResourceManager::FreeSquare() {
+    mSquareCount--;
+    
+    if (mSquareCount <= 0)
+        delete mSquare;
 }
 
 ResourceManager& Resources() {

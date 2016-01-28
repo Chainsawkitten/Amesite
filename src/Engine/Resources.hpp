@@ -7,6 +7,7 @@ class Shader;
 class ShaderProgram;
 namespace Geometry {
     class Cube;
+    class Square;
 }
 
 /// Handles all resource loading.
@@ -47,7 +48,7 @@ class ResourceManager {
          * \endcode
          *
          * @param shaders List of shaders to link together.
-         * @return The shader program instance
+         * @return The shader program instance.
          */
         ShaderProgram* CreateShaderProgram(std::initializer_list<const Shader*> shaders);
         
@@ -60,7 +61,7 @@ class ResourceManager {
         
         /// Create a cube for rendering if it doesn't already exist.
         /**
-         * @return The cube instance
+         * @return The cube instance.
          */
         Geometry::Cube* CreateCube();
         
@@ -69,6 +70,18 @@ class ResourceManager {
          * Deletes the instance if no more references exist.
          */
         void FreeCube();
+        
+        /// Create a square for rendering if it doesn't already exist.
+        /**
+         * @return The square instance.
+         */
+        Geometry::Square* CreateSquare();
+        
+        /// Free the reference to the square.
+        /**
+         * Deletes the instance if no more references exist.
+         */
+        void FreeSquare();
         
     private:
         ResourceManager();
@@ -106,6 +119,10 @@ class ResourceManager {
         // Cube
         Geometry::Cube* mCube;
         int mCubeCount;
+        
+        // Square
+        Geometry::Square* mSquare;
+        int mSquareCount;
 };
 
 /// Get the resource manager.
