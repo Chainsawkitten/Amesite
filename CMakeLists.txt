@@ -130,7 +130,7 @@ set(ENGINE_SRCS
         src/Engine/Component/Lens.cpp
         src/Engine/Component/Transform.cpp
         src/Engine/Component/Mesh.cpp
-        src/Engine/Component/Parent.cpp
+        src/Engine/Component/RelativeTransform.cpp
         src/Engine/Entity/Entity.cpp
         src/Engine/Scene/Scene.cpp
         src/Engine/System/RenderSystem.cpp
@@ -161,7 +161,7 @@ set(ENGINE_HEADERS
         src/Engine/Component/Lens.hpp
         src/Engine/Component/Transform.hpp
         src/Engine/Component/Mesh.hpp
-        src/Engine/Component/Parent.hpp
+        src/Engine/Component/RelativeTransform.hpp
         src/Engine/Entity/Entity.hpp
         src/Engine/Scene/Scene.hpp
         src/Engine/System/RenderSystem.hpp
