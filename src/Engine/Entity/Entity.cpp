@@ -3,6 +3,7 @@
 #include "../Component/Transform.hpp"
 #include "../Component/Lens.hpp"
 #include "../Component/Mesh.hpp"
+#include "../Component/RelativeTransform.hpp"
 
 Entity::Entity() {
     mLens = nullptr;
@@ -36,5 +37,13 @@ Component::Transform* Entity::CreateTransform() {
 Component::Mesh* Entity::CreateMesh() {
     if (mMesh == nullptr)
         return mMesh = new Component::Mesh();
+    return nullptr;
+}
+
+Component::RelativeTransform* Entity::CreateRelativeTransform() {
+    //if (mTransofmr == nullptr) {
+    //    mRelativeTransform = new RelativeTransform();
+    //    return mTransform = mRelativeTransform;
+    //}
     return nullptr;
 }

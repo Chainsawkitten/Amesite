@@ -50,7 +50,7 @@ int main() {
 
     Entity* cubeEntity = scene.CreateEntity();
     cubeEntity->AddComponent<Component::Mesh>();
-    cubeEntity->AddComponent<Component::Transform>();
+    cubeEntity->AddComponent<Component::Transform>(); //RelativeTranform
     cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
 
     Entity* cameraEntity = scene.CreateEntity();
