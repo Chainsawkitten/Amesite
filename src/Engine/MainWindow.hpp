@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 struct GLFWwindow;
 
 /// The main game window in which the game is contained.
@@ -22,6 +24,12 @@ class MainWindow {
         /// Initialize components.
         void Init();
         
+        /// Get the size of the window.
+        /**
+         * @return The size of the window in pixels.
+         */
+        const glm::vec2& GetSize() const;
+        
         /// Set window title.
         /**
          * @param title New window title.
@@ -40,4 +48,5 @@ class MainWindow {
     private:
         GLFWwindow* mWindow;
         bool mDebugContext;
+        glm::vec2 mSize;
 };

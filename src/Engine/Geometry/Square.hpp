@@ -39,7 +39,7 @@ namespace Geometry {
              */
             unsigned int GetIndexCount() const;
             
-            /// Render the rectangle with a solid color.
+            /// Render the square with a solid color.
             /**
              * @param position Position on the screen in pixels.
              * @param size Size in pixels.
