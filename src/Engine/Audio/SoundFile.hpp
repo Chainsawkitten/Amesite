@@ -9,7 +9,7 @@ namespace Audio {
      */
     class SoundFile {
         public:
-            /// Destructor
+            /// Destructor.
             virtual ~SoundFile() { }
     
             /// Get raw audio data.

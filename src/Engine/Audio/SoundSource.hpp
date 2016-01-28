@@ -18,7 +18,7 @@ namespace Audio {
              */
             Sound(SoundBuffer* buffer);
             
-            /// Destructor
+            /// Destructor.
             ~Sound();
             
             /// Get position.

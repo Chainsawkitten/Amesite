@@ -17,7 +17,7 @@ namespace Audio {
              */
             SoundSystem();
     
-            /// Destructor
+            /// Destructor.
             /**
              * Closes the audio device and destroys the audio context.
              */

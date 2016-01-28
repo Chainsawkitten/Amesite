@@ -14,7 +14,7 @@ namespace Audio {
              */
             SoundBuffer(SoundFile* soundFile);
             
-            /// Destructor
+            /// Destructor.
             ~SoundBuffer();
             
             /// Get AL buffer.
