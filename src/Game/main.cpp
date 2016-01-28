@@ -55,7 +55,7 @@ int main() {
     cameraEntity->GetComponent<Component::Transform>()->Move(-3.f, 0.5f, 5.f);
     cameraEntity->GetComponent<Component::Transform>()->Rotate(-15.f, 0.f, 0.f);
     
-    Texture2D* testTexture = new Texture2D("Resources/TestTexture.png");
+    Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -87,7 +87,7 @@ int main() {
         glfwPollEvents();
     }
     
-    delete testTexture;
+    Resources().FreeTexture2DFromFile(testTexture);
     Resources().FreeCube();
     
     delete window;

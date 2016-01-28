@@ -9,6 +9,7 @@ namespace Geometry {
     class Cube;
     class Square;
 }
+class Texture2D;
 
 /// Handles all resource loading.
 class ResourceManager {
@@ -83,6 +84,35 @@ class ResourceManager {
          */
         void FreeSquare();
         
+        /// Create a 2D texture if it doesn't already exist.
+        /**
+		 * @param data Image file data.
+		 * @param dataLength Length of the image file data.
+		 * @return The %Texture2D instance
+		 */
+        Texture2D* CreateTexture2D(const char* data, int dataLength);
+        
+        /// Free the reference to the 2D texture.
+        /**
+         * Deletes the instance if no more references exist.
+         * @param texture %Texture to dereference.
+         */
+        void FreeTexture2D(Texture2D* texture);
+        
+        /// Create a 2D texture if it doesn't already exist.
+        /**
+		 * @param filename Filename of image file.
+		 * @return The %Texture2D instance
+		 */
+        Texture2D* CreateTexture2DFromFile(std::string filename);
+        
+        /// Free the reference to the 2D texture.
+        /**
+         * Deletes the instance if no more references exist.
+         * @param texture %Texture to dereference.
+         */
+        void FreeTexture2DFromFile(Texture2D* texture);
+        
     private:
         ResourceManager();
         ResourceManager(ResourceManager const&);
@@ -123,6 +153,18 @@ class ResourceManager {
         // Square
         Geometry::Square* mSquare;
         int mSquareCount;
+        
+        // Texture2D
+        struct Texture2DInstance {
+            Texture2D* texture;
+            int count;
+        };
+        std::map<const char*, Texture2DInstance> mTextures;
+        std::map<Texture2D*, const char*> mTexturesInverse;
+        
+        // Texture2D from file
+        std::map<std::string, Texture2DInstance> mTexturesFromFile;
+        std::map<Texture2D*, std::string> mTexturesFromFileInverse;
 };
 
 /// Get the resource manager.
