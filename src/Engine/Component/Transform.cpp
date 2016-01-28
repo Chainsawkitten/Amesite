@@ -16,6 +16,10 @@ Transform::~Transform() {
 
 }
 
+glm::mat4 Transform::GetModelMatrix() const {
+	return glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
+}
+
 glm::mat4 Transform::GetOrientation() const {
     glm::mat4 orientation;
     orientation = glm::rotate(orientation, glm::radians(yaw), glm::vec3(0, 1, 0));
