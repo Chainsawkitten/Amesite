@@ -29,6 +29,8 @@ RenderSystem::~RenderSystem() {
 
 void RenderSystem::Init(ShaderProgram* shaderProgram) {
     mShaderProgram = shaderProgram;
+    if (mShaderProgram != nullptr)
+        mShaderProgram->Use();
 }
 
 void RenderSystem::Render(Scene* scene) {

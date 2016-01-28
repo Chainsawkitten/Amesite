@@ -45,7 +45,6 @@ int main() {
     Shader* vertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     Shader* fragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     ShaderProgram* shaderProgram = Resources().CreateShaderProgram( {vertShader, fragShader} );
-    shaderProgram->Use();
 
     // RenderSystem.
     RenderSystem renderSystem(shaderProgram);
