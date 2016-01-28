@@ -55,6 +55,8 @@ endfunction()
 set(EMBEDDED_INPUT
         shaders/Default3D.frag
         shaders/Default3D.vert
+        shaders/Default2D.vert
+        shaders/SingleColor2D.frag
     )
 
 # Headerize
@@ -107,9 +109,10 @@ set(ENGINE_SRCS
         src/Engine/Audio/SoundSystem.cpp
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
-        src/Engine/Geometry/Cube.cpp
         src/Engine/Geometry/Geometry2D.cpp
+        src/Engine/Geometry/Square.cpp
         src/Engine/Geometry/Geometry3D.cpp
+        src/Engine/Geometry/Cube.cpp
         src/Engine/Shader/Shader.cpp
         src/Engine/Shader/ShaderProgram.cpp
         src/Engine/Util/FileSystem.cpp
@@ -136,9 +139,10 @@ set(ENGINE_HEADERS
         src/Engine/Audio/SoundSystem.hpp
         src/Engine/Audio/VorbisFile.hpp
         src/Engine/Audio/WaveFile.hpp
-        src/Engine/Geometry/Cube.hpp
         src/Engine/Geometry/Geometry2D.hpp
+        src/Engine/Geometry/Square.hpp
         src/Engine/Geometry/Geometry3D.hpp
+        src/Engine/Geometry/Cube.hpp
         src/Engine/Shader/Shader.hpp
         src/Engine/Shader/ShaderProgram.hpp
         src/Engine/Util/FileSystem.hpp
