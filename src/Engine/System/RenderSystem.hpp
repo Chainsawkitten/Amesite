@@ -5,9 +5,9 @@ class Scene;
 class Shader;
 class ShaderProgram;
 
+/// System to render a scene.
 class RenderSystem {
     public:
-
         /// Create new render system.
         RenderSystem();
 
@@ -16,8 +16,8 @@ class RenderSystem {
 
         /// Render Scene containing entities.
         /**
-        * @param scene Contains a bunch of entities.
-        */
+         * @param scene Contains a bunch of entities.
+         */
         void Render(const Scene& scene);
 
     private:
