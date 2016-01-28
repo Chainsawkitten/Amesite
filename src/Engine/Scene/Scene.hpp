@@ -29,7 +29,7 @@ class Scene {
         * @param index The index of the Entity.
         * @return Entity on index, else nullptr.
         */
-        Entity* operator[](unsigned int index);
+        Entity* operator[](unsigned int index) const;
 
     private:
         std::vector<Entity*> mEntityVec;

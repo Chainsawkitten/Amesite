@@ -41,13 +41,9 @@ int main() {
     MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Modership", GameSettings::GetInstance().GetBool("Debug Context"));
     glewInit();
     window->Init();
-    
-    Shader* vertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    ShaderProgram* shaderProgram = Resources().CreateShaderProgram( {vertShader, fragShader} );
 
     // RenderSystem.
-    RenderSystem renderSystem(shaderProgram);
+    RenderSystem renderSystem;
 
     // Scene and Entites. 
     Scene scene;
@@ -75,7 +71,7 @@ int main() {
 
         // Render.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        renderSystem.Render(&scene);
+        renderSystem.Render(scene);
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
@@ -93,10 +89,6 @@ int main() {
         
         glfwPollEvents();
     }
-    
-    Resources().FreeShaderProgram(shaderProgram);
-    Resources().FreeShader(vertShader);
-    Resources().FreeShader(fragShader);
     
     Resources().FreeCube();
     

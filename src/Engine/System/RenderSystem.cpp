@@ -1,15 +1,11 @@
 #include "RenderSystem.hpp"
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <MainWindow.hpp>
 
-#include <Engine/Geometry/Cube.hpp>
 #include <Engine/Shader/Shader.hpp>
 #include <Engine/Shader/ShaderProgram.hpp>
 
-#include <Resources.hpp>
+#include <Engine/Resources.hpp>
 #include "Default3D.frag.hpp"
 #include "Default3D.vert.hpp"
 
@@ -19,27 +15,26 @@
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Mesh.hpp>
 
-RenderSystem::RenderSystem(ShaderProgram* shaderProgram) {
-    Init(shaderProgram);
+RenderSystem::RenderSystem() {
+    mVertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertShader, mFragShader });
+    mShaderProgram->Use();
 }
 
 RenderSystem::~RenderSystem() {
-
+    Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShader(mVertShader);
+    Resources().FreeShader(mFragShader);
 }
 
-void RenderSystem::Init(ShaderProgram* shaderProgram) {
-    mShaderProgram = shaderProgram;
-    if (mShaderProgram != nullptr)
-        mShaderProgram->Use();
-}
-
-void RenderSystem::Render(Scene* scene) {
+void RenderSystem::Render(const Scene& scene) {
     Entity* camera = nullptr;
 
     // Finds camera in scene.
-    for (unsigned int i = 0; i < scene->Size() && camera == nullptr; i++) {
-        if ((*scene)[i]->GetComponent<Component::Lens>() != nullptr && (*scene)[i]->GetComponent<Component::Transform>() != nullptr) {
-            camera = (*scene)[i];
+    for (unsigned int i = 0; i < scene.Size() && camera == nullptr; i++) {
+        if (scene[i]->GetComponent<Component::Lens>() != nullptr && scene[i]->GetComponent<Component::Transform>() != nullptr) {
+            camera = scene[i];
         }
     }
 
@@ -52,9 +47,9 @@ void RenderSystem::Render(Scene* scene) {
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
 
         // Finds models in scene.
-        for (unsigned int i = 0; i < scene->Size(); i++) {
-            if ((*scene)[i]->GetComponent<Component::Transform>() != nullptr && (*scene)[i]->GetComponent<Component::Mesh>()) {
-                Entity* model = (*scene)[i];
+        for (unsigned int i = 0; i < scene.Size(); i++) {
+            if (scene[i]->GetComponent<Component::Transform>() != nullptr && scene[i]->GetComponent<Component::Mesh>()) {
+                Entity* model = scene[i];
                 
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
 

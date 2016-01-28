@@ -32,7 +32,7 @@ void Scene::Clear() {
     mEntityVec.shrink_to_fit();
 }
 
-Entity* Scene::operator[](unsigned int index) {
+Entity* Scene::operator[](unsigned int index) const {
     if (index < mEntityVec.size()) {
         return mEntityVec.at(index);
     }
