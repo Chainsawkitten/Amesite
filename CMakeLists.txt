@@ -108,6 +108,7 @@ set(ENGINE_SRCS
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
         src/Engine/Geometry/Cube.cpp
+        src/Engine/Geometry/Geometry2D.cpp
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Shader/Shader.cpp
         src/Engine/Shader/ShaderProgram.cpp
@@ -136,6 +137,7 @@ set(ENGINE_HEADERS
         src/Engine/Audio/VorbisFile.hpp
         src/Engine/Audio/WaveFile.hpp
         src/Engine/Geometry/Cube.hpp
+        src/Engine/Geometry/Geometry2D.hpp
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Shader/Shader.hpp
         src/Engine/Shader/ShaderProgram.hpp
