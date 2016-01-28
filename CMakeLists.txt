@@ -101,6 +101,12 @@ endif(DOXYGEN_FOUND)
 set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
         src/Engine/Resources.cpp
+        src/Engine/Audio/Listener.cpp
+        src/Engine/Audio/SoundBuffer.cpp
+        src/Engine/Audio/SoundSource.cpp
+        src/Engine/Audio/SoundSystem.cpp
+        src/Engine/Audio/VorbisFile.cpp
+        src/Engine/Audio/WaveFile.cpp
         src/Engine/Geometry/Cube.cpp
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Shader/Shader.cpp
@@ -112,15 +118,22 @@ set(ENGINE_SRCS
         src/Engine/Component/Lens.cpp
         src/Engine/Component/Transform.cpp
         src/Engine/Component/Mesh.cpp
-		src/Engine/Component/Parent.cpp
+        src/Engine/Component/Parent.cpp
         src/Engine/Entity/Entity.cpp
         src/Engine/Scene/Scene.cpp
-		src/Engine/System/RenderSystem.cpp
+        src/Engine/System/RenderSystem.cpp
     )
 
 set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
         src/Engine/Resources.hpp
+        src/Engine/Audio/Listener.hpp
+        src/Engine/Audio/SoundBuffer.hpp
+        src/Engine/Audio/SoundFile.hpp
+        src/Engine/Audio/SoundSource.hpp
+        src/Engine/Audio/SoundSystem.hpp
+        src/Engine/Audio/VorbisFile.hpp
+        src/Engine/Audio/WaveFile.hpp
         src/Engine/Geometry/Cube.hpp
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Shader/Shader.hpp
@@ -132,10 +145,10 @@ set(ENGINE_HEADERS
         src/Engine/Component/Lens.hpp
         src/Engine/Component/Transform.hpp
         src/Engine/Component/Mesh.hpp
-		src/Engine/Component/Parent.hpp
+        src/Engine/Component/Parent.hpp
         src/Engine/Entity/Entity.hpp
         src/Engine/Scene/Scene.hpp
-		src/Engine/System/RenderSystem.hpp
+        src/Engine/System/RenderSystem.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
