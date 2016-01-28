@@ -57,6 +57,7 @@ set(EMBEDDED_INPUT
         shaders/Default3D.vert
         shaders/Default2D.vert
         shaders/SingleColor2D.frag
+        shaders/Texture2D.frag
     )
 
 # Headerize
@@ -127,6 +128,7 @@ set(ENGINE_SRCS
         src/Engine/Scene/Scene.cpp
         src/Engine/System/RenderSystem.cpp
         src/Engine/Texture/Texture.cpp
+        src/Engine/Texture/Texture2D.cpp
     )
 
 set(ENGINE_HEADERS
@@ -157,6 +159,7 @@ set(ENGINE_HEADERS
         src/Engine/Scene/Scene.hpp
         src/Engine/System/RenderSystem.hpp
         src/Engine/Texture/Texture.hpp
+        src/Engine/Texture/Texture2D.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
