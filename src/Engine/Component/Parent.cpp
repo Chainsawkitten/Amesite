@@ -1,19 +1,22 @@
 #include "Parent.hpp"
+
+#include "../Entity/Entity.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
 
 using namespace Component;
 
-Parent::Parent() {
-    //fieldOfView = 45.f;
-    //zFar = 100.f;
-    //zNear = 0.05f;
+RelativeTransform::RelativeTransform() : Transform() {
+    parentEntity = nullptr;
 }
 
-Parent::~Parent() {
-
+RelativeTransform::~RelativeTransform() {
 }
 
-//glm::mat4 Lens::GetProjection(const glm::vec2& screenSize) const {
-//    return glm::perspective(glm::radians(fieldOfView), screenSize.x/screenSize.y, zNear, zFar);
-//}
+glm::mat4 RelativeTransform::GetOrientation() const
+{
+    glm::mat4 orientation;
+    orientation = glm::rotate(orientation, glm::radians(yaw), glm::vec3(0, 1, 0));
+    orientation = glm::rotate(orientation, glm::radians(pitch), glm::vec3(1, 0, 0));
+    orientation = glm::rotate(orientation, glm::radians(roll), glm::vec3(0, 0, 1));
+    return orientation;
+}
