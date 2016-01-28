@@ -1,15 +1,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/gtc/matrix_transform.hpp>
 #include <MainWindow.hpp>
 
-#include <Engine/Geometry/Cube.hpp>
-#include <Engine/Shader/Shader.hpp>
-#include <Engine/Shader/ShaderProgram.hpp>
-
+#include <Geometry/Cube.hpp>
 #include <Resources.hpp>
-#include "Default3D.frag.hpp"
-#include "Default3D.vert.hpp"
 
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
@@ -20,9 +14,10 @@
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
 
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/Lens.hpp>
-#include <Engine/Component/Mesh.hpp>
+#include <Component/Transform.hpp>
+#include <Component/Lens.hpp>
+#include <Component/Mesh.hpp>
+#include <Component/RelativeTransform.hpp>
 
 #include <thread>
 
@@ -50,15 +45,20 @@ int main() {
 
     Entity* cubeEntity = scene.CreateEntity();
     cubeEntity->AddComponent<Component::Mesh>();
-    cubeEntity->AddComponent<Component::Transform>(); //RelativeTranform
+    cubeEntity->AddComponent<Component::Transform>();
     cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
+    Entity* cubeChildEntity = scene.CreateEntity();
+    cubeChildEntity->AddComponent<Component::Mesh>()->geometry = cubeEntity->GetComponent<Component::Mesh>()->geometry;
+    cubeChildEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
+    cubeChildEntity->GetComponent<Component::RelativeTransform>()->Move(1.f, 1.f, -1.f);
 
     Entity* cameraEntity = scene.CreateEntity();
     cameraEntity->AddComponent<Component::Lens>();
     cameraEntity->AddComponent<Component::Transform>();
 
-    cameraEntity->GetComponent<Component::Transform>()->Move(-3.f, 0.5f, 5.f);
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(-15.f, 0.f, 0.f);
+    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 0.0f, 5.f);
+    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -66,11 +66,10 @@ int main() {
     while (!window->ShouldClose()) {
         lastTime = glfwGetTime();
 
-        // Move camera
-        cameraEntity->GetComponent<Component::Transform>()->Move(0.01f, 0.0f, 0.f);
+        // Move cube.
+        cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
 
         // Render.
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         renderSystem.Render(scene);
         
         // Set window title to reflect screen update and render times.

@@ -12,15 +12,10 @@ RelativeTransform::RelativeTransform() : Transform() {
 RelativeTransform::~RelativeTransform() {
 }
 
-glm::mat4 RelativeTransform::GetOrientation() const
+glm::mat4 RelativeTransform::GetModelMatrix() const
 {
-    glm::mat4 orientation;
-    orientation = glm::rotate(orientation, glm::radians(yaw), glm::vec3(0, 1, 0));
-    orientation = glm::rotate(orientation, glm::radians(pitch), glm::vec3(1, 0, 0));
-    orientation = glm::rotate(orientation, glm::radians(roll), glm::vec3(0, 0, 1));
-
     if (parentEntity != nullptr) {
-        parentEntity->GetComponent<Component::Transform>()->GetOrientation() * ;
+        return parentEntity->GetComponent<Component::Transform>()->GetModelMatrix() * glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
     }
-    return orientation;
+    return glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
 }

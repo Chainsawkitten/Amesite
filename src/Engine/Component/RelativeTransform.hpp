@@ -6,7 +6,7 @@ class Entity;
 
 namespace Component {
 
-    /// Component handling a parent entity.
+    /// Component providing transformation relative to a parent Entity.
     class RelativeTransform : public Transform {
         public:
             /// Create a new lens.
@@ -17,9 +17,9 @@ namespace Component {
 
             /// Get model matrix.
             /**
-            * @return The entity's model matrix, containing translation, scaling and rotation.
-            */
-            glm::mat4 GetOrientation() const;
+             * @return The entity's model matrix, containing translation, scaling and rotation.
+             */
+            glm::mat4 GetModelMatrix() const;
             
             /// Parent Entity.
             /**

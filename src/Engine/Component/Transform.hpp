@@ -17,7 +17,13 @@ namespace Component{
             /**
              * @return The entity's model matrix, containing translation, scaling and rotation.
              */
-            virtual glm::mat4 GetOrientation() const;
+            virtual glm::mat4 GetModelMatrix() const;
+        
+            /// Get orientation matrix.
+            /**
+             * @return The entity's orientation matrix.
+             */
+            glm::mat4 GetOrientation() const;
 
             /// Set rotation by an offset.
             /**
@@ -45,18 +51,33 @@ namespace Component{
             void Move(float x, float y, float z);
         
             /// Position in the world.
+            /**
+             * Default: 0.f, 0.f, 0.f
+             */
             glm::vec3 position;
         
             /// Scale.
+            /**
+             * Default: 1.f, 1.f, 1.f
+             */
             glm::vec3 scale;
         
             /// Yaw (in degrees).
+            /**
+             * Default: 0.f
+             */
             float yaw;
         
             /// Pitch (in degrees).
+            /**
+             * Default: 0.f
+             */
             float pitch;
         
             /// Roll (in degrees).
+            /**
+             * Default: 0.f
+             */
             float roll;
 
         };

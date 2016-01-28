@@ -9,6 +9,7 @@ Entity::Entity() {
     mLens = nullptr;
     mTransform = nullptr;
     mMesh = nullptr;
+    mRelativeTransform = nullptr;
 }
 
 Entity::~Entity() {
@@ -41,9 +42,10 @@ Component::Mesh* Entity::CreateMesh() {
 }
 
 Component::RelativeTransform* Entity::CreateRelativeTransform() {
-    //if (mTransofmr == nullptr) {
-    //    mRelativeTransform = new RelativeTransform();
-    //    return mTransform = mRelativeTransform;
-    //}
+    if (mTransform == nullptr) {
+        mRelativeTransform = new Component::RelativeTransform();
+        mTransform = mRelativeTransform;
+        return mRelativeTransform;
+    }
     return nullptr;
 }

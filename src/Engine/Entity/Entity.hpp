@@ -36,6 +36,7 @@ class Entity {
         Component::Lens* mLens;
         Component::Transform* mTransform;
         Component::Mesh* mMesh;
+        Component::RelativeTransform* mRelativeTransform;
 };
 
 template<> inline Component::Lens* Entity::AddComponent<Component::Lens>() {
@@ -50,6 +51,10 @@ template<> inline Component::Mesh* Entity::AddComponent<Component::Mesh>() {
     return CreateMesh();
 }
 
+template<> inline Component::RelativeTransform* Entity::AddComponent<Component::RelativeTransform>() {
+    return CreateRelativeTransform();
+}
+
 template<> inline Component::Lens* Entity::GetComponent<Component::Lens>() {
     return mLens;
 }
@@ -60,4 +65,8 @@ template<> inline Component::Transform* Entity::GetComponent<Component::Transfor
 
 template<> inline Component::Mesh* Entity::GetComponent<Component::Mesh>() {
     return mMesh;
+}
+
+template<> inline Component::RelativeTransform* Entity::GetComponent<Component::RelativeTransform>() {
+    return mRelativeTransform;
 }
