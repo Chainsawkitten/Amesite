@@ -15,7 +15,13 @@ namespace Component{
 
         /// Get model matrix.
         /**
-         * @return The object's model matrix, containing translation, scaling and rotation.
+         * @return The entity's model matrix, containing translation, scaling and rotation.
+         */
+        glm::mat4 GetModelMatrix() const;
+        
+        /// Get orientation matrix.
+        /**
+         * @return The entity's orientation matrix.
          */
         glm::mat4 GetOrientation() const;
 
