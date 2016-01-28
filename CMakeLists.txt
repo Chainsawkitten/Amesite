@@ -122,6 +122,7 @@ set(ENGINE_SRCS
         src/Engine/Entity/Entity.cpp
         src/Engine/Scene/Scene.cpp
         src/Engine/System/RenderSystem.cpp
+        src/Engine/Texture/Texture.cpp
     )
 
 set(ENGINE_HEADERS
@@ -149,6 +150,7 @@ set(ENGINE_HEADERS
         src/Engine/Entity/Entity.hpp
         src/Engine/Scene/Scene.hpp
         src/Engine/System/RenderSystem.hpp
+        src/Engine/Texture/Texture.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
