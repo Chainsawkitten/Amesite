@@ -15,13 +15,20 @@ class Scene {
         /// Create new Entity in Scene.
         Entity* CreateEntity();
 
-        /// Return number of Entities in Scene.
+        /// Get number of entities in Scene.
+        /**
+        * @return Number of entities in Scene
+        */
         unsigned int Size() const;
 
-        /// Clear Scene of all entities
+        /// Clear Scene of all entities.
         void Clear();
 
-        /// Return Entity on index, else nullptr.
+        /// Get Entity on index, else nullptr.
+        /**
+        * @param index The index of the Entity.
+        * @return Entity on index, else nullptr.
+        */
         Entity* operator[](unsigned int index);
 
     private:

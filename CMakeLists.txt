@@ -113,7 +113,7 @@ set(ENGINE_SRCS
         src/Engine/Component/Transform.cpp
         src/Engine/Component/Mesh.cpp
         src/Engine/Entity/Entity.cpp
-		src/Engine/Scene/Scene.cpp
+        src/Engine/Scene/Scene.cpp
     )
 
 set(ENGINE_HEADERS
@@ -131,7 +131,7 @@ set(ENGINE_HEADERS
         src/Engine/Component/Transform.hpp
         src/Engine/Component/Mesh.hpp
         src/Engine/Entity/Entity.hpp
-		src/Engine/Scene/Scene.hpp
+        src/Engine/Scene/Scene.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
@@ -144,12 +144,12 @@ set_property(TARGET Engine PROPERTY CXX_STANDARD_REQUIRED ON)
 set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Util/GameSettings.cpp
-		src/Game/System/RenderSystem.cpp
+        src/Game/System/RenderSystem.cpp
     )
 
 set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
-		src/Game/System/RenderSystem.hpp
+        src/Game/System/RenderSystem.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
