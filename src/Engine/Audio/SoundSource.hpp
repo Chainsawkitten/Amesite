@@ -24,7 +24,7 @@ namespace Audio {
             /// Get position.
             /**
              * Starting position: (0.0, 0.0, 0.0).
-             * @return The sound source's position in the game world
+             * @return The sound source's position in the game world.
              */
             const glm::vec3& Position() const;
             
@@ -37,7 +37,7 @@ namespace Audio {
             /// Get pitch.
             /**
              * Default 1.0.
-             * @return The sound source's pitch
+             * @return The sound source's pitch.
              */
             ALfloat Pitch() const;
             
@@ -62,7 +62,7 @@ namespace Audio {
             
             /// Get whether sound should loop.
             /**
-             * @return Whether the sound should loop
+             * @return Whether the sound should loop.
              */
             ALboolean Looping() const;
             

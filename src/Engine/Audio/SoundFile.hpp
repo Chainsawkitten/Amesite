@@ -14,7 +14,7 @@ namespace Audio {
     
             /// Get raw audio data.
             /**
-             * @return Raw audio data
+             * @return Raw audio data.
              */
             virtual const char* Data() const = 0;
     
@@ -27,13 +27,13 @@ namespace Audio {
             /// Get AL format.
             /**
              * 32-bit sound is not supported in OpenAL.
-             * @return One of AL_FORMAT_MONO8, AL_FORMAT_MONO16, AL_FORMAT_STEREO8 or AL_FORMAT_STEREO16
+             * @return One of AL_FORMAT_MONO8, AL_FORMAT_MONO16, AL_FORMAT_STEREO8 or AL_FORMAT_STEREO16.
              */
             virtual ALenum Format() const = 0;
     
             /// Get sample rate.
             /**
-             * @return The sound file's sample rate (Hz)
+             * @return The sound file's sample rate (Hz).
              */
             virtual ALsizei SampleRate() const = 0;
     };

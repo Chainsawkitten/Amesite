@@ -20,7 +20,7 @@ namespace Audio {
     
             /// Get raw audio data.
             /**
-             * @return Raw audio data
+             * @return Raw audio data.
              */
             const char* Data() const;
     
@@ -39,7 +39,7 @@ namespace Audio {
     
             /// Get sample rate.
             /**
-             * @return The sound file's sample rate (Hz)
+             * @return The sound file's sample rate (Hz).
              */
             ALsizei SampleRate() const;
     
