@@ -2,24 +2,23 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <Engine/Shader/Shader.hpp>
-#include <Engine/Shader/ShaderProgram.hpp>
+#include "../Shader/Shader.hpp"
+#include "../Shader/ShaderProgram.hpp"
 
-#include <Engine/Resources.hpp>
+#include "../Resources.hpp"
 #include "Default3D.frag.hpp"
 #include "Default3D.vert.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
-#include <Engine/Component/Lens.hpp>
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/Mesh.hpp>
+#include "../Scene/Scene.hpp"
+#include "../Entity/Entity.hpp"
+#include "../Component/Lens.hpp"
+#include "../Component/Transform.hpp"
+#include "../Component/Mesh.hpp"
 
 RenderSystem::RenderSystem() {
     mVertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ mVertShader, mFragShader });
-    mShaderProgram->Use();
 }
 
 RenderSystem::~RenderSystem() {
@@ -29,6 +28,10 @@ RenderSystem::~RenderSystem() {
 }
 
 void RenderSystem::Render(const Scene& scene) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    mShaderProgram->Use();
+    
     Entity* camera = nullptr;
 
     // Finds camera in scene.
