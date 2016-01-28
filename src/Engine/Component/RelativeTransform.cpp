@@ -12,8 +12,7 @@ RelativeTransform::RelativeTransform() : Transform() {
 RelativeTransform::~RelativeTransform() {
 }
 
-glm::mat4 RelativeTransform::GetModelMatrix() const
-{
+glm::mat4 RelativeTransform::GetModelMatrix() const {
     if (parentEntity != nullptr) {
         return parentEntity->GetComponent<Component::Transform>()->GetModelMatrix() * glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
     }
