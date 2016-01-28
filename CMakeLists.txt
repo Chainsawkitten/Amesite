@@ -51,6 +51,13 @@ function(create_directory_groups)
     endforeach()
 endfunction()
 
+# Copy resources
+set(RESOURCES
+    assets/TestTexture.png
+)
+
+file(COPY ${RESOURCES} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
+
 # Setup embedded source
 set(EMBEDDED_INPUT
         shaders/Default3D.frag

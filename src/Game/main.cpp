@@ -17,6 +17,7 @@
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
+#include <Texture/Texture2D.hpp>
 
 #include <thread>
 
@@ -53,6 +54,8 @@ int main() {
 
     cameraEntity->GetComponent<Component::Transform>()->Move(-3.f, 0.5f, 5.f);
     cameraEntity->GetComponent<Component::Transform>()->Rotate(-15.f, 0.f, 0.f);
+    
+    Texture2D* testTexture = new Texture2D("Resources/TestTexture.png");
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -65,6 +68,7 @@ int main() {
 
         // Render.
         renderSystem.Render(scene);
+        testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
@@ -83,6 +87,7 @@ int main() {
         glfwPollEvents();
     }
     
+    delete testTexture;
     Resources().FreeCube();
     
     delete window;
