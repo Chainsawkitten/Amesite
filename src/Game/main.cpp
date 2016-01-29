@@ -8,6 +8,7 @@
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
 #include <Util/FileSystem.hpp>
+#include <Util/Input.hpp>
 
 #include "System/RenderSystem.hpp"
 
@@ -71,6 +72,9 @@ int main() {
 
         // Render.
         renderSystem.Render(scene);
+
+        //Input testing
+        window->Update();
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";

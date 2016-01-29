@@ -1,5 +1,5 @@
-#include "MainWindow.hpp"
 #include "Util/Log.hpp"
+#include "MainWindow.hpp"
 #include <GLFW/glfw3.h>
 
 MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, const char* title, bool debugContext) {
@@ -24,17 +24,29 @@ MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, 
     
     // Setup error callbacks.
     glfwSetErrorCallback(ErrorCallback);
+
+    mInput = new InputHandler(mWindow);
+    mInput->Update();
+    mInput->SetActive();
 }
 
 MainWindow::~MainWindow() {
     glfwDestroyWindow(mWindow);
+    delete mInput;
 }
 
 void MainWindow::Init() {
     glEnable(GL_DEPTH_TEST);
+
+
     
     if (mDebugContext)
         glDebugMessageCallback(DebugMessageCallback, nullptr);
+}
+
+void MainWindow::Update() {
+    mInput->Update();
+    mInput->SetActive();
 }
 
 void MainWindow::SetTitle(const char *title) {

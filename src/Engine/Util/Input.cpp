@@ -69,11 +69,12 @@ void InputHandler::Update() {
 
     // Update joystick axis.
     int axisOneCount = 0;
+    const float *axes;
     mJoystickAxisData[PLAYER_ONE] = glfwGetJoystickAxes(PLAYER_ONE, &axisOneCount);
-    //Log() << axisOneCount;
 
     // Update joystick buttons.
     int buttonOneCount = 0;
+    const unsigned char* buttons = glfwGetJoystickButtons(PLAYER_ONE, &buttonOneCount);
     mJoystickButtonPressed[PLAYER_ONE] = glfwGetJoystickButtons(PLAYER_ONE, &buttonOneCount);
     //Log() << buttonOneCount;
 
@@ -84,7 +85,7 @@ void InputHandler::Update() {
 
     // Update joystick buttons.
     int buttonTwoCount = 0;
-    mJoystickButtonPressed[PLAYER_ONE] = glfwGetJoystickButtons(PLAYER_TWO, &buttonTwoCount);
+    mJoystickButtonPressed[PLAYER_TWO] = glfwGetJoystickButtons(PLAYER_TWO, &buttonTwoCount);
     //Log() << buttonTwoCount;
 
     // Update button states depending on bindings.
@@ -98,26 +99,29 @@ void InputHandler::Update() {
                 case KEYBOARD:
                     if (glfwGetKey(mWindow, key) == GLFW_PRESS)
                         value = 1.0;
+                    break;
                 case JOYSTICK:
                     // Scalar axis of joystick.
                     if (mJoystickAxis[player][button]) {
                         value = mJoystickAxisData[player][key];
                         // Buttons of joystick.
                     } else {
-                        if (mJoystickButtonPressed[player][button] == GLFW_PRESS) {
+                        if (mJoystickButtonPressed[player][mBindings[button][0]] == GLFW_PRESS) {
                             value = 1.0;
                         } else {
                             value = 0.0;
                         }
                     }
+                    break;
                 default:
                     value = 0.0;
+                    break;
                 }
+                mButtonTriggered[player][button] = (mButtonValue[player][button] == 1.0) && (value == 1.0);
+                mButtonReleased[player][button] = (mButtonValue[player][button] == 0.0) && (value == 0.0);
+                mButtonValue[player][button] = value;
 
             }
-            mButtonTriggered[player][button] = (mButtonValue[player][button] == 1.0) && (value == 1.0);
-            mButtonReleased[player][button] = (mButtonValue[player][button] == 0.0) && (value == 0.0);
-            mButtonValue[player][button] = value;
         }
     }
     // Update the 'Anyone' input section

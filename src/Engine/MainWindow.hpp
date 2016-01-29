@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Util/Input.hpp"
+
 struct GLFWwindow;
 
 /// The main game window in which the game is contained.
@@ -21,6 +23,9 @@ class MainWindow {
         
         /// Initialize components.
         void Init();
+
+        /// Update
+        void Update();
         
         /// Set window title.
         /**
@@ -38,6 +43,7 @@ class MainWindow {
         void SwapBuffers();
         
     private:
+        InputHandler *mInput;
         GLFWwindow* mWindow;
         bool mDebugContext;
 };

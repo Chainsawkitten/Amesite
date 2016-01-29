@@ -11,6 +11,31 @@
  */
 class InputHandler {
     public:
+        enum XBOXAxisIndex {
+            LEFT_STICK_X = 0,
+            LEFT_STICK_Y,
+            LEFT_RIGHT_TRIGGER,
+            RIGHT_STICK_X,
+            RIGHT_STICK_Y,
+        };
+
+        enum XBOXButtonIndex {
+            A = 0,
+            B,
+            X,
+            Y,
+            LEFT_BUMPER,
+            RIGHT_BUMPER,
+            BACK,
+            START,
+            LEFT_STICK,
+            RIGHT_STICK,
+            D_PAD_UP,
+            D_PAD_RIGHT,
+            D_PAD_DOWN,
+            D_PAD_LEFT,
+        };
+
         /// Button codes.
         enum Button {
             MOVE_X = 0, ///< Move in X axis
