@@ -7,7 +7,9 @@
 
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
+#include "CaveSystem/CaveSystem.hpp"
 #include <Util/FileSystem.hpp>
+
 
 #include "System/RenderSystem.hpp"
 
@@ -17,6 +19,7 @@
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
+
 #include <Texture/Texture2D.hpp>
 #include <Component/RelativeTransform.hpp>
 
@@ -43,12 +46,15 @@ int main() {
     
     // Scene and Entites. 
     Scene scene;
+
+    Caves::CaveSystem testCaveSystem(&scene);
+    testCaveSystem.GenerateCaveSystem();
     
     Entity* cubeEntity = scene.CreateEntity();
     cubeEntity->AddComponent<Component::Mesh>();
     cubeEntity->AddComponent<Component::Transform>();
     cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-    
+
     Entity* cubeChildEntity = scene.CreateEntity();
     cubeChildEntity->AddComponent<Component::Mesh>()->geometry = cubeEntity->GetComponent<Component::Mesh>()->geometry;
     cubeChildEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
@@ -58,9 +64,9 @@ int main() {
     cameraEntity->AddComponent<Component::Lens>();
     cameraEntity->AddComponent<Component::Transform>();
     
-    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 0.0f, 5.f);
+    cameraEntity->GetComponent<Component::Transform>()->Move(12.5f, -12.5f, 35.f);
     cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
-    
+
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
     // Main game loop.
@@ -75,7 +81,7 @@ int main() {
         // Render.
         renderSystem.Render(scene);
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
-        
+
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))

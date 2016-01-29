@@ -179,10 +179,12 @@ set_property(TARGET Engine PROPERTY CXX_STANDARD_REQUIRED ON)
 set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Util/GameSettings.cpp
+        src/Game/CaveSystem/CaveSystem.cpp
     )
 
 set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
+        src/Game/CaveSystem/CaveSystem.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
