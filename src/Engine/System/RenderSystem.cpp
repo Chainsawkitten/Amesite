@@ -15,6 +15,8 @@
 #include "../Component/Transform.hpp"
 #include "../Component/Mesh.hpp"
 
+using namespace System;
+
 RenderSystem::RenderSystem() {
     mVertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);

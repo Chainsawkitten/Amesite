@@ -38,7 +38,7 @@ int main() {
     window->Init();
 
     // RenderSystem.
-    RenderSystem renderSystem;
+    System::RenderSystem renderSystem;
 
     // Scene and Entites. 
     Scene scene;

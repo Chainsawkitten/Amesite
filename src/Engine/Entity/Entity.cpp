@@ -50,7 +50,6 @@ Component::RelativeTransform* Entity::CreateRelativeTransform() {
     if (mTransform == nullptr) {
         mRelativeTransform = new Component::RelativeTransform(this);
         mTransform = mRelativeTransform;
-        //mScene->mTransformComponentVec.push_back(mTransform); || mScene->mTransformComponentVec.push_back(mRelativeTransform); ?? <----------------------------------- NO MERGE ------------------------------>
         mScene->mTransformComponentVec.push_back(mRelativeTransform);
         return mRelativeTransform;
     }

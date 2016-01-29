@@ -3,9 +3,6 @@
 class Entity;
 
 namespace Component{
-
-    // --- TODO PURE VIRTUAL? --- // <------------------------------------------- !!!! <----------------------------------------------------------- !!!! NO MERGE
-
     /// Component which all Components generalize.
     class SuperComponent {
         public:
