@@ -1,5 +1,5 @@
 #pragma once
-#include "../Entity/Entity.hpp"
+#include <Entity/Entity.hpp>
 #include <vector>
 
 namespace Component {

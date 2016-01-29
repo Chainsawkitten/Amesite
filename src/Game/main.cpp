@@ -13,6 +13,7 @@
 
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
+#include "CaveSystem/CaveSystem.hpp"
 #include <Util/FileSystem.hpp>
 
 #include <Entity/Entity.hpp>
@@ -20,8 +21,6 @@
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
-
-#include <CaveSystem/CaveSystem.hpp>
 
 #include <Resources.hpp>
 
