@@ -21,7 +21,7 @@ Entity::~Entity() {
 
 Component::Lens* Entity::CreateLens() {
     if (mLens == nullptr) {
-        mLens = new Component::Lens();
+        mLens = new Component::Lens(this);
         mScene->mLensComponentVec.push_back(mLens);
         return mLens;
     }
@@ -30,7 +30,7 @@ Component::Lens* Entity::CreateLens() {
 
 Component::Transform* Entity::CreateTransform() {
     if (mTransform == nullptr) {
-        mTransform = new Component::Transform();
+        mTransform = new Component::Transform(this);
         mScene->mTransformComponentVec.push_back(mTransform);
         return mTransform;
     }
@@ -39,7 +39,7 @@ Component::Transform* Entity::CreateTransform() {
 
 Component::Mesh* Entity::CreateMesh() {
     if (mMesh == nullptr) {
-        mMesh = new Component::Mesh();
+        mMesh = new Component::Mesh(this);
         mScene->mMeshComponentVec.push_back(mMesh);
         return mMesh;
     }    
@@ -48,9 +48,9 @@ Component::Mesh* Entity::CreateMesh() {
 
 Component::RelativeTransform* Entity::CreateRelativeTransform() {
     if (mTransform == nullptr) {
-        mRelativeTransform = new Component::RelativeTransform();
+        mRelativeTransform = new Component::RelativeTransform(this);
         mTransform = mRelativeTransform;
-        //mScene->mTransformComponentVec.push_back(mTransform); || mScene->mTransformComponentVec.push_back(mRelativeTransform); ??
+        //mScene->mTransformComponentVec.push_back(mTransform); || mScene->mTransformComponentVec.push_back(mRelativeTransform); ?? <----------------------------------- NO MERGE ------------------------------>
         mScene->mTransformComponentVec.push_back(mRelativeTransform);
         return mRelativeTransform;
     }

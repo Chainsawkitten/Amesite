@@ -2,7 +2,7 @@
 
 using namespace Component;
 
-Mesh::Mesh() {
+Mesh::Mesh(Entity* entity) : SuperComponent(entity) {
     geometry = nullptr;
 }
 

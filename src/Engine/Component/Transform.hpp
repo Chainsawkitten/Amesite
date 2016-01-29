@@ -1,16 +1,22 @@
 #pragma once
 
+#include "SuperComponent.hpp"
+
+class Entity;
+
 #include <glm/glm.hpp>
 
-namespace Component{
-
+namespace Component {
     /// Component providing transformation.
-    class Transform {
+    class Transform : public SuperComponent {
         public:
-            /// Create new transform
-            Transform();
+            /// Create new %Transform.
+            /**
+             * @param entity Pointer to which Entity this %Component corresponds.
+             */
+            Transform(Entity* entity);
 
-            /// Destructor
+            /// Destructor.
             virtual ~Transform();
 
             /// Get model matrix.
@@ -79,7 +85,5 @@ namespace Component{
              * Default: 0.f
              */
             float roll;
-
         };
-
 }
