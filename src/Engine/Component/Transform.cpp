@@ -14,7 +14,6 @@ Transform::Transform(Entity* entity) : SuperComponent(entity) {
 }
 
 Transform::~Transform() {
-
 }
 
 glm::mat4 Transform::GetModelMatrix() const {

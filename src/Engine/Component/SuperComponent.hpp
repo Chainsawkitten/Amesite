@@ -2,7 +2,7 @@
 
 class Entity;
 
-namespace Component{
+namespace Component {
     /// Component which all Components generalize.
     class SuperComponent {
         public:
