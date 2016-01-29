@@ -49,6 +49,7 @@ void MainWindow::Init() {
 void MainWindow::Update() {
     mInput->Update();
     mInput->SetActive();
+}
 
 const glm::vec2& MainWindow::GetSize() const {
     return mSize;
