@@ -12,6 +12,9 @@ class Scene;
 class Entity {
     public:
         /// Create a new Entity.
+        /**
+         * @param scene Pointer to which Scene %Entity is contained.
+         */
         Entity(Scene* scene);
 
         /// Destructor.
