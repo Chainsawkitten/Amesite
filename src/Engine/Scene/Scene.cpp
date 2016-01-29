@@ -1,27 +1,19 @@
 #include "Scene.hpp"
 
-#include <Engine/Entity/Entity.hpp>
+#include "../Entity/Entity.hpp"
 
 Scene::Scene() {
 
 }
 
 Scene::~Scene() {
-    for (unsigned int i = 0; i < mEntityVec.size(); i++) {
-        delete mEntityVec.at(i);
-    }
-    mEntityVec.clear();
-    mEntityVec.shrink_to_fit();
+    Clear();
 }
 
 Entity* Scene::CreateEntity() {
-    Entity* entity = new Entity();
+    Entity* entity = new Entity(this);
     mEntityVec.push_back(entity);
     return entity;
-}
-
-unsigned int Scene::Size() const {
-    return mEntityVec.size();
 }
 
 void Scene::Clear() {
@@ -30,11 +22,28 @@ void Scene::Clear() {
     }
     mEntityVec.clear();
     mEntityVec.shrink_to_fit();
-}
 
-Entity* Scene::operator[](unsigned int index) const {
-    if (index < mEntityVec.size()) {
-        return mEntityVec.at(index);
+    for (unsigned int i = 0; i < mLensComponentVec.size(); i++) {
+        delete mLensComponentVec.at(i);
     }
-    return nullptr;
+    mLensComponentVec.clear();
+    mLensComponentVec.shrink_to_fit();
+
+    for (unsigned int i = 0; i < mTransformComponentVec.size(); i++) {
+        delete mTransformComponentVec.at(i);
+    }
+    mTransformComponentVec.clear();
+    mTransformComponentVec.shrink_to_fit();
+
+    for (unsigned int i = 0; i < mMeshComponentVec.size(); i++) {
+        delete mMeshComponentVec.at(i);
+    }
+    mMeshComponentVec.clear();
+    mMeshComponentVec.shrink_to_fit();
+
+    for (unsigned int i = 0; i < mRelativeTransformComponentVec.size(); i++) {
+        delete mRelativeTransformComponentVec.at(i);
+    }
+    mRelativeTransformComponentVec.clear();
+    mRelativeTransformComponentVec.shrink_to_fit();
 }
