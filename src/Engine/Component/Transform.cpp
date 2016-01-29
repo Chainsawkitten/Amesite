@@ -1,4 +1,5 @@
 #include "Transform.hpp"
+
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace Component;
@@ -14,6 +15,10 @@ Transform::Transform() {
 
 Transform::~Transform() {
 
+}
+
+glm::mat4 Transform::GetModelMatrix() const {
+	return glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
 }
 
 glm::mat4 Transform::GetOrientation() const {
