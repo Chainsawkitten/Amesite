@@ -37,6 +37,14 @@ InputHandler::InputHandler(GLFWwindow* window) {
         }
     }
 
+    // Discover joysticks.
+    if (glfwJoystickPresent(PLAYER_ONE)) {
+        Log() << glfwGetJoystickName(PLAYER_ONE) << " detected! \n";
+    }
+    if (glfwJoystickPresent(PLAYER_TWO)) {
+        Log() << glfwGetJoystickName(PLAYER_TWO) << " detected! \n";
+    }
+
     mBindings = new std::vector<int>[PLAYERS*BUTTONS];
 
     glfwSetCharCallback(window, characterCallback);
