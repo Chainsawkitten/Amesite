@@ -76,22 +76,17 @@ void InputHandler::Update() {
 
     glfwGetCursorPos(mWindow, &mCursorX, &mCursorY);
 
-    // Update joystick axis.
+    // Joystick counters.
     int axisOneCount = 0;
-    mJoystickAxisData[PLAYER_ONE] = glfwGetJoystickAxes(PLAYER_ONE, &axisOneCount);
-
-    // Update joystick buttons.
-    int buttonOneCount = 0;
-    const unsigned char* buttons = glfwGetJoystickButtons(PLAYER_ONE, &buttonOneCount);
-    mJoystickButtonPressed[PLAYER_ONE] = glfwGetJoystickButtons(PLAYER_ONE, &buttonOneCount);
-
-    // Update joystick axis.
     int axisTwoCount = 0;
-    mJoystickAxisData[PLAYER_TWO] = glfwGetJoystickAxes(PLAYER_TWO, &axisTwoCount);
-
-    // Update joystick buttons.
+    int buttonOneCount = 0;
     int buttonTwoCount = 0;
-    mJoystickButtonPressed[PLAYER_TWO] = glfwGetJoystickButtons(PLAYER_TWO, &buttonTwoCount);
+
+    // Update joystick axis and buttons
+    for (int player = 0; player < PLAYERS - 1; player++) {
+        mJoystickAxisData[player] = glfwGetJoystickAxes(player, &axisOneCount);
+        mJoystickButtonPressed[player] = glfwGetJoystickButtons(player, &buttonOneCount);
+    }
 
     // Update button states depending on bindings.
     for (int player = 0; player < (PLAYERS - 1); player++) {
