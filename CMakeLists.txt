@@ -51,10 +51,20 @@ function(create_directory_groups)
     endforeach()
 endfunction()
 
+# Copy resources
+set(RESOURCES
+    assets/TestTexture.png
+)
+
+file(COPY ${RESOURCES} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
+
 # Setup embedded source
 set(EMBEDDED_INPUT
         shaders/Default3D.frag
         shaders/Default3D.vert
+        shaders/Default2D.vert
+        shaders/SingleColor2D.frag
+        shaders/Texture2D.frag
     )
 
 # Headerize
@@ -107,8 +117,10 @@ set(ENGINE_SRCS
         src/Engine/Audio/SoundSystem.cpp
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
-        src/Engine/Geometry/Cube.cpp
+        src/Engine/Geometry/Geometry2D.cpp
+        src/Engine/Geometry/Square.cpp
         src/Engine/Geometry/Geometry3D.cpp
+        src/Engine/Geometry/Cube.cpp
         src/Engine/Shader/Shader.cpp
         src/Engine/Shader/ShaderProgram.cpp
         src/Engine/Util/FileSystem.cpp
@@ -123,6 +135,8 @@ set(ENGINE_SRCS
         src/Engine/Entity/Entity.cpp
         src/Engine/Scene/Scene.cpp
         src/Engine/System/RenderSystem.cpp
+        src/Engine/Texture/Texture.cpp
+        src/Engine/Texture/Texture2D.cpp
     )
 
 set(ENGINE_HEADERS
@@ -135,8 +149,10 @@ set(ENGINE_HEADERS
         src/Engine/Audio/SoundSystem.hpp
         src/Engine/Audio/VorbisFile.hpp
         src/Engine/Audio/WaveFile.hpp
-        src/Engine/Geometry/Cube.hpp
+        src/Engine/Geometry/Geometry2D.hpp
+        src/Engine/Geometry/Square.hpp
         src/Engine/Geometry/Geometry3D.hpp
+        src/Engine/Geometry/Cube.hpp
         src/Engine/Shader/Shader.hpp
         src/Engine/Shader/ShaderProgram.hpp
         src/Engine/Util/FileSystem.hpp
@@ -151,6 +167,8 @@ set(ENGINE_HEADERS
         src/Engine/Entity/Entity.hpp
         src/Engine/Scene/Scene.hpp
         src/Engine/System/RenderSystem.hpp
+        src/Engine/Texture/Texture.hpp
+        src/Engine/Texture/Texture2D.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
@@ -163,10 +181,12 @@ set_property(TARGET Engine PROPERTY CXX_STANDARD_REQUIRED ON)
 set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Util/GameSettings.cpp
+        src/Game/CaveSystem/CaveSystem.cpp
     )
 
 set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
+        src/Game/CaveSystem/CaveSystem.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

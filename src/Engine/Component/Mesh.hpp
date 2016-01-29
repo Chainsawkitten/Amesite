@@ -7,7 +7,7 @@ class Entity;
 #include "../Geometry/Geometry3D.hpp"
 
 namespace Component {
-    /// Component handling a Geometry3D.
+    /// Component providing geometry to Entity.
     class Mesh : public SuperComponent {
         public:
             /// Create new %Mesh.
@@ -19,7 +19,7 @@ namespace Component {
             /// Destructor.
             ~Mesh();
 
-            /// Geometry3D.
+            /// Geometry data.
             /**
              * Default: nullptr
              */
