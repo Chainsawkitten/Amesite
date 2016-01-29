@@ -42,7 +42,7 @@ class InputHandler {
         enum Button {
             MOVE_X = 0, ///< Move in X axis
             MOVE_Z, ///< Move in Z axis
-            AIM_X, ///< Aim in X axis
+            AIM_XZ, ///< Aim in XZ - plane
             SHOOT, ///< Fire bullet
             QUIT, ///< Quit game
             BUTTONS, ///< Total number of inputs - joystick
@@ -136,7 +136,7 @@ class InputHandler {
         /**
          * @param button The button to assign a key to.
          * @param axis - is it an axis (==TRUE)? or is it a button (==FALSE).
-         * @param index of the key in GLFW -
+         * @param index of the key in GLFW - See enums for XBOX input in Input.hpp
          * @param player to check (0 player 1, 1 is player2, 2 is player3)
          */
         void AssignJoystick(Button button, bool axis, int index, Player player);
@@ -201,6 +201,13 @@ class InputHandler {
          */
         void ScrollCallback(double yoffset);
 
+        /// Check if the joystick is active/connected
+        /**
+        * @param player for who to check joystick.
+        * @return whether joystick is active or not.
+        */
+        bool ActiveJoystick(Player player);
+
     private:
         static InputHandler* mActiveInstance;
 
@@ -218,6 +225,9 @@ class InputHandler {
 
         // Binding information, differentiate input devices.
         int mBindingDevice[PLAYERS][BUTTONS];
+
+        // Active joysticks
+        bool mActiveJoystick[PLAYERS - 1];
 
         // Bindings
         std::vector<int>* mBindings;

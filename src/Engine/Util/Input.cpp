@@ -38,11 +38,12 @@ InputHandler::InputHandler(GLFWwindow* window) {
     }
 
     // Discover joysticks.
-    if (glfwJoystickPresent(PLAYER_ONE)) {
-        Log() << glfwGetJoystickName(PLAYER_ONE) << " detected! \n";
-    }
-    if (glfwJoystickPresent(PLAYER_TWO)) {
-        Log() << glfwGetJoystickName(PLAYER_TWO) << " detected! \n";
+    for (int player = 0; player < PLAYERS - 1; player++) {
+        mActiveJoystick[player] = false;
+        if (glfwJoystickPresent(player)) {
+            Log() << glfwGetJoystickName(player) << " detected! \n";
+            mActiveJoystick[player] = true;
+        }
     }
 
     mBindings = new std::vector<int>[PLAYERS*BUTTONS];
@@ -181,6 +182,10 @@ void InputHandler::CenterCursor() {
     mCursorY = static_cast<double>(height / 2);
 }
 void InputHandler::AssignJoystick(Button button, bool axis, int index, Player player) {
+    if (!ActiveJoystick(player)) {
+        Log() << "Error binding key, Player " << player+1 << " has no joystick connected!\n";
+        return;
+    }
     mBindings[BUTTONS*player + button].push_back(index);
     mJoystickAxis[player][button] = axis;
     mBindingDevice[player][button] = JOYSTICK;
@@ -223,6 +228,11 @@ void InputHandler::CharacterCallback(unsigned int codePoint) {
 
 void InputHandler::ScrollCallback(double yoffset) {
     mScroll += yoffset;
+}
+
+bool InputHandler::ActiveJoystick(Player player)
+{
+    return mActiveJoystick[player];
 }
 
 InputHandler* Input() {
