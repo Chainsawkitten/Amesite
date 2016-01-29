@@ -77,24 +77,20 @@ void InputHandler::Update() {
 
     // Update joystick axis.
     int axisOneCount = 0;
-    const float *axes;
     mJoystickAxisData[PLAYER_ONE] = glfwGetJoystickAxes(PLAYER_ONE, &axisOneCount);
 
     // Update joystick buttons.
     int buttonOneCount = 0;
     const unsigned char* buttons = glfwGetJoystickButtons(PLAYER_ONE, &buttonOneCount);
     mJoystickButtonPressed[PLAYER_ONE] = glfwGetJoystickButtons(PLAYER_ONE, &buttonOneCount);
-    //Log() << buttonOneCount;
 
     // Update joystick axis.
     int axisTwoCount = 0;
     mJoystickAxisData[PLAYER_TWO] = glfwGetJoystickAxes(PLAYER_TWO, &axisTwoCount);
-    //Log() << axisTwoCount;
 
     // Update joystick buttons.
     int buttonTwoCount = 0;
     mJoystickButtonPressed[PLAYER_TWO] = glfwGetJoystickButtons(PLAYER_TWO, &buttonTwoCount);
-    //Log() << buttonTwoCount;
 
     // Update button states depending on bindings.
     for (int player = 0; player < (PLAYERS - 1); player++) {
