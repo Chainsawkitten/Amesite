@@ -131,6 +131,9 @@ set(ENGINE_SRCS
         src/Engine/Component/Transform.cpp
         src/Engine/Component/Mesh.cpp
         src/Engine/Component/RelativeTransform.cpp
+        src/Engine/Component/Collider2DRectangle.cpp
+        src/Engine/Component/Collider2DLineSegment.cpp
+        src/Engine/Component/Collider2DCircle.cpp
         src/Engine/Entity/Entity.cpp
         src/Engine/Scene/Scene.cpp
         src/Engine/System/RenderSystem.cpp
@@ -162,6 +165,9 @@ set(ENGINE_HEADERS
         src/Engine/Component/Transform.hpp
         src/Engine/Component/Mesh.hpp
         src/Engine/Component/RelativeTransform.hpp
+        src/Engine/Component/Collider2DRectangle.hpp
+        src/Engine/Component/Collider2DLineSegment.hpp
+        src/Engine/Component/Collider2DCircle.hpp
         src/Engine/Entity/Entity.hpp
         src/Engine/Scene/Scene.hpp
         src/Engine/System/RenderSystem.hpp
