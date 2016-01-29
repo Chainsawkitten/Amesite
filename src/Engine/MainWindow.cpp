@@ -24,6 +24,8 @@ MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, 
     
     // Setup error callbacks.
     glfwSetErrorCallback(ErrorCallback);
+    
+    mSize = glm::vec2(width, height);
 }
 
 MainWindow::~MainWindow() {
@@ -35,6 +37,10 @@ void MainWindow::Init() {
     
     if (mDebugContext)
         glDebugMessageCallback(DebugMessageCallback, nullptr);
+}
+
+const glm::vec2& MainWindow::GetSize() const {
+    return mSize;
 }
 
 void MainWindow::SetTitle(const char *title) {

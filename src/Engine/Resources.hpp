@@ -7,7 +7,9 @@ class Shader;
 class ShaderProgram;
 namespace Geometry {
     class Cube;
+    class Square;
 }
+class Texture2D;
 
 /// Handles all resource loading.
 class ResourceManager {
@@ -47,7 +49,7 @@ class ResourceManager {
          * \endcode
          *
          * @param shaders List of shaders to link together.
-         * @return The shader program instance
+         * @return The shader program instance.
          */
         ShaderProgram* CreateShaderProgram(std::initializer_list<const Shader*> shaders);
         
@@ -60,7 +62,7 @@ class ResourceManager {
         
         /// Create a cube for rendering if it doesn't already exist.
         /**
-         * @return The cube instance
+         * @return The cube instance.
          */
         Geometry::Cube* CreateCube();
         
@@ -69,6 +71,47 @@ class ResourceManager {
          * Deletes the instance if no more references exist.
          */
         void FreeCube();
+        
+        /// Create a square for rendering if it doesn't already exist.
+        /**
+         * @return The square instance.
+         */
+        Geometry::Square* CreateSquare();
+        
+        /// Free the reference to the square.
+        /**
+         * Deletes the instance if no more references exist.
+         */
+        void FreeSquare();
+        
+        /// Create a 2D texture if it doesn't already exist.
+        /**
+		 * @param data Image file data.
+		 * @param dataLength Length of the image file data.
+		 * @return The %Texture2D instance
+		 */
+        Texture2D* CreateTexture2D(const char* data, int dataLength);
+        
+        /// Free the reference to the 2D texture.
+        /**
+         * Deletes the instance if no more references exist.
+         * @param texture %Texture to dereference.
+         */
+        void FreeTexture2D(Texture2D* texture);
+        
+        /// Create a 2D texture if it doesn't already exist.
+        /**
+		 * @param filename Filename of image file.
+		 * @return The %Texture2D instance
+		 */
+        Texture2D* CreateTexture2DFromFile(std::string filename);
+        
+        /// Free the reference to the 2D texture.
+        /**
+         * Deletes the instance if no more references exist.
+         * @param texture %Texture to dereference.
+         */
+        void FreeTexture2DFromFile(Texture2D* texture);
         
     private:
         ResourceManager();
@@ -106,6 +149,22 @@ class ResourceManager {
         // Cube
         Geometry::Cube* mCube;
         int mCubeCount;
+        
+        // Square
+        Geometry::Square* mSquare;
+        int mSquareCount;
+        
+        // Texture2D
+        struct Texture2DInstance {
+            Texture2D* texture;
+            int count;
+        };
+        std::map<const char*, Texture2DInstance> mTextures;
+        std::map<Texture2D*, const char*> mTexturesInverse;
+        
+        // Texture2D from file
+        std::map<std::string, Texture2DInstance> mTexturesFromFile;
+        std::map<Texture2D*, std::string> mTexturesFromFileInverse;
 };
 
 /// Get the resource manager.
