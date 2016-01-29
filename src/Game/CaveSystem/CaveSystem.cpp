@@ -6,16 +6,12 @@
 
 using namespace Caves;
 
-CaveSystem::CaveSystem() {
-    mScene = nullptr;
-}
-
 CaveSystem::CaveSystem(Scene* scene) {
     mScene = scene;
 }
 
 CaveSystem::~CaveSystem() {
-    //TODO: DELETE EVERYTHING
+
 }
 
 void CaveSystem::GenerateCaveSystem() {
@@ -27,7 +23,6 @@ void CaveSystem::GenerateCaveSystem() {
                 wall->AddComponent<Component::Mesh>();
                 wall->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
                 wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j), -float(i), 0.f);
-                walls.push_back(wall);
             }
         }
     }

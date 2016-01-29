@@ -72,7 +72,6 @@ int main() {
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
-    int numberOfWalls = testCaveSystem.walls.size();
     while (!window->ShouldClose()) {
         lastTime = glfwGetTime();
         

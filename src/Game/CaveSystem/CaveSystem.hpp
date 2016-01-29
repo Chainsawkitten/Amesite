@@ -11,12 +11,15 @@ namespace Component {
 namespace Caves {
     class CaveSystem {
         public:
-            CaveSystem();
+            ///Constructor
+            /**
+            *@Param scene pointer to the active scene.
+            */
             CaveSystem(Scene* scene);
             ~CaveSystem();
-            void GenerateCaveSystem();
-            std::vector<Entity*> walls;
 
+            ///Creates a cavesystem from map out of cubes
+            void GenerateCaveSystem();
         private:
             Scene* mScene;
 
