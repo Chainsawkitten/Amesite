@@ -3,6 +3,8 @@
 #include "Shader/ShaderProgram.hpp"
 #include "Shader/Shader.hpp"
 #include "Geometry/Cube.hpp"
+#include "Geometry/Square.hpp"
+#include "Texture/Texture2D.hpp"
 
 using namespace std;
 
@@ -133,6 +135,67 @@ void ResourceManager::FreeCube() {
     
     if (mCubeCount <= 0)
         delete mCube;
+}
+
+Geometry::Square* ResourceManager::CreateSquare() {
+    if (mSquareCount == 0)
+        mSquare = new Geometry::Square();
+    
+    mSquareCount++;
+    return mSquare;
+}
+
+void ResourceManager::FreeSquare() {
+    mSquareCount--;
+    
+    if (mSquareCount <= 0)
+        delete mSquare;
+}
+
+Texture2D* ResourceManager::CreateTexture2D(const char* data, int dataLength) {
+    if (mTextures.find(data) == mTextures.end()) {
+        mTextures[data].texture = new Texture2D(data, dataLength);
+        mTexturesInverse[mTextures[data].texture] = data;
+        mTextures[data].count = 1;
+    } else {
+        mTextures[data].count++;
+    }
+    
+    return mTextures[data].texture;
+}
+
+void ResourceManager::FreeTexture2D(Texture2D* texture) {
+    const char* data = mTexturesInverse[texture];
+    
+    mTextures[data].count--;
+    if (mTextures[data].count <= 0) {
+        mTexturesInverse.erase(texture);
+        delete texture;
+        mTextures.erase(data);
+    }
+}
+
+Texture2D* ResourceManager::CreateTexture2DFromFile(std::string filename) {
+    if (mTexturesFromFile.find(filename) == mTexturesFromFile.end()) {
+        mTexturesFromFile[filename].texture = new Texture2D(filename.c_str());
+        mTexturesFromFileInverse[mTexturesFromFile[filename].texture] = filename;
+        mTexturesFromFile[filename].count = 1;
+    } else {
+        mTexturesFromFile[filename].count++;
+    }
+    
+    return mTexturesFromFile[filename].texture;
+}
+
+void ResourceManager::FreeTexture2DFromFile(Texture2D* texture) {
+    string filename = mTexturesFromFileInverse[texture];
+    
+    mTexturesFromFile[filename].count--;
+    if (mTexturesFromFile[filename].count <= 0) {
+        mTexturesFromFileInverse.erase(texture);
+        delete texture;
+        mTexturesFromFile.erase(filename);
+    }
 }
 
 ResourceManager& Resources() {

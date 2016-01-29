@@ -28,6 +28,8 @@ MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, 
     mInput = new InputHandler(mWindow);
     mInput->Update();
     mInput->SetActive();
+    
+    mSize = glm::vec2(width, height);
 }
 
 MainWindow::~MainWindow() {
@@ -47,6 +49,9 @@ void MainWindow::Init() {
 void MainWindow::Update() {
     mInput->Update();
     mInput->SetActive();
+
+const glm::vec2& MainWindow::GetSize() const {
+    return mSize;
 }
 
 void MainWindow::SetTitle(const char *title) {

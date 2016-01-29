@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Util/Input.hpp"
+#include <glm/glm.hpp>
 
 struct GLFWwindow;
 
@@ -27,6 +28,12 @@ class MainWindow {
         /// Update
         void Update();
         
+        /// Get the size of the window.
+        /**
+         * @return The size of the window in pixels.
+         */
+        const glm::vec2& GetSize() const;
+        
         /// Set window title.
         /**
          * @param title New window title.
@@ -46,4 +53,5 @@ class MainWindow {
         InputHandler *mInput;
         GLFWwindow* mWindow;
         bool mDebugContext;
+        glm::vec2 mSize;
 };
