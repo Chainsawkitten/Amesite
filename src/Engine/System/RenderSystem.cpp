@@ -36,10 +36,10 @@ void RenderSystem::Render(const Scene& scene) {
     
     Entity* camera = nullptr;
 
-    // Finds camera in scene.
-    for (unsigned int i = 0; i < scene.Size<Entity>() && camera == nullptr; i++) {
-        if (scene.operator[]<Entity>(i)->GetComponent<Component::Lens>() != nullptr && scene.operator[]<Entity>(i)->GetComponent<Component::Transform>() != nullptr) {
-            camera = scene.operator[]<Entity>(i);
+    // Finds (last) camera in scene.
+    for (unsigned int i = 0; i < scene.Size<Component::Lens>(); i++) {
+        if (scene.Get<Component::Lens>(i)->entity->GetComponent<Component::Transform>() != nullptr) {
+            camera = scene.Get<Component::Lens>(i)->entity;
         }
     }
 
@@ -52,9 +52,9 @@ void RenderSystem::Render(const Scene& scene) {
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
 
         // Finds models in scene.
-        for (unsigned int i = 0; i < scene.Size<Entity>(); i++) {
-            if (scene.operator[]<Entity>(i)->GetComponent<Component::Transform>() != nullptr && scene.operator[]<Entity>(i)->GetComponent<Component::Mesh>()) {
-                Entity* model = scene.operator[]<Entity>(i);
+        for (unsigned int i = 0; i < scene.Size<Component::Mesh>(); i++) {
+            if (scene.Get<Component::Mesh>(i)->entity->GetComponent<Component::Transform>() != nullptr) {
+                Entity* model = scene.Get<Component::Mesh>(i)->entity;
                 
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
 

@@ -41,7 +41,7 @@ class Scene {
         * @param index The index of the item.
         * @return Pointer to item on index, else nullptr.
         */
-        template<typename T> T* operator[](unsigned int index) const { return nullptr; }
+        template<typename T> T* Get(unsigned int index) const { return nullptr; }
 
     private:
         std::vector<Entity*> mEntityVec;
@@ -52,7 +52,7 @@ class Scene {
         std::vector<Component::RelativeTransform*> mRelativeTransformComponentVec;
 };
 
-// Size()
+// Size<T>()
 template<> inline unsigned int Scene::Size<Entity>() const {
     return mEntityVec.size();
 }
@@ -73,32 +73,32 @@ template<> inline unsigned int Scene::Size<Component::RelativeTransform>() const
     return mRelativeTransformComponentVec.size();
 }
 
-// operator[]
-template<> inline Entity* Scene::operator[](unsigned int index) const {
+// Get<T>()
+template<> inline Entity* Scene::Get(unsigned int index) const {
     if (index < mEntityVec.size())
         return mEntityVec.at(index);
     return nullptr;
 }
 
-template<> inline Component::Lens* Scene::operator[](unsigned int index) const {
+template<> inline Component::Lens* Scene::Get(unsigned int index) const {
     if (index < mLensComponentVec.size())
         return mLensComponentVec.at(index);
     return nullptr;
 }
 
-template<> inline Component::Transform* Scene::operator[](unsigned int index) const {
+template<> inline Component::Transform* Scene::Get(unsigned int index) const {
     if (index < mTransformComponentVec.size())
         return mTransformComponentVec.at(index);
     return nullptr;
 }
 
-template<> inline Component::Mesh* Scene::operator[](unsigned int index) const {
+template<> inline Component::Mesh* Scene::Get(unsigned int index) const {
     if (index < mMeshComponentVec.size())
         return mMeshComponentVec.at(index);
     return nullptr;
 }
 
-template<> inline Component::RelativeTransform* Scene::operator[](unsigned int index) const {
+template<> inline Component::RelativeTransform* Scene::Get(unsigned int index) const {
     if (index < mRelativeTransformComponentVec.size())
         return mRelativeTransformComponentVec.at(index);
     return nullptr;
