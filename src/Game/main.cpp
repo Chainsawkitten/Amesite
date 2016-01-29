@@ -57,7 +57,7 @@ int main() {
     cameraEntity->AddComponent<Component::Lens>();
     cameraEntity->AddComponent<Component::Transform>();
 
-    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 0.0f, 5.f);
+    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 0.f, 5.f);
     cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
 
     // Main game loop.

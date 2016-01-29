@@ -50,6 +50,7 @@ class Entity {
         Scene* mScene;
 };
 
+// AddComponent<T>()
 template<> inline Component::Lens* Entity::AddComponent<Component::Lens>() {
     return CreateLens();
 }
@@ -66,6 +67,7 @@ template<> inline Component::RelativeTransform* Entity::AddComponent<Component::
     return CreateRelativeTransform();
 }
 
+// GetComponent<T>()
 template<> inline Component::Lens* Entity::GetComponent<Component::Lens>() {
     return mLens;
 }

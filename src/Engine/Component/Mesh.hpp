@@ -8,7 +8,7 @@ class Entity;
 
 namespace Component {
     /// Component handling a Geometry3D.
-    class Mesh : SuperComponent {
+    class Mesh : public SuperComponent {
         public:
             /// Create new %Mesh.
             /**

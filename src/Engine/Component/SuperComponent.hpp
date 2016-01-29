@@ -21,5 +21,4 @@ namespace Component{
              */
             Entity* entity;
         };
-
 }
