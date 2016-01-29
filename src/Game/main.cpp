@@ -9,6 +9,7 @@
 #include "Util/GameSettings.hpp"
 #include "CaveSystem/CaveSystem.hpp"
 #include <Util/FileSystem.hpp>
+#include <Util/Input.hpp>
 
 
 #include "System/RenderSystem.hpp"
@@ -80,6 +81,10 @@ int main() {
         
         // Render.
         renderSystem.Render(scene);
+
+        //Input testing
+        window->Update();
+        
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
 
         // Set window title to reflect screen update and render times.
