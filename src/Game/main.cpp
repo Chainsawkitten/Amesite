@@ -82,7 +82,7 @@ int main() {
         // Render.
         renderSystem.Render(scene);
 
-        // Input testing
+        // Input testing.
         window->Update();
         
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
