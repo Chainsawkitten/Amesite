@@ -1,10 +1,13 @@
 #pragma once
+#include "Transform.hpp"
 
 namespace Component {
-    class ColliderCircle2D {
+    class Collider2DCircle {
         public:
+            Collider2DCircle(float radius, Transform* mTransform);
+            ~Collider2DCircle();
             float radius;
         private:
-            transform
-    }
+            Transform* transform;
+    };
 }

@@ -1,8 +1,15 @@
 #pragma once
+#include "Transform.hpp"
+#include "../Entity/Entity.hpp"
 
 namespace Component {
-    class ColliderRectangle2D {
+    class Collider2DRectangle : public Component {
         public:
-        private:
-    }
+            Collider2DRectangle(float width, float height, Transform* mTransform);
+            ~Collider2DRectangle();
+            bool CollideRectangle(Entity* other);
+            bool CollideCircle(Entity* other);
+            float width, height;
+            Entity *parent;
+    };
 }
