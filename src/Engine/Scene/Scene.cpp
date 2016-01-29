@@ -2,6 +2,11 @@
 
 #include "../Entity/Entity.hpp"
 
+#include "../Component/Transform.hpp"
+#include "../Component/Lens.hpp"
+#include "../Component/Mesh.hpp"
+#include "../Component/RelativeTransform.hpp"
+
 Scene::Scene() {
 
 }
