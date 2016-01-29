@@ -45,7 +45,7 @@ class Entity {
 
         /// Pointer to which Scene %Entity is contained.
         /**
-         * Default: nullptr
+         * Default: Must point to a Scene
          */
         Scene* mScene;
 };
