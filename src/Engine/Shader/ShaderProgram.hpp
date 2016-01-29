@@ -1,7 +1,9 @@
 #pragma once
 
 #include <initializer_list>
-#include "Shader.hpp"
+#include <GL/glew.h>
+
+class Shader;
 
 /// A GLSL shader program.
 class ShaderProgram {

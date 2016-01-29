@@ -1,6 +1,7 @@
 #include "Resources.hpp"
 
 #include "Shader/ShaderProgram.hpp"
+#include "Shader/Shader.hpp"
 #include "Geometry/Cube.hpp"
 
 using namespace std;

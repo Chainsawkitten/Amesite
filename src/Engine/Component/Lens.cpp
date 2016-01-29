@@ -5,9 +5,9 @@
 using namespace Component;
 
 Lens::Lens() {
-    mFieldOfView = 45.f;
-    mZFar = 100.f;
-    mZNear = 0.05f;
+    fieldOfView = 45.f;
+    zFar = 100.f;
+    zNear = 0.05f;
 }
 
 Lens::~Lens() {
@@ -15,5 +15,5 @@ Lens::~Lens() {
 }
 
 glm::mat4 Lens::GetProjection(const glm::vec2& screenSize) const {
-    return glm::perspective(glm::radians(mFieldOfView), screenSize.x/screenSize.y, mZNear, mZFar);
+    return glm::perspective(glm::radians(fieldOfView), screenSize.x/screenSize.y, zNear, zFar);
 }
