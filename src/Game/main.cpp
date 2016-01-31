@@ -11,7 +11,6 @@
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
-
 #include "System/RenderSystem.hpp"
 
 #include <Engine/Scene/Scene.hpp>
@@ -49,24 +48,14 @@ int main() {
     Scene scene;
 
     Caves::CaveSystem testCaveSystem(&scene);
-    testCaveSystem.GenerateCaveSystem();
-    
-    Entity* cubeEntity = scene.CreateEntity();
-    cubeEntity->AddComponent<Component::Mesh>();
-    cubeEntity->AddComponent<Component::Transform>();
-    cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-
-    Entity* cubeChildEntity = scene.CreateEntity();
-    cubeChildEntity->AddComponent<Component::Mesh>()->geometry = cubeEntity->GetComponent<Component::Mesh>()->geometry;
-    cubeChildEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
-    cubeChildEntity->GetComponent<Component::RelativeTransform>()->Move(1.f, 1.f, -1.f);
+    Entity* map = testCaveSystem.GenerateCaveSystem();
     
     Entity* cameraEntity = scene.CreateEntity();
     cameraEntity->AddComponent<Component::Lens>();
     cameraEntity->AddComponent<Component::Transform>();
 
-    cameraEntity->GetComponent<Component::Transform>()->Move(12.5f, -12.5f, 35.f);
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
+    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 35.f, 30.f);
+    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 50.f, 0.f);
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
@@ -77,7 +66,7 @@ int main() {
         lastTime = glfwGetTime();
         
         // Move cube.
-        cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
+        map->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
         
         // Render.
         renderSystem.Render(scene);
