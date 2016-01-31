@@ -45,10 +45,4 @@ void Scene::Clear() {
     }
     mMeshComponentVec.clear();
     mMeshComponentVec.shrink_to_fit();
-
-    for (unsigned int i = 0; i < mRelativeTransformComponentVec.size(); i++) {
-        delete mRelativeTransformComponentVec.at(i);
-    }
-    mRelativeTransformComponentVec.clear();
-    mRelativeTransformComponentVec.shrink_to_fit();
 }

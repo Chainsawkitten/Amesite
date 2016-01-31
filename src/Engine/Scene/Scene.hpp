@@ -49,7 +49,6 @@ class Scene {
         std::vector<Component::Lens*> mLensComponentVec;
         std::vector<Component::Transform*> mTransformComponentVec;
         std::vector<Component::Mesh*> mMeshComponentVec;
-        std::vector<Component::RelativeTransform*> mRelativeTransformComponentVec;
 };
 
 // Size<T>()
@@ -67,10 +66,6 @@ template<> inline unsigned int Scene::Size<Component::Transform>() const {
 
 template<> inline unsigned int Scene::Size<Component::Mesh>() const {
     return mMeshComponentVec.size();
-}
-
-template<> inline unsigned int Scene::Size<Component::RelativeTransform>() const {
-    return mRelativeTransformComponentVec.size();
 }
 
 // Get<T>()
@@ -95,11 +90,5 @@ template<> inline Component::Transform* Scene::Get(unsigned int index) const {
 template<> inline Component::Mesh* Scene::Get(unsigned int index) const {
     if (index < mMeshComponentVec.size())
         return mMeshComponentVec.at(index);
-    return nullptr;
-}
-
-template<> inline Component::RelativeTransform* Scene::Get(unsigned int index) const {
-    if (index < mRelativeTransformComponentVec.size())
-        return mRelativeTransformComponentVec.at(index);
     return nullptr;
 }
