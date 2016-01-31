@@ -5,12 +5,14 @@
 class Entity;
 
 namespace Component {
-
     /// Component providing transformation relative to a parent Entity.
     class RelativeTransform : public Transform {
         public:
-            /// Create a new lens.
-            RelativeTransform();
+            /// Create new %RelativeTransform.
+            /**
+             * @param entity Pointer to which Entity this %Component corresponds.
+             */
+            RelativeTransform(Entity* entity);
             
             /// Destructor.
             ~RelativeTransform();
@@ -27,5 +29,4 @@ namespace Component {
              */
             Entity* parentEntity;
     };
-
 }

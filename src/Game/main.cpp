@@ -43,8 +43,8 @@ int main() {
     window->Init();
     
     // RenderSystem.
-    RenderSystem renderSystem;
-    
+    System::RenderSystem renderSystem;
+
     // Scene and Entites. 
     Scene scene;
 
@@ -64,7 +64,7 @@ int main() {
     Entity* cameraEntity = scene.CreateEntity();
     cameraEntity->AddComponent<Component::Lens>();
     cameraEntity->AddComponent<Component::Transform>();
-    
+
     cameraEntity->GetComponent<Component::Transform>()->Move(12.5f, -12.5f, 35.f);
     cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
 
@@ -82,7 +82,7 @@ int main() {
         // Render.
         renderSystem.Render(scene);
 
-        //Input testing
+        // Input testing.
         window->Update();
         
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
