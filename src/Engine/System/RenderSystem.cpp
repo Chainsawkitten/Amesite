@@ -34,6 +34,10 @@ void RenderSystem::Render(const Scene& scene) {
     
     mShaderProgram->Use();
     
+    for (unsigned int i = 0; i < scene.Size<Component::Transform>(); i++) {
+        scene.Get<Component::Transform>(i)->UpdateModelMatrix();
+    }
+
     Entity* camera = nullptr;
 
     // Finds (last) camera in scene.
@@ -60,7 +64,7 @@ void RenderSystem::Render(const Scene& scene) {
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
 
                 // Render model.
-                glm::mat4 modelMat = model->GetComponent<Component::Transform>()->GetModelMatrix();
+                glm::mat4 modelMat = model->GetComponent<Component::Transform>()->modelMatrix;
                 glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
 
                 glDrawElements(GL_TRIANGLES, model->GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
