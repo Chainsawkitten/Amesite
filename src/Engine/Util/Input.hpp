@@ -11,6 +11,33 @@
  */
 class InputHandler {
     public:
+        /// Xbox 360 controller scalar axis index
+        enum XBOXAxisIndex {
+            LEFT_STICK_X = 0, ///< Left stick X axis
+            LEFT_STICK_Y, ///< Left stick Y axis
+            LEFT_RIGHT_TRIGGER, ///< Left and right trigger value
+            RIGHT_STICK_X, ///< Right stick X axis
+            RIGHT_STICK_Y, ///< Right stick Y axis
+        };
+
+        /// Xbox 360 controller button index
+        enum XBOXButtonIndex {
+            A = 0, ///< A button
+            B, ///< B button
+            X, ///< X button
+            Y, ///< Y button
+            LEFT_BUMPER, ///< Left bumper button
+            RIGHT_BUMPER, ///< Right bumper button
+            BACK, ///< Back button
+            START, ///< Start button
+            LEFT_STICK, ///< Left stick click
+            RIGHT_STICK, ///< Right stick click
+            D_PAD_UP, ///< D-pad up
+            D_PAD_RIGHT, ///< D-pad right
+            D_PAD_DOWN, ///< D-pad down
+            D_PAD_LEFT, ///< D-pad left
+        };
+
         /// Button codes.
         enum Button {
             MOVE_X = 0, ///< Move in X axis
