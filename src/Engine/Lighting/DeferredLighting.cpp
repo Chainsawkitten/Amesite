@@ -58,6 +58,10 @@ void DeferredLighting::SetTarget() {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFrameBufferObject);
 }
 
+void DeferredLighting::ResetTarget() {
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+}
+
 void DeferredLighting::ShowTextures(const glm::vec2& size) {
     // Disable depth testing
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);

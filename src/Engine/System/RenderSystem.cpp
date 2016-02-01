@@ -16,21 +16,29 @@
 #include "../Component/Transform.hpp"
 #include "../Component/Mesh.hpp"
 
+#include "../Lighting/DeferredLighting.hpp"
+
 using namespace System;
 
 RenderSystem::RenderSystem() {
     mVertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ mVertShader, mFragShader });
+    
+    mDeferredLighting = new DeferredLighting(MainWindow::GetInstance()->GetSize());
 }
 
 RenderSystem::~RenderSystem() {
+    delete mDeferredLighting;
+    
     Resources().FreeShaderProgram(mShaderProgram);
     Resources().FreeShader(mVertShader);
     Resources().FreeShader(mFragShader);
 }
 
 void RenderSystem::Render(const Scene& scene) {
+    mDeferredLighting->SetTarget();
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     mShaderProgram->Use();
@@ -67,4 +75,7 @@ void RenderSystem::Render(const Scene& scene) {
             }
         }
     }
+    
+    mDeferredLighting->ResetTarget();
+    mDeferredLighting->ShowTextures(MainWindow::GetInstance()->GetSize());
 }

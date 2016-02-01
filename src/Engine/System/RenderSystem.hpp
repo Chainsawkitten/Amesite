@@ -4,6 +4,7 @@ class Entity;
 class Scene;
 class Shader;
 class ShaderProgram;
+class DeferredLighting;
 
 namespace System {
     /// System to render a scene.
@@ -25,5 +26,7 @@ namespace System {
             Shader* mVertShader;
             Shader* mFragShader;
             ShaderProgram* mShaderProgram;
+            
+            DeferredLighting* mDeferredLighting;
     };
 }
