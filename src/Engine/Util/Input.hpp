@@ -43,6 +43,7 @@ class InputHandler {
             MOVE_X = 0, ///< Move in X axis
             MOVE_Z, ///< Move in Z axis
             AIM_X, ///< Aim in X axis
+            AIM_Z, ///< Aim in Z axis
             SHOOT, ///< Fire bullet
             QUIT, ///< Quit game
             BUTTONS, ///< Total number of inputs - joystick

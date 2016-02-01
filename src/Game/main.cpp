@@ -26,59 +26,105 @@
 
 #include <thread>
 
+#include "Player/Player.hpp"
+
 using namespace std;
 
 int main() {
+    
     // Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
         freopen(FileSystem::SavePath("Modership", "GameLog.txt").c_str(), "a", stderr);
-    
+
     Log() << "Game started - " << time(nullptr) << "\n";
-    
+
     if (!glfwInit())
         return 1;
-    
+
     MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Modership", GameSettings::GetInstance().GetBool("Debug Context"));
     glewInit();
     window->Init();
-    
+
     // RenderSystem.
     System::RenderSystem renderSystem;
 
     // Scene and Entites. 
     Scene scene;
 
-    Caves::CaveSystem testCaveSystem(&scene);
-    testCaveSystem.GenerateCaveSystem();
-    
     Entity* cubeEntity = scene.CreateEntity();
     cubeEntity->AddComponent<Component::Mesh>();
     cubeEntity->AddComponent<Component::Transform>();
     cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+   
+    Entity* cubeEntity2 = scene.CreateEntity();
+    cubeEntity2->AddComponent<Component::Mesh>();
+    cubeEntity2->AddComponent<Component::Transform>();
+    cubeEntity2->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
 
-    Entity* cubeChildEntity = scene.CreateEntity();
-    cubeChildEntity->AddComponent<Component::Mesh>()->geometry = cubeEntity->GetComponent<Component::Mesh>()->geometry;
-    cubeChildEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
-    cubeChildEntity->GetComponent<Component::RelativeTransform>()->Move(1.f, 1.f, -1.f);
-    
+    Entity* turretJoint = scene.CreateEntity();
+    turretJoint->AddComponent<Component::RelativeTransform>();
+    turretJoint->GetComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
+
+    Entity* turretEntity = scene.CreateEntity();
+    turretEntity->AddComponent<Component::Mesh>();
+    turretEntity->AddComponent<Component::RelativeTransform>();
+    turretEntity->GetComponent<Component::RelativeTransform>()->parentEntity = turretJoint;
+    turretEntity->GetComponent<Component::RelativeTransform>()->Move(1, 0, 0);
+    turretEntity->GetComponent<Component::RelativeTransform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+
+    turretEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
     Entity* cameraEntity = scene.CreateEntity();
     cameraEntity->AddComponent<Component::Lens>();
     cameraEntity->AddComponent<Component::Transform>();
 
-    cameraEntity->GetComponent<Component::Transform>()->Move(12.5f, -12.5f, 35.f);
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
+    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, -34.5f, 0.f);
+    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, -90.f, 0.f);
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
-    
+
+
+    glm::vec3 velocity(0.5f, 0, 0);
+
+    Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_ONE);
+    Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_ONE);
+    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_ONE);
+    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_ONE);
+
+    Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_TWO);
+    Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_TWO);
+    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_TWO);
+    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_TWO);
+
+    Player player(cubeEntity, 20);
+    Player player2(cubeEntity2, 20, InputHandler::PLAYER_TWO);
+
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
     while (!window->ShouldClose()) {
         lastTime = glfwGetTime();
-        
+
         // Move cube.
-        cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
-        
+        //cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
+        cubeEntity->GetComponent<Component::Transform>()->Move(velocity);
+
+        player.Update(0.01f);
+        player2.Update(0.01f);
+
+        float a = Input()->ButtonValue(Input()->AIM_X, Input()->PLAYER_TWO);
+        float b = Input()->ButtonValue(Input()->AIM_Z, Input()->PLAYER_TWO);
+
+        if(glm::abs(a) + glm::abs(b) > 0.2f)
+            if(a > 0)
+                turretJoint->GetComponent<Component::RelativeTransform>()->yaw = glm::atan(b / a) * 360.f/(2*3.14);
+            else
+                turretJoint->GetComponent<Component::RelativeTransform>()->yaw = 180 + glm::atan(b / a) * 360.f / (2 * 3.14);
+
+        Log() << (float) Input()->ButtonValue(Input()->MOVE_X, Input()->PLAYER_ONE) << "\n";
+
+        velocity *= 0.95f;
+
         // Render.
         renderSystem.Render(scene);
 
@@ -115,4 +161,5 @@ int main() {
     
     Log() << "Game ended - " << time(nullptr) << "\n";
     return 0;
+
 }

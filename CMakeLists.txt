@@ -182,11 +182,15 @@ set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Util/GameSettings.cpp
         src/Game/CaveSystem/CaveSystem.cpp
+        src/Game/Player/Player.cpp
+        src/Game/Turret/Turret.cpp
     )
 
 set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
         src/Game/CaveSystem/CaveSystem.hpp
+        src/Game/Player/Player.hpp
+        src/Game/Turret/Turret.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
