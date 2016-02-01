@@ -1,14 +1,20 @@
 #pragma once
 
+#include "SuperComponent.hpp"
+
+class Entity;
+
 #include <glm\glm.hpp>
 
 namespace Component {
-
     /// Component handling a camera lens.
-    class Lens {
+    class Lens : public SuperComponent {
         public:
-            /// Create a new lens.
-            Lens();
+            /// Create new %Lens.
+            /**
+             * @param entity Pointer to which Entity this %Component corresponds.
+             */
+            Lens(Entity* entity);
             
             /// Destructor.
             ~Lens();
@@ -38,5 +44,4 @@ namespace Component {
              */
             float zFar;
     };
-
 }

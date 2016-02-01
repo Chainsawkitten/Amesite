@@ -7,10 +7,15 @@ namespace Component {
     class RelativeTransform;
 }
 
+class Scene;
+
 class Entity {
     public:
-        /// Create a new Entity.
-        Entity();
+        /// Create new Entity.
+        /**
+         * @param scene Pointer to which Scene %Entity is contained.
+         */
+        Entity(Scene* scene);
 
         /// Destructor.
         ~Entity();
@@ -37,8 +42,15 @@ class Entity {
         Component::Transform* mTransform;
         Component::Mesh* mMesh;
         Component::RelativeTransform* mRelativeTransform;
+
+        /// Pointer to which Scene %Entity is contained.
+        /**
+         * Default: Must point to a Scene
+         */
+        Scene* mScene;
 };
 
+// AddComponent<T>()
 template<> inline Component::Lens* Entity::AddComponent<Component::Lens>() {
     return CreateLens();
 }
@@ -55,6 +67,7 @@ template<> inline Component::RelativeTransform* Entity::AddComponent<Component::
     return CreateRelativeTransform();
 }
 
+// GetComponent<T>()
 template<> inline Component::Lens* Entity::GetComponent<Component::Lens>() {
     return mLens;
 }
