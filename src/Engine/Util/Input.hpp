@@ -220,6 +220,7 @@ class InputHandler {
         double mCursorX, mCursorY;
         double mLastScroll;
         double mScroll;
+        const double mThreshold = 0.2;
 
         std::string mText, mTempText;
 
