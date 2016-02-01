@@ -1,13 +1,15 @@
 #pragma once
 #include "Transform.hpp"
+#include "../Entity/Entity.hpp"
 
 namespace Component {
-    class Collider2DCircle {
+    class Collider2DCircle : public SuperComponent {
         public:
-            Collider2DCircle(float radius, Transform* mTransform);
+            ///Constructor
+            Collider2DCircle(Entity* entity);
             ~Collider2DCircle();
+
+            ///Radius of circle
             float radius;
-        private:
-            Transform* transform;
     };
 }

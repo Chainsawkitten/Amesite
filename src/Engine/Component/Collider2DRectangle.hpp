@@ -3,13 +3,16 @@
 #include "../Entity/Entity.hpp"
 
 namespace Component {
-    class Collider2DRectangle : public Component {
+    class Collider2DRectangle : public SuperComponent {
         public:
-            Collider2DRectangle(float width, float height, Transform* mTransform);
+            ///Constructor
+            Collider2DRectangle(Entity* entity);
             ~Collider2DRectangle();
-            bool CollideRectangle(Entity* other);
-            bool CollideCircle(Entity* other);
-            float width, height;
-            Entity *parent;
+
+            ///width of rectangle
+            float width;
+
+            ///height of rectangle
+            float height;
     };
 }

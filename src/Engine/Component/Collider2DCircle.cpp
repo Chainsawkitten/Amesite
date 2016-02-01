@@ -2,9 +2,9 @@
 
 using namespace Component;
 
-Collider2DCircle::Collider2DCircle(float radius, Transform* mTransform) {
-    this->radius = radius;
+Collider2DCircle::Collider2DCircle(Entity* entity) : SuperComponent(entity) {
 }
+
 Collider2DCircle::~Collider2DCircle() {
 
 }

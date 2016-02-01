@@ -20,6 +20,10 @@
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
+#include <Component/Collider2DCircle.hpp>
+#include <Component/Collider2DRectangle.hpp>
+
+#include <CollisionSystem/CollisionSystem.hpp>
 
 #include <Texture/Texture2D.hpp>
 #include <Component/RelativeTransform.hpp>
@@ -56,6 +60,23 @@ int main() {
     cubeEntity->AddComponent<Component::Transform>();
     cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
 
+    Entity* collisionCubeA = scene.CreateEntity();
+    collisionCubeA->AddComponent<Component::Mesh>();
+    collisionCubeA->AddComponent<Component::Transform>();
+    collisionCubeA->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    collisionCubeA->AddComponent<Component::Collider2DRectangle>();
+    collisionCubeA->GetComponent<Component::Transform>()->Move(-4.f, 0.f, -4.f);
+    collisionCubeA->GetComponent<Component::Collider2DRectangle>()->height = 1.f;
+    collisionCubeA->GetComponent<Component::Collider2DRectangle>()->width = 1.f;
+
+    Entity* collisionCubeB = scene.CreateEntity();
+    collisionCubeB->AddComponent<Component::Mesh>();
+    collisionCubeB->AddComponent<Component::Transform>();
+    collisionCubeB->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    collisionCubeB->AddComponent<Component::Collider2DCircle>();
+    collisionCubeB->GetComponent<Component::Transform>()->Move(-4.f,0.f,-6.f);
+    collisionCubeB->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
+
     Entity* cubeChildEntity = scene.CreateEntity();
     cubeChildEntity->AddComponent<Component::Mesh>()->geometry = cubeEntity->GetComponent<Component::Mesh>()->geometry;
     cubeChildEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
@@ -65,20 +86,37 @@ int main() {
     cameraEntity->AddComponent<Component::Lens>();
     cameraEntity->AddComponent<Component::Transform>();
 
-    cameraEntity->GetComponent<Component::Transform>()->Move(12.5f, -12.5f, 35.f);
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
+    cameraEntity->GetComponent<Component::Transform>()->Move(-5.0f, 12.5f, -5.0f);
+    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 90.f, 0.f);
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
+    float rotation = 0;
+    glm::vec3 cubeAOrigin = collisionCubeA->GetComponent<Component::Transform>()->position;
+    glm::vec3 cubeBOrigin = collisionCubeA->GetComponent<Component::Transform>()->position;
     while (!window->ShouldClose()) {
+        double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
+        rotation += deltaTime;
+        if (rotation > 360.f)
+            rotation = 0;
         
         // Move cube.
         cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
-        
+
+        // Move collision cubes.
+        collisionCubeA->GetComponent<Component::Transform>()->position = cubeAOrigin + glm::vec3(glm::cos(rotation), 0.f, -glm::sin(rotation));
+        collisionCubeB->GetComponent<Component::Transform>()->position = cubeBOrigin + glm::vec3(glm::cos(rotation), 0.f, glm::sin(rotation));
+        if (CollisionManager().RectangleVSCircle(collisionCubeA, collisionCubeB)) {
+            Log() << "COLLISIIONISON!\n";
+        }
+        else
+            Log() << "NO NONONONO COLOSsisi";
+
+
         // Render.
         renderSystem.Render(scene);
 
