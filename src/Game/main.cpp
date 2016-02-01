@@ -102,7 +102,7 @@ int main() {
         lastTime = glfwGetTime();
         rotation += deltaTime;
         if (rotation > 360.f)
-            rotation = 0;
+            rotation -= 360.f;
         
         // Move cube.
         cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
@@ -110,12 +110,6 @@ int main() {
         // Move collision cubes.
         collisionCubeA->GetComponent<Component::Transform>()->position = cubeAOrigin + glm::vec3(glm::cos(rotation), 0.f, -glm::sin(rotation));
         collisionCubeB->GetComponent<Component::Transform>()->position = cubeBOrigin + glm::vec3(glm::cos(rotation), 0.f, glm::sin(rotation));
-        if (CollisionManager().RectangleVSCircle(collisionCubeA, collisionCubeB)) {
-            Log() << "COLLISIIONISON!\n";
-        }
-        else
-            Log() << "NO NONONONO COLOSsisi";
-
 
         // Render.
         renderSystem.Render(scene);

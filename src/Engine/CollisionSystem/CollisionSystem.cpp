@@ -1,10 +1,13 @@
 #include "CollisionSystem.hpp"
+#include "../Component/Collider2DCircle.hpp"
+#include "../Component/Collider2DRectangle.hpp"
+#include "../Entity/Entity.hpp"
+#include "../Component/Transform.hpp"
 #include <glm\glm.hpp>
 
 using namespace Component;
 
-CollisionSystem & CollisionSystem::GetInstance()
-{
+CollisionSystem& CollisionSystem::GetInstance() {
     static CollisionSystem instance;
 
     return instance;
@@ -87,27 +90,23 @@ bool CollisionSystem::RectangleVSCircle(Entity *aRectangle, Entity *bCircle) {
     //Top & bottom side
     if (circleCenter.x > topLeft.x && circleCenter.x < topRight.x) {
         float distanceToSide = circleCenter.y - topRight.y;
-        if (distanceToSide < circle->radius && distanceToSide > 0.f) {
+        if (distanceToSide < circle->radius && distanceToSide > 0.f)
             return true;
-        }
         
         distanceToSide = bottomRight.y - circleCenter.y;
-        if (distanceToSide < circle->radius && distanceToSide > 0.f) {
+        if (distanceToSide < circle->radius && distanceToSide > 0.f)
             return true;
-        }
     }
 
     //Left & right side
     if (circleCenter.y > bottomLeft.y && circleCenter.y < topLeft.y) {
         float distanceToSide = topLeft.x - circleCenter.x;
-        if (distanceToSide < circle->radius && distanceToSide > 0.f) {
+        if (distanceToSide < circle->radius && distanceToSide > 0.f)
             return true;
-        }
 
         distanceToSide = circleCenter.x - topRight.x;
-        if (distanceToSide < circle->radius && distanceToSide > 0.f) {
+        if (distanceToSide < circle->radius && distanceToSide > 0.f)
             return true;
-        }
     }
     return false;
 }

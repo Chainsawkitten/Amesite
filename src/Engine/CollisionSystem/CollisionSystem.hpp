@@ -1,8 +1,8 @@
 #pragma once
-#include "../Entity/Entity.hpp"
-#include "../Component/Collider2DCircle.hpp"
-#include "../Component/Collider2DRectangle.hpp"
 
+class Entity;
+
+///Class providing collision detection
 class CollisionSystem {
     public:
         /// Get the instance of the class.
