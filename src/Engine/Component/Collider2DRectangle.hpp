@@ -5,6 +5,7 @@
 class Entity;
 
 namespace Component {
+    ///Component describing a rectangle.
     class Collider2DRectangle : public SuperComponent {
         public:
             /// Create new %Collider2DRectangle.
