@@ -9,17 +9,21 @@ namespace Component {
 }
 
 namespace Caves {
+    /// Generates caves for the player to explore.
     class CaveSystem {
         public:
-            ///Constructor
+            /// Create new cave system.
             /**
-            *@Param scene pointer to the active scene.
-            */
+             * @param scene Pointer to the active scene.
+             */
             CaveSystem(Scene* scene);
+            
+            /// Destructor.
             ~CaveSystem();
 
-            ///Creates a cavesystem from map out of cubes
+            /// Creates a cave system from map out of cubes.
             void GenerateCaveSystem();
+            
         private:
             Scene* mScene;
 
