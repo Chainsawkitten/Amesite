@@ -19,5 +19,5 @@ class PointParticleEmitter : public ParticleEmitter {
         void EmitParticle();
         
     private:
-        glm::vec3 origin;
+        glm::vec3 mOrigin;
 };

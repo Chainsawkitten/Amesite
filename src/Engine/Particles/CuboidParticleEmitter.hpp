@@ -20,7 +20,7 @@ class CuboidParticleEmitter : public ParticleEmitter {
         void EmitParticle();
         
     private:
-        glm::vec3 origin;
-        glm::vec3 size;
+        glm::vec3 mOrigin;
+        glm::vec3 mSize;
 };
 

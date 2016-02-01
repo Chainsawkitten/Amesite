@@ -12,93 +12,93 @@
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
 ParticleSystem::ParticleSystem(ParticleType particleType, int maxParticleCount) {
-    vertexShader = Resources().CreateShader(PARTICLE_VERT, PARTICLE_VERT_LENGTH, GL_VERTEX_SHADER);
-    geometryShader = Resources().CreateShader(PARTICLE_GEOM, PARTICLE_GEOM_LENGTH, GL_GEOMETRY_SHADER);
-    fragmentShader = Resources().CreateShader(PARTICLE_FRAG, PARTICLE_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    shaderProgram = Resources().CreateShaderProgram({ vertexShader, geometryShader, fragmentShader });
+    mVertexShader = Resources().CreateShader(PARTICLE_VERT, PARTICLE_VERT_LENGTH, GL_VERTEX_SHADER);
+    mGeometryShader = Resources().CreateShader(PARTICLE_GEOM, PARTICLE_GEOM_LENGTH, GL_GEOMETRY_SHADER);
+    mFragmentShader = Resources().CreateShader(PARTICLE_FRAG, PARTICLE_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mGeometryShader, mFragmentShader });
     
-    this->particleType = particleType;
+    this->mParticleType = particleType;
     
-    this->maxParticleCount = maxParticleCount;
-    particleCount = 0;
+    this->mMaxParticleCount = maxParticleCount;
+    mParticleCount = 0;
     
     BindPointData();
 }
 
 ParticleSystem::~ParticleSystem() {
-    glDeleteBuffers(1, &vertexBuffer);
+    glDeleteBuffers(1, &mVertexBuffer);
     
-    for (ParticleEmitter* emitter : emitters) {
+    for (ParticleEmitter* emitter : mEmitters) {
         delete emitter;
     }
     
-    Resources().FreeShaderProgram(shaderProgram);
-    Resources().FreeShader(vertexShader);
-    Resources().FreeShader(geometryShader);
-    Resources().FreeShader(fragmentShader);
+    Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mGeometryShader);
+    Resources().FreeShader(mFragmentShader);
 }
 
 unsigned int ParticleSystem::ParticleCount() const {
-    return particleCount;
+    return mParticleCount;
 }
 
 unsigned int ParticleSystem::MaxParticleCount() const {
-    return maxParticleCount;
+    return mMaxParticleCount;
 }
 
 void ParticleSystem::AddParticleEmitter(ParticleEmitter* emitter) {
-    emitters.push_back(emitter);
+    mEmitters.push_back(emitter);
 }
 
 void ParticleSystem::RemoveParticleEmitter() {
-	emitters.pop_back();
+	mEmitters.pop_back();
 }
 
 void ParticleSystem::EmitParticle(glm::vec3 position) {
-    if (particleCount < maxParticleCount) {
+    if (mParticleCount < mMaxParticleCount) {
         Particle particle;
         
         particle.worldPos = position;
         particle.life = 0.f;
-        particle.lifetime = particleType.minLifetime + rand() / (RAND_MAX / (particleType.maxLifetime - particleType.minLifetime));
+        particle.lifetime = mParticleType.mMinLifetime + rand() / (RAND_MAX / (mParticleType.mMaxLifetime - mParticleType.mMinLifetime));
         
-        if (particleType.uniformScaling) {
-            particle.size = particleType.minSize + (rand() / static_cast<float>(RAND_MAX)) * (particleType.maxSize - particleType.minSize);
+        if (mParticleType.mUniformScaling) {
+            particle.size = mParticleType.mMinSize + (rand() / static_cast<float>(RAND_MAX)) * (mParticleType.mMaxSize - mParticleType.mMinSize);
         } else {
-            particle.size.x = particleType.minSize.x + rand() / (RAND_MAX / (particleType.maxSize.x - particleType.minSize.x));
-            particle.size.y = particleType.minSize.y + rand() / (RAND_MAX / (particleType.maxSize.y - particleType.minSize.y));
+            particle.size.x = mParticleType.mMinSize.x + rand() / (RAND_MAX / (mParticleType.mMaxSize.x - mParticleType.mMinSize.x));
+            particle.size.y = mParticleType.mMinSize.y + rand() / (RAND_MAX / (mParticleType.mMaxSize.y - mParticleType.mMinSize.y));
         }
         
-        particle.velocity.x = particleType.minVelocity.x + rand() / (RAND_MAX / (particleType.maxVelocity.x - particleType.minVelocity.x));
-        particle.velocity.y = particleType.minVelocity.y + rand() / (RAND_MAX / (particleType.maxVelocity.y - particleType.minVelocity.y));
-        particle.velocity.z = particleType.minVelocity.z + rand() / (RAND_MAX / (particleType.maxVelocity.z - particleType.minVelocity.z));
+        particle.velocity.x = mParticleType.mMinVelocity.x + rand() / (RAND_MAX / (mParticleType.mMaxVelocity.x - mParticleType.mMinVelocity.x));
+        particle.velocity.y = mParticleType.mMinVelocity.y + rand() / (RAND_MAX / (mParticleType.mMaxVelocity.y - mParticleType.mMinVelocity.y));
+        particle.velocity.z = mParticleType.mMinVelocity.z + rand() / (RAND_MAX / (mParticleType.mMaxVelocity.z - mParticleType.mMinVelocity.z));
         
-        particles.push_back(particle);
+        mParticles.push_back(particle);
         
-        particleCount++;
+        mParticleCount++;
     }
 }
 
 void ParticleSystem::Update(double time, Entity* follow) {
-    if (!this->particles.empty()) {
-        for (std::vector<int>::size_type i = 0; i != particles.size(); i++) {
-            particles[i].life += static_cast<float>(time);
+    if (!this->mParticles.empty()) {
+        for (std::vector<int>::size_type i = 0; i != mParticles.size(); i++) {
+            mParticles[i].life += static_cast<float>(time);
             
-            if (particles[i].life >= particles[i].lifetime) {
-                particles.erase(particles.begin() + i);
-                particleCount--;
+            if (mParticles[i].life >= mParticles[i].lifetime) {
+                mParticles.erase(mParticles.begin() + i);
+                mParticleCount--;
                 i--;
             }
         }
     }
     
-    for (ParticleEmitter* emitter : emitters) {
+    for (ParticleEmitter* emitter : mEmitters) {
         emitter->Update(time, this, follow);
     }
     
-    if (particleCount > 0) {
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, particleCount * sizeof(ParticleSystem::Particle), &this->particles[0]);
+    if (mParticleCount > 0) {
+        glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, mParticleCount * sizeof(ParticleSystem::Particle), &this->mParticles[0]);
     }
 }
 
@@ -114,32 +114,32 @@ void ParticleSystem::Render(Entity* camera, const glm::vec2& screenSize) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     
-    shaderProgram->Use();
+    mShaderProgram->Use();
     
-    glUniform1i(shaderProgram->GetUniformLocation("baseImage"), 0);
+    glUniform1i(mShaderProgram->GetUniformLocation("baseImage"), 0);
     
     glActiveTexture(GL_TEXTURE0 + 0);
-    glBindTexture(GL_TEXTURE_2D, particleType.texture->GetTextureID());
+    glBindTexture(GL_TEXTURE_2D, mParticleType.texture->GetTextureID());
     
-    glBindVertexArray(vertexAttribute);
+    glBindVertexArray(mVertexAttribute);
     
     // Base image texture
     glActiveTexture(GL_TEXTURE0 + 0);
-    glBindTexture(GL_TEXTURE_2D, particleType.texture->GetTextureID());
+    glBindTexture(GL_TEXTURE_2D, mParticleType.texture->GetTextureID());
     
     // Send the matrices to the shader.
     glm::mat4 view = camera->GetComponent<Component::Transform>()->GetOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
     glm::vec3 up(glm::inverse(camera->GetComponent<Component::Transform>()->GetOrientation())* glm::vec4(0, 1, 0, 1));
     camera->GetComponent<Component::Transform>()->position;
 
-    glUniform3fv(shaderProgram->GetUniformLocation("cameraPosition"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
-    glUniform3fv(shaderProgram->GetUniformLocation("cameraUp"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
-    glUniformMatrix4fv(shaderProgram->GetUniformLocation("viewProjectionMatrix"), 1, GL_FALSE, &(camera->GetComponent<Component::Lens>()->GetProjection(screenSize) * view)[0][0]);
+    glUniform3fv(mShaderProgram->GetUniformLocation("cameraPosition"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
+    glUniform3fv(mShaderProgram->GetUniformLocation("cameraUp"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("viewProjectionMatrix"), 1, GL_FALSE, &(camera->GetComponent<Component::Lens>()->GetProjection(screenSize) * view)[0][0]);
     
-    float alpha[3] = { particleType.startAlpha, particleType.midAlpha, particleType.endAlpha };
-    glUniform1fv(shaderProgram->GetUniformLocation("alpha"), 3, alpha);
+    float alpha[3] = { mParticleType.mStartAlpha, mParticleType.mMidAlpha, mParticleType.mEndAlpha };
+    glUniform1fv(mShaderProgram->GetUniformLocation("alpha"), 3, alpha);
     
-    glUniform3fv(shaderProgram->GetUniformLocation("color"), 1, &particleType.color[0]);
+    glUniform3fv(mShaderProgram->GetUniformLocation("color"), 1, &mParticleType.mColor[0]);
     
     // Draw the triangles
     glDrawArrays(GL_POINTS, 0, ParticleCount());
@@ -152,13 +152,13 @@ void ParticleSystem::Render(Entity* camera, const glm::vec2& screenSize) {
 
 void ParticleSystem::BindPointData() {
     // Vertex buffer
-    glGenBuffers(1, &vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, maxParticleCount * sizeof(ParticleSystem::Particle), NULL, GL_DYNAMIC_DRAW);
+    glGenBuffers(1, &mVertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, mMaxParticleCount * sizeof(ParticleSystem::Particle), NULL, GL_DYNAMIC_DRAW);
     
     // Define vertex data layout
-    glGenVertexArrays(1, &vertexAttribute);
-    glBindVertexArray(vertexAttribute);
+    glGenVertexArrays(1, &mVertexAttribute);
+    glBindVertexArray(mVertexAttribute);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);

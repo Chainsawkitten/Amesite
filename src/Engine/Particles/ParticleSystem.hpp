@@ -85,21 +85,21 @@ class ParticleSystem {
         // Helper functions
         void BindPointData();
         
-        Shader* vertexShader;
-        Shader* geometryShader;
-        Shader* fragmentShader;
-        ShaderProgram* shaderProgram;
+        Shader* mVertexShader;
+        Shader* mGeometryShader;
+        Shader* mFragmentShader;
+        ShaderProgram* mShaderProgram;
         
-        ParticleType particleType;
-        std::vector<Particle> particles;
-        std::vector<ParticleEmitter*> emitters;
+        ParticleType mParticleType;
+        std::vector<Particle> mParticles;
+        std::vector<ParticleEmitter*> mEmitters;
         
         // System properties
-        unsigned int particleCount;
-        unsigned int maxParticleCount;
+        unsigned int mParticleCount;
+        unsigned int mMaxParticleCount;
         
         // Vertex buffer.
-        GLuint vertexBuffer = 0;
-        GLuint vertexAttribute = 0;
-        unsigned int vertexCount = 0;
+        GLuint mVertexBuffer = 0;
+        GLuint mVertexAttribute = 0;
+        unsigned int mVertexCount = 0;
 };

@@ -9,35 +9,35 @@ struct ParticleType {
 	Texture* texture = nullptr;
     
 	/// The minimum initial velocity in all directions.
-	glm::vec3 minVelocity;
+	glm::vec3 mMinVelocity;
     
 	/// The maximum initial velocity in all directions.
-	glm::vec3 maxVelocity;
+	glm::vec3 mMaxVelocity;
     
 	/// The minimum lifetime of the particle (in seconds).
-	float minLifetime = 0.f;
+	float mMinLifetime = 0.f;
     
 	/// The maximum lifetime of the particle (in seconds).
-	float maxLifetime = 0.f;
+	float mMaxLifetime = 0.f;
     
 	/// The minimum size of the particle.
-	glm::vec2 minSize = glm::vec2(1.f, 1.f);
+	glm::vec2 mMinSize = glm::vec2(1.f, 1.f);
     
 	/// The maximum size of the particle.
-	glm::vec2 maxSize = glm::vec2(1.f, 1.f);
+	glm::vec2 mMaxSize = glm::vec2(1.f, 1.f);
     
 	/// Whether to scale all axes individually or uniformly.
-	bool uniformScaling;
+	bool mUniformScaling;
     
 	/// Alpha at the beginning of the particle's life.
-	float startAlpha = 0.f;
+	float mStartAlpha = 0.f;
     
 	/// Alpha in the middle of the particle's life.
-	float midAlpha = 1.f;
+	float mMidAlpha = 1.f;
     
 	/// Alpha at the end of the particle's life.
-	float endAlpha = 0.f;
+	float mEndAlpha = 0.f;
     
 	/// Blend color.
-	glm::vec3 color = glm::vec3(1.f, 1.f, 1.f);
+	glm::vec3 mColor = glm::vec3(1.f, 1.f, 1.f);
 };

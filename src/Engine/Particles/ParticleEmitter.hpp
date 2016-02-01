@@ -36,15 +36,15 @@ class ParticleEmitter {
         void EmitParticleAt(glm::vec3 position);
         
     private:
-        double minEmitTime;
-        double maxEmitTime;
-        double timeToNext;
+        double mMinEmitTime;
+        double mMaxEmitTime;
+        double mTimeToNext;
         
-        bool relative;
+        bool mRelative;
 
-		double lifetime;
+		double mLifetime;
         
-        ParticleSystem* particleSystem;
-        Entity* follow;
+        ParticleSystem* mParticleSystem;
+        Entity* mFollow;
 };
 

@@ -3,36 +3,36 @@
 #include "../Component/Transform.hpp"
 
 ParticleEmitter::ParticleEmitter(double minEmitTime, double maxEmitTime, bool relative) {
-    this->minEmitTime = minEmitTime;
-    this->maxEmitTime = maxEmitTime;
-    this->relative = relative;
-    timeToNext = minEmitTime + ((double)rand() / RAND_MAX) * (maxEmitTime - minEmitTime);
-	lifetime = 0.0;
+    this->mMinEmitTime = minEmitTime;
+    this->mMaxEmitTime = maxEmitTime;
+    this->mRelative = relative;
+    mTimeToNext = minEmitTime + ((double)rand() / RAND_MAX) * (maxEmitTime - minEmitTime);
+	mLifetime = 0.0;
 }
 
 void ParticleEmitter::Update(double time, ParticleSystem* particleSystem, Entity* follow) {
-    this->particleSystem = particleSystem;
-    this->follow = follow;
+    this->mParticleSystem = particleSystem;
+    this->mFollow = follow;
     
-    timeToNext -= time;
-    while (timeToNext < 0.0) {
-        timeToNext += minEmitTime + ((double)rand() / RAND_MAX) * (maxEmitTime - minEmitTime);
+    mTimeToNext -= time;
+    while (mTimeToNext < 0.0) {
+        mTimeToNext += mMinEmitTime + ((double)rand() / RAND_MAX) * (mMaxEmitTime - mMinEmitTime);
         EmitParticle();
     }
-	lifetime += time;
+	mLifetime += time;
 }
 
 void ParticleEmitter::EmitParticleAt(glm::vec3 position) {
-    if (relative)
-        position += follow->GetComponent<Component::Transform>()->position;
+    if (mRelative)
+        position += mFollow->GetComponent<Component::Transform>()->position;
     
-    particleSystem->EmitParticle(position);
+    mParticleSystem->EmitParticle(position);
 }
 
 double ParticleEmitter::Lifetime() {
-	return lifetime;
+	return mLifetime;
 }
 
 void ParticleEmitter::ResetLifetime() {
-	lifetime = 0.0;
+	mLifetime = 0.0;
 }
