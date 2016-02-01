@@ -9,7 +9,6 @@ Collider2DRectangle::Collider2DRectangle(Entity* entity) : SuperComponent(entity
 
 }
 
-
 Collider2DRectangle::~Collider2DRectangle() {
 
 }
