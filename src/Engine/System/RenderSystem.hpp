@@ -25,5 +25,5 @@ namespace System {
             Shader* mVertShader;
             Shader* mFragShader;
             ShaderProgram* mShaderProgram;
-        };
+    };
 }

@@ -2,6 +2,8 @@
 #include "MainWindow.hpp"
 #include <GLFW/glfw3.h>
 
+MainWindow* MainWindow::mInstance = nullptr;
+
 MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, const char* title, bool debugContext) {
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     
@@ -24,12 +26,13 @@ MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, 
     
     // Setup error callbacks.
     glfwSetErrorCallback(ErrorCallback);
-
+    
     mInput = new InputHandler(mWindow);
     mInput->Update();
     mInput->SetActive();
     
     mSize = glm::vec2(width, height);
+    mInstance = this;
 }
 
 MainWindow::~MainWindow() {
@@ -37,10 +40,12 @@ MainWindow::~MainWindow() {
     delete mInput;
 }
 
+MainWindow* MainWindow::GetInstance() {
+    return mInstance;
+}
+
 void MainWindow::Init() {
     glEnable(GL_DEPTH_TEST);
-
-
     
     if (mDebugContext)
         glDebugMessageCallback(DebugMessageCallback, nullptr);
