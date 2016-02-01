@@ -85,7 +85,7 @@ int main() {
         // Input testing.
         window->Update();
         
-        testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
+        testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f));
 
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";

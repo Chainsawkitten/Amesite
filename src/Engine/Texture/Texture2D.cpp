@@ -1,9 +1,11 @@
 #include "Texture2D.hpp"
+
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_JPEG
 #define STBI_ONLY_PNG
 #define STBI_ONLY_TGA
 #include <stb_image.h>
+
 #include "../Util/Log.hpp"
 #include "Default2D.vert.hpp"
 #include "Texture2D.frag.hpp"
@@ -11,6 +13,7 @@
 #include "../Shader/Shader.hpp"
 #include "../Shader/ShaderProgram.hpp"
 #include "../Geometry/Square.hpp"
+#include "../MainWindow.hpp"
 
 Texture2D::Texture2D(const char* filename) {
     glGenTextures(1, &mTexID);
@@ -115,7 +118,7 @@ void Texture2D::SetWrapping(GLint wrapMode) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 }
 
-void Texture2D::Render(const glm::vec2 &position, const glm::vec2 &size, const glm::vec2& screenSize) const {
+void Texture2D::Render(const glm::vec2 &position, const glm::vec2 &size) const {
     // Disable depth testing.
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
     glDisable(GL_DEPTH_TEST);
@@ -135,6 +138,7 @@ void Texture2D::Render(const glm::vec2 &position, const glm::vec2 &size, const g
     glBindTexture(GL_TEXTURE_2D, mTexID);
     
     // Set location and size.
+    glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
     glUniform2fv(mShaderProgram->GetUniformLocation("position"), 1, &(position / screenSize)[0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("size"), 1, &(size / screenSize)[0]);
     

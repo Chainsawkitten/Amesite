@@ -62,9 +62,8 @@ class Texture2D : public Texture {
         /**
          * @param position Position on the screen, in pixels.
          * @param size Size in pixels.
-         * @param screenSize Size of the screen in pixels.
          */
-        void Render(const glm::vec2& position, const glm::vec2& size, const glm::vec2& screenSize) const;
+        void Render(const glm::vec2& position, const glm::vec2& size) const;
         
     private:
         GLuint mTexID;
