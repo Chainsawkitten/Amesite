@@ -70,13 +70,13 @@ class ParticleSystem {
         /// Update all the system's particles, spawn new particles etc.
         /**
          * @param time Time since last frame (in seconds).
-         * @param follow %Object to follow (only needs to be sent if there are relative emitters).
+         * @param follow Entity to follow (only needs to be sent if there are relative emitters).
          */
         void Update(double time, Entity* follow = nullptr);
         
         /// Render particles.
         /**
-         * @param camera Camera through which to render.
+         * @param camera Entity through which to render.
          * @param screenSize Size of the screen in pixels.
          */
         void Render(Entity* camera, const glm::vec2& screenSize);

@@ -19,7 +19,7 @@ class ParticleEmitter {
         /**
          * @param time Time since last frame (in seconds).
          * @param particleSystem Particle system to add particles to.
-         * @param follow %Object to follow (for relative emitting).
+         * @param follow Entity to follow (for relative emitting).
          */
         void Update(double time, ParticleSystem* particleSystem, Entity* follow);
         
