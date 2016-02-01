@@ -94,24 +94,30 @@ int main() {
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
 
+    ParticleSystem* particleSystem;
+    Texture2D* particleTexture;
+
+    // Particle texture.
+    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
+
     // Particle type.
-    ParticleSystem* explosionParticleSystem;
-    ParticleEmitter* explosionEmitter;
+    ParticleType dustParticle;
+    dustParticle.texture = particleTexture;
+    dustParticle.mMinLifetime = 6.f;
+    dustParticle.mMaxLifetime = 10.f;
+    dustParticle.mMinVelocity = glm::vec3(-0.025f, -0.01f, -0.025f);
+    dustParticle.mMaxVelocity = glm::vec3(0.025f, -0.1f, 0.025f);
+    dustParticle.mMinSize = glm::vec2(0.025f, 0.025f);
+    dustParticle.mMaxSize = glm::vec2(0.05f, 0.05f);
+    dustParticle.mUniformScaling = true;
+    dustParticle.mColor = glm::vec3(.3f, .3f, 1.f);
 
-    ParticleType explosionParticle;
-    explosionParticle.texture = testTexture;
-    explosionParticle.mMinLifetime = .1f;
-    explosionParticle.mMaxLifetime = 2.f;
-    explosionParticle.mMinVelocity = glm::vec3(-10.f, 10.f, -10.f);
-    explosionParticle.mMaxVelocity = glm::vec3(10.f, -10.f, 10.f);
-    explosionParticle.mMinSize = glm::vec2(2.5f, 2.5f);
-    explosionParticle.mMaxSize = glm::vec2(5.f, 5.f);
-    explosionParticle.mUniformScaling = true;
-    explosionParticle.mColor = glm::vec3(1.f, 0.5f, 0.5f);
+    particleSystem = new ParticleSystem(dustParticle, 1000);
 
-    explosionParticleSystem = new ParticleSystem(explosionParticle, 1000);
-    explosionEmitter = new PointParticleEmitter(cameraEntity->GetComponent<Component::Transform>()->position + glm::vec3(glm::inverse(cameraEntity->GetComponent<Component::Transform>()->GetOrientation()) * glm::vec4(0, 0, -1, 1)), 1, 2, false);
-    explosionParticleSystem->AddParticleEmitter(explosionEmitter);
+    // Emitters.
+    ParticleEmitter* emitter = new CuboidParticleEmitter(glm::vec3(0.f, 0.f, 0.f), glm::vec3(40.f, 15.f, 40.f), 0.01, 0.02, true);
+    particleSystem->AddParticleEmitter(emitter);
+    emitter->Update(5.0, particleSystem, cameraEntity);
     
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -138,12 +144,11 @@ int main() {
 
         // Input testing.
         window->Update();
+
+        particleSystem->Update(deltaTime, cameraEntity);
+        particleSystem->Render(cameraEntity, window->GetSize());
         
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
-
-        explosionEmitter->Update(15, explosionParticleSystem, cameraEntity);
-
-        explosionParticleSystem->Render(cameraEntity, window->GetSize());
 
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
