@@ -65,6 +65,9 @@ set(EMBEDDED_INPUT
         shaders/Default2D.vert
         shaders/SingleColor2D.frag
         shaders/Texture2D.frag
+        shaders/Particle.vert
+        shaders/Particle.geom
+        shaders/Particle.frag
     )
 
 # Headerize
@@ -140,6 +143,10 @@ set(ENGINE_SRCS
         src/Engine/System/RenderSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
+        src/Engine/Particles/CuboidParticleEmitter.cpp
+        src/Engine/Particles/ParticleEmitter.cpp
+        src/Engine/Particles/ParticleSystem.cpp
+        src/Engine/Particles/PointParticleEmitter.cpp
     )
 
 set(ENGINE_HEADERS
@@ -175,6 +182,11 @@ set(ENGINE_HEADERS
         src/Engine/System/RenderSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
+        src/Engine/Particles/CuboidParticleEmitter.hpp
+        src/Engine/Particles/ParticleEmitter.hpp
+        src/Engine/Particles/ParticleSystem.hpp
+        src/Engine/Particles/ParticleType.hpp
+        src/Engine/Particles/PointParticleEmitter.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
