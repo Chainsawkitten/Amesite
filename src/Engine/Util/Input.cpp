@@ -103,8 +103,8 @@ void InputHandler::Update() {
                 case JOYSTICK:
                     // Scalar axis of joystick.
                     if (mJoystickAxis[player][button]) {
-                        value = mJoystickAxisData[player][key];
-                        // Buttons of joystick.
+                        value = (abs(mJoystickAxisData[player][key])>mThreshold) ? value = mJoystickAxisData[player][key] : value = 0.0;
+                    // Buttons of joystick.
                     } else {
                         if (mJoystickButtonPressed[player][mBindings[button][0]] == GLFW_PRESS) {
                             value = 1.0;

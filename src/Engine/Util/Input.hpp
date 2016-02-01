@@ -16,8 +16,8 @@ class InputHandler {
             LEFT_STICK_X = 0, ///< Left stick X axis
             LEFT_STICK_Y, ///< Left stick Y axis
             LEFT_RIGHT_TRIGGER, ///< Left and right trigger value
-            RIGHT_STICK_X, ///< Right stick X axis
-            RIGHT_STICK_Y, ///< Right stick Y axis
+            RIGHT_STICK_Y, ///< Right stick X axis
+            RIGHT_STICK_X, ///< Right stick Y axis
         };
 
         /// Xbox 360 controller button index
