@@ -6,6 +6,7 @@
 #include "../Component/Lens.hpp"
 #include "../Component/Mesh.hpp"
 #include "../Component/RelativeTransform.hpp"
+#include "../Component/Physics.hpp"
 
 Scene::Scene() {
 
@@ -45,4 +46,16 @@ void Scene::Clear() {
     }
     mMeshComponentVec.clear();
     mMeshComponentVec.shrink_to_fit();
+
+    for (unsigned int i = 0; i < mPhysicsComponentVec.size(); i++) {
+        delete mPhysicsComponentVec.at(i);
+    }
+    mPhysicsComponentVec.clear();
+    mPhysicsComponentVec.shrink_to_fit();
+}
+
+void Scene::UpdateModelMatrices() {
+    for (unsigned int i = 0; i < mTransformComponentVec.size(); i++) {
+        mTransformComponentVec.at(i)->UpdateModelMatrix();
+    }
 }

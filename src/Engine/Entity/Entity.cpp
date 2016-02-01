@@ -6,6 +6,7 @@
 #include "../Component/Lens.hpp"
 #include "../Component/Mesh.hpp"
 #include "../Component/RelativeTransform.hpp"
+#include "../Component/Physics.hpp"
 
 Entity::Entity(Scene* scene) {
     mScene = scene;
@@ -14,6 +15,7 @@ Entity::Entity(Scene* scene) {
     mTransform = nullptr;
     mMesh = nullptr;
     mRelativeTransform = nullptr;
+    mPhysics = nullptr;
 }
 
 Entity::~Entity() {
@@ -52,6 +54,15 @@ Component::RelativeTransform* Entity::CreateRelativeTransform() {
         mTransform = mRelativeTransform;
         mScene->mTransformComponentVec.push_back(mRelativeTransform);
         return mRelativeTransform;
+    }
+    return nullptr;
+}
+
+Component::Physics* Entity::CreatePhysics() {
+    if (mPhysics == nullptr) {
+        mPhysics = new Component::Physics(this);
+        mScene->mPhysicsComponentVec.push_back(mPhysics);
+        return mPhysics;
     }
     return nullptr;
 }

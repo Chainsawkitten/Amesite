@@ -33,11 +33,7 @@ void RenderSystem::Render(const Scene& scene) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     mShaderProgram->Use();
-    
-    for (unsigned int i = 0; i < scene.Size<Component::Transform>(); i++) {
-        scene.Get<Component::Transform>(i)->UpdateModelMatrix();
-    }
-
+   
     Entity* camera = nullptr;
 
     // Finds (last) camera in scene.

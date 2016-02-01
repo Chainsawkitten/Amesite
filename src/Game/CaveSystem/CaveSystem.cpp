@@ -12,7 +12,6 @@ CaveSystem::CaveSystem(Scene* scene) {
 }
 
 CaveSystem::~CaveSystem() {
-
 }
 
 Entity* CaveSystem::GenerateCaveSystem() {

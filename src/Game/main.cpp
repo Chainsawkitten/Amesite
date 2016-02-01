@@ -11,7 +11,8 @@
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
-#include "System/RenderSystem.hpp"
+#include <System/RenderSystem.hpp>
+#include <System/PhysicsSystem.hpp>
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -19,9 +20,10 @@
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
+#include <Component/RelativeTransform.hpp>
+#include <Component/Physics.hpp>
 
 #include <Texture/Texture2D.hpp>
-#include <Component/RelativeTransform.hpp>
 
 #include <thread>
 
@@ -44,11 +46,19 @@ int main() {
     // RenderSystem.
     System::RenderSystem renderSystem;
 
+    // PhysicsSystem.
+    System::PhysicsSystem physicsSystem;
+
     // Scene and Entites. 
     Scene scene;
 
     Caves::CaveSystem testCaveSystem(&scene);
     Entity* map = testCaveSystem.GenerateCaveSystem();
+    map->GetComponent<Component::Transform>()->scale = glm::vec3(2.f, 2.f, 2.f);
+    map->AddComponent<Component::Physics>()->gravityCoefficient = 0.f;
+    //map->GetComponent<Component::Physics>()->angularVelocity.z = 1.0f;
+    map->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
+    map->GetComponent<Component::Physics>()->mass = 1.f;
     
     Entity* cameraEntity = scene.CreateEntity();
     cameraEntity->AddComponent<Component::Lens>();
@@ -60,14 +70,21 @@ int main() {
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
     // Main game loop.
+    float frameTime = 0.f;
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
     while (!window->ShouldClose()) {
         lastTime = glfwGetTime();
         
         // Move cube.
-        map->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
+        map->GetComponent<Component::Transform>()->Rotate(360 * frameTime, 0.f, 0.f);
         
+        // PhysicsSystem.
+        physicsSystem.Update(scene, frameTime);
+
+        // Updates model matrices for this frame.
+        scene.UpdateModelMatrices();
+
         // Render.
         renderSystem.Render(scene);
 
@@ -78,8 +95,9 @@ int main() {
 
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
+        frameTime = (glfwGetTime() - lastTime);
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))
-            title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0) + " ms";
+            title += " - " + std::to_string(frameTime * 1000.0f) + " ms";
         window->SetTitle(title.c_str());
         
         // Swap buffers and wait until next frame.

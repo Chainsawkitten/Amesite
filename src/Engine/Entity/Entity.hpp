@@ -5,6 +5,7 @@ namespace Component {
     class Lens;
     class Mesh;
     class RelativeTransform;
+    class Physics;
 }
 
 class Scene;
@@ -37,11 +38,13 @@ class Entity {
         Component::Transform* CreateTransform();
         Component::Mesh* CreateMesh();
         Component::RelativeTransform* CreateRelativeTransform();
+        Component::Physics* CreatePhysics();
 
         Component::Lens* mLens;
         Component::Transform* mTransform;
         Component::Mesh* mMesh;
         Component::RelativeTransform* mRelativeTransform;
+        Component::Physics* mPhysics;
 
         /// Pointer to which Scene %Entity is contained.
         /**
@@ -67,6 +70,10 @@ template<> inline Component::RelativeTransform* Entity::AddComponent<Component::
     return CreateRelativeTransform();
 }
 
+template<> inline Component::Physics* Entity::AddComponent<Component::Physics>() {
+    return CreatePhysics();
+}
+
 // GetComponent<T>()
 template<> inline Component::Lens* Entity::GetComponent<Component::Lens>() {
     return mLens;
@@ -82,4 +89,8 @@ template<> inline Component::Mesh* Entity::GetComponent<Component::Mesh>() {
 
 template<> inline Component::RelativeTransform* Entity::GetComponent<Component::RelativeTransform>() {
     return mRelativeTransform;
+}
+
+template<> inline Component::Physics* Entity::GetComponent<Component::Physics>() {
+    return mPhysics;
 }
