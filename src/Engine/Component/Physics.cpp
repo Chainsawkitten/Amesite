@@ -9,10 +9,9 @@ Physics::Physics(Entity* entity) : SuperComponent(entity) {
     maxAngularVelocity = 2.f;
     acceleration = glm::vec3(0.f, 0.f, 0.f);
     angularaAcceleration = glm::vec3(0.f, 0.f, 0.f);
-    mass = 1.f;
-    frictionCoefficient = 0.5f;
-    angularDragFactor = 0.5f;
-    gravityCoefficient = 1.f;
+    velocityDragFactor = 0.0f;
+    angularDragFactor = 1.f;
+    gravityFactor = 0.f;
     momentOfInertia = glm::vec3(1.f);
 }
 

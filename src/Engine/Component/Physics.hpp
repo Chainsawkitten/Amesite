@@ -55,29 +55,23 @@ namespace Component {
              */
             glm::vec3 angularaAcceleration;
 
-            /// Mass (in kilogram).
+            /// Friction factor. Describes the procentage of the velocity that is lost each secound. 
+            /**
+             * Default: 1.0f
+             */
+            float velocityDragFactor;
+
+            /// Angular drag factor. Describes the procentage of the rotation that is lost each secound. 
             /**
              * Default: 1.f
-             */
-            float mass;
-
-            /// Friction coefficient.
-            /**
-             * Default: 0.5f
-             */
-            float frictionCoefficient;
-
-            /// Angular drag factor. Describes how many procent of the rotation that is lost each secound. 
-            /**
-             * Default: 0.5f
              */
             float angularDragFactor;
 
-            /// Gravity coefficient.
+            /// Gravity factor. 
             /**
-             * Default: 1.f
+             * Default: 0.f
              */
-            float gravityCoefficient;
+            float gravityFactor;
 
             /// Moment of inertia. Describes how hard it's to rotate an object.
             /**
