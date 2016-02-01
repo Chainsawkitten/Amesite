@@ -225,8 +225,7 @@ void InputHandler::ScrollCallback(double yoffset) {
     mScroll += yoffset;
 }
 
-bool InputHandler::ActiveJoystick(Player player)
-{
+bool InputHandler::ActiveJoystick(Player player) {
     return mActiveJoystick[player];
 }
 

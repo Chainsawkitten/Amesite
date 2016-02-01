@@ -26,8 +26,8 @@ class ParticleEmitter {
         /// Emit particle.
         virtual void EmitParticle() = 0;
 
-		/// Get lifetime
-		double Lifetime();
+        /// Get lifetime
+        double Lifetime();
 
 		/// Reset lifetime
 		void ResetLifetime();
@@ -41,8 +41,7 @@ class ParticleEmitter {
         double mTimeToNext;
         
         bool mRelative;
-
-		double mLifetime;
+        double mLifetime;
         
         ParticleSystem* mParticleSystem;
         Entity* mFollow;

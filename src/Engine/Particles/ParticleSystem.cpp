@@ -92,9 +92,8 @@ void ParticleSystem::Update(double time, Entity* follow) {
         }
     }
     
-    for (ParticleEmitter* emitter : mEmitters) {
+    for (ParticleEmitter* emitter : mEmitters)
         emitter->Update(time, this, follow);
-    }
     
     if (mParticleCount > 0) {
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);

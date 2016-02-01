@@ -58,8 +58,8 @@ class ParticleSystem {
          */
         void AddParticleEmitter(ParticleEmitter* emitter);
         
-		/// Remove a particle emitter from the system
-		void RemoveParticleEmitter();
+        /// Remove a particle emitter from the system
+        void RemoveParticleEmitter();
 
         /// Emit a particle a the given position.
         /**
