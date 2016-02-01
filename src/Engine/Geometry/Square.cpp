@@ -45,11 +45,9 @@ Square::Square() {
     GenerateBuffers();
     GenerateVertexArray();
     
-    Shader* vertexShader = Resources().CreateShader(DEFAULT2D_VERT, DEFAULT2D_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragmentShader = Resources().CreateShader(SINGLECOLOR2D_FRAG, SINGLECOLOR2D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
-    Resources().FreeShader(fragmentShader);
+    mVertexShader = Resources().CreateShader(DEFAULT2D_VERT, DEFAULT2D_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(SINGLECOLOR2D_FRAG, SINGLECOLOR2D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
 }
 
 Square::~Square() {
@@ -57,6 +55,8 @@ Square::~Square() {
     delete[] mIndexData;
     
     Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mFragmentShader);
 }
 
 Geometry2D::Vertex* Square::GetVertices() const {

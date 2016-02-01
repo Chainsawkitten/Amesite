@@ -2,6 +2,7 @@
 
 class Entity;
 class Scene;
+class Shader;
 class ShaderProgram;
 class DeferredLighting;
 
@@ -22,6 +23,8 @@ namespace System {
             void Render(const Scene& scene);
 
         private:
+            Shader* mVertexShader;
+            Shader* mFragmentShader;
             ShaderProgram* mShaderProgram;
             
             DeferredLighting* mDeferredLighting;

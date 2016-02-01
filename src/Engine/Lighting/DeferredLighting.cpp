@@ -1,9 +1,26 @@
 #include "DeferredLighting.hpp"
 #include "../Util/Log.hpp"
+
 #include "../Resources.hpp"
+#include "../Geometry/Square.hpp"
+#include "../Shader/Shader.hpp"
+#include "../Shader/ShaderProgram.hpp"
+#include "Post.vert.hpp"
+#include "Deferred.frag.hpp"
+
+#include "../Entity/Entity.hpp"
+#include "../Component/Transform.hpp"
+#include "../Component/Lens.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 DeferredLighting::DeferredLighting(const glm::vec2& size) {
     mSize = size;
+    
+    mVertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(DEFERRED_FRAG, DEFERRED_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
+    
+    mSquare = Resources().CreateSquare();
     
     // Create the FBO
     glGenFramebuffers(1, &mFrameBufferObject);
@@ -52,6 +69,12 @@ DeferredLighting::~DeferredLighting() {
     
     if (mDepthHandle != 0)
         glDeleteTextures(1, &mDepthHandle);
+    
+    Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mFragmentShader);
+    
+    Resources().FreeSquare();
 }
 
 void DeferredLighting::SetTarget() {
@@ -91,6 +114,40 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
         glEnable(GL_DEPTH_TEST);
 }
 
+void DeferredLighting::Render(Entity* camera, const glm::vec2& screenSize, float scale) {
+    // Disable depth testing
+    GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
+    
+    GLint oldDepthFunctionMode;
+    glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunctionMode);
+    glDepthFunc(GL_ALWAYS);
+    
+    mShaderProgram->Use();
+    
+    // Blending enabled for handling multiple light sources
+    GLboolean blend = glIsEnabled(GL_BLEND);
+    glEnable(GL_BLEND);
+    glBlendEquation(GL_FUNC_ADD);
+    glBlendFunc(GL_ONE, GL_ONE);
+    
+    BindLighting(camera, screenSize, scale);
+    BindForReading();
+    
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    glBindVertexArray(mSquare->GetVertexArray());
+    
+    glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+    
+    if (!depthTest)
+        glDisable(GL_DEPTH_TEST);
+    if (!blend)
+        glDisable(GL_BLEND);
+    
+    glDepthFunc(oldDepthFunctionMode);
+}
+
 void DeferredLighting::AttachTexture(GLuint texture, unsigned int width, unsigned int height, GLenum attachment, GLint internalFormat) {
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, GL_RGB, GL_FLOAT, nullptr);
@@ -99,10 +156,41 @@ void DeferredLighting::AttachTexture(GLuint texture, unsigned int width, unsigne
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture, 0);
 }
 
+void DeferredLighting::BindForReading() {
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, mFrameBufferObject);
+    
+    for (unsigned int i = 0; i < NUM_TEXTURES; i++) {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, mTextures[i]);
+    }
+    
+    glActiveTexture(GL_TEXTURE0 + NUM_TEXTURES);
+    glBindTexture(GL_TEXTURE_2D, mDepthHandle);
+}
+
 void DeferredLighting::BindForTexReading() {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, mFrameBufferObject);
 }
 
 void DeferredLighting::SetReadBuffer(TEXTURE_TYPE textureType){
     glReadBuffer(GL_COLOR_ATTACHMENT0 + textureType);
+}
+
+void DeferredLighting::BindLighting(Entity* camera, const glm::vec2& screenSize, float scale){
+    // Bind light information for lighting pass
+    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
+    glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
+    
+    glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::DIFFUSE);
+    glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), DeferredLighting::NORMAL);
+    glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
+    glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
+    
+    glUniform1f(mShaderProgram->GetUniformLocation("scale"), scale);
+    
+    glUniform4fv(mShaderProgram->GetUniformLocation("lightPosition"), 1, &(viewMat * glm::vec4(0.f, 3.f, 3.f, 1.f))[0]);
+    glUniform3fv(mShaderProgram->GetUniformLocation("lightIntensity"), 1, &glm::vec3(1.f, 1.f, 1.f)[0]);
+    glUniform3fv(mShaderProgram->GetUniformLocation("diffuseCoefficient"), 1, &glm::vec3(1.f, 1.f, 1.f)[0]);
+    
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(projectionMat)[0][0]);
 }

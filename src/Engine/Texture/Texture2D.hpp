@@ -6,6 +6,7 @@
 namespace Geometry {
     class Square;
 }
+class Shader;
 class ShaderProgram;
 
 /// A two-dimensional texture.
@@ -70,5 +71,7 @@ class Texture2D : public Texture {
         
         Geometry::Square* mSquare;
         
+        Shader* mVertexShader;
+        Shader* mFragmentShader;
         ShaderProgram* mShaderProgram;
 };

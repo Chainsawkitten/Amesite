@@ -65,6 +65,8 @@ set(EMBEDDED_INPUT
         shaders/Default2D.vert
         shaders/SingleColor2D.frag
         shaders/Texture2D.frag
+        shaders/Post.vert
+        shaders/Deferred.frag
     )
 
 # Headerize

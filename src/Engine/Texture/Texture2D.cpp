@@ -47,11 +47,9 @@ Texture2D::Texture2D(const char* filename) {
     // For rendering.
     mSquare = Resources().CreateSquare();
     
-    Shader* vertexShader = Resources().CreateShader(DEFAULT2D_VERT, DEFAULT2D_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragmentShader = Resources().CreateShader(TEXTURE2D_FRAG, TEXTURE2D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
-    Resources().FreeShader(fragmentShader);
+    mVertexShader = Resources().CreateShader(DEFAULT2D_VERT, DEFAULT2D_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(TEXTURE2D_FRAG, TEXTURE2D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
 }
 
 Texture2D::Texture2D(const char *source, int sourceLength) {
@@ -86,17 +84,18 @@ Texture2D::Texture2D(const char *source, int sourceLength) {
     // For rendering.
     mSquare = Resources().CreateSquare();
     
-    Shader* vertexShader = Resources().CreateShader(DEFAULT2D_VERT, DEFAULT2D_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragmentShader = Resources().CreateShader(TEXTURE2D_FRAG, TEXTURE2D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
-    Resources().FreeShader(fragmentShader);
+    mVertexShader = Resources().CreateShader(DEFAULT2D_VERT, DEFAULT2D_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(TEXTURE2D_FRAG, TEXTURE2D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
 }
 
 Texture2D::~Texture2D() {
     glDeleteTextures(1, &mTexID);
     
     Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mFragmentShader);
+    
     Resources().FreeSquare();
 }
 
