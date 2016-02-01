@@ -46,6 +46,7 @@ MainWindow* MainWindow::GetInstance() {
 
 void MainWindow::Init() {
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     
     if (mDebugContext)
         glDebugMessageCallback(DebugMessageCallback, nullptr);

@@ -36,11 +36,11 @@ Square::Square() {
     mIndexData = new unsigned int[mIndexNr];
     
     mIndexData[0] = 0;
-    mIndexData[1] = 2;
-    mIndexData[2] = 1;
+    mIndexData[1] = 1;
+    mIndexData[2] = 2;
     mIndexData[3] = 1;
-    mIndexData[4] = 2;
-    mIndexData[5] = 3;
+    mIndexData[4] = 3;
+    mIndexData[5] = 2;
     
     GenerateBuffers();
     GenerateVertexArray();
