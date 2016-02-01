@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Util/Input.hpp"
 #include <glm/glm.hpp>
 
 struct GLFWwindow;
@@ -23,6 +24,9 @@ class MainWindow {
         
         /// Initialize components.
         void Init();
+
+        /// Update
+        void Update();
         
         /// Get the size of the window.
         /**
@@ -46,6 +50,7 @@ class MainWindow {
         void SwapBuffers();
         
     private:
+        InputHandler *mInput;
         GLFWwindow* mWindow;
         bool mDebugContext;
         glm::vec2 mSize;
