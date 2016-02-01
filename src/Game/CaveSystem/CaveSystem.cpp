@@ -1,8 +1,11 @@
 #include "CaveSystem.hpp"
+
 #include <Geometry/Cube.hpp>
 #include <Resources.hpp>
 #include <Component/Mesh.hpp>
 #include <Component/Transform.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
 using namespace Caves;
 

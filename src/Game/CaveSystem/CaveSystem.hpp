@@ -1,12 +1,8 @@
 #pragma once
-#include <Entity/Entity.hpp>
-#include <vector>
-#include <Scene/scene.hpp>
 
-namespace Component {
-    class Transform;
-    class Mesh;
-}
+#include <vector>
+
+class Scene;
 
 namespace Caves {
     /// Generates caves for the player to explore.
