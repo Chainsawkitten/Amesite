@@ -6,6 +6,8 @@ namespace Component {
     class Mesh;
     class RelativeTransform;
     class Physics;
+    class Collider2DRectangle;
+    class Collider2DCircle;
 }
 
 class Scene;
@@ -39,12 +41,16 @@ class Entity {
         Component::Mesh* CreateMesh();
         Component::RelativeTransform* CreateRelativeTransform();
         Component::Physics* CreatePhysics();
+        Component::Collider2DCircle* CreateCollider2DCircle();
+        Component::Collider2DRectangle* CreateCollider2DRectangle();
 
         Component::Lens* mLens;
         Component::Transform* mTransform;
         Component::Mesh* mMesh;
         Component::RelativeTransform* mRelativeTransform;
         Component::Physics* mPhysics;
+        Component::Collider2DCircle* mCircle;
+        Component::Collider2DRectangle* mRectangle;
 
         /// Pointer to which Scene %Entity is contained.
         /**
@@ -74,6 +80,14 @@ template<> inline Component::Physics* Entity::AddComponent<Component::Physics>()
     return CreatePhysics();
 }
 
+template<> inline Component::Collider2DCircle* Entity::AddComponent<Component::Collider2DCircle>() {
+    return CreateCollider2DCircle();
+}
+
+template<> inline Component::Collider2DRectangle* Entity::AddComponent<Component::Collider2DRectangle>() {
+    return CreateCollider2DRectangle();
+}
+
 // GetComponent<T>()
 template<> inline Component::Lens* Entity::GetComponent<Component::Lens>() {
     return mLens;
@@ -93,4 +107,12 @@ template<> inline Component::RelativeTransform* Entity::GetComponent<Component::
 
 template<> inline Component::Physics* Entity::GetComponent<Component::Physics>() {
     return mPhysics;
+}
+
+template<> inline Component::Collider2DCircle* Entity::GetComponent<Component::Collider2DCircle>() {
+    return mCircle;
+}
+
+template<> inline Component::Collider2DRectangle* Entity::GetComponent<Component::Collider2DRectangle>() {
+    return mRectangle;
 }
