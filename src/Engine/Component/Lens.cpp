@@ -4,14 +4,13 @@
 
 using namespace Component;
 
-Lens::Lens() {
+Lens::Lens(Entity* entity) : SuperComponent(entity) {
     fieldOfView = 45.f;
     zFar = 100.f;
     zNear = 0.05f;
 }
 
 Lens::~Lens() {
-
 }
 
 glm::mat4 Lens::GetProjection(const glm::vec2& screenSize) const {

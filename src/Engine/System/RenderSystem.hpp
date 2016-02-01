@@ -5,23 +5,25 @@ class Scene;
 class Shader;
 class ShaderProgram;
 
-/// System to render a scene.
-class RenderSystem {
-    public:
-        /// Create new render system.
-        RenderSystem();
+namespace System {
+    /// System to render a scene.
+    class RenderSystem {
+        public:
+            /// Create new render system.
+            RenderSystem();
 
-        /// Destructor.
-        ~RenderSystem();
+            /// Destructor.
+            ~RenderSystem();
 
-        /// Render Scene containing entities.
-        /**
-         * @param scene Contains a bunch of entities.
-         */
-        void Render(const Scene& scene);
+            /// Render Scene containing entities.
+            /**
+             * @param scene Contains a bunch of entities.
+             */
+            void Render(const Scene& scene);
 
-    private:
-        Shader* mVertShader;
-        Shader* mFragShader;
-        ShaderProgram* mShaderProgram;
-};
+        private:
+            Shader* mVertShader;
+            Shader* mFragShader;
+            ShaderProgram* mShaderProgram;
+        };
+}

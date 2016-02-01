@@ -5,7 +5,7 @@
 
 using namespace Component;
 
-RelativeTransform::RelativeTransform() : Transform() {
+RelativeTransform::RelativeTransform(Entity* entity) : Transform(entity) {
     parentEntity = nullptr;
 }
 
