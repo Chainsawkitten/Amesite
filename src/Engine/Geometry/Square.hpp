@@ -2,7 +2,6 @@
 
 #include "Geometry2D.hpp"
 
-class Shader;
 class ShaderProgram;
 
 namespace Geometry {
@@ -54,9 +53,6 @@ namespace Geometry {
             unsigned int* mIndexData = nullptr;
             unsigned int mIndexNr = 0;
             
-            // Shaders
-            Shader* mVertexShader;
-            Shader* mFragmentShader;
             ShaderProgram* mShaderProgram;
     };
 }

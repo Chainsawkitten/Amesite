@@ -21,9 +21,11 @@
 using namespace System;
 
 RenderSystem::RenderSystem() {
-    mVertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
-    mFragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ mVertShader, mFragShader });
+    Shader* vertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
+    Shader* fragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ vertShader, fragShader });
+    Resources().FreeShader(vertShader);
+    Resources().FreeShader(fragShader);
     
     mDeferredLighting = new DeferredLighting(MainWindow::GetInstance()->GetSize());
 }
@@ -32,8 +34,6 @@ RenderSystem::~RenderSystem() {
     delete mDeferredLighting;
     
     Resources().FreeShaderProgram(mShaderProgram);
-    Resources().FreeShader(mVertShader);
-    Resources().FreeShader(mFragShader);
 }
 
 void RenderSystem::Render(const Scene& scene) {
