@@ -38,11 +38,12 @@ InputHandler::InputHandler(GLFWwindow* window) {
     }
 
     // Discover joysticks.
-    if (glfwJoystickPresent(PLAYER_ONE)) {
-        Log() << glfwGetJoystickName(PLAYER_ONE) << " detected! \n";
-    }
-    if (glfwJoystickPresent(PLAYER_TWO)) {
-        Log() << glfwGetJoystickName(PLAYER_TWO) << " detected! \n";
+    for (int player = 0; player < PLAYERS - 1; player++) {
+        mActiveJoystick[player] = false;
+        if (glfwJoystickPresent(player)) {
+            Log() << glfwGetJoystickName(player) << " detected! \n";
+            mActiveJoystick[player] = true;
+        }
     }
 
     mBindings = new std::vector<int>[PLAYERS*BUTTONS];
@@ -75,22 +76,17 @@ void InputHandler::Update() {
 
     glfwGetCursorPos(mWindow, &mCursorX, &mCursorY);
 
-    // Update joystick axis.
+    // Joystick counters.
     int axisOneCount = 0;
-    mJoystickAxisData[PLAYER_ONE] = glfwGetJoystickAxes(PLAYER_ONE, &axisOneCount);
-
-    // Update joystick buttons.
-    int buttonOneCount = 0;
-    const unsigned char* buttons = glfwGetJoystickButtons(PLAYER_ONE, &buttonOneCount);
-    mJoystickButtonPressed[PLAYER_ONE] = glfwGetJoystickButtons(PLAYER_ONE, &buttonOneCount);
-
-    // Update joystick axis.
     int axisTwoCount = 0;
-    mJoystickAxisData[PLAYER_TWO] = glfwGetJoystickAxes(PLAYER_TWO, &axisTwoCount);
-
-    // Update joystick buttons.
+    int buttonOneCount = 0;
     int buttonTwoCount = 0;
-    mJoystickButtonPressed[PLAYER_TWO] = glfwGetJoystickButtons(PLAYER_TWO, &buttonTwoCount);
+
+    // Update joystick axis and buttons
+    for (int player = 0; player < PLAYERS - 1; player++) {
+        mJoystickAxisData[player] = glfwGetJoystickAxes(player, &axisOneCount);
+        mJoystickButtonPressed[player] = glfwGetJoystickButtons(player, &buttonOneCount);
+    }
 
     // Update button states depending on bindings.
     for (int player = 0; player < (PLAYERS - 1); player++) {
@@ -107,8 +103,8 @@ void InputHandler::Update() {
                 case JOYSTICK:
                     // Scalar axis of joystick.
                     if (mJoystickAxis[player][button]) {
-                        value = mJoystickAxisData[player][key];
-                        // Buttons of joystick.
+                        value = (abs(mJoystickAxisData[player][key])>mThreshold) ? value = mJoystickAxisData[player][key] : value = 0.0;
+                    // Buttons of joystick.
                     } else {
                         if (mJoystickButtonPressed[player][mBindings[button][0]] == GLFW_PRESS) {
                             value = 1.0;
@@ -181,6 +177,10 @@ void InputHandler::CenterCursor() {
     mCursorY = static_cast<double>(height / 2);
 }
 void InputHandler::AssignJoystick(Button button, bool axis, int index, Player player) {
+    if (!ActiveJoystick(player)) {
+        Log() << "Error binding key, Player " << player+1 << " has no joystick connected!\n";
+        return;
+    }
     mBindings[BUTTONS*player + button].push_back(index);
     mJoystickAxis[player][button] = axis;
     mBindingDevice[player][button] = JOYSTICK;
@@ -223,6 +223,10 @@ void InputHandler::CharacterCallback(unsigned int codePoint) {
 
 void InputHandler::ScrollCallback(double yoffset) {
     mScroll += yoffset;
+}
+
+bool InputHandler::ActiveJoystick(Player player) {
+    return mActiveJoystick[player];
 }
 
 InputHandler* Input() {
