@@ -19,13 +19,13 @@ namespace Component {
             /// Destructor.
             ~Physics();
 
-            /// Velocity (in meter/secound).
+            /// Velocity (in meter/second).
             /**
              * Default: 0.f, 0.f, 0.f
              */
             glm::vec3 velocity;
 
-            /// Max celocity (in meter/secound).
+            /// Max celocity (in meter/second).
             /**
             * Default: 20.f
             */
@@ -43,25 +43,25 @@ namespace Component {
             */
             float maxAngularVelocity;
 
-            /// Acceleration (in meter/secound^2).
+            /// Acceleration (in meter/second^2).
             /**
              * Default: 0.f, 0.f, 0.f
              */
             glm::vec3 acceleration;
 
-            /// Angular acceleration (in rad/secound^2).
+            /// Angular acceleration (in rad/second^2).
             /**
              * Default: 0.f, 0.f, 0.f
              */
             glm::vec3 angularaAcceleration;
 
-            /// Friction factor. Describes the procentage of the velocity that is lost each secound. 
+            /// Friction factor. Describes the procentage of the velocity that is lost each second. 
             /**
              * Default: 1.0f
              */
             float velocityDragFactor;
 
-            /// Angular drag factor. Describes the procentage of the rotation that is lost each secound. 
+            /// Angular drag factor. Describes the procentage of the rotation that is lost each second. 
             /**
              * Default: 1.f
              */

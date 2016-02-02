@@ -25,12 +25,5 @@ namespace Component {
              * Default: nullptr
              */
             Entity* parentEntity;
-
-        private:
-            /// Calculate model matrix.
-            /**
-             * @return The entity's model matrix, containing translation, scaling and rotation.
-             */
-            virtual glm::mat4 CalculateModelMatrix();
     };
 }

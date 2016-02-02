@@ -19,7 +19,7 @@ Transform::~Transform() {
 }
 
 void Transform::UpdateModelMatrix() {
-    modelMatrix = CalculateModelMatrix();
+    modelMatrix = glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
 }
 
 glm::mat4 Transform::GetOrientation() const {
@@ -50,8 +50,4 @@ void Transform::Move(const glm::vec3 &offset) {
 
 void Transform::Move(float x, float y, float z) {
     position += glm::vec3(x, y, z);
-}
-
-glm::mat4 Transform::CalculateModelMatrix() {
-    return glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
 }

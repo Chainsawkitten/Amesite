@@ -6,7 +6,7 @@ namespace System {
     ///Class providing collision detection
     class CollisionSystem {
         public:
-            /// New %CollisionSystem.
+            /// Create %CollisionSystem.
             CollisionSystem();
 
             ~CollisionSystem();

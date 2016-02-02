@@ -8,7 +8,7 @@ namespace System {
     /// System to update the physics of a scene.
     class PhysicsSystem {
         public:
-            /// Create new physics system.
+            /// Create physics system.
             PhysicsSystem(glm::vec3 gravity = glm::vec3(0.f, -9.82f, 0.f));
 
             /// Destructor.
@@ -17,7 +17,7 @@ namespace System {
             /// Update Scene containing entities. Moves entities and updates the physics component.
             /**
              * @param scene Contains a bunch of entities.
-             * @param timeDelta Time (in secounds).
+             * @param timeDelta Time (in seconds).
              */
             void Update(const Scene& scene, float deltaTime);
         private:

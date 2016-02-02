@@ -88,12 +88,5 @@ namespace Component {
              * Default: Identity matrix
              */
             glm::mat4 modelMatrix;
-
-        private:
-            /// Calculate model matrix.
-            /**
-             * @return The entity's model matrix, containing translation, scaling and rotation.
-             */
-            virtual glm::mat4 CalculateModelMatrix();
         };
 }

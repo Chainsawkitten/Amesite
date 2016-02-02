@@ -29,7 +29,7 @@ class Scene {
 
         /// Get number of items in %Scene.
         /**
-         * @return Number of items in %Scene, returns -1 if no such item can be found.
+         * @return Number of items in %Scene, returns 0 if no such item can be found.
          */
         template<typename T> unsigned int Size() const { return 0; }
 
