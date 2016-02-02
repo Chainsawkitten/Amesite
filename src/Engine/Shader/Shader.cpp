@@ -1,7 +1,7 @@
 #include "Shader.hpp"
 
 Shader::Shader(const char* source, int sourceLength, GLenum shaderType) {
-	this->mShaderType = shaderType;
+	mShaderType = shaderType;
 
 	mShader = glCreateShader(shaderType);
     GLint length = sourceLength;
@@ -19,4 +19,8 @@ GLuint Shader::GetShaderID() const {
 
 GLenum Shader::GetShaderType() const {
 	return mShaderType;
+}
+
+const char* Shader::GetSource() const {
+    return mSource;
 }

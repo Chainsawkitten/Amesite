@@ -32,8 +32,16 @@ class Shader {
 		 * @return %Shader type. One of GL_COMPUTE_SHADER, GL_VERTEX_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_GEOMETRY_SHADER, or GL_FRAGMENT_SHADER.
 		 */
 		GLenum GetShaderType() const;
+        
+        /// Get source code used to compile the shader.
+        /**
+         * @return The shader's source code.
+         */
+        const char* GetSource() const;
 
 	private:
 		GLuint mShader;
 		GLenum mShaderType;
+        
+        const char* mSource;
 };
