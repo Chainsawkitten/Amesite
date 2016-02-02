@@ -7,7 +7,6 @@
 #include "ParticleType.hpp"
 #include "../Shader/ShaderProgram.hpp"
 #include "../Texture/Texture.hpp"
-#include "ParticleEmitter.hpp"
 
 /// Handles particles.
 class ParticleSystem {
@@ -56,7 +55,7 @@ class ParticleSystem {
         /**
          * @param emitter Particle emitter to add to the system.
          */
-        void AddParticleEmitter(ParticleEmitter* emitter);
+        void AddParticleEmitter(Component::ParticleEmitter* emitter);
         
         /// Remove a particle emitter from the system
         void RemoveParticleEmitter();
@@ -92,7 +91,7 @@ class ParticleSystem {
         
         ParticleType mParticleType;
         std::vector<Particle> mParticles;
-        std::vector<ParticleEmitter*> mEmitters;
+        std::vector<Component::ParticleEmitter*> mEmitters;
         
         // System properties
         unsigned int mParticleCount;

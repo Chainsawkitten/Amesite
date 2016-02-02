@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ParticleEmitter.hpp"
+#include "../Component/ParticleEmitter.hpp"
 #include <glm/glm.hpp>
 
 /// Emitter that emits particles in a cuboid area.
-class CuboidParticleEmitter : public ParticleEmitter {
+class CuboidParticleEmitter : public Component::ParticleEmitter {
     public:
         /// Create new CuboidParticleEmitter.
         /**
@@ -14,7 +14,7 @@ class CuboidParticleEmitter : public ParticleEmitter {
          * @param maxEmitTime The maximum time between each emitted particle.
          * @param relative Whether to emit particles relative to the camera position.
          */
-        CuboidParticleEmitter(glm::vec3 origin, glm::vec3 size, double minEmitTime, double maxEmitTime, bool relative = false);
+        CuboidParticleEmitter(glm::vec3 origin, glm::vec3 size, Entity* entity);
         
         /// Emit particle.
         void EmitParticle();

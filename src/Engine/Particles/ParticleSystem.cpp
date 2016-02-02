@@ -1,6 +1,7 @@
 #include "ParticleSystem.hpp"
 #include "../Component/Transform.hpp"
 #include "../Component/Lens.hpp"
+#include "../Component/ParticleEmitter.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <vector>
@@ -28,7 +29,7 @@ ParticleSystem::ParticleSystem(ParticleType particleType, int maxParticleCount) 
 ParticleSystem::~ParticleSystem() {
     glDeleteBuffers(1, &mVertexBuffer);
     
-    for (ParticleEmitter* emitter : mEmitters) {
+    for (Component::ParticleEmitter* emitter : mEmitters) {
         delete emitter;
     }
     
@@ -46,7 +47,7 @@ unsigned int ParticleSystem::MaxParticleCount() const {
     return mMaxParticleCount;
 }
 
-void ParticleSystem::AddParticleEmitter(ParticleEmitter* emitter) {
+void ParticleSystem::AddParticleEmitter(Component::ParticleEmitter* emitter) {
     mEmitters.push_back(emitter);
 }
 
@@ -92,8 +93,8 @@ void ParticleSystem::Update(double time, Entity* follow) {
         }
     }
     
-    for (ParticleEmitter* emitter : mEmitters)
-        emitter->Update(time, this, follow);
+    for (Component::ParticleEmitter* emitter : mEmitters)
+        emitter->Update(time, follow, this);
     
     if (mParticleCount > 0) {
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);

@@ -7,6 +7,7 @@ namespace Component {
     class RelativeTransform;
     class Collider2DRectangle;
     class Collider2DCircle;
+    class ParticleEmitter;
 }
 
 class Scene;
@@ -41,7 +42,9 @@ class Entity {
         Component::RelativeTransform* CreateRelativeTransform();
         Component::Collider2DCircle* CreateCollider2DCircle();
         Component::Collider2DRectangle* CreateCollider2DRectangle();
+        Component::ParticleEmitter* CreateParticleEmitter();
 
+        Component::ParticleEmitter * mParticle;
         Component::Lens* mLens;
         Component::Transform* mTransform;
         Component::Mesh* mMesh;
@@ -81,6 +84,10 @@ template<> inline Component::Collider2DRectangle* Entity::AddComponent<Component
     return CreateCollider2DRectangle();
 }
 
+template<> inline Component::ParticleEmitter* Entity::AddComponent<Component::ParticleEmitter>() {
+    return CreateParticleEmitter();
+}
+
 // GetComponent<T>()
 template<> inline Component::Lens* Entity::GetComponent<Component::Lens>() {
     return mLens;
@@ -105,4 +112,8 @@ template<> inline Component::Collider2DCircle* Entity::GetComponent<Component::C
 
 template<> inline Component::Collider2DRectangle* Entity::GetComponent<Component::Collider2DRectangle>() {
     return mRectangle;
+}
+
+template<> inline Component::ParticleEmitter* Entity::GetComponent<Component::ParticleEmitter>() {
+    return mParticle;
 }

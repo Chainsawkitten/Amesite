@@ -1,6 +1,7 @@
 #include "CuboidParticleEmitter.hpp"
+#include "../Component/ParticleEmitter.hpp"
 
-CuboidParticleEmitter::CuboidParticleEmitter(glm::vec3 origin, glm::vec3 size, double minEmitTime, double maxEmitTime, bool relative) : ParticleEmitter(minEmitTime, maxEmitTime, relative) {
+CuboidParticleEmitter::CuboidParticleEmitter(glm::vec3 origin, glm::vec3 size, Entity* entity) : ParticleEmitter(entity) {
     this->mOrigin = origin;
     this->mSize = size;
 }

@@ -8,6 +8,7 @@
 #include "../Component/RelativeTransform.hpp"
 #include "../Component/Collider2DCircle.hpp"
 #include "../Component/Collider2DRectangle.hpp"
+#include "../Component/ParticleEmitter.hpp"
 
 using namespace Component;
 
@@ -20,6 +21,7 @@ Entity::Entity(Scene* scene) {
     mRelativeTransform = nullptr;
     mCircle = nullptr;
     mRectangle = nullptr;
+    mParticle = nullptr;
 }
 
 Entity::~Entity() {
@@ -74,6 +76,15 @@ Collider2DRectangle* Entity::CreateCollider2DRectangle() {
     if (mRectangle == nullptr) {
         mRectangle = new Component::Collider2DRectangle(this);
         return mRectangle;
+    }
+    return nullptr;
+}
+
+ParticleEmitter * Entity::CreateParticleEmitter()
+{
+    if (mParticle == nullptr) {
+        mParticle = new Component::ParticleEmitter(this);
+        return mParticle;
     }
     return nullptr;
 }

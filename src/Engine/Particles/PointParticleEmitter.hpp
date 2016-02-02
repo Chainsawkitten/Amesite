@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ParticleEmitter.hpp"
+#include "../Component/ParticleEmitter.hpp"
 #include <glm/glm.hpp>
 
 /// Emitter that emits particles from a single point.
-class PointParticleEmitter : public ParticleEmitter {
+class PointParticleEmitter : public Component::ParticleEmitter {
     public:
         /// Create new PointParticleEmitter.
         /**
@@ -13,7 +13,7 @@ class PointParticleEmitter : public ParticleEmitter {
          * @param maxEmitTime The maximum time between each emitted particle.
          * @param relative Whether to emit particles relative to the camera position.
          */
-        PointParticleEmitter(glm::vec3 origin, double minEmitTime, double maxEmitTime, bool relative = false);
+        PointParticleEmitter(glm::vec3 origin, Entity* entity);
         
         /// Emit particle.
         void EmitParticle();

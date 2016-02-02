@@ -144,7 +144,7 @@ set(ENGINE_SRCS
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
         src/Engine/Particles/CuboidParticleEmitter.cpp
-        src/Engine/Particles/ParticleEmitter.cpp
+        src/Engine/Component/ParticleEmitter.cpp
         src/Engine/Particles/ParticleSystem.cpp
         src/Engine/Particles/PointParticleEmitter.cpp
     )
@@ -183,7 +183,7 @@ set(ENGINE_HEADERS
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
         src/Engine/Particles/CuboidParticleEmitter.hpp
-        src/Engine/Particles/ParticleEmitter.hpp
+        src/Engine/Component/ParticleEmitter.hpp
         src/Engine/Particles/ParticleSystem.hpp
         src/Engine/Particles/ParticleType.hpp
         src/Engine/Particles/PointParticleEmitter.hpp

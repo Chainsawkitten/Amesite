@@ -11,10 +11,6 @@
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
-#include "Engine/Particles/CuboidParticleEmitter.hpp"
-#include "Engine/Particles/PointParticleEmitter.hpp"
-#include "Engine/Particles/ParticleSystem.hpp"
-
 #include "System/RenderSystem.hpp"
 
 #include <Engine/Scene/Scene.hpp>
@@ -25,6 +21,7 @@
 #include <Component/Mesh.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include <Component/Collider2DRectangle.hpp>
+#include <Component/ParticleEmitter.hpp>
 
 #include <CollisionSystem/CollisionSystem.hpp>
 
@@ -54,6 +51,13 @@ int main() {
 
     // Scene and Entites. 
     Scene scene;
+
+    // Particle System
+    ParticleSystem* particleSystem;
+    Texture2D* particleTexture;
+
+    // Particle texture.
+    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
 
     Caves::CaveSystem testCaveSystem(&scene);
     testCaveSystem.GenerateCaveSystem();
@@ -88,19 +92,23 @@ int main() {
     Entity* cameraEntity = scene.CreateEntity();
     cameraEntity->AddComponent<Component::Lens>();
     cameraEntity->AddComponent<Component::Transform>();
+    cameraEntity->AddComponent<Component::ParticleEmitter>();
+    
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->emitterType = Component::ParticleEmitter::CUBOID;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->follow = cameraEntity;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->maxEmitTime = 0.02;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->minEmitTime = 0.01;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->lifetime = 0.0;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->origin = glm::vec3(0.f, 0.f, 0.f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->size = glm::vec3(40.f, 15.f, 40.f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->relative = true;
 
     cameraEntity->GetComponent<Component::Transform>()->Move(-5.0f, 12.5f, -5.0f);
     cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 90.f, 0.f);
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
 
-    ParticleSystem* particleSystem;
-    Texture2D* particleTexture;
-
-    // Particle texture.
-    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
-
-    // Particle type.
+    //Particle type.
     ParticleType dustParticle;
     dustParticle.texture = particleTexture;
     dustParticle.mMinLifetime = 6.f;
@@ -115,9 +123,8 @@ int main() {
     particleSystem = new ParticleSystem(dustParticle, 1000);
 
     // Emitters.
-    ParticleEmitter* emitter = new CuboidParticleEmitter(glm::vec3(0.f, 0.f, 0.f), glm::vec3(40.f, 15.f, 40.f), 0.01, 0.02, true);
-    particleSystem->AddParticleEmitter(emitter);
-    emitter->Update(5.0, particleSystem, cameraEntity);
+    particleSystem->AddParticleEmitter(cameraEntity->GetComponent<Component::ParticleEmitter>());
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->Update(5.0, cameraEntity, particleSystem);
     
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -145,8 +152,8 @@ int main() {
         // Input testing.
         window->Update();
 
-        particleSystem->Update(deltaTime, cameraEntity);
-        particleSystem->Render(cameraEntity, window->GetSize());
+        //particleSystem->Update(deltaTime, cameraEntity);
+        //particleSystem->Render(cameraEntity, window->GetSize());
         
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
 
