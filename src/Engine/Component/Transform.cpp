@@ -11,13 +11,15 @@ Transform::Transform(Entity* entity) : SuperComponent(entity) {
     yaw = 0.f;
     pitch = 0.f;
     roll = 0.f;
+
+    UpdateModelMatrix();
 }
 
 Transform::~Transform() {
 }
 
-glm::mat4 Transform::GetModelMatrix() const {
-	return glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
+void Transform::UpdateModelMatrix() {
+    modelMatrix = glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
 }
 
 glm::mat4 Transform::GetOrientation() const {

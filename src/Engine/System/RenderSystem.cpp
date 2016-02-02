@@ -44,7 +44,7 @@ void RenderSystem::Render(const Scene& scene) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     mShaderProgram->Use();
-    
+   
     Entity* camera = nullptr;
 
     // Finds (last) camera in scene.
@@ -70,7 +70,7 @@ void RenderSystem::Render(const Scene& scene) {
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
 
                 // Render model.
-                glm::mat4 modelMat = model->GetComponent<Component::Transform>()->GetModelMatrix();
+                glm::mat4 modelMat = model->GetComponent<Component::Transform>()->modelMatrix;
                 glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
                 glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
                 glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);

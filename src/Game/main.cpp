@@ -11,8 +11,9 @@
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
-
-#include "System/RenderSystem.hpp"
+#include <System/RenderSystem.hpp>
+#include <System/PhysicsSystem.hpp>
+#include <System/CollisionSystem.hpp>
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -20,9 +21,12 @@
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
+#include <Component/RelativeTransform.hpp>
+#include <Component/Physics.hpp>
+#include <Component/Collider2DCircle.hpp>
+#include <Component/Collider2DRectangle.hpp>
 
 #include <Texture/Texture2D.hpp>
-#include <Component/RelativeTransform.hpp>
 
 #include <thread>
 
@@ -45,28 +49,25 @@ int main() {
     // RenderSystem.
     System::RenderSystem renderSystem;
 
+    // PhysicsSystem.
+    System::PhysicsSystem physicsSystem;
+
     // Scene and Entites. 
     Scene scene;
 
     Caves::CaveSystem testCaveSystem(&scene);
-    testCaveSystem.GenerateCaveSystem();
-    
-    Entity* cubeEntity = scene.CreateEntity();
-    cubeEntity->AddComponent<Component::Mesh>();
-    cubeEntity->AddComponent<Component::Transform>();
-    cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
 
-    Entity* cubeChildEntity = scene.CreateEntity();
-    cubeChildEntity->AddComponent<Component::Mesh>()->geometry = cubeEntity->GetComponent<Component::Mesh>()->geometry;
-    cubeChildEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
-    cubeChildEntity->GetComponent<Component::RelativeTransform>()->Move(1.f, 1.f, -1.f);
+    Entity* map = testCaveSystem.GenerateCaveSystem();
+    map->GetComponent<Component::Transform>()->scale = glm::vec3(1.8f, 1.8f, 1.8f);
+    map->AddComponent<Component::Physics>()->angularVelocity.y = 0.1f;
+    map->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
     
     Entity* cameraEntity = scene.CreateEntity();
     cameraEntity->AddComponent<Component::Lens>();
     cameraEntity->AddComponent<Component::Transform>();
 
-    cameraEntity->GetComponent<Component::Transform>()->Move(12.5f, -12.5f, 35.f);
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
+    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 35.f, 35.f);
+    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 50.f, 0.f);
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
@@ -74,11 +75,15 @@ int main() {
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
     while (!window->ShouldClose()) {
+        double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
         
-        // Move cube.
-        cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
-        
+        // PhysicsSystem.
+        physicsSystem.Update(scene, deltaTime);
+
+        // Updates model matrices for this frame.
+        scene.UpdateModelMatrices();
+
         // Render.
         renderSystem.Render(scene);
 
@@ -90,7 +95,7 @@ int main() {
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))
-            title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0) + " ms";
+            title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0f) + " ms";
         window->SetTitle(title.c_str());
         
         // Swap buffers and wait until next frame.
