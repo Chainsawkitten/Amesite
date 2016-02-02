@@ -21,6 +21,13 @@ Turret::~Turret() {
 
 void Turret::SetAngle(float angle) {
 
-    mTurret->GetComponent<Component::Transform>()->yaw = angle;
+    if(mTurret->GetComponent<Component::Transform>() != nullptr)
+        mTurret->GetComponent<Component::Transform>()->yaw = angle;
+
+}
+
+void Turret::Shoot() {
+
+    
 
 }

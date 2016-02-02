@@ -31,4 +31,32 @@ void Player::Update(float dTime) {
     if (glm::abs(x) + glm::abs(z) > 0.2f)
         mPlayerEntity->GetComponent<Component::Transform>()->Move(glm::vec3(x * mAcceleration * dTime, 0, -z * mAcceleration * dTime));
 
+    //Rotate the turret(s)
+    float a = Input()->ButtonValue(Input()->AIM_Z, mPlayerID);
+    float b = Input()->ButtonValue(Input()->AIM_X, mPlayerID);
+    float rot = 0;
+
+    if (glm::abs(a) + glm::abs(b) > 0.2f) {
+
+        if (a >= 0)
+            rot = glm::atan(b / a) * 360.f / (2 * 3.14);
+        else
+            rot = 180 + glm::atan(b / a) * 360.f / (2 * 3.14);
+
+        if (mTurret != nullptr)
+            mTurret->SetAngle(rot);
+    
+    }
+
+}
+
+void Player::SetTurret(Entity* turret, Entity* muzzle) {
+
+    mTurret = new Turret(turret, muzzle);
+
+}
+void Player::SetTurret(Turret* turret) {
+
+    mTurret = turret;
+
 }

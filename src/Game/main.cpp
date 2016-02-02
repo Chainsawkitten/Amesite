@@ -11,6 +11,9 @@
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
+#include "Engine/Particles/CuboidParticleEmitter.hpp"
+#include "Engine/Particles/PointParticleEmitter.hpp"
+#include "Engine/Particles/ParticleSystem.hpp"
 
 #include "System/RenderSystem.hpp"
 
@@ -20,6 +23,10 @@
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
+#include <Component/Collider2DCircle.hpp>
+#include <Component/Collider2DRectangle.hpp>
+
+#include <CollisionSystem/CollisionSystem.hpp>
 
 #include <Texture/Texture2D.hpp>
 #include <Component/RelativeTransform.hpp>
@@ -27,6 +34,7 @@
 #include <thread>
 
 #include "Player/Player.hpp"
+#include "Turret\Turret.hpp"
 
 using namespace std;
 
@@ -47,7 +55,7 @@ int main() {
 
     // RenderSystem.
     System::RenderSystem renderSystem;
-
+    CollisionSystem collisionSystem;
     // Scene and Entites. 
     Scene scene;
 
@@ -74,17 +82,34 @@ int main() {
 
     turretEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
 
+    Entity* collisionCubeA = scene.CreateEntity();
+    collisionCubeA->AddComponent<Component::Mesh>();
+    collisionCubeA->AddComponent<Component::Transform>();
+    collisionCubeA->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    collisionCubeA->AddComponent<Component::Collider2DRectangle>();
+    collisionCubeA->GetComponent<Component::Transform>()->Move(-4.f, 0.f, -4.f);
+    collisionCubeA->GetComponent<Component::Collider2DRectangle>()->height = 1.f;
+    collisionCubeA->GetComponent<Component::Collider2DRectangle>()->width = 1.f;
+
+    Entity* collisionCubeB = scene.CreateEntity();
+    collisionCubeB->AddComponent<Component::Mesh>();
+    collisionCubeB->AddComponent<Component::Transform>();
+    collisionCubeB->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    collisionCubeB->AddComponent<Component::Collider2DCircle>();
+    collisionCubeB->GetComponent<Component::Transform>()->Move(-4.f,0.f,-6.f);
+    collisionCubeB->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
+
+    Entity* cubeChildEntity = scene.CreateEntity();
+    cubeChildEntity->AddComponent<Component::Mesh>()->geometry = cubeEntity->GetComponent<Component::Mesh>()->geometry;
+    cubeChildEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
+    cubeChildEntity->GetComponent<Component::RelativeTransform>()->Move(1.f, 1.f, -1.f);
+    
     Entity* cameraEntity = scene.CreateEntity();
     cameraEntity->AddComponent<Component::Lens>();
     cameraEntity->AddComponent<Component::Transform>();
 
     cameraEntity->GetComponent<Component::Transform>()->Move(0.f, -34.5f, 0.f);
     cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, -90.f, 0.f);
-
-    Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
-
-
-    glm::vec3 velocity(0.5f, 0, 0);
 
     Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_ONE);
     Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_ONE);
@@ -99,31 +124,39 @@ int main() {
     Player player(cubeEntity, 20);
     Player player2(cubeEntity2, 20, InputHandler::PLAYER_TWO);
 
+    Turret turret(cubeEntity2, turretEntity);
+
+    player.SetTurret(&turret);
+
+    Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
+
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
+    float rotation = 0;
+    glm::vec3 cubeAOrigin = collisionCubeA->GetComponent<Component::Transform>()->position;
+    glm::vec3 cubeBOrigin = collisionCubeA->GetComponent<Component::Transform>()->position;
     while (!window->ShouldClose()) {
+        double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
 
-        // Move cube.
-        //cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
-        cubeEntity->GetComponent<Component::Transform>()->Move(velocity);
-
         player.Update(0.01f);
-        player2.Update(0.01f);
+        //player2.Update(0.01f);
 
-        float a = Input()->ButtonValue(Input()->AIM_X, Input()->PLAYER_TWO);
-        float b = Input()->ButtonValue(Input()->AIM_Z, Input()->PLAYER_TWO);
+        rotation += deltaTime;
+        if (rotation > 360.f)
+            rotation -= 360.f;
+        
+        // Move cube.
+        cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
 
-        if(glm::abs(a) + glm::abs(b) > 0.2f)
-            if(a > 0)
-                turretJoint->GetComponent<Component::RelativeTransform>()->yaw = glm::atan(b / a) * 360.f/(2*3.14);
-            else
-                turretJoint->GetComponent<Component::RelativeTransform>()->yaw = 180 + glm::atan(b / a) * 360.f / (2 * 3.14);
+        // Move collision cubes.
+        collisionCubeA->GetComponent<Component::Transform>()->position = cubeAOrigin + glm::vec3(glm::cos(rotation), 0.f, -glm::sin(rotation));
+        collisionCubeB->GetComponent<Component::Transform>()->position = cubeBOrigin + glm::vec3(glm::cos(rotation), 0.f, glm::sin(rotation));
 
-        Log() << (float) Input()->ButtonValue(Input()->MOVE_X, Input()->PLAYER_ONE) << "\n";
+        collisionCubeA->GetComponent<Component::Collider2DRectangle>();
 
-        velocity *= 0.95f;
+        Log() << CollisionManager().RectangleVSCircle(collisionCubeA, collisionCubeB) << "\n";
 
         // Render.
         renderSystem.Render(scene);

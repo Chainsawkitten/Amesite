@@ -15,6 +15,7 @@ public:
     ~Turret();
 
     void SetAngle(float angle);
+    void Shoot();
 
 private:
     Entity* mTurret;

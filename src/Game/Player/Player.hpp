@@ -4,6 +4,8 @@
 #include <Engine/Entity/Entity.hpp>
 #include <Component/Transform.hpp>
 
+#include "../Turret/Turret.hpp"
+
 class Player {
 
 public:
@@ -14,9 +16,12 @@ public:
 
     void Update(float dTime);
 
+    void SetTurret(Entity* turret, Entity* muzzle);
+    void SetTurret(Turret* turret);
+
 private:
     Entity* mPlayerEntity;
-    Entity* mTurretEntity;
+    Turret* mTurret;
     InputHandler::Player mPlayerID;
 
     float mAcceleration;
