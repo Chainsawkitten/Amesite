@@ -17,11 +17,8 @@ namespace Component {
             /// Destructor.
             ~RelativeTransform();
 
-            /// Get model matrix.
-            /**
-             * @return The entity's model matrix, containing translation, scaling and rotation.
-             */
-            glm::mat4 GetModelMatrix() const;
+            /// Update model matrix.
+            void UpdateModelMatrix();
             
             /// Parent Entity.
             /**

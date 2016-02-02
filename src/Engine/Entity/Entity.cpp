@@ -6,6 +6,7 @@
 #include "../Component/Lens.hpp"
 #include "../Component/Mesh.hpp"
 #include "../Component/RelativeTransform.hpp"
+#include "../Component/Physics.hpp"
 #include "../Component/Collider2DCircle.hpp"
 #include "../Component/Collider2DRectangle.hpp"
 
@@ -18,6 +19,7 @@ Entity::Entity(Scene* scene) {
     mTransform = nullptr;
     mMesh = nullptr;
     mRelativeTransform = nullptr;
+    mPhysics = nullptr;
     mCircle = nullptr;
     mRectangle = nullptr;
 }
@@ -58,6 +60,15 @@ RelativeTransform* Entity::CreateRelativeTransform() {
         mTransform = mRelativeTransform;
         mScene->mTransformComponentVec.push_back(mRelativeTransform);
         return mRelativeTransform;
+    }
+    return nullptr;
+}
+
+Component::Physics* Entity::CreatePhysics() {
+    if (mPhysics == nullptr) {
+        mPhysics = new Component::Physics(this);
+        mScene->mPhysicsComponentVec.push_back(mPhysics);
+        return mPhysics;
     }
     return nullptr;
 }
