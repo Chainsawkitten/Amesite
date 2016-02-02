@@ -16,10 +16,11 @@ namespace System {
 
             /// Update Scene containing entities. Moves entities and updates the physics component.
             /**
-             * @param scene Contains a bunch of entities.
-             * @param timeDelta Time (in seconds).
+             * @param scene The scene to update.
+             * @param deltaTime Time since last frame (in seconds).
              */
             void Update(const Scene& scene, float deltaTime);
+            
         private:
             /// Gravity (in meter/secound)
             /**
