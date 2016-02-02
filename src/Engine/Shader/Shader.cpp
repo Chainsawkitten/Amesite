@@ -2,6 +2,7 @@
 
 Shader::Shader(const char* source, int sourceLength, GLenum shaderType) {
 	mShaderType = shaderType;
+    mSource = source;
 
 	mShader = glCreateShader(shaderType);
     GLint length = sourceLength;

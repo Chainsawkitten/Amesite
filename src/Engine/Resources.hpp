@@ -132,12 +132,12 @@ class ResourceManager {
             int count;
         };
         struct ShaderProgramKey {
-            const Shader* computeShader;
-            const Shader* vertexShader;
-            const Shader* tessControlShader;
-            const Shader* tessEvaluationShader;
-            const Shader* geometryShader;
-            const Shader* fragmentShader;
+            const char* computeShader;
+            const char* vertexShader;
+            const char* tessControlShader;
+            const char* tessEvaluationShader;
+            const char* geometryShader;
+            const char* fragmentShader;
             
             ShaderProgramKey();
             
