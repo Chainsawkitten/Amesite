@@ -7,18 +7,20 @@
 
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
-#include "CaveSystem/CaveSystem.hpp"
+//#include "CaveSystem/CaveSystem.hpp"
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
-#include "Engine/Particles/CuboidParticleEmitter.hpp"
-#include "Engine/Particles/PointParticleEmitter.hpp"
-#include "Engine/Particles/ParticleSystem.hpp"
+//#include "Engine/Particles/CuboidParticleEmitter.hpp"
+//#include "Engine/Particles/PointParticleEmitter.hpp"
+//#include "Engine/Particles/ParticleSystem.hpp"
 
 #include "System/RenderSystem.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
+
+#include "Game/Util/GameEntityFactory.hpp"
 
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
@@ -26,7 +28,7 @@
 #include <Component/Collider2DCircle.hpp>
 #include <Component/Collider2DRectangle.hpp>
 
-#include <CollisionSystem/CollisionSystem.hpp>
+//#include <CollisionSystem/CollisionSystem.hpp>
 
 #include <Texture/Texture2D.hpp>
 #include <Component/RelativeTransform.hpp>
@@ -55,70 +57,75 @@ int main() {
     // Scene and Entites. 
     Scene scene;
 
-    Caves::CaveSystem testCaveSystem(&scene);
-    testCaveSystem.GenerateCaveSystem();
+    GameEntityCreator().SetScene(&scene);
+
+    Entity* cameraEntity = GameEntityCreator().CreateCamera(glm::vec3(0.f, 10.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    Entity* basicEnemy = GameEntityCreator().CreateBasicEnemy(glm::vec3(0.f, 0.f, 0.f));
+
+    //Caves::CaveSystem testCaveSystem(&scene);
+    //testCaveSystem.GenerateCaveSystem();
     
-    Entity* cubeEntity = scene.CreateEntity();
-    cubeEntity->AddComponent<Component::Mesh>();
-    cubeEntity->AddComponent<Component::Transform>();
-    cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    //Entity* cubeEntity = scene.CreateEntity();
+    //cubeEntity->AddComponent<Component::Mesh>();
+    //cubeEntity->AddComponent<Component::Transform>();
+    //cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
 
-    Entity* collisionCubeA = scene.CreateEntity();
-    collisionCubeA->AddComponent<Component::Mesh>();
-    collisionCubeA->AddComponent<Component::Transform>();
-    collisionCubeA->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-    collisionCubeA->AddComponent<Component::Collider2DRectangle>();
-    collisionCubeA->GetComponent<Component::Transform>()->Move(-4.f, 0.f, -4.f);
-    collisionCubeA->GetComponent<Component::Collider2DRectangle>()->height = 1.f;
-    collisionCubeA->GetComponent<Component::Collider2DRectangle>()->width = 1.f;
+    //Entity* collisionCubeA = scene.CreateEntity();
+    //collisionCubeA->AddComponent<Component::Mesh>();
+    //collisionCubeA->AddComponent<Component::Transform>();
+    //collisionCubeA->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    //collisionCubeA->AddComponent<Component::Collider2DRectangle>();
+    //collisionCubeA->GetComponent<Component::Transform>()->Move(-4.f, 0.f, -4.f);
+    //collisionCubeA->GetComponent<Component::Collider2DRectangle>()->height = 1.f;
+    //collisionCubeA->GetComponent<Component::Collider2DRectangle>()->width = 1.f;
 
-    Entity* collisionCubeB = scene.CreateEntity();
-    collisionCubeB->AddComponent<Component::Mesh>();
-    collisionCubeB->AddComponent<Component::Transform>();
-    collisionCubeB->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-    collisionCubeB->AddComponent<Component::Collider2DCircle>();
-    collisionCubeB->GetComponent<Component::Transform>()->Move(-4.f,0.f,-6.f);
-    collisionCubeB->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
+    //Entity* collisionCubeB = scene.CreateEntity();
+    //collisionCubeB->AddComponent<Component::Mesh>();
+    //collisionCubeB->AddComponent<Component::Transform>();
+    //collisionCubeB->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    //collisionCubeB->AddComponent<Component::Collider2DCircle>();
+    //collisionCubeB->GetComponent<Component::Transform>()->Move(-4.f,0.f,-6.f);
+    //collisionCubeB->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
 
-    Entity* cubeChildEntity = scene.CreateEntity();
-    cubeChildEntity->AddComponent<Component::Mesh>()->geometry = cubeEntity->GetComponent<Component::Mesh>()->geometry;
-    cubeChildEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
-    cubeChildEntity->GetComponent<Component::RelativeTransform>()->Move(1.f, 1.f, -1.f);
-    
-    Entity* cameraEntity = scene.CreateEntity();
-    cameraEntity->AddComponent<Component::Lens>();
-    cameraEntity->AddComponent<Component::Transform>();
+    //Entity* cubeChildEntity = scene.CreateEntity();
+    //cubeChildEntity->AddComponent<Component::Mesh>()->geometry = cubeEntity->GetComponent<Component::Mesh>()->geometry;
+    //cubeChildEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
+    //cubeChildEntity->GetComponent<Component::RelativeTransform>()->Move(1.f, 1.f, -1.f);
+    //
+    //Entity* cameraEntity = scene.CreateEntity();
+    //cameraEntity->AddComponent<Component::Lens>();
+    //cameraEntity->AddComponent<Component::Transform>();
 
-    cameraEntity->GetComponent<Component::Transform>()->Move(-5.0f, 12.5f, -5.0f);
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 90.f, 0.f);
+    //cameraEntity->GetComponent<Component::Transform>()->Move(-5.0f, 12.5f, -5.0f);
+    //cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 90.f, 0.f);
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
 
     // Particle type.
-    ParticleSystem* explosionParticleSystem;
-    ParticleEmitter* explosionEmitter;
+    //ParticleSystem* explosionParticleSystem;
+    //ParticleEmitter* explosionEmitter;
 
-    ParticleType explosionParticle;
-    explosionParticle.texture = testTexture;
-    explosionParticle.mMinLifetime = .1f;
-    explosionParticle.mMaxLifetime = 2.f;
-    explosionParticle.mMinVelocity = glm::vec3(-10.f, 10.f, -10.f);
-    explosionParticle.mMaxVelocity = glm::vec3(10.f, -10.f, 10.f);
-    explosionParticle.mMinSize = glm::vec2(2.5f, 2.5f);
-    explosionParticle.mMaxSize = glm::vec2(5.f, 5.f);
-    explosionParticle.mUniformScaling = true;
-    explosionParticle.mColor = glm::vec3(1.f, 0.5f, 0.5f);
+    //ParticleType explosionParticle;
+    //explosionParticle.texture = testTexture;
+    //explosionParticle.mMinLifetime = .1f;
+    //explosionParticle.mMaxLifetime = 2.f;
+    //explosionParticle.mMinVelocity = glm::vec3(-10.f, 10.f, -10.f);
+    //explosionParticle.mMaxVelocity = glm::vec3(10.f, -10.f, 10.f);
+    //explosionParticle.mMinSize = glm::vec2(2.5f, 2.5f);
+    //explosionParticle.mMaxSize = glm::vec2(5.f, 5.f);
+    //explosionParticle.mUniformScaling = true;
+    //explosionParticle.mColor = glm::vec3(1.f, 0.5f, 0.5f);
 
-    explosionParticleSystem = new ParticleSystem(explosionParticle, 1000);
-    explosionEmitter = new PointParticleEmitter(cameraEntity->GetComponent<Component::Transform>()->position + glm::vec3(glm::inverse(cameraEntity->GetComponent<Component::Transform>()->GetOrientation()) * glm::vec4(0, 0, -1, 1)), 1, 2, false);
-    explosionParticleSystem->AddParticleEmitter(explosionEmitter);
+    //explosionParticleSystem = new ParticleSystem(explosionParticle, 1000);
+    //explosionEmitter = new PointParticleEmitter(cameraEntity->GetComponent<Component::Transform>()->position + glm::vec3(glm::inverse(cameraEntity->GetComponent<Component::Transform>()->GetOrientation()) * glm::vec4(0, 0, -1, 1)), 1, 2, false);
+    //explosionParticleSystem->AddParticleEmitter(explosionEmitter);
     
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
     float rotation = 0;
-    glm::vec3 cubeAOrigin = collisionCubeA->GetComponent<Component::Transform>()->position;
-    glm::vec3 cubeBOrigin = collisionCubeA->GetComponent<Component::Transform>()->position;
+   // glm::vec3 cubeAOrigin = collisionCubeA->GetComponent<Component::Transform>()->position;
+    //glm::vec3 cubeBOrigin = collisionCubeA->GetComponent<Component::Transform>()->position;
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
@@ -127,11 +134,11 @@ int main() {
             rotation -= 360.f;
         
         // Move cube.
-        cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
+        //cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
 
         // Move collision cubes.
-        collisionCubeA->GetComponent<Component::Transform>()->position = cubeAOrigin + glm::vec3(glm::cos(rotation), 0.f, -glm::sin(rotation));
-        collisionCubeB->GetComponent<Component::Transform>()->position = cubeBOrigin + glm::vec3(glm::cos(rotation), 0.f, glm::sin(rotation));
+        //collisionCubeA->GetComponent<Component::Transform>()->position = cubeAOrigin + glm::vec3(glm::cos(rotation), 0.f, -glm::sin(rotation));
+        //collisionCubeB->GetComponent<Component::Transform>()->position = cubeBOrigin + glm::vec3(glm::cos(rotation), 0.f, glm::sin(rotation));
 
         // Render.
         renderSystem.Render(scene);
@@ -141,9 +148,9 @@ int main() {
         
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
 
-        explosionEmitter->Update(15, explosionParticleSystem, cameraEntity);
+        //explosionEmitter->Update(15, explosionParticleSystem, cameraEntity);
 
-        explosionParticleSystem->Render(cameraEntity, window->GetSize());
+        //explosionParticleSystem->Render(cameraEntity, window->GetSize());
 
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";

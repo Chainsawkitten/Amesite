@@ -1,31 +1,39 @@
 #pragma once
 
+#include <glm\glm.hpp>
+
 class Scene;
-class EnemyObject;
+class Entity;
 
 
-class GameObjectFactory {
+class GameEntityFactory {
     public:
         /// Get the instance of the class.
         /**
          * @return The %GameEntityFactory instance
          */
-        static GameObjectFactory& GetInstance();
+        static GameEntityFactory& GetInstance();
         
         ///Default constructor
-        GameObjectFactory::GameObjectFactory();
+        GameEntityFactory::GameEntityFactory();
 
         ///Constructor
         /**
          *@param scene The scene that the factory will be coupled to.
          */
-        GameObjectFactory::GameObjectFactory(Scene* scene);
+        GameEntityFactory::GameEntityFactory(Scene* scene);
         
         ///Create a basic enemy.
         /**
          *@param origin The enemy's starting position
          */
-        EnemyObject* GameObjectFactory::CreateBasicEnemy(glm::vec3 origin);
+        Entity* GameEntityFactory::CreateBasicEnemy(glm::vec3 origin);
+
+        ///Create a camera.
+        /**
+        *@param origin The enemy's starting position
+        */
+        Entity* GameEntityFactory::CreateCamera(glm::vec3 origin, glm::vec3 rotation);
 
         ///Sets scene that the factory is coupled to.
         /**
@@ -34,7 +42,7 @@ class GameObjectFactory {
         void SetScene(Scene* scene);
 
         ///Destructor
-        GameObjectFactory::~GameObjectFactory();
+        GameEntityFactory::~GameEntityFactory();
 
     private:
         Scene* mScene;
@@ -44,4 +52,4 @@ class GameObjectFactory {
 /**
  * @return The %CollisionManager instance
  */
-GameObjectFactory& GameEntityCreator();
+GameEntityFactory& GameEntityCreator();

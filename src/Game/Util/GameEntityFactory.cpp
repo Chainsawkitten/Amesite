@@ -1,8 +1,8 @@
 #include "GameEntityFactory.hpp"
 #include <Entity/Entity.hpp>
-#include "../GameObject/EnemyObject.hpp"
 #include <Resources.hpp>
 #include <Component/Mesh.hpp>
+#include <Component/Lens.hpp>
 #include <Component/Transform.hpp>
 #include <Component/RelativeTransform.hpp>
 #include <Component/Collider2DCircle.hpp>
@@ -12,39 +12,52 @@
 
 #include <Scene/Scene.hpp>
 
-GameObjectFactory& GameObjectFactory::GetInstance() {
-    static GameObjectFactory instance;
+GameEntityFactory& GameEntityFactory::GetInstance() {
+    static GameEntityFactory instance;
 
     return instance;
 }
 
-GameObjectFactory::GameObjectFactory(){
+GameEntityFactory::GameEntityFactory(){
     mScene = nullptr;
 }
 
-GameObjectFactory::GameObjectFactory(Scene* scene) {
+GameEntityFactory::GameEntityFactory(Scene* scene) {
     mScene = scene;
 }
 
-EnemyObject* GameObjectFactory::CreateBasicEnemy(glm::vec3 origin){
-    EnemyObject* newEnemy = new EnemyObject();
-    newEnemy->entityList.insert (std::make_pair("body", mScene->CreateEntity()));
+Entity* GameEntityFactory::CreateBasicEnemy(glm::vec3 origin){
+    Entity* enemyEntity = mScene->CreateEntity();
+    enemyEntity->AddComponent<Component::Mesh>();
+    enemyEntity->AddComponent<Component::Transform>();
+    enemyEntity->AddComponent<Component::Collider2DCircle>();
 
-    newEnemy->entityList["body"]->AddComponent<Component::Transform>();
-    newEnemy->entityList["body"]->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-    newEnemy->entityList["body"]->AddComponent<Component::Collider2DCircle>();
-    newEnemy->entityList["body"]->GetComponent<Component::Transform>()->position = origin;
-    newEnemy->entityList["body"]->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
+    enemyEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    enemyEntity->GetComponent<Component::Transform>()->position = origin;
+    enemyEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
+
+    return enemyEntity;
 }
 
-void GameObjectFactory::SetScene(Scene* scene) {
+Entity* GameEntityFactory::CreateCamera(glm::vec3 origin, glm::vec3 rotation){
+    Entity* cameraEntity = mScene->CreateEntity();
+    cameraEntity->AddComponent<Component::Transform>();
+    cameraEntity->AddComponent<Component::Lens>();
+
+    cameraEntity->GetComponent<Component::Transform>()->position = origin;
+    cameraEntity->GetComponent<Component::Transform>()->Rotate(rotation.x, rotation.y, rotation.z);
+
+    return cameraEntity;
+}
+
+void GameEntityFactory::SetScene(Scene* scene) {
     mScene = scene;
 }
 
-GameObjectFactory::~GameObjectFactory() {
+GameEntityFactory::~GameEntityFactory() {
 
 }
 
-GameObjectFactory& GameEntityCreator() {
-    return GameObjectFactory::GetInstance();
+GameEntityFactory& GameEntityCreator() {
+    return GameEntityFactory::GetInstance();
 }
