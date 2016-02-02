@@ -98,6 +98,7 @@ int main() {
     cameraEntity->GetComponent<Component::ParticleEmitter>()->follow = cameraEntity;
     cameraEntity->GetComponent<Component::ParticleEmitter>()->maxEmitTime = 0.02;
     cameraEntity->GetComponent<Component::ParticleEmitter>()->minEmitTime = 0.01;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->timeToNext = cameraEntity->GetComponent<Component::ParticleEmitter>()->minEmitTime +((double)rand() / RAND_MAX) * (cameraEntity->GetComponent<Component::ParticleEmitter>()->maxEmitTime - cameraEntity->GetComponent<Component::ParticleEmitter>()->minEmitTime);
     cameraEntity->GetComponent<Component::ParticleEmitter>()->lifetime = 0.0;
     cameraEntity->GetComponent<Component::ParticleEmitter>()->origin = glm::vec3(0.f, 0.f, 0.f);
     cameraEntity->GetComponent<Component::ParticleEmitter>()->size = glm::vec3(40.f, 15.f, 40.f);
@@ -142,6 +143,9 @@ int main() {
         // Move cube.
         cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
 
+        // Update ParticleSystem
+        particleSystem->Update(deltaTime, cameraEntity);
+
         // Move collision cubes.
         collisionCubeA->GetComponent<Component::Transform>()->position = cubeAOrigin + glm::vec3(glm::cos(rotation), 0.f, -glm::sin(rotation));
         collisionCubeB->GetComponent<Component::Transform>()->position = cubeBOrigin + glm::vec3(glm::cos(rotation), 0.f, glm::sin(rotation));
@@ -152,8 +156,9 @@ int main() {
         // Input testing.
         window->Update();
 
-        //particleSystem->Update(deltaTime, cameraEntity);
-        //particleSystem->Render(cameraEntity, window->GetSize());
+        // Render particle system
+        particleSystem->Update(deltaTime, cameraEntity);
+        particleSystem->Render(cameraEntity, window->GetSize());
         
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
 
