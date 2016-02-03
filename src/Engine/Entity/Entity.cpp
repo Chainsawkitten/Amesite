@@ -6,6 +6,7 @@
 #include "../Component/Lens.hpp"
 #include "../Component/Mesh.hpp"
 #include "../Component/RelativeTransform.hpp"
+#include "../Component/Physics.hpp"
 #include "../Component/Collider2DCircle.hpp"
 #include "../Component/Collider2DRectangle.hpp"
 #include "../Component/SuperComponent.hpp"

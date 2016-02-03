@@ -10,8 +10,8 @@ namespace Component {
         public:
             /// Create new %Collider2DRectangle.
             /**
-            * @param entity Pointer to which Entity this %Component corresponds.
-            */
+             * @param entity Pointer to which Entity this %Component corresponds.
+             */
             Collider2DRectangle(Entity* entity);
 
             ///Destructor;

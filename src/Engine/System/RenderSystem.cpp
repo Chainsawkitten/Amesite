@@ -14,6 +14,7 @@
 #include "../Component/Lens.hpp"
 #include "../Component/Transform.hpp"
 #include "../Component/Mesh.hpp"
+#include <string>
 
 using namespace System;
 
@@ -33,7 +34,7 @@ void RenderSystem::Render(const Scene& scene) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     mShaderProgram->Use();
-    
+   
     Entity* camera = nullptr;
 
 	//Find last camera.
@@ -59,11 +60,11 @@ void RenderSystem::Render(const Scene& scene) {
 			scene.GetAll<Component::Mesh>(meshes);
             if (meshes[i]->entity->GetComponent<Component::Transform>() != nullptr) {
 				Entity* model = meshes[i]->entity;
-                
+				Log() << std::to_string(meshes[i]->entity->GetComponent<Component::Transform>()->position.x);
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
 
                 // Render model.
-                glm::mat4 modelMat = model->GetComponent<Component::Transform>()->GetModelMatrix();
+                glm::mat4 modelMat = model->GetComponent<Component::Transform>()->modelMatrix;
                 glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
 
                 glDrawElements(GL_TRIANGLES, model->GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);

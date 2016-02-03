@@ -7,6 +7,7 @@
 #include "../Component/Mesh.hpp"
 #include "../Component/RelativeTransform.hpp"
 #include "../Component/SuperComponent.hpp"
+#include "../Component/Physics.hpp"
 
 Scene::Scene() {
 
@@ -29,4 +30,12 @@ void Scene::AddComponentToList(Component::SuperComponent* component, const type_
 
 void Scene::Clear() {
 	//TODO: CLEAR STUFF
+}
+
+void Scene::UpdateModelMatrices() {
+	std::vector<Component::Transform*> transforms;
+	GetAll<Component::Transform>(transforms);
+	for (unsigned int i = 0; i < transforms.size(); i++)
+		transforms[i]->UpdateModelMatrix();
+        
 }

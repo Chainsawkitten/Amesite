@@ -13,6 +13,7 @@ namespace Component {
     class Mesh;
     class RelativeTransform;
 	class SuperComponent;
+    class Physics;
 }
 
 /// Contains a bunch of entities.
@@ -42,6 +43,9 @@ class Scene {
 		///Gets number of elements in maps or entity list.
 		template <typename T> unsigned int Size() const;
 		
+		/// Updates all model matrices in %Scene.
+		void UpdateModelMatrices();
+
 		///Gets all components of a specific type.
 		/**
 		 * @param returnVector Vector that will keep components.
@@ -69,6 +73,7 @@ template<typename T> void Scene::AddComponentToList(T* component){
 	return;
 }
 
+
 template <typename T> void Scene::GetAll(std::vector<T*> &returnVector) const {
 	auto range = this->mComponents.equal_range(&typeid(T*));
 	for (auto it = range.first; it != range.second; ++it)
@@ -81,7 +86,9 @@ template<> inline unsigned int Scene::Size<Entity>() const {
 	return this->mEntityVector.size();
 }
 
+
 //General case
 template<typename T> unsigned int Scene::Size() const {
 	return this->mComponents.count(&typeid(T*));
 }
+

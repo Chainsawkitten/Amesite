@@ -9,6 +9,7 @@ namespace Component {
     class Lens;
     class Mesh;
     class RelativeTransform;
+    class Physics;
     class Collider2DRectangle;
     class Collider2DCircle;
     class SuperComponent;
@@ -53,6 +54,7 @@ class Entity {
 		 */
 		void AddComponent(Component::SuperComponent* component, const type_info* componentType);
 };
+
 
 template <typename T> T* Entity::GetComponent() {
 	if (this->components.count(&typeid(T*)) != 0) {
