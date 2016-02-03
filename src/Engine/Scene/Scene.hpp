@@ -69,7 +69,6 @@ class Scene {
         std::vector<Entity*> mEntityVector;
 
         ///multimap that maps component type to multiple components.
-        //std::multimap < const std::type_info*, Component::SuperComponent* > mComponents;
         std::map<const std::type_info*, std::vector<Component::SuperComponent*> > mComponents;
 
 };

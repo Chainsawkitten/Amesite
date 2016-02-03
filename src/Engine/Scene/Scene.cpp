@@ -28,7 +28,7 @@ void Scene::AddComponentToList(Component::SuperComponent* component, const type_
 }
 
 void Scene::Clear() {
-    //TODO: CLEAR STUFF
+
 }
 
 void Scene::UpdateModelMatrices() {
