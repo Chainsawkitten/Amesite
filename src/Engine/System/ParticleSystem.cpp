@@ -80,9 +80,6 @@ void ParticleSystem::Update(Scene& scene, double time) {
             EmitParticle(emitter);
         }
     }
-    
-    if (mParticleCount > 0) {
-    }
 }
 
 void ParticleSystem::EmitParticle(Component::ParticleEmitter* emitter) {

@@ -65,10 +65,11 @@ ParticleRenderSystem::~ParticleRenderSystem()
 
 void ParticleRenderSystem::Render(Scene & scene, Entity* camera)
 {
-	Particle()->ParticleCount();
-	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-	// Return vector by value or no?
-	glBufferSubData(GL_ARRAY_BUFFER, 0, Particle()->ParticleCount() *sizeof(ParticleSystem::Particle), scene.GetVector<ParticleSystem::Particle>());
+	if (Particle()->ParticleCount() > 0) {
+		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+		// Return vector by value or no?
+		glBufferSubData(GL_ARRAY_BUFFER, 0, Particle()->ParticleCount() *sizeof(ParticleSystem::Particle), scene.GetVector<ParticleSystem::Particle>());
+	}
 
     // Don't write to depth buffer.
     GLboolean depthWriting;
