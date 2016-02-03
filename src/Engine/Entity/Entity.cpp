@@ -18,3 +18,7 @@ Entity::Entity(Scene* scene) {
 
 Entity::~Entity() {
 }
+
+void Entity::AddComponent(Component::SuperComponent* component, const type_info* componentType) {
+	this->components[componentType] = component;
+}

@@ -29,6 +29,8 @@ class GameEntityFactory {
          */
         Entity* GameEntityFactory::CreateBasicEnemy(glm::vec3 origin);
 
+		///Create a cube for testing purposes.
+		Entity* GameEntityFactory::CreateCube(glm::vec3 origin);
         ///Create a camera.
         /**
         *@param origin The enemy's starting position

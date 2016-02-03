@@ -27,33 +27,46 @@ class Entity {
         /// Destructor.
         ~Entity();
 
-        template <typename T>
-        T* AddComponent() {
-            T* component = new T(this);
-            const type_info* componentType = &typeid(component);
-            AddComponent(component, componentType);
-            return component;
-        }
+		///Adds component with type T
+        template <typename T> T* AddComponent();
 
-        void AddComponent(Component::SuperComponent* component, const type_info* componentType) {
-            Log() << componentType->name();
-            this->components[componentType] = component;
-        }
+		///Gets component with type T
+        template <typename T> T* GetComponent();
 
-        template <typename T>
-        T* GetComponent() {
-            if (this->components.count(&typeid(T*)) != 0) {
-                return static_cast<T*>(this->components[&typeid(T*)]);
-            } else {
-                return nullptr;
-            }
-        }
-
+		///Unordered map containing components.
+		/**
+		 * Maps component type to component.
+		 */
         std::unordered_map<const std::type_info*, Component::SuperComponent*> components;
+
     private:
         /// Pointer to which Scene %Entity is contained.
         /**
          * Default: Must point to a Scene
          */
         Scene* mScene;
+
+		///Adds a component to this entity and to the scene.
+		/**
+		 * @param component The component that will be added.
+		 * @param componentType The type of the component.
+		 */
+		void AddComponent(Component::SuperComponent* component, const type_info* componentType);
 };
+
+template <typename T> T* Entity::GetComponent() {
+	if (this->components.count(&typeid(T*)) != 0) {
+		return static_cast<T*>(this->components[&typeid(T*)]);
+	}
+	else {
+		return nullptr;
+	}
+}
+
+template <typename T> T* Entity::AddComponent() {
+	T* component = new T(this);
+	const type_info* componentType = &typeid(component);
+	AddComponent(component, componentType);
+	mScene->AddComponentToList(component, componentType);
+	return component;
+}
