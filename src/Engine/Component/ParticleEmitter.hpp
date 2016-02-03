@@ -1,6 +1,6 @@
 #pragma once
 #include "SuperComponent.hpp"
-#include "../Particles/ParticleSystem.hpp"
+#include "../System/ParticleSystem.hpp"
 #include "glm/glm.hpp"
 
 class Entity;

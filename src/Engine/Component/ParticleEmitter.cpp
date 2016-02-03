@@ -1,5 +1,5 @@
 #include "ParticleEmitter.hpp"
-#include "../Particles/ParticleSystem.hpp"
+#include "../System/ParticleSystem.hpp"
 #include "../Entity/Entity.hpp"
 #include "Transform.hpp"
 
