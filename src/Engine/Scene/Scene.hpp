@@ -5,8 +5,13 @@
 #include <vector>
 #include <iterator>
 #include <algorithm>
+#include "../System/ParticleSystem.hpp"
 
 class Entity;
+
+namespace System {
+	class ParticleSystem;
+}
 
 namespace Component {
     class Transform;
@@ -18,9 +23,6 @@ namespace Component {
     class Collider2DCircle;
     //class Collider2DRectangle;
 }
-
-#include "../System/ParticleSystem.hpp"
-#include <vector>
 
 /// Contains a bunch of entities.
 class Scene {
@@ -72,7 +74,6 @@ class Scene {
             Entity* entity = nullptr;
             std::vector<Entity*> intersect;
         };
-
     private:
         // Adds component to list internally.
         void AddComponentToList(Component::SuperComponent* component, const std::type_info* componentType);
@@ -80,7 +81,7 @@ class Scene {
         // List of all entities created in this scene.
         std::vector<Entity*> mEntityVector;
         
-        std::vector<System::ParticleSystem::Particle> mParticlesVector;
+        std::vector<System::ParticleSystem::Particle*> mParticlesVector;
 
         std::map<const std::type_info*, std::vector<Component::SuperComponent*>> mComponents;
 
@@ -114,6 +115,6 @@ template<> inline std::vector<Scene::Collision*>* Scene::GetVector() {
     return &mCollisionVector;
 }
 
-template<> inline std::vector<System::ParticleSystem::Particle>* Scene::GetInstanceVector() {
-    return mParticlesVector;
+template<> inline std::vector<System::ParticleSystem::Particle*>* Scene::GetVector() {
+    return &mParticlesVector;
 }

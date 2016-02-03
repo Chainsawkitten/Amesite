@@ -86,7 +86,3 @@ template <typename T> T* Entity::AddComponent() {
     mScene->AddComponentToList(component, componentType);
     return component;
 }
-
-template<> inline Component::ParticleEmitter* Entity::GetComponent<Component::ParticleEmitter>() {
-    return mParticle;
-}

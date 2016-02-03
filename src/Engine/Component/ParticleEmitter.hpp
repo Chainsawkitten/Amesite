@@ -1,9 +1,9 @@
 #pragma once
 #include "SuperComponent.hpp"
-#include "../System/ParticleSystem.hpp"
 #include "glm/glm.hpp"
 
 class Entity;
+class Texture;
 
 namespace Component {
     /// Emitter that emits particles.

@@ -153,7 +153,7 @@ int main() {
     }
     
     Resources().FreeTexture2DFromFile(testTexture);
-    Resources().FreeTexture2DFromFile(particleTexture);
+    //Resources().FreeTexture2DFromFile(particleTexture);
     Resources().FreeCube();
     
     delete window;

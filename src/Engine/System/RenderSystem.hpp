@@ -27,11 +27,6 @@ namespace System {
             Shader* mFragmentShader;
             ShaderProgram* mShaderProgram;
 
-            Shader* mParticleVertShader;
-            Shader* mParticleGeomShader;
-            Shader* mParticleFragShader;
-            ShaderProgram* mParticleShaderProgram;
-        };     
             DeferredLighting* mDeferredLighting;
     };
 }

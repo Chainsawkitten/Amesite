@@ -24,12 +24,3 @@ Entity::~Entity() {
 void Entity::AddComponent(Component::SuperComponent* component, const std::type_info* componentType) {
     this->components[componentType] = component;
 }
-
-ParticleEmitter* Entity::CreateParticleEmitter()
-{
-    if (mParticle == nullptr) {
-        mParticle = new Component::ParticleEmitter(this);
-        return mParticle;
-    }
-    return nullptr;
-}

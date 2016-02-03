@@ -3,37 +3,49 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
-#include "../Entity/Entity.hpp"
-#include "../Shader/ShaderProgram.hpp"
-#include "../Texture/Texture.hpp"
+
+namespace Component {
+	class ParticleEmitter;
+}
+
+class Scene;
 
 namespace System {
     /// Handles particles.
     class ParticleSystem {
         public:
-            /// A particle in the particle emitter.
-            struct Particle {
-                /// Position.
-                glm::vec3 worldPos;
+			/// A particle in the particle emitter.
+			struct Particle {
+				/// Position.
+				glm::vec3 worldPos;
 
-                /// Size.
-                glm::vec2 size;
+				/// Size.
+				glm::vec2 size;
 
-                /// Life (in seconds)
-                float life;
+				/// Life (in seconds)
+				float life;
 
-                /// Lifetime (in seconds)
-                float lifetime;
+				/// Lifetime (in seconds)
+				float lifetime;
 
-                /// Initial velocity.
-                glm::vec3 velocity;
-            };
+				/// Initial velocity.
+				glm::vec3 velocity;
+			};
 
             /// Create a new particle system.
             ParticleSystem();
 
             /// Destructor.
             ~ParticleSystem();
+
+			/// Get currently active ParticleSystem.
+			/**
+			* @return The currently active input handler or nullptr.
+			*/
+			static ParticleSystem* GetActiveInstance();
+
+			/// Set as currently active ParticleSystem.
+			void SetActive();
 
             /// Get the amount of particles.
             /**
@@ -51,13 +63,13 @@ namespace System {
             /**
              * @param position Position to emit particle at.
              */
-            void EmitParticle(Scene& scene, glm::vec3 position, Component::ParticleEmitter* emitter);
+            void EmitParticle(glm::vec3 position, Component::ParticleEmitter* emitter);
 
             /// Decide where the emitter should emit before rendering.
             /**
              * @param emitter for which to calculate emission
              */
-            void EmitParticle(Scene& scene, Component::ParticleEmitter* emitter);
+            void EmitParticle(Component::ParticleEmitter* emitter);
 
             /// Update all the system's particles, spawn new particles etc.
             /**
@@ -66,8 +78,18 @@ namespace System {
              */
              void Update(Scene& scene, double time);
         private:
+			Scene* mScene;
+			static ParticleSystem* mActiveInstance;
             // System properties
             unsigned int mParticleCount;
             unsigned int mMaxParticleCount;
     };
+
+	/// Get currently active ParticleSystem.
+	/**
+	* @return The currently active ParticleSystem or nullptr.
+	*/
+	ParticleSystem* Particle();
 }
+
+

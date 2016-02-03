@@ -1,28 +1,39 @@
 #pragma once
 
 class Scene;
+class Entity;
+class Shader;
+class ShaderProgram;
 
 #include "ParticleSystem.hpp"
+#include "Particle.vert.hpp"
+#include "Particle.geom.hpp"
+#include "Particle.frag.hpp"
 
 namespace System {
     /// System to render particles
     class ParticleRenderSystem
     {
-    public:
-        /// Create the render system.
-        ParticleRenderSystem();
+		public:
+			/// Create the render system.
+			ParticleRenderSystem();
 
-        /// Destructor.
-        ~ParticleRenderSystem();
+			/// Destructor.
+			~ParticleRenderSystem();
 
-        /// Render
-        void Render(const Scene& scene);
+			/// Render
+			void Render(Scene& scene, Entity* camera);
 
-    private:
-        // Vertex buffer.
-        GLuint mVertexBuffer = 0;
-        GLuint mVertexAttribute = 0;
-        unsigned int mVertexCount = 0;
+		private:
+			Shader* mParticleVertShader;
+			Shader* mParticleGeomShader;
+			Shader* mParticleFragShader;
+			ShaderProgram* mParticleShaderProgram;
+
+			// Vertex buffer.
+			GLuint mVertexBuffer = 0;
+			GLuint mVertexAttribute = 0;
+			unsigned int mVertexCount = 0;
     };
 }
 
