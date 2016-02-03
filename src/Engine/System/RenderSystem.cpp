@@ -15,6 +15,7 @@
 #include "../Component/Lens.hpp"
 #include "../Component/Transform.hpp"
 #include "../Component/Mesh.hpp"
+#include <string>
 
 #include "../Lighting/DeferredLighting.hpp"
 
@@ -36,23 +37,22 @@ RenderSystem::~RenderSystem() {
     Resources().FreeShaderProgram(mShaderProgram);
 }
 
-void RenderSystem::Render(const Scene& scene) {
+void RenderSystem::Render(Scene& scene) {
     glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
     
     mDeferredLighting->SetTarget();
-    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     mShaderProgram->Use();
    
     Entity* camera = nullptr;
 
-    // Finds (last) camera in scene.
-    for (unsigned int i = 0; i < scene.Size<Component::Lens>(); i++) {
-        if (scene.Get<Component::Lens>(i)->entity->GetComponent<Component::Transform>() != nullptr) {
-            camera = scene.Get<Component::Lens>(i)->entity;
-        }
-    }
+    //Find last camera.
+    std::vector<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
+    for (unsigned int i = 0; i < lenses.size(); i++) {
+        if (lenses[i]->entity->GetComponent<Component::Transform>() != nullptr)
+            camera = lenses[i]->entity;
+    };
 
     // Render from camera.
     if (camera != nullptr) {
@@ -63,10 +63,10 @@ void RenderSystem::Render(const Scene& scene) {
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
 
         // Finds models in scene.
-        for (unsigned int i = 0; i < scene.Size<Component::Mesh>(); i++) {
-            if (scene.Get<Component::Mesh>(i)->entity->GetComponent<Component::Transform>() != nullptr) {
-                Entity* model = scene.Get<Component::Mesh>(i)->entity;
-                
+        std::vector<Component::Mesh*> meshes = scene.GetAll<Component::Mesh>();
+        for (unsigned int i = 0; i < meshes.size(); i++) {
+            if (meshes[i]->entity->GetComponent<Component::Transform>() != nullptr) {
+                Entity* model = meshes[i]->entity;
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
 
                 // Render model.

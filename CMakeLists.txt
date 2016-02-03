@@ -208,11 +208,13 @@ set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Util/GameSettings.cpp
         src/Game/CaveSystem/CaveSystem.cpp
+        src/Game/Util/GameEntityFactory.cpp
     )
 
 set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
         src/Game/CaveSystem/CaveSystem.hpp
+        src/Game/Util/GameEntityFactory.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

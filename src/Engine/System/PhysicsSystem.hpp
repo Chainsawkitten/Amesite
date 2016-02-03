@@ -19,7 +19,7 @@ namespace System {
              * @param scene The scene to update.
              * @param deltaTime Time since last frame (in seconds).
              */
-            void Update(const Scene& scene, float deltaTime);
+            void Update(Scene& scene, float deltaTime);
             
         private:
             /// Gravity (in meter/secound)

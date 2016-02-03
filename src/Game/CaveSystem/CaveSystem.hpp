@@ -28,7 +28,7 @@ namespace Caves {
             
         private:
             Scene* mScene;
-
+            
             static const float mMap[25][25];
     };
 }
