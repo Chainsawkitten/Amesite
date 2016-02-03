@@ -62,6 +62,12 @@ class Scene {
          */
         template <typename T> std::vector<T*>* GetVector() { return nullptr; };
 
+        /// Gets all item of a specific type.
+        /**
+        * @return A pointer to a vector of pointers to all items of the specified scene.
+        */
+        template <typename T> std::vector<T>* GetInstanceVector() { return nullptr; };
+
         struct Collision {
             Entity* entity = nullptr;
             std::vector<Entity*> intersect;
@@ -106,4 +112,8 @@ template<> inline std::vector<Entity*>* Scene::GetVector() {
 
 template<> inline std::vector<Scene::Collision*>* Scene::GetVector() {
     return &mCollisionVector;
+}
+
+template<> inline std::vector<System::ParticleSystem::Particle>* Scene::GetInstanceVector() {
+    return mParticlesVector;
 }

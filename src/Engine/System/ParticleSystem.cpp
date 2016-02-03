@@ -47,16 +47,18 @@ void ParticleSystem::EmitParticle(Scene& scene, glm::vec3 position, Component::P
         particle.velocity.y = emitter->particleType.minVelocity.y + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.y - emitter->particleType.minVelocity.y));
         particle.velocity.z = emitter->particleType.minVelocity.z + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.z - emitter->particleType.minVelocity.z));
         
-        scene.mParticles.push_back(particle);
+        std::vector<Particle>* particleVector = scene.GetInstanceVector<Particle>();
+        particleVector->push_back(particle);
         
         mParticleCount++;
     }
 }
 
 void ParticleSystem::Update(Scene& scene, double time) {
-    if (!this->mParticles.empty()) {
-        for (std::vector<int>::size_type i = 0; i != mParticles.size(); i++) {
-            mParticles[i].life += static_cast<float>(time);
+    std::vector<Particle>* particleVector = scene.GetInstanceVector<Particle>();
+    if (!particleVector->empty()) {
+        for (std::vector<int>::size_type i = 0; i != particleVector->size(); i++) {
+            particleVector += static_cast<float>(time);
             
             if (mParticles[i].life >= mParticles[i].lifetime) {
                 mParticles.erase(mParticles.begin() + i);
