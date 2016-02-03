@@ -7,6 +7,7 @@
 #include "../Component/Mesh.hpp"
 #include "../Component/RelativeTransform.hpp"
 #include "../Component/Physics.hpp"
+#include "../Component/ParticleEmitter.hpp"
 
 Scene::Scene() {
 
@@ -47,6 +48,11 @@ void Scene::Clear() {
         delete mPhysicsComponentVec.at(i);
     mPhysicsComponentVec.clear();
     mPhysicsComponentVec.shrink_to_fit();
+
+    for (unsigned int i = 0; i < mParticleEmitterComponentVec.size(); i++)
+        delete mParticleEmitterComponentVec.at(i);
+    mParticleEmitterComponentVec.clear();
+    mParticleEmitterComponentVec.shrink_to_fit();
 }
 
 void Scene::UpdateModelMatrices() {

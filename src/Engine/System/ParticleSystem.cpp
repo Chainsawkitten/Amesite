@@ -1,78 +1,55 @@
 #include "ParticleSystem.hpp"
+
 #include "../Component/Transform.hpp"
 #include "../Component/Lens.hpp"
 #include "../Component/ParticleEmitter.hpp"
+#include "../Scene/Scene.hpp"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <vector>
 #include "../Resources.hpp"
-#include "Particle.vert.hpp"
-#include "Particle.geom.hpp"
-#include "Particle.frag.hpp"
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
+using namespace System;
 
-ParticleSystem::ParticleSystem(ParticleType particleType, int maxParticleCount) {
-    mVertexShader = Resources().CreateShader(PARTICLE_VERT, PARTICLE_VERT_LENGTH, GL_VERTEX_SHADER);
-    mGeometryShader = Resources().CreateShader(PARTICLE_GEOM, PARTICLE_GEOM_LENGTH, GL_GEOMETRY_SHADER);
-    mFragmentShader = Resources().CreateShader(PARTICLE_FRAG, PARTICLE_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mGeometryShader, mFragmentShader });
-    
-    this->mParticleType = particleType;
-    
-    this->mMaxParticleCount = maxParticleCount;
+ParticleSystem::ParticleSystem() { 
+    this->mMaxParticleCount = 1000;
     mParticleCount = 0;
+    mParticles = new std::vector<Particle>[1];
     
     BindPointData();
 }
 
 ParticleSystem::~ParticleSystem() {
-    glDeleteBuffers(1, &mVertexBuffer);
-    
-    for (Component::ParticleEmitter* emitter : mEmitters) {
-        delete emitter;
-    }
-    
-    Resources().FreeShaderProgram(mShaderProgram);
-    Resources().FreeShader(mVertexShader);
-    Resources().FreeShader(mGeometryShader);
-    Resources().FreeShader(mFragmentShader);
 }
 
-unsigned int ParticleSystem::ParticleCount() const {
-    return mParticleCount;
+unsigned int ParticleSystem::ParticleCount(int index) const {
+    return mParticleCount[index];
 }
 
-unsigned int ParticleSystem::MaxParticleCount() const {
-    return mMaxParticleCount;
+unsigned int ParticleSystem::MaxParticleCount(int index) const {
+    return mMaxParticleCount[index];
 }
 
-void ParticleSystem::AddParticleEmitter(Component::ParticleEmitter* emitter) {
-    mEmitters.push_back(emitter);
-}
-
-void ParticleSystem::RemoveParticleEmitter() {
-	mEmitters.pop_back();
-}
-
-void ParticleSystem::EmitParticle(glm::vec3 position) {
+void ParticleSystem::EmitParticle(glm::vec3 position, Component::ParticleEmitter* emitter) {
     if (mParticleCount < mMaxParticleCount) {
         Particle particle;
         
         particle.worldPos = position;
         particle.life = 0.f;
-        particle.lifetime = mParticleType.mMinLifetime + rand() / (RAND_MAX / (mParticleType.mMaxLifetime - mParticleType.mMinLifetime));
+        particle.lifetime = emitter->particleType.minLifetime + rand() / (RAND_MAX / (emitter->particleType.maxLifetime - emitter->particleType.minLifetime));
         
-        if (mParticleType.mUniformScaling) {
-            particle.size = mParticleType.mMinSize + (rand() / static_cast<float>(RAND_MAX)) * (mParticleType.mMaxSize - mParticleType.mMinSize);
+        if (emitter->particleType.uniformScaling) {
+            particle.size = emitter->particleType.minSize + (rand() / static_cast<float>(RAND_MAX)) * (emitter->particleType.maxSize - emitter->particleType.minSize);
         } else {
-            particle.size.x = mParticleType.mMinSize.x + rand() / (RAND_MAX / (mParticleType.mMaxSize.x - mParticleType.mMinSize.x));
-            particle.size.y = mParticleType.mMinSize.y + rand() / (RAND_MAX / (mParticleType.mMaxSize.y - mParticleType.mMinSize.y));
+            particle.size.x = emitter->particleType.minSize.x + rand() / (RAND_MAX / (emitter->particleType.maxSize.x - emitter->particleType.minSize.x));
+            particle.size.y = emitter->particleType.minSize.y + rand() / (RAND_MAX / (emitter->particleType.maxSize.y - emitter->particleType.minSize.y));
         }
         
-        particle.velocity.x = mParticleType.mMinVelocity.x + rand() / (RAND_MAX / (mParticleType.mMaxVelocity.x - mParticleType.mMinVelocity.x));
-        particle.velocity.y = mParticleType.mMinVelocity.y + rand() / (RAND_MAX / (mParticleType.mMaxVelocity.y - mParticleType.mMinVelocity.y));
-        particle.velocity.z = mParticleType.mMinVelocity.z + rand() / (RAND_MAX / (mParticleType.mMaxVelocity.z - mParticleType.mMinVelocity.z));
+        particle.velocity.x = emitter->particleType.minVelocity.x + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.x - emitter->particleType.minVelocity.x));
+        particle.velocity.y = emitter->particleType.minVelocity.y + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.y - emitter->particleType.minVelocity.y));
+        particle.velocity.z = emitter->particleType.minVelocity.z + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.z - emitter->particleType.minVelocity.z));
         
         mParticles.push_back(particle);
         
@@ -80,7 +57,7 @@ void ParticleSystem::EmitParticle(glm::vec3 position) {
     }
 }
 
-void ParticleSystem::Update(double time, Entity* follow) {
+void ParticleSystem::Update(const Scene& scene, double time) {
     if (!this->mParticles.empty()) {
         for (std::vector<int>::size_type i = 0; i != mParticles.size(); i++) {
             mParticles[i].life += static_cast<float>(time);
@@ -93,7 +70,8 @@ void ParticleSystem::Update(double time, Entity* follow) {
         }
     }
     
-    for (Component::ParticleEmitter* emitter : mEmitters) {
+    for (unsigned int i = 0; i < scene.Size<Component::ParticleEmitter>(); i++) {
+        Component::ParticleEmitter* emitter = scene.Get<Component::ParticleEmitter>(i);
         emitter->timeToNext -= time;
         while (emitter->timeToNext < 0.0) {
             emitter->timeToNext += emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
@@ -120,10 +98,10 @@ void ParticleSystem::EmitParticle(Component::ParticleEmitter* emitter) {
     if (emitter->relative) {
         position += emitter->follow->GetComponent<Component::Transform>()->position;
     }
-    EmitParticle(position);
+    EmitParticle(position, emitter);
 }
 
-void ParticleSystem::Render(Entity* camera, const glm::vec2& screenSize) {
+void ParticleSystem::Render(Scene* scene, Entity* camera, const glm::vec2& screenSize) {
     // Don't write to depth buffer.
     GLboolean depthWriting;
     glGetBooleanv(GL_DEPTH_WRITEMASK, &depthWriting);

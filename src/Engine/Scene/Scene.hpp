@@ -9,6 +9,7 @@ namespace Component {
     class Physics;
 }
 
+#include "../System/ParticleSystem.hpp"
 #include <vector>
 
 /// Contains a bunch of entities.
@@ -49,10 +50,14 @@ class Scene {
     private:
         std::vector<Entity*> mEntityVec;
 
+        /// A list of all the particles in the scene 
+        std::vector<System::ParticleSystem::Particle> mParticles;
+
         std::vector<Component::Lens*> mLensComponentVec;
         std::vector<Component::Transform*> mTransformComponentVec;
         std::vector<Component::Mesh*> mMeshComponentVec;
         std::vector<Component::Physics*> mPhysicsComponentVec;
+        std::vector<Component::ParticleEmitter*> mParticleEmitterComponentVec;
 };
 
 // Size<T>()
@@ -74,6 +79,10 @@ template<> inline unsigned int Scene::Size<Component::Mesh>() const {
 
 template<> inline unsigned int Scene::Size<Component::Physics>() const {
     return mPhysicsComponentVec.size();
+}
+
+template<> inline unsigned int Scene::Size<Component::ParticleEmitter>() const {
+    return mParticleEmitterComponentVec.size();
 }
 
 // Get<T>()
@@ -104,5 +113,11 @@ template<> inline Component::Mesh* Scene::Get(unsigned int index) const {
 template<> inline Component::Physics* Scene::Get(unsigned int index) const {
     if (index < mPhysicsComponentVec.size())
         return mPhysicsComponentVec.at(index);
+    return nullptr;
+}
+
+template<> inline Component::ParticleEmitter* Scene::Get(unsigned int index) const {
+    if (index < mParticleEmitterComponentVec.size())
+        return mParticleEmitterComponentVec.at(index);
     return nullptr;
 }

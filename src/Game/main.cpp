@@ -59,7 +59,7 @@ int main() {
     Scene scene;
 
     // Particle System
-    ParticleSystem* particleSystem;
+    System::ParticleSystem particleSystem;
     Texture2D* particleTexture;
 
     Caves::CaveSystem testCaveSystem(&scene);
@@ -74,6 +74,7 @@ int main() {
     cameraEntity->AddComponent<Component::Transform>();
     cameraEntity->AddComponent<Component::ParticleEmitter>();
     
+    // Particle emitter.
     cameraEntity->GetComponent<Component::ParticleEmitter>()->emitterType = Component::ParticleEmitter::CUBOID;
     cameraEntity->GetComponent<Component::ParticleEmitter>()->follow = cameraEntity;
     cameraEntity->GetComponent<Component::ParticleEmitter>()->maxEmitTime = 0.02;
@@ -85,29 +86,25 @@ int main() {
     cameraEntity->GetComponent<Component::ParticleEmitter>()->relative = true;
     cameraEntity->GetComponent<Component::ParticleEmitter>()->follow = cameraEntity;
     cameraEntity->GetComponent<Component::ParticleEmitter>()->timeToNext = 5.0;
-
-    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 35.f, 35.f);
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 50.f, 0.f);
-
+    
     // Particle texture.
     particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
 
     //Particle type.
-    ParticleType dustParticle;
-    dustParticle.texture = particleTexture;
-    dustParticle.mMinLifetime = 6.f;
-    dustParticle.mMaxLifetime = 10.f;
-    dustParticle.mMinVelocity = glm::vec3(-0.025f, -0.01f, -0.025f);
-    dustParticle.mMaxVelocity = glm::vec3(0.025f, -0.1f, 0.025f);
-    dustParticle.mMinSize = glm::vec2(0.025f, 0.025f);
-    dustParticle.mMaxSize = glm::vec2(0.05f, 0.05f);
-    dustParticle.mUniformScaling = true;
-    dustParticle.mColor = glm::vec3(.3f, .3f, 1.f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.texture = particleTexture;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMinLifetime = 6.f;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMaxLifetime = 10.f;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMinVelocity = glm::vec3(-0.025f, -0.01f, -0.025f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMaxVelocity = glm::vec3(0.025f, -0.1f, 0.025f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMinSize = glm::vec2(0.025f, 0.025f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMaxSize = glm::vec2(0.05f, 0.05f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mUniformScaling = true;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mColor = glm::vec3(.3f, .3f, 1.f);
 
+    particleSystem.AddParticleEmitter(cameraEntity->GetComponent<Component::ParticleEmitter>());
 
-    particleSystem = new ParticleSystem(dustParticle, 1000);
-    particleSystem->AddParticleEmitter(cameraEntity->GetComponent<Component::ParticleEmitter>());
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleSystem = particleSystem;
+    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 35.f, 35.f);
+    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 50.f, 0.f);
 
     // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
@@ -123,7 +120,7 @@ int main() {
         physicsSystem.Update(scene, deltaTime);
 
         // Update ParticleSystem
-        particleSystem->Update(deltaTime, cameraEntity);
+        particleSystem.Update(deltaTime, scene);
 
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();

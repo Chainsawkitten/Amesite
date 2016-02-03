@@ -25,5 +25,10 @@ namespace System {
             Shader* mVertShader;
             Shader* mFragShader;
             ShaderProgram* mShaderProgram;
+
+            Shader* mParticleVertShader;
+            Shader* mParticleGeomShader;
+            Shader* mParticleFragShader;
+            ShaderProgram* mParticleShaderProgram;
         };
 }

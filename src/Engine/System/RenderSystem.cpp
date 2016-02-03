@@ -9,6 +9,10 @@
 #include "Default3D.frag.hpp"
 #include "Default3D.vert.hpp"
 
+#include "Particle.vert.hpp"
+#include "Particle.geom.hpp"
+#include "Particle.frag.hpp"
+
 #include "../Scene/Scene.hpp"
 #include "../Entity/Entity.hpp"
 #include "../Component/Lens.hpp"
@@ -21,12 +25,22 @@ RenderSystem::RenderSystem() {
     mVertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ mVertShader, mFragShader });
+
+    mParticleVertShader = Resources().CreateShader(PARTICLE_VERT, PARTICLE_VERT_LENGTH, GL_VERTEX_SHADER);
+    mParticleGeomShader = Resources().CreateShader(PARTICLE_GEOM, PARTICLE_GEOM_LENGTH, GL_GEOMETRY_SHADER);
+    mParticleFragShader = Resources().CreateShader(PARTICLE_FRAG, PARTICLE_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mParticleShaderProgram = Resources().CreateShaderProgram({ mParticleVertShader, mParticleGeomShader, mParticleFragShader });
 }
 
 RenderSystem::~RenderSystem() {
     Resources().FreeShaderProgram(mShaderProgram);
     Resources().FreeShader(mVertShader);
     Resources().FreeShader(mFragShader);
+
+    Resources().FreeShaderProgram(mParticleShaderProgram);
+    Resources().FreeShader(mParticleVertShader);
+    Resources().FreeShader(mParticleGeomShader);
+    Resources().FreeShader(mParticleFragShader);
 }
 
 void RenderSystem::Render(const Scene& scene) {

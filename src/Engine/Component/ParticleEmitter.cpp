@@ -1,7 +1,4 @@
 #include "ParticleEmitter.hpp"
-#include "../System/ParticleSystem.hpp"
-#include "../Entity/Entity.hpp"
-#include "Transform.hpp"
 
 using namespace Component;
 
