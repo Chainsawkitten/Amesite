@@ -23,11 +23,11 @@ GameEntityFactory::GameEntityFactory(){
     mScene = nullptr;
 }
 
-GameEntityFactory::GameEntityFactory(Scene* scene) {
+GameEntityFactory::GameEntityFactory( Scene* scene ) {
     mScene = scene;
 }
 
-Entity* GameEntityFactory::CreateBasicEnemy(glm::vec3 origin){
+Entity* GameEntityFactory::CreateBasicEnemy( glm::vec3 origin ) {
     Entity* enemyEntity = mScene->CreateEntity();
     enemyEntity->AddComponent<Component::Mesh>();
     enemyEntity->AddComponent<Component::Transform>();
@@ -40,7 +40,7 @@ Entity* GameEntityFactory::CreateBasicEnemy(glm::vec3 origin){
     return enemyEntity;
 }
 
-Entity* GameEntityFactory::CreateCube(glm::vec3 origin){
+Entity* GameEntityFactory::CreateCube( glm::vec3 origin ) {
 	Entity* cubeEntity = mScene->CreateEntity();
 	cubeEntity->AddComponent<Component::Mesh>();
 	cubeEntity->AddComponent<Component::Transform>();
@@ -51,23 +51,23 @@ Entity* GameEntityFactory::CreateCube(glm::vec3 origin){
 	return cubeEntity;
 }
 
-Entity* GameEntityFactory::CreateCamera(glm::vec3 origin, glm::vec3 rotation){
+Entity* GameEntityFactory::CreateCamera( glm::vec3 origin, glm::vec3 rotation ) {
     Entity* cameraEntity = mScene->CreateEntity();
     cameraEntity->AddComponent<Component::Transform>();
     cameraEntity->AddComponent<Component::Lens>();
 
     cameraEntity->GetComponent<Component::Transform>()->position = origin;
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(rotation.x, rotation.y, rotation.z);
+    cameraEntity->GetComponent<Component::Transform>()->Rotate( rotation.x, rotation.y, rotation.z );
 
     return cameraEntity;
 }
 
-void GameEntityFactory::SetScene(Scene* scene) {
+void GameEntityFactory::SetScene( Scene* scene ) {
     mScene = scene;
 }
 
-Caves::CaveSystem * GameEntityFactory::CreateMap(){
-    Caves::CaveSystem* theMap = new Caves::CaveSystem(mScene);
+Caves::CaveSystem * GameEntityFactory::CreateMap() {
+    Caves::CaveSystem* theMap = new Caves::CaveSystem( mScene );
     theMap->GenerateCaveSystem();
     return theMap;
 }
