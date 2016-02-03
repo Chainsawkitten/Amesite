@@ -19,7 +19,7 @@ namespace System {
              * @param scene Contains a bunch of entities.
              * @param timeDelta Time (in seconds).
              */
-            void Update(const Scene& scene, float deltaTime);
+            void Update(Scene& scene, float deltaTime);
         private:
             /// Gravity (in meter/secound)
             /**

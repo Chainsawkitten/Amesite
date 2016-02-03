@@ -19,7 +19,7 @@ namespace System {
             /**
              * @param scene Contains a bunch of entities.
              */
-            void Render(const Scene& scene);
+            void Render(Scene& scene);
 
         private:
             Shader* mVertShader;

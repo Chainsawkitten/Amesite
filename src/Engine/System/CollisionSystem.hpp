@@ -21,7 +21,7 @@ namespace System {
             ~CollisionSystem();
 
             /// Update collision vector.
-            void Update(const Scene& scene);
+            void Update(Scene& scene);
 
             struct Collision {
                 Entity* entity = nullptr;

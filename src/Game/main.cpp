@@ -7,9 +7,13 @@
 
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
-#include "CaveSystem/CaveSystem.hpp"
+//#include "CaveSystem/CaveSystem.hpp"
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
+
+//#include "Engine/Particles/CuboidParticleEmitter.hpp"
+//#include "Engine/Particles/PointParticleEmitter.hpp"
+//#include "Engine/Particles/ParticleSystem.hpp"
 
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
@@ -17,6 +21,8 @@
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
+
+#include "Game/Util/GameEntityFactory.hpp"
 
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
@@ -58,25 +64,19 @@ int main() {
     // Scene and Entites. 
     Scene scene;
 
-    Caves::CaveSystem testCaveSystem(&scene);
+    GameEntityCreator().SetScene(&scene);
 
-    Entity* map = testCaveSystem.GenerateCaveSystem();
-    map->GetComponent<Component::Transform>()->scale = glm::vec3(1.8f, 1.8f, 1.8f);
-    map->AddComponent<Component::Physics>()->angularVelocity.y = 0.1f;
-    map->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
-    
-    Entity* cameraEntity = scene.CreateEntity();
-    cameraEntity->AddComponent<Component::Lens>();
-    cameraEntity->AddComponent<Component::Transform>();
-
-    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 35.f, 35.f);
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 50.f, 0.f);
+    Entity* entity = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    entity = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
+    Caves::CaveSystem* theMap = GameEntityCreator().CreateMap();
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
+    float rotation = 0;
+   
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();

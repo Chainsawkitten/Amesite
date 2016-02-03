@@ -33,7 +33,7 @@ unsigned int CollisionSystem::GetCollsionVectorSize() const {
     return mCollisionVec.size();
 }
 
-void CollisionSystem::Update(const Scene& scene) {
+void CollisionSystem::Update(Scene& scene) {
     // Clear vector
     for (unsigned int i = 0; i < mCollisionVec.size(); i++) {
         delete mCollisionVec.at(i);
@@ -121,8 +121,9 @@ void CollisionSystem::Update(const Scene& scene) {
     //}
 
     // Circle vs Circle
-    for (unsigned int x = 0; x < scene.Size<Collider2DCircle>(); x++) {
-        Collider2DCircle* colliderX = scene.Get<Collider2DCircle>(x);
+    std::vector<Component::Collider2DCircle*> collider2DCircle = scene.GetAll<Component::Collider2DCircle>();
+    for (unsigned int x = 0; x < collider2DCircle.size(); x++) {
+        Collider2DCircle* colliderX = collider2DCircle.at(x);
         Collision* collisionX = nullptr;
         // check if collisionX is in mCollisonVec
         for (unsigned int i = 0; i < mCollisionVec.size() && collisionX == nullptr; i++) {
@@ -130,8 +131,8 @@ void CollisionSystem::Update(const Scene& scene) {
                 collisionX = mCollisionVec.at(i);
         }
 
-        for (unsigned int y = x + 1; y < scene.Size<Collider2DCircle>(); y++) {
-            Collider2DCircle* colliderY = scene.Get<Collider2DCircle>(y);
+        for (unsigned int y = x + 1; y < collider2DCircle.size(); y++) {
+            Collider2DCircle* colliderY = collider2DCircle.at(y);
             if (CircleVSCircle(colliderX, colliderY)) {
                 // x and y intersect each other.
                 if (collisionX == nullptr) {
