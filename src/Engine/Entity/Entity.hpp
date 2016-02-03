@@ -5,6 +5,7 @@ namespace Component {
     class Lens;
     class Mesh;
     class RelativeTransform;
+    class Physics;
     class Collider2DRectangle;
     class Collider2DCircle;
     class ParticleEmitter;
@@ -40,6 +41,7 @@ class Entity {
         Component::Transform* CreateTransform();
         Component::Mesh* CreateMesh();
         Component::RelativeTransform* CreateRelativeTransform();
+        Component::Physics* CreatePhysics();
         Component::Collider2DCircle* CreateCollider2DCircle();
         Component::Collider2DRectangle* CreateCollider2DRectangle();
         Component::ParticleEmitter* CreateParticleEmitter();
@@ -49,6 +51,7 @@ class Entity {
         Component::Transform* mTransform;
         Component::Mesh* mMesh;
         Component::RelativeTransform* mRelativeTransform;
+        Component::Physics* mPhysics;
         Component::Collider2DCircle* mCircle;
         Component::Collider2DRectangle* mRectangle;
 
@@ -74,6 +77,10 @@ template<> inline Component::Mesh* Entity::AddComponent<Component::Mesh>() {
 
 template<> inline Component::RelativeTransform* Entity::AddComponent<Component::RelativeTransform>() {
     return CreateRelativeTransform();
+}
+
+template<> inline Component::Physics* Entity::AddComponent<Component::Physics>() {
+    return CreatePhysics();
 }
 
 template<> inline Component::Collider2DCircle* Entity::AddComponent<Component::Collider2DCircle>() {
@@ -105,6 +112,9 @@ template<> inline Component::RelativeTransform* Entity::GetComponent<Component::
     return mRelativeTransform;
 }
 
+template<> inline Component::Physics* Entity::GetComponent<Component::Physics>() {
+    return mPhysics;
+}
 
 template<> inline Component::Collider2DCircle* Entity::GetComponent<Component::Collider2DCircle>() {
     return mCircle;

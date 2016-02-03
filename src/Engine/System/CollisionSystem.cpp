@@ -1,17 +1,22 @@
 #include "CollisionSystem.hpp"
+
+#include "../Entity/Entity.hpp"
+
 #include "../Component/Collider2DCircle.hpp"
 #include "../Component/Collider2DRectangle.hpp"
-#include "../Entity/Entity.hpp"
 #include "../Component/Transform.hpp"
+
 #include <glm\glm.hpp>
 
+using namespace System;
 using namespace Component;
 
-CollisionSystem& CollisionSystem::GetInstance() {
-    static CollisionSystem instance;
-
-    return instance;
+CollisionSystem::CollisionSystem() {
 }
+
+CollisionSystem::~CollisionSystem() {
+}
+
 
 bool CollisionSystem::RectangleVSRectangle(Entity *aRectangle, Entity *bRectangle) {
     if ((aRectangle->GetComponent<Collider2DRectangle>() == nullptr) || (aRectangle->GetComponent<Transform>() == nullptr))
@@ -129,9 +134,4 @@ bool CollisionSystem::CircleVSCircle(Entity *aCircle, Entity *bCircle) {
         return true;
 
     return false;
-}
-
-CollisionSystem& CollisionManager()
-{
-    return CollisionSystem::GetInstance();
 }

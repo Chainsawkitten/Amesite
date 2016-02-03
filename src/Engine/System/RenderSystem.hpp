@@ -9,7 +9,7 @@ namespace System {
     /// System to render a scene.
     class RenderSystem {
         public:
-            /// Create new render system.
+            /// Create render system.
             RenderSystem();
 
             /// Destructor.
