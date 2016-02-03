@@ -14,9 +14,11 @@ PhysicsSystem::PhysicsSystem(glm::vec3 gravity) {
 PhysicsSystem::~PhysicsSystem() {
 }
 
-void PhysicsSystem::Update(const Scene& scene, float deltaTime) {
-    for (unsigned int i = 0; i < scene.Size<Component::Physics>(); i++) {
-        Component::Physics* physicsComp = scene.Get<Component::Physics>(i);
+void PhysicsSystem::Update(Scene& scene, float deltaTime) {
+    std::vector<Component::Physics*> physicsObjects;
+    physicsObjects = scene.GetAll<Component::Physics>();
+    for (unsigned int i = 0; i < physicsObjects.size(); i++) {
+        Component::Physics* physicsComp = physicsObjects[i];
         Component::Transform* transformComp = physicsComp->entity->GetComponent<Component::Transform>();
         if (transformComp != nullptr) {
 

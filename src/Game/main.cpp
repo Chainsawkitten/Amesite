@@ -7,11 +7,10 @@
 
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
-#include "CaveSystem/CaveSystem.hpp"
+//#include "CaveSystem/CaveSystem.hpp"
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
-#include "System/RenderSystem.hpp"
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
@@ -20,14 +19,16 @@
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
 
+#include "Game/Util/GameEntityFactory.hpp"
+
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
 #include <Component/RelativeTransform.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
-#include <Component/Collider2DRectangle.hpp>
 #include <Component/ParticleEmitter.hpp>
+//#include <Component/Collider2DRectangle.hpp>
 
 #include <Texture/Texture2D.hpp>
 
@@ -55,23 +56,16 @@ int main() {
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;
 
+    // CollisionSystem.
+    System::CollisionSystem collisionSystem;
+
     // Scene and Entites. 
     Scene scene;
 
     // Particle System
-    System::ParticleSystem particleSystem;
+    /*System::ParticleSystem particleSystem;
     Texture2D* particleTexture;
 
-    Caves::CaveSystem testCaveSystem(&scene);
-
-    Entity* map = testCaveSystem.GenerateCaveSystem();
-    map->GetComponent<Component::Transform>()->scale = glm::vec3(1.8f, 1.8f, 1.8f);
-    map->AddComponent<Component::Physics>()->angularVelocity.y = 0.1f;
-    map->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
-    
-    Entity* cameraEntity = scene.CreateEntity();
-    cameraEntity->AddComponent<Component::Lens>();
-    cameraEntity->AddComponent<Component::Transform>();
     cameraEntity->AddComponent<Component::ParticleEmitter>();
     
     // Particle emitter.
@@ -99,10 +93,14 @@ int main() {
     cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.minSize = glm::vec2(0.025f, 0.025f);
     cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.maxSize = glm::vec2(0.05f, 0.05f);
     cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.uniformScaling = true;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(.3f, .3f, 1.f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(.3f, .3f, 1.f);*/
+    
+    
+    GameEntityCreator().SetScene(&scene);
 
-    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 35.f, 35.f);
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 50.f, 0.f);
+    Entity* entity = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    entity = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
+    Caves::CaveSystem* theMap = GameEntityCreator().CreateMap();
 
     // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
@@ -110,15 +108,20 @@ int main() {
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
+    float rotation = 0;
+   
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
-        
+
         // PhysicsSystem.
-        //physicsSystem.Update(scene, deltaTime);
+        physicsSystem.Update(scene, (float)deltaTime);
 
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
+
+        // Check collisions
+        collisionSystem.Update(scene);
 
         // Render.
         renderSystem.Render(scene);
@@ -130,7 +133,7 @@ int main() {
         //particleSystem->Update(deltaTime, cameraEntity);
         //particleSystem->Render(cameraEntity, window->GetSize());
         
-        testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
+        testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f));
 
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";

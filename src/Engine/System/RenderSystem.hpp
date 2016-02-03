@@ -4,6 +4,7 @@ class Entity;
 class Scene;
 class Shader;
 class ShaderProgram;
+class DeferredLighting;
 
 namespace System {
     /// System to render a scene.
@@ -19,16 +20,18 @@ namespace System {
             /**
              * @param scene Contains a bunch of entities.
              */
-            void Render(const Scene& scene);
+            void Render(Scene& scene);
 
         private:
-            Shader* mVertShader;
-            Shader* mFragShader;
+            Shader* mVertexShader;
+            Shader* mFragmentShader;
             ShaderProgram* mShaderProgram;
 
             Shader* mParticleVertShader;
             Shader* mParticleGeomShader;
             Shader* mParticleFragShader;
             ShaderProgram* mParticleShaderProgram;
-        };
+        };     
+            DeferredLighting* mDeferredLighting;
+    };
 }

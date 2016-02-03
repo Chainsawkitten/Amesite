@@ -22,6 +22,12 @@ class MainWindow {
         /// Destructor.
         ~MainWindow();
         
+        /// Get the instance of %MainWindow.
+        /**
+         * @return The %MainWindow instance.
+         */
+        static MainWindow* GetInstance();
+        
         /// Initialize components.
         void Init();
 
@@ -50,7 +56,9 @@ class MainWindow {
         void SwapBuffers();
         
     private:
-        InputHandler *mInput;
+        static MainWindow* mInstance;
+        
+        InputHandler* mInput;
         GLFWwindow* mWindow;
         bool mDebugContext;
         glm::vec2 mSize;

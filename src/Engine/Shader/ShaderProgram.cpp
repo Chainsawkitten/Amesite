@@ -8,6 +8,9 @@ ShaderProgram::ShaderProgram(std::initializer_list<const Shader*> shaders) {
 		glAttachShader(mShaderProgram, shader->GetShaderID());
 
 	glLinkProgram(mShaderProgram);
+    
+    for (auto shader : shaders)
+		glDetachShader(mShaderProgram, shader->GetShaderID());
 }
 
 ShaderProgram::~ShaderProgram() {
