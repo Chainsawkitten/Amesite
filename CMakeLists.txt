@@ -135,12 +135,14 @@ set(ENGINE_SRCS
         src/Engine/Component/Transform.cpp
         src/Engine/Component/Mesh.cpp
         src/Engine/Component/RelativeTransform.cpp
+        src/Engine/Component/Physics.cpp
         src/Engine/Component/Collider2DRectangle.cpp
         src/Engine/Component/Collider2DCircle.cpp
-        src/Engine/CollisionSystem/CollisionSystem.cpp
         src/Engine/Entity/Entity.cpp
         src/Engine/Scene/Scene.cpp
         src/Engine/System/RenderSystem.cpp
+        src/Engine/System/PhysicsSystem.cpp
+        src/Engine/System/CollisionSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
         src/Engine/Particles/CuboidParticleEmitter.cpp
@@ -174,12 +176,14 @@ set(ENGINE_HEADERS
         src/Engine/Component/Transform.hpp
         src/Engine/Component/Mesh.hpp
         src/Engine/Component/RelativeTransform.hpp
+        src/Engine/Component/Physics.hpp
         src/Engine/Component/Collider2DRectangle.hpp
         src/Engine/Component/Collider2DCircle.hpp
-        src/Engine/CollisionSystem/CollisionSystem.hpp
         src/Engine/Entity/Entity.hpp
         src/Engine/Scene/Scene.hpp
         src/Engine/System/RenderSystem.hpp
+        src/Engine/System/PhysicsSystem.hpp
+        src/Engine/System/CollisionSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
         src/Engine/Particles/CuboidParticleEmitter.hpp

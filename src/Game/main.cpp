@@ -11,11 +11,9 @@
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
-#include "Engine/Particles/CuboidParticleEmitter.hpp"
-#include "Engine/Particles/PointParticleEmitter.hpp"
-#include "Engine/Particles/ParticleSystem.hpp"
-
-#include "System/RenderSystem.hpp"
+#include <System/RenderSystem.hpp>
+#include <System/PhysicsSystem.hpp>
+#include <System/CollisionSystem.hpp>
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -23,20 +21,23 @@
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
+#include <Component/RelativeTransform.hpp>
+#include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include <Component/Collider2DRectangle.hpp>
 
-#include <CollisionSystem/CollisionSystem.hpp>
-
 #include <Texture/Texture2D.hpp>
-#include <Component/RelativeTransform.hpp>
 
 #include <thread>
 
 #include "Player/Player.hpp"
-#include "Turret\Turret.hpp"
+#include "Turret/Turret.hpp"
+
+#include <fstream>
 
 using namespace std;
+
+std::string space2underscore(std::string text);
 
 int main() {
     
@@ -55,7 +56,7 @@ int main() {
 
     // RenderSystem.
     System::RenderSystem renderSystem;
-    CollisionSystem collisionSystem;
+
     // Scene and Entites. 
     Scene scene;
 
@@ -63,11 +64,8 @@ int main() {
     cubeEntity->AddComponent<Component::Mesh>();
     cubeEntity->AddComponent<Component::Transform>();
     cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-   
-    Entity* cubeEntity2 = scene.CreateEntity();
-    cubeEntity2->AddComponent<Component::Mesh>();
-    cubeEntity2->AddComponent<Component::Transform>();
-    cubeEntity2->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    cubeEntity->AddComponent<Component::Physics>();
+    cubeEntity->GetComponent<Component::Transform>()->position = glm::vec3(25, 0, 15);
 
     Entity* turretJoint = scene.CreateEntity();
     turretJoint->AddComponent<Component::RelativeTransform>();
@@ -82,34 +80,23 @@ int main() {
 
     turretEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
 
-    Entity* collisionCubeA = scene.CreateEntity();
-    collisionCubeA->AddComponent<Component::Mesh>();
-    collisionCubeA->AddComponent<Component::Transform>();
-    collisionCubeA->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-    collisionCubeA->AddComponent<Component::Collider2DRectangle>();
-    collisionCubeA->GetComponent<Component::Transform>()->Move(-4.f, 0.f, -4.f);
-    collisionCubeA->GetComponent<Component::Collider2DRectangle>()->height = 1.f;
-    collisionCubeA->GetComponent<Component::Collider2DRectangle>()->width = 1.f;
+    // PhysicsSystem.
+    System::PhysicsSystem physicsSystem;
 
-    Entity* collisionCubeB = scene.CreateEntity();
-    collisionCubeB->AddComponent<Component::Mesh>();
-    collisionCubeB->AddComponent<Component::Transform>();
-    collisionCubeB->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-    collisionCubeB->AddComponent<Component::Collider2DCircle>();
-    collisionCubeB->GetComponent<Component::Transform>()->Move(-4.f,0.f,-6.f);
-    collisionCubeB->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
+    Caves::CaveSystem testCaveSystem(&scene);
 
-    Entity* cubeChildEntity = scene.CreateEntity();
-    cubeChildEntity->AddComponent<Component::Mesh>()->geometry = cubeEntity->GetComponent<Component::Mesh>()->geometry;
-    cubeChildEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
-    cubeChildEntity->GetComponent<Component::RelativeTransform>()->Move(1.f, 1.f, -1.f);
-    
+    Entity* map = testCaveSystem.GenerateCaveSystem();
+    map->GetComponent<Component::Transform>()->scale = glm::vec3(5.f, 5.f, 5.f);
+    map->GetComponent<Component::Transform>()->Rotate(0, 0, 180);
+    map->GetComponent<Component::Transform>()->Rotate(-90, 0, 180);
+
+
+    map->AddComponent<Component::Physics>();
+    map->GetComponent<Component::Physics>();
+
     Entity* cameraEntity = scene.CreateEntity();
     cameraEntity->AddComponent<Component::Lens>();
-    cameraEntity->AddComponent<Component::Transform>();
-
-    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, -34.5f, 0.f);
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, -90.f, 0.f);
+    cameraEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
 
     Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_ONE);
     Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_ONE);
@@ -121,42 +108,106 @@ int main() {
     Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_TWO);
     Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_TWO);
 
-    Player player(cubeEntity, 20);
-    Player player2(cubeEntity2, 20, InputHandler::PLAYER_TWO);
+    Turret turret(turretJoint, turretEntity);
 
-    Turret turret(cubeEntity2, turretEntity);
-
-    player.SetTurret(&turret);
+    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 50.f, 20.f);
+    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 70.f, 0.f);
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
 
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
-    float rotation = 0;
-    glm::vec3 cubeAOrigin = collisionCubeA->GetComponent<Component::Transform>()->position;
-    glm::vec3 cubeBOrigin = collisionCubeA->GetComponent<Component::Transform>()->position;
+
+    int score = 0;
+    time_t startTime = time(nullptr);
+    int session = 0;
+
+    float playerAcceleration = 6000;
+    float playerMaxSpeed = 40;
+    float playerDrag = 1.5f;
+
+    Player player(cubeEntity, playerAcceleration);
+    cubeEntity->GetComponent<Component::Physics>()->maxVelocity = playerMaxSpeed;
+    cubeEntity->GetComponent<Component::Physics>()->velocityDragFactor = playerDrag;
+    player.SetTurret(&turret);
+
+    std::string testLog = "Player acceleration: " + std::to_string(playerAcceleration) + "\n";
+    testLog += "Player max velocity: " + std::to_string(playerMaxSpeed) + "\n";
+    testLog += "Player drag: " + std::to_string(playerDrag) + "\n";
+
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
 
-        player.Update(0.01f);
-        //player2.Update(0.01f);
+        int xPos = (int)(cubeEntity->GetComponent<Component::Transform>()->position[0] / 5 + 25.f / 2.f + 0.5f);
+        int zPos = (int)(cubeEntity->GetComponent<Component::Transform>()->position[2] / 5 + 25.f / 2.f + 0.25f);
 
-        rotation += deltaTime;
-        if (rotation > 360.f)
-            rotation -= 360.f;
+        float caveCollide = *testCaveSystem.mMap[xPos, zPos];
+
+        if (testCaveSystem.mMap[xPos][zPos] == 1.f) {
+
+            cubeEntity->GetComponent<Component::Transform>()->position = glm::vec3(25, 0, 15);
+            cubeEntity->GetComponent<Component::Physics>()->velocity = glm::vec3(0, 0, 0);
+
+            Log() << "You died " << "\n";
+            testLog += "You died with a score of " + std::to_string(score) + "\n";
+
+            startTime = time(nullptr);
+            score = 0;
+
+            for (int i = 0; i < 25; i++) {
+                for (int j = 0; j < 25; j++) {
+                    if (testCaveSystem.mMap[i][j] == -2.f) {
+
+                        testCaveSystem.mMap[i][j] = -1;
+
+                    }
+                }
+            }
+
+        }
+        if (testCaveSystem.mMap[xPos][zPos] == -1.f) {
+
+            score++;
+            Log() << "score! " << "\n";
+            testCaveSystem.mMap[xPos][zPos] = -2;
+
+        }
+
+        if (score == 5) {
+
+            Log() << "You win! Your time was: " << (int)(time(nullptr) - startTime) << "\n";
+            testLog += "You win! Your time was: " + std::to_string((int)(time(nullptr) - startTime)) + "\n";
+
+            ofstream myfile;
+            const time_t now = time(nullptr);
+            string fileName(std::asctime(localtime(&now)));
+            fileName = fileName.substr(0, fileName.size() - 2);
+            fileName += ".txt";
+            fileName = space2underscore(fileName);
+
+            Log() << fileName << "\n";
+
+            myfile.open("../logs/Move_Tests/Session_" + std::to_string(session) + "_A-" + std::to_string(playerAcceleration).substr(0, 5) + "_S-" + std::to_string(playerMaxSpeed).substr(0,3) + "_D-" + std::to_string(playerDrag).substr(0,5) + "_" + fileName);
+            myfile << testLog;
+            myfile.close();
+
+            testLog = "Player acceleration: " + std::to_string(playerAcceleration) + "\n";
+            testLog += "Player max velocity: " + std::to_string(playerMaxSpeed) + "\n";
+            testLog += "Player drag: " + std::to_string(playerDrag) + "\n";
+            score = 0;
+            session++;
+
+        }
         
-        // Move cube.
-        cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
+        player.Update(0.01f);
+        
+        // PhysicsSystem.
+        physicsSystem.Update(scene, deltaTime);
 
-        // Move collision cubes.
-        collisionCubeA->GetComponent<Component::Transform>()->position = cubeAOrigin + glm::vec3(glm::cos(rotation), 0.f, -glm::sin(rotation));
-        collisionCubeB->GetComponent<Component::Transform>()->position = cubeBOrigin + glm::vec3(glm::cos(rotation), 0.f, glm::sin(rotation));
-
-        collisionCubeA->GetComponent<Component::Collider2DRectangle>();
-
-        Log() << CollisionManager().RectangleVSCircle(collisionCubeA, collisionCubeB) << "\n";
+        // Updates model matrices for this frame.
+        scene.UpdateModelMatrices();
 
         // Render.
         renderSystem.Render(scene);
@@ -169,7 +220,7 @@ int main() {
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))
-            title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0) + " ms";
+            title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0f) + " ms";
         window->SetTitle(title.c_str());
         
         // Swap buffers and wait until next frame.
@@ -195,4 +246,16 @@ int main() {
     Log() << "Game ended - " << time(nullptr) << "\n";
     return 0;
 
+}
+
+std::string space2underscore(std::string text) {
+    for (std::string::iterator it = text.begin(); it != text.end(); ++it) {
+        if (*it == ' ') {
+            *it = '_';
+        }
+        else if (*it == ':') {
+            *it = '-';
+        }
+    }
+    return text;
 }

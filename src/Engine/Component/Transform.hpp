@@ -19,12 +19,9 @@ namespace Component {
             /// Destructor.
             virtual ~Transform();
 
-            /// Get model matrix.
-            /**
-             * @return The entity's model matrix, containing translation, scaling and rotation.
-             */
-            virtual glm::mat4 GetModelMatrix() const;
-        
+            /// Update model matrix.
+            virtual void UpdateModelMatrix();
+
             /// Get orientation matrix.
             /**
              * @return The entity's orientation matrix.
@@ -85,5 +82,11 @@ namespace Component {
              * Default: 0.f
              */
             float roll;
+
+            /// Model Matrix
+            /**
+             * Default: Identity matrix
+             */
+            glm::mat4 modelMatrix;
         };
 }

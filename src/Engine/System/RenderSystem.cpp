@@ -33,7 +33,7 @@ void RenderSystem::Render(const Scene& scene) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     mShaderProgram->Use();
-    
+   
     Entity* camera = nullptr;
 
     // Finds (last) camera in scene.
@@ -45,7 +45,9 @@ void RenderSystem::Render(const Scene& scene) {
 
     // Render from camera.
     if (camera != nullptr) {
-        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
+        glm::mat4 camModelMatrix = camera->GetComponent<Component::Transform>()->modelMatrix;
+        glm::vec3 camPosition = glm::vec3(camModelMatrix[3][0], camModelMatrix[3][1], camModelMatrix[3][2]);
+        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camPosition);
         //TODO: DO NOT USE SET VIEWPORT SIZE!
         glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(glm::vec2(800, 600));
 
@@ -60,7 +62,7 @@ void RenderSystem::Render(const Scene& scene) {
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
 
                 // Render model.
-                glm::mat4 modelMat = model->GetComponent<Component::Transform>()->GetModelMatrix();
+                glm::mat4 modelMat = model->GetComponent<Component::Transform>()->modelMatrix;
                 glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
 
                 glDrawElements(GL_TRIANGLES, model->GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);

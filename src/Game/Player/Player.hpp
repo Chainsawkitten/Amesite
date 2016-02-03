@@ -3,6 +3,7 @@
 #include <util\Input.hpp>
 #include <Engine/Entity/Entity.hpp>
 #include <Component/Transform.hpp>
+#include <Component\Physics.hpp>
 
 #include "../Turret/Turret.hpp"
 
