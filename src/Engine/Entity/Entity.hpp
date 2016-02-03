@@ -73,7 +73,6 @@ template <> inline Component::RelativeTransform* Entity::AddComponent<Component:
             AddComponent(mRelativeTransform, &typeid(mRelativeTransform));
 
             mScene->AddComponentToList(mRelativeTransform, &typeid(Component::Transform*));
-            mScene->AddComponentToList(mRelativeTransform, &typeid(mRelativeTransform));
             return mRelativeTransform;
         }
     return nullptr;

@@ -64,6 +64,7 @@ Entity* CaveSystem::GenerateCaveSystem() {
                 Entity* wall = mScene->CreateEntity();
                 wall->AddComponent<Component::RelativeTransform>()->parentEntity = map;
                 wall->AddComponent<Component::Mesh>();
+                wall->AddComponent<Component::Collider2DCircle>()->radius = 50;
                 wall->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
                 wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j), 0.f, -float(i)) + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
             }

@@ -9,6 +9,8 @@
 
 #include <glm/glm.hpp>
 
+#include <vector>
+
 using namespace System;
 using namespace Component;
 
@@ -16,29 +18,24 @@ CollisionSystem::CollisionSystem() {
 }
 
 CollisionSystem::~CollisionSystem() {
-    for (unsigned int i = 0; i < mCollisionVec.size(); i++) {
-        delete mCollisionVec.at(i);
-    }
-    mCollisionVec.clear();
-    mCollisionVec.shrink_to_fit();
-}
-
-CollisionSystem::Collision* CollisionSystem::GetCollsionAt(const unsigned int index) const {
-    if (index < mCollisionVec.size())
-        return mCollisionVec.at(index);
-    return nullptr;
-}
-
-unsigned int CollisionSystem::GetCollsionVectorSize() const {
-    return mCollisionVec.size();
 }
 
 void CollisionSystem::Update(Scene& scene) {
+    // Get vector from scene
+    std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
+    
     // Clear vector
-    for (unsigned int i = 0; i < mCollisionVec.size(); i++) {
+    for (Scene::Collision* collision : *collisionVector) {
+        delete collision;
+    }
+    collisionVector->clear();
+
+    
+
+    /*for (unsigned int i = 0; i < mCollisionVec.size(); i++) {
         delete mCollisionVec.at(i);
     }
-    mCollisionVec.clear();
+    mCollisionVec.clear();*/
 
     //// Rectangle vs Rectangle
     //for (unsigned int x = 0; x < scene.Size<Collider2DRectangle>(); x++) {
@@ -124,11 +121,11 @@ void CollisionSystem::Update(Scene& scene) {
     std::vector<Component::Collider2DCircle*> collider2DCircle = scene.GetAll<Component::Collider2DCircle>();
     for (unsigned int x = 0; x < collider2DCircle.size(); x++) {
         Collider2DCircle* colliderX = collider2DCircle.at(x);
-        Collision* collisionX = nullptr;
+        Scene::Collision* collisionX = nullptr;
         // check if collisionX is in mCollisonVec
-        for (unsigned int i = 0; i < mCollisionVec.size() && collisionX == nullptr; i++) {
-            if (mCollisionVec.at(i)->entity == colliderX->entity)
-                collisionX = mCollisionVec.at(i);
+        for (unsigned int i = 0; i < collisionVector->size() && collisionX == nullptr; i++) {
+            if (collisionVector->at(i)->entity == colliderX->entity)
+                collisionX = collisionVector->at(i);
         }
 
         for (unsigned int y = x + 1; y < collider2DCircle.size(); y++) {
@@ -136,23 +133,23 @@ void CollisionSystem::Update(Scene& scene) {
             if (CircleVSCircle(colliderX, colliderY)) {
                 // x and y intersect each other.
                 if (collisionX == nullptr) {
-                    collisionX = new Collision();
+                    collisionX = new Scene::Collision();
                     collisionX->entity = colliderX->entity;
-                    mCollisionVec.push_back(collisionX);
+                    collisionVector->push_back(collisionX);
                 }
 
                 // check if collisionY is in mCollisonVec
-                Collision* collisionY = nullptr;
-                for (unsigned int i = 0; i < mCollisionVec.size() && collisionY == nullptr; i++) {
-                    if (mCollisionVec.at(i)->entity == colliderY->entity)
-                        collisionY = mCollisionVec.at(i);
+                Scene::Collision* collisionY = nullptr;
+                for (unsigned int i = 0; i < collisionVector->size() && collisionY == nullptr; i++) {
+                    if (collisionVector->at(i)->entity == colliderY->entity)
+                        collisionY = collisionVector->at(i);
                 }
 
                 // if collisionY isn't in vector;
                 if (collisionY == nullptr) {
-                    collisionY = new Collision();
+                    collisionY = new Scene::Collision();
                     collisionY->entity = colliderY->entity;
-                    mCollisionVec.push_back(collisionY);
+                    collisionVector->push_back(collisionY);
                 }
 
                 collisionX->intersect.push_back(colliderY->entity);

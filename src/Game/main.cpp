@@ -80,18 +80,15 @@ int main() {
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
-        
+
         // PhysicsSystem.
-        physicsSystem.Update(scene, deltaTime);
+        physicsSystem.Update(scene, (float)deltaTime);
 
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
 
         // Check collisions
         collisionSystem.Update(scene);
-        for (unsigned int i = 0; i < collisionSystem.GetCollsionVectorSize(); i++) {
-            System::CollisionSystem::Collision* collision = collisionSystem.GetCollsionAt(i);
-        }
 
         // Render.
         renderSystem.Render(scene);

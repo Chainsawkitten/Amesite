@@ -1,14 +1,11 @@
 #pragma once
 
-class Entity;
 class Scene;
 
 namespace Component {
     class Collider2DCircle;
-    class Collider2DRectangle;
+    //class Collider2DRectangle;
 }
-
-#include <vector>
 
 namespace System {
     ///Class providing collision detection
@@ -23,16 +20,7 @@ namespace System {
             /// Update collision vector.
             void Update(Scene& scene);
 
-            struct Collision {
-                Entity* entity = nullptr;
-                std::vector<Entity*> intersect;
-            };
-
-            Collision* GetCollsionAt(const unsigned int index) const ;
-            unsigned int GetCollsionVectorSize() const;
-
         private:
-            std::vector<Collision*> mCollisionVec;
 
             /// Check rectangle vs rectangle collision.
             /**
