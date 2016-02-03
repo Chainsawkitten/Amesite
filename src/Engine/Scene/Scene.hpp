@@ -1,9 +1,11 @@
 #pragma once
 
-#include <unordered_map>
+#include <map>
+//#include <unordered_map>
 #include <typeinfo>
 #include <vector>
 #include <iterator>
+#include <algorithm>
 
 class Entity;
 
@@ -50,7 +52,10 @@ class Scene {
 		/**
 		 * @param returnVector Vector that will keep components.
 		 */
-		template <typename T> void GetAll(std::vector<T*> &returnVector) const;
+		//template <typename T> void GetAll(std::vector<T*> &returnVector);
+
+        ///Gets all components of a specific type, returns a vector.
+        template <typename T> std::vector<T*> GetAll();
 
     private:
 		///Adds component to list internally.
@@ -64,20 +69,27 @@ class Scene {
         std::vector<Entity*> mEntityVector;
 
 		///multimap that maps component type to multiple components.
-		std::unordered_multimap < const std::type_info*, Component::SuperComponent* > mComponents;
+		//std::multimap < const std::type_info*, Component::SuperComponent* > mComponents;
+        std::map<const std::type_info*, std::vector<Component::SuperComponent*> > mComponents;
+
 };
 
 template<typename T> void Scene::AddComponentToList(T* component){
 	const type_info* componentType = &typeid(component);
 	AddComponentToList(component, componentType);
-	return;
+    return;
 }
 
+template <typename T> std::vector<T*> Scene::GetAll() {
+    auto found = mComponents.find(&typeid(T*));
+    std::vector<T*> returnVector;
+    if (found == mComponents.end())
+        return returnVector;
 
-template <typename T> void Scene::GetAll(std::vector<T*> &returnVector) const {
-	auto range = this->mComponents.equal_range(&typeid(T*));
-	for (auto it = range.first; it != range.second; ++it)
-		returnVector.push_back(static_cast<T*>(it->second));
+    returnVector.reserve(found->second.size());
+    for (int i = 0; i < found->second.size(); ++i)
+        returnVector.push_back(static_cast<T*>(found->second[i]));
+    return returnVector;
 }
 
 // Size<T>()
@@ -86,9 +98,12 @@ template<> inline unsigned int Scene::Size<Entity>() const {
 	return this->mEntityVector.size();
 }
 
-
 //General case
 template<typename T> unsigned int Scene::Size() const {
-	return this->mComponents.count(&typeid(T*));
+    auto found = mComponents.find(&typeid(T*));
+    if (found == mComponents.end())
+        return 0;
+
+    return found->second.size();
 }
 

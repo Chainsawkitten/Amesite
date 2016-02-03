@@ -3,6 +3,8 @@
 #include <unordered_map>
 #include <typeinfo>
 #include "../Util/log.hpp"
+#include "../Component/RelativeTransform.hpp"
+#include <Engine/Scene/Scene.hpp>
 
 namespace Component {
     class Transform;
@@ -59,10 +61,23 @@ class Entity {
 template <typename T> T* Entity::GetComponent() {
 	if (this->components.count(&typeid(T*)) != 0) {
 		return static_cast<T*>(this->components[&typeid(T*)]);
-	}
-	else {
+	} else {
 		return nullptr;
 	}
+}
+
+template <> inline Component::RelativeTransform* Entity::AddComponent<Component::RelativeTransform>() {
+        if(this->GetComponent<Component::Transform>() == nullptr && this->GetComponent<Component::RelativeTransform>() == nullptr) {
+            Component::RelativeTransform* mRelativeTransform = new Component::RelativeTransform(this);
+            
+            AddComponent(mRelativeTransform, &typeid(Component::Transform*));
+            AddComponent(mRelativeTransform, &typeid(mRelativeTransform));
+
+            mScene->AddComponentToList(mRelativeTransform, &typeid(Component::Transform*));
+            mScene->AddComponentToList(mRelativeTransform, &typeid(mRelativeTransform));
+            return mRelativeTransform;
+        }
+    return nullptr;
 }
 
 template <typename T> T* Entity::AddComponent() {

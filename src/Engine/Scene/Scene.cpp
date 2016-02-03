@@ -24,8 +24,7 @@ Entity* Scene::CreateEntity() {
 }
 
 void Scene::AddComponentToList(Component::SuperComponent* component, const type_info* componentType) {
-	std::pair<const std::type_info*, Component::SuperComponent*> pair(componentType, component);
-	mComponents.insert(pair);
+    mComponents[componentType].push_back(component);
 }
 
 void Scene::Clear() {
@@ -34,7 +33,7 @@ void Scene::Clear() {
 
 void Scene::UpdateModelMatrices() {
 	std::vector<Component::Transform*> transforms;
-	GetAll<Component::Transform>(transforms);
+	transforms = GetAll<Component::Transform>();
 	for (unsigned int i = 0; i < transforms.size(); i++)
 		transforms[i]->UpdateModelMatrix();
         

@@ -63,9 +63,9 @@ int main() {
 
     GameEntityCreator().SetScene(&scene);
 
-    Entity* entity = GameEntityCreator().CreateCamera(glm::vec3(0.f, 10.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    entity = GameEntityCreator().CreateBasicEnemy(glm::vec3(-1.f, 0.f, 0.f));
-	entity = GameEntityCreator().CreateCube(glm::vec3(3.f, 0.f, 3.f));
+    Entity* entity = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    entity = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
+    Caves::CaveSystem* theMap = GameEntityCreator().CreateMap();
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
@@ -78,17 +78,11 @@ int main() {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
         
-        // Move cube.
-        //cubeEntity->GetComponent<Component::Transform>()->Rotate(1.f, 0.f, 0.f);
-
-        // Move collision cubes.
-        //collisionCubeA->GetComponent<Component::Transform>()->position = cubeAOrigin + glm::vec3(glm::cos(rotation), 0.f, -glm::sin(rotation));
-        //collisionCubeB->GetComponent<Component::Transform>()->position = cubeBOrigin + glm::vec3(glm::cos(rotation), 0.f, glm::sin(rotation));
         // PhysicsSystem.
         physicsSystem.Update(scene, deltaTime);
 
         // Updates model matrices for this frame.
-        //scene.UpdateModelMatrices();
+        scene.UpdateModelMatrices();
 
         // Render.
         renderSystem.Render(scene);

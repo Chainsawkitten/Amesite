@@ -30,7 +30,7 @@ RenderSystem::~RenderSystem() {
     Resources().FreeShader(mFragShader);
 }
 
-void RenderSystem::Render(const Scene& scene) {
+void RenderSystem::Render(Scene& scene) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     mShaderProgram->Use();
@@ -38,8 +38,7 @@ void RenderSystem::Render(const Scene& scene) {
     Entity* camera = nullptr;
 
 	//Find last camera.
-	std::vector<Component::Lens*> lenses;
-	scene.GetAll<Component::Lens>(lenses);
+	std::vector<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
 	for (unsigned int i = 0; i < lenses.size(); i++) {
 		if (lenses[i]->entity->GetComponent<Component::Transform>() != nullptr)
 			camera = lenses[i]->entity;
@@ -55,9 +54,8 @@ void RenderSystem::Render(const Scene& scene) {
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
 
         // Finds models in scene.
-        for (unsigned int i = 0; i < scene.Size<Component::Mesh>(); i++) {
-			std::vector<Component::Mesh*> meshes;
-			scene.GetAll<Component::Mesh>(meshes);
+        std::vector<Component::Mesh*> meshes = scene.GetAll<Component::Mesh>();
+        for (unsigned int i = 0; i < meshes.size(); i++) {
             if (meshes[i]->entity->GetComponent<Component::Transform>() != nullptr) {
 				Entity* model = meshes[i]->entity;
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());

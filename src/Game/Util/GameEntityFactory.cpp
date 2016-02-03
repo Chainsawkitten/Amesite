@@ -9,6 +9,7 @@
 #include <Component/Collider2DRectangle.hpp>
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
+#include "../CaveSystem/CaveSystem.hpp"
 
 #include <Scene/Scene.hpp>
 
@@ -63,6 +64,12 @@ Entity* GameEntityFactory::CreateCamera(glm::vec3 origin, glm::vec3 rotation){
 
 void GameEntityFactory::SetScene(Scene* scene) {
     mScene = scene;
+}
+
+Caves::CaveSystem * GameEntityFactory::CreateMap(){
+    Caves::CaveSystem* theMap = new Caves::CaveSystem(mScene);
+    theMap->GenerateCaveSystem();
+    return theMap;
 }
 
 GameEntityFactory::~GameEntityFactory() {
