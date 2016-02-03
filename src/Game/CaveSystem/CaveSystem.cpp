@@ -4,6 +4,8 @@
 #include <Component/Mesh.hpp>
 #include <Component/Transform.hpp>
 #include <Component/RelativeTransform.hpp>
+//#include <Component/Collider2DRectangle.hpp>
+#include <Component/Collider2DCircle.hpp>
 
 using namespace Caves;
 

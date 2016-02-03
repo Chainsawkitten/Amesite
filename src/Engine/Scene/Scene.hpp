@@ -7,6 +7,8 @@ namespace Component {
     class Lens;
     class Mesh;
     class Physics;
+    class Collider2DCircle;
+    //class Collider2DRectangle;
 }
 
 #include <vector>
@@ -53,6 +55,8 @@ class Scene {
         std::vector<Component::Transform*> mTransformComponentVec;
         std::vector<Component::Mesh*> mMeshComponentVec;
         std::vector<Component::Physics*> mPhysicsComponentVec;
+        std::vector<Component::Collider2DCircle*> mCollider2DCircleVec;
+        //std::vector<Component::Collider2DRectangle*> mCollider2DRectangleVec;
 };
 
 // Size<T>()
@@ -75,6 +79,14 @@ template<> inline unsigned int Scene::Size<Component::Mesh>() const {
 template<> inline unsigned int Scene::Size<Component::Physics>() const {
     return mPhysicsComponentVec.size();
 }
+
+template<> inline unsigned int Scene::Size<Component::Collider2DCircle>() const {
+    return mCollider2DCircleVec.size();
+}
+
+//template<> inline unsigned int Scene::Size<Component::Collider2DRectangle>() const {
+//    return mCollider2DRectangleVec.size();
+//}
 
 // Get<T>()
 template<> inline Entity* Scene::Get(unsigned int index) const {
@@ -106,3 +118,16 @@ template<> inline Component::Physics* Scene::Get(unsigned int index) const {
         return mPhysicsComponentVec.at(index);
     return nullptr;
 }
+
+template<> inline Component::Collider2DCircle* Scene::Get(unsigned int index) const {
+    if (index < mCollider2DCircleVec.size())
+        return mCollider2DCircleVec.at(index);
+    return nullptr;
+}
+
+//template<> inline Component::Collider2DRectangle* Scene::Get(unsigned int index) const {
+//    if (index < mCollider2DRectangleVec.size())
+//        return mCollider2DRectangleVec.at(index);
+//    return nullptr;
+//}
+//

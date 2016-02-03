@@ -8,7 +8,7 @@
 #include "../Component/RelativeTransform.hpp"
 #include "../Component/Physics.hpp"
 #include "../Component/Collider2DCircle.hpp"
-#include "../Component/Collider2DRectangle.hpp"
+//#include "../Component/Collider2DRectangle.hpp"
 
 using namespace Component;
 
@@ -20,8 +20,8 @@ Entity::Entity(Scene* scene) {
     mMesh = nullptr;
     mRelativeTransform = nullptr;
     mPhysics = nullptr;
-    mCircle = nullptr;
-    mRectangle = nullptr;
+    mCollider2DCircle = nullptr;
+    //mCollider2DRectangle = nullptr;
 }
 
 Entity::~Entity() {
@@ -74,17 +74,19 @@ Component::Physics* Entity::CreatePhysics() {
 }
 
 Collider2DCircle* Entity::CreateCollider2DCircle() {
-    if (mCircle == nullptr) {
-        mCircle = new Component::Collider2DCircle(this);
-        return mCircle;
+    if (mCollider2DCircle == nullptr) {
+        mCollider2DCircle = new Component::Collider2DCircle(this);
+        mScene->mCollider2DCircleVec.push_back(mCollider2DCircle);
+        return mCollider2DCircle;
     }
     return nullptr;
 }
 
-Collider2DRectangle* Entity::CreateCollider2DRectangle() {
-    if (mRectangle == nullptr) {
-        mRectangle = new Component::Collider2DRectangle(this);
-        return mRectangle;
-    }
-    return nullptr;
-}
+//Collider2DRectangle* Entity::CreateCollider2DRectangle() {
+//    if (mCollider2DRectangle == nullptr) {
+//        mCollider2DRectangle = new Component::Collider2DRectangle(this);
+//        mScene->mCollider2DRectangleVec.push_back(mCollider2DRectangle);
+//        return mCollider2DRectangle;
+//    }
+//    return nullptr;
+//}

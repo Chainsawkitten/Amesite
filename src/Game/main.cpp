@@ -24,7 +24,7 @@
 #include <Component/RelativeTransform.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
-#include <Component/Collider2DRectangle.hpp>
+//#include <Component/Collider2DRectangle.hpp>
 
 #include <Texture/Texture2D.hpp>
 
@@ -51,6 +51,9 @@ int main() {
 
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;
+
+    // CollisionSystem.
+    System::CollisionSystem collisionSystem;
 
     // Scene and Entites. 
     Scene scene;
@@ -83,6 +86,12 @@ int main() {
 
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
+
+        // Check collisions
+        collisionSystem.Update(scene);
+        for (unsigned int i = 0; i < collisionSystem.GetCollsionVectorSize(); i++) {
+            System::CollisionSystem::Collision* collision = collisionSystem.GetCollsionAt(i);
+        }
 
         // Render.
         renderSystem.Render(scene);

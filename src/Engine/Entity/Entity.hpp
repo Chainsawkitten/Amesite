@@ -6,7 +6,7 @@ namespace Component {
     class Mesh;
     class RelativeTransform;
     class Physics;
-    class Collider2DRectangle;
+    //class Collider2DRectangle;
     class Collider2DCircle;
 }
 
@@ -42,15 +42,15 @@ class Entity {
         Component::RelativeTransform* CreateRelativeTransform();
         Component::Physics* CreatePhysics();
         Component::Collider2DCircle* CreateCollider2DCircle();
-        Component::Collider2DRectangle* CreateCollider2DRectangle();
+        //Component::Collider2DRectangle* CreateCollider2DRectangle();
 
         Component::Lens* mLens;
         Component::Transform* mTransform;
         Component::Mesh* mMesh;
         Component::RelativeTransform* mRelativeTransform;
         Component::Physics* mPhysics;
-        Component::Collider2DCircle* mCircle;
-        Component::Collider2DRectangle* mRectangle;
+        Component::Collider2DCircle* mCollider2DCircle;
+        //Component::Collider2DRectangle* mCollider2DRectangle;
 
         /// Pointer to which Scene %Entity is contained.
         /**
@@ -84,9 +84,9 @@ template<> inline Component::Collider2DCircle* Entity::AddComponent<Component::C
     return CreateCollider2DCircle();
 }
 
-template<> inline Component::Collider2DRectangle* Entity::AddComponent<Component::Collider2DRectangle>() {
-    return CreateCollider2DRectangle();
-}
+//template<> inline Component::Collider2DRectangle* Entity::AddComponent<Component::Collider2DRectangle>() {
+//    return CreateCollider2DRectangle();
+//}
 
 // GetComponent<T>()
 template<> inline Component::Lens* Entity::GetComponent<Component::Lens>() {
@@ -110,9 +110,9 @@ template<> inline Component::Physics* Entity::GetComponent<Component::Physics>()
 }
 
 template<> inline Component::Collider2DCircle* Entity::GetComponent<Component::Collider2DCircle>() {
-    return mCircle;
+    return mCollider2DCircle;
 }
 
-template<> inline Component::Collider2DRectangle* Entity::GetComponent<Component::Collider2DRectangle>() {
-    return mRectangle;
-}
+//template<> inline Component::Collider2DRectangle* Entity::GetComponent<Component::Collider2DRectangle>() {
+//    return mCollider2DRectangle;
+//}

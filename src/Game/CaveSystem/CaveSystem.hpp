@@ -5,11 +5,6 @@
 
 class Entity;
 
-namespace Component {
-    class Transform;
-    class Mesh;
-}
-
 namespace Caves {
     class CaveSystem {
         public:
