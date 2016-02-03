@@ -4,7 +4,7 @@
 #include <typeinfo>
 #include "../Util/log.hpp"
 #include "../Component/RelativeTransform.hpp"
-#include <Engine/Scene/Scene.hpp>
+#include "../Scene/Scene.hpp"
 
 namespace Component {
     class Transform;
