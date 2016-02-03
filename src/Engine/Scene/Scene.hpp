@@ -1,15 +1,21 @@
 #pragma once
 
+#include <map>
+#include <typeinfo>
+#include <vector>
+#include <iterator>
+#include <algorithm>
+
 class Entity;
 
 namespace Component {
     class Transform;
     class Lens;
     class Mesh;
+    class RelativeTransform;
+    class SuperComponent;
     class Physics;
 }
-
-#include <vector>
 
 /// Contains a bunch of entities.
 class Scene {
@@ -26,83 +32,76 @@ class Scene {
 
         /// Create new Entity in Scene.
         Entity* CreateEntity();
-
-        /// Get number of items in %Scene.
-        /**
-         * @return Number of items in %Scene, returns 0 if no such item can be found.
-         */
-        template<typename T> unsigned int Size() const { return 0; }
-
         /// Clear Scene of all items.
         void Clear();
 
+        ///Adds component to map, used externally.
+        /**
+         *@param component component that will be added to map.
+         */
+        template <typename T> void AddComponentToList(T* component);
+
+        ///Gets number of elements in maps or entity list.
+        template <typename T> unsigned int Size() const;
+        
         /// Updates all model matrices in %Scene.
         void UpdateModelMatrices();
 
-        /// Get item on index, else nullptr.
+        ///Gets all components of a specific type.
         /**
-         * @param index The index of the item.
-         * @return Pointer to item on index, else nullptr.
+         * @param returnVector Vector that will keep components.
          */
-        template<typename T> T* Get(unsigned int index) const { return nullptr; }
+        //template <typename T> void GetAll(std::vector<T*> &returnVector);
+
+        ///Gets all components of a specific type, returns a vector.
+        template <typename T> std::vector<T*> GetAll();
 
     private:
-        std::vector<Entity*> mEntityVec;
+        ///Adds component to list internally.
+        /**
+         * @param component The component that will be added.
+         * @param componentType The type of the component.
+         */
+        void AddComponentToList(Component::SuperComponent* component, const type_info* componentType);
 
-        std::vector<Component::Lens*> mLensComponentVec;
-        std::vector<Component::Transform*> mTransformComponentVec;
-        std::vector<Component::Mesh*> mMeshComponentVec;
-        std::vector<Component::Physics*> mPhysicsComponentVec;
+        ///List of all entities created in this scene.
+        std::vector<Entity*> mEntityVector;
+
+        ///multimap that maps component type to multiple components.
+        std::map<const std::type_info*, std::vector<Component::SuperComponent*> > mComponents;
+
 };
 
+template<typename T> void Scene::AddComponentToList(T* component){
+    const type_info* componentType = &typeid(component);
+    AddComponentToList(component, componentType);
+    return;
+}
+
+template <typename T> std::vector<T*> Scene::GetAll() {
+    auto found = mComponents.find(&typeid(T*));
+    std::vector<T*> returnVector;
+    if (found == mComponents.end())
+        return returnVector;
+
+    returnVector.reserve(found->second.size());
+    for (unsigned int i = 0; i < found->second.size(); ++i)
+        returnVector.push_back(static_cast<T*>(found->second[i]));
+    return returnVector;
+}
+
 // Size<T>()
+//Special case for entity vector
 template<> inline unsigned int Scene::Size<Entity>() const {
-    return mEntityVec.size();
+    return this->mEntityVector.size();
 }
 
-template<> inline unsigned int Scene::Size<Component::Lens>() const {
-    return mLensComponentVec.size();
+//General case
+template<typename T> unsigned int Scene::Size() const {
+    auto found = mComponents.find(&typeid(T*));
+    if (found == mComponents.end())
+        return 0;
+
+    return found->second.size();
 }
 
-template<> inline unsigned int Scene::Size<Component::Transform>() const {
-    return mTransformComponentVec.size();
-}
-
-template<> inline unsigned int Scene::Size<Component::Mesh>() const {
-    return mMeshComponentVec.size();
-}
-
-template<> inline unsigned int Scene::Size<Component::Physics>() const {
-    return mPhysicsComponentVec.size();
-}
-
-// Get<T>()
-template<> inline Entity* Scene::Get(unsigned int index) const {
-    if (index < mEntityVec.size())
-        return mEntityVec.at(index);
-    return nullptr;
-}
-
-template<> inline Component::Lens* Scene::Get(unsigned int index) const {
-    if (index < mLensComponentVec.size())
-        return mLensComponentVec.at(index);
-    return nullptr;
-}
-
-template<> inline Component::Transform* Scene::Get(unsigned int index) const {
-    if (index < mTransformComponentVec.size())
-        return mTransformComponentVec.at(index);
-    return nullptr;
-}
-
-template<> inline Component::Mesh* Scene::Get(unsigned int index) const {
-    if (index < mMeshComponentVec.size())
-        return mMeshComponentVec.at(index);
-    return nullptr;
-}
-
-template<> inline Component::Physics* Scene::Get(unsigned int index) const {
-    if (index < mPhysicsComponentVec.size())
-        return mPhysicsComponentVec.at(index);
-    return nullptr;
-}

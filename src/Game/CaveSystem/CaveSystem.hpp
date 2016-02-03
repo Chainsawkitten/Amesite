@@ -18,6 +18,8 @@ namespace Caves {
              *@Param scene pointer to the active scene.
              */
             CaveSystem(Scene* scene);
+            
+            ///Destructor
             ~CaveSystem();
 
             /// Creates a cavesystem from map out of cubes
@@ -25,7 +27,7 @@ namespace Caves {
         private:
             Scene* mScene;
 
-            float mMap[25][25] = {
+            const float mMap[25][25] = {
                 { 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f },
                 { 1.f, 0.f, 0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f },
                 { 1.f, 0.f, 0.f, 0.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f },
