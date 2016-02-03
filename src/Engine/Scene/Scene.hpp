@@ -87,7 +87,7 @@ template <typename T> std::vector<T*> Scene::GetAll() {
         return returnVector;
 
     returnVector.reserve(found->second.size());
-    for (int i = 0; i < found->second.size(); ++i)
+    for (unsigned int i = 0; i < found->second.size(); ++i)
         returnVector.push_back(static_cast<T*>(found->second[i]));
     return returnVector;
 }
