@@ -29,6 +29,7 @@
 #include <Component/Mesh.hpp>
 #include <Component/RelativeTransform.hpp>
 #include <Component/DirectionalLight.hpp>
+#include <Component/PointLight.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include <Component/Collider2DRectangle.hpp>
@@ -70,12 +71,21 @@ int main() {
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
+    // Directional light.
     entity = scene.CreateEntity();
     Component::Transform* transform = entity->AddComponent<Component::Transform>();
     transform->pitch = 90.f;
-    Component::DirectionalLight* light = entity->AddComponent<Component::DirectionalLight>();
-    light->color = glm::vec3(1.f, 1.f, 1.f);
-    light->ambientCoefficient = 0.2f;
+    Component::DirectionalLight* dLight = entity->AddComponent<Component::DirectionalLight>();
+    dLight->color = glm::vec3(0.1f, 0.1f, 0.1f);
+    dLight->ambientCoefficient = 0.2f;
+    
+    // Point light.
+    entity = scene.CreateEntity();
+    transform = entity->AddComponent<Component::Transform>();
+    transform->position = glm::vec3(0.f, 0.f, 0.f);
+    Component::PointLight* pLight = entity->AddComponent<Component::PointLight>();
+    pLight->color = glm::vec3(1.f, 1.f, 1.f);
+    pLight->attenuation = 0.1f;
     
     // Main game loop.
     double lastTime = glfwGetTime();

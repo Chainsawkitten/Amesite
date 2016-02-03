@@ -49,7 +49,7 @@ vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecu
 	}
 	
 	// Ambient.
-	vec3 ambient = light.ambientCoefficient * surfaceColor * light.intensities;
+	vec3 ambient = light.ambientCoefficient * surfaceColor;
 	
 	// Diffuse
 	float diffuseCoefficient = max(0.0, dot(normal, surfaceToLight));

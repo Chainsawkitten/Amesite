@@ -12,6 +12,7 @@
 #include "../Component/Transform.hpp"
 #include "../Component/Lens.hpp"
 #include "../Component/DirectionalLight.hpp"
+#include "../Component/PointLight.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 DeferredLighting::DeferredLighting(const glm::vec2& size) {
@@ -149,7 +150,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glUniform1f(mShaderProgram->GetUniformLocation("scale"), scale);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(projectionMat)[0][0]);
     
-    // Get all directional lights.
+    // Render all directional lights.
     std::vector<Component::DirectionalLight*> directionalLights = scene.GetAll<Component::DirectionalLight>();
     for (int i=0; i<directionalLights.size(); i++) {
         Entity* lightEntity = directionalLights[i]->entity;
@@ -162,6 +163,23 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), directionalLights[i]->ambientCoefficient);
             glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 0.f);
             glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
+            
+            glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+        }
+    }
+    
+    // Render all point lights.
+    std::vector<Component::PointLight*> pointLights = scene.GetAll<Component::PointLight>();
+    for (int i=0; i<pointLights.size(); i++) {
+        Entity* lightEntity = pointLights[i]->entity;
+        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
+        if (transform != nullptr) {
+            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * glm::vec4(transform->position, 1.0))[0]);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &pointLights[i]->color[0]);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), pointLights[i]->attenuation);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), pointLights[i]->ambientCoefficient);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 180.f);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
             
             glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
         }
