@@ -1,5 +1,6 @@
 /*
 Lighting pass fragment shader (second pass)
+Directional light (sunlight).
 */
 #version 400
 
@@ -9,15 +10,16 @@ uniform sampler2D tNormals;
 uniform sampler2D tSpecular;
 uniform sampler2D tDepth;
 
-uniform mat4 UVtransformMatrix;
-uniform mat4 inverseViewMatrix;
 uniform mat4 inverseProjectionMatrix;
-uniform mat4 lightViewMatrix;
-uniform mat4 lightProjectionMatrix;
 
-uniform vec4 lightPosition;
-uniform vec3 lightIntensity;
-uniform vec3 diffuseCoefficient;
+uniform struct Light {
+	vec4 position;
+	vec3 intensities;
+	float attenuation;
+	float ambientCoefficient;
+	float coneAngle;
+	vec3 direction;
+} light;
 
 uniform float scale;
 
@@ -25,55 +27,36 @@ in vec2 texCoords;
 
 out vec4 fragmentColor;
 
-const vec2 poisson[15] = vec2[](
-	vec2( 0.3717325, 0.1279892),
-	vec2(0.4879754, -0.3658713),
-	vec2(0.794171, 0.3522189),
-	vec2(0.3074657, 0.6046221),
-	vec2(-0.1719546, 0.1717038),
-	vec2(0.8643684, -0.07669879),
-	vec2(-0.3394284, -0.2177678),
-	vec2(0.07109351, -0.4859956),
-	vec2(0.4489738, -0.7939949),
-	vec2(-0.1399191, -0.8488325),
-	vec2(-0.6998154, -0.5012075),
-	vec2(-0.08893247, 0.9369829),
-	vec2(-0.4376774, 0.5030558),
-	vec2(-0.9372669, 0.04219909),
-	vec2(-0.8517231, 0.4333114)
-);
-
-// Calculate shadow
-float calculateShadow(vec4 lightSpacePosition) {
-    vec4 shadowCoord = UVtransformMatrix * lightSpacePosition;
-
-	float visibility = 1.0;
-	for (int i = 0; i < 10; i++){
-		if (texture(tShadowMap, (shadowCoord.xy / shadowCoord.w) + poisson[i] / 300.0).z < (shadowCoord.z)/ shadowCoord.w){
-			visibility -= 1.0/20.0;
-		 }
+// Apply ambient, diffuse and specular lighting.
+vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecular) {
+	vec3 surfaceToLight;
+	float attenuation = 1.0;
+	
+	if (light.position.w == 0.0) {
+		// Directional light.
+		surfaceToLight = normalize(light.position.xyz);
+		attenuation = 1.0;
+	} else {
+		// TODO: Point light, spot light.
 	}
-    return visibility;
-}
-
-// Divide a color into discrete steps.
-vec3 discretify(vec3 color) {
-	float steps = 3.0;
-	return round(steps * color) / steps;
-}
-
-// Ambient, diffuse and specular lighting.
-vec3 ads(vec3 diffuse, vec3 normal, vec3 position, vec3 specular) {
-	vec4 lightSpacePos = lightProjectionMatrix * lightViewMatrix * 	inverseViewMatrix * vec4(position, 1.0);
-	vec3 lightDirection = normalize(vec3(lightPosition) - position);	
-	float visibility = calculateShadow(lightSpacePos);
-	vec3 v = normalize(vec3(-position));
-	vec3 r = normalize(reflect(-lightDirection, normal)) * (visibility * 2.0 - 1.0);
-	vec3 diffuseLight = diffuseCoefficient * max(dot(lightDirection, normal), 0.0);
-	float shinyPower = 2000.0;
-	vec3 Ka = vec3(0.2, 0.2, 0.2);
-	vec3 specularLight = specular * pow(max(dot(r, v), 0.0), shinyPower);
-	return lightIntensity * (diffuse * discretify(Ka + visibility * diffuseLight) + visibility * specularLight);
+	
+	// Ambient.
+	vec3 ambient = light.ambientCoefficient * surfaceColor * light.intensities;
+	
+	// Diffuse
+	float diffuseCoefficient = max(0.0, dot(normal, surfaceToLight));
+	vec3 diffuse = diffuseCoefficient * surfaceColor * light.intensities;
+	
+	// Specular
+	vec3 surfaceToCamera = normalize(-position);
+	float materialShininess = 20.0;
+	float specularCoefficient = 0.0;
+	if (diffuseCoefficient > 0.0)
+		specularCoefficient = pow(max(dot(surfaceToCamera, reflect(-surfaceToLight, normal)), 0.0), materialShininess);
+	vec3 specular = specularCoefficient * surfaceSpecular * light.intensities;
+	
+	// Linear color (color before gamma correction)
+	return ambient + attenuation * (diffuse + specular);
 }
 
 // Reconstruct position.
@@ -91,6 +74,6 @@ void main () {
 	vec3 normal = texture(tNormals, texCoords * scale).xyz;
 	vec3 specular = texture(tSpecular, texCoords * scale).xyz;
 	
-	fragmentColor = vec4(ads(diffuse, normal, position, specular), 1.0);
+	fragmentColor = vec4(ApplyLight(diffuse, normalize(normal), position, specular), 1.0);
 	gl_FragDepth = depth;
 }
