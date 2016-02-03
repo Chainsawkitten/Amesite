@@ -37,7 +37,12 @@ vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecu
 		surfaceToLight = normalize(light.position.xyz);
 		attenuation = 1.0;
 	} else {
-		// TODO: Point light, spot light.
+		// Point light.
+		surfaceToLight = normalize(light.position.xyz - position);
+		float distanceToLight = length(light.position.xyz - position);
+		attenuation = 1.0 / (1.0 + light.attenuation * pow(distanceToLight, 2));
+		
+		// TODO: Spot light.
 	}
 	
 	// Ambient.

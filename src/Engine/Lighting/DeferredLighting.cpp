@@ -188,9 +188,9 @@ void DeferredLighting::BindLighting(Entity* camera, const glm::vec2& screenSize,
     
     glUniform1f(mShaderProgram->GetUniformLocation("scale"), scale);
     
-    glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * glm::vec4(0.f, 1.f, 0.f, 0.f))[0]);
+    glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * glm::vec4(0.f, 1.f, 0.f, 1.f))[0]);
     glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &glm::vec3(1.f, 1.f, 1.f)[0]);
-    glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), 1.f);
+    glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), 0.1f);
     glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), 0.2f);
     glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 0.f);
     glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
