@@ -11,6 +11,7 @@
 #include "../Entity/Entity.hpp"
 #include "../Component/Transform.hpp"
 #include "../Component/Lens.hpp"
+#include "../Component/DirectionalLight.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 DeferredLighting::DeferredLighting(const glm::vec2& size) {
@@ -114,7 +115,7 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
         glEnable(GL_DEPTH_TEST);
 }
 
-void DeferredLighting::Render(Entity* camera, const glm::vec2& screenSize, float scale) {
+void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, float scale) {
     // Disable depth testing
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
     glEnable(GL_DEPTH_TEST);
@@ -123,22 +124,48 @@ void DeferredLighting::Render(Entity* camera, const glm::vec2& screenSize, float
     glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunctionMode);
     glDepthFunc(GL_ALWAYS);
     
-    mShaderProgram->Use();
-    
     // Blending enabled for handling multiple light sources
     GLboolean blend = glIsEnabled(GL_BLEND);
     glEnable(GL_BLEND);
     glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_ONE, GL_ONE);
     
-    BindLighting(camera, screenSize, scale);
-    BindForReading();
+    mShaderProgram->Use();
     
+    BindForReading();
     glClear(GL_COLOR_BUFFER_BIT);
     
     glBindVertexArray(mSquare->GetVertexArray());
     
-    glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+    // Set uniforms.
+    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
+    glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
+    
+    glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::DIFFUSE);
+    glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), DeferredLighting::NORMAL);
+    glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
+    glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
+    
+    glUniform1f(mShaderProgram->GetUniformLocation("scale"), scale);
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(projectionMat)[0][0]);
+    
+    // Get all directional lights.
+    std::vector<Component::DirectionalLight*> directionalLights = scene.GetAll<Component::DirectionalLight>();
+    for (int i=0; i<directionalLights.size(); i++) {
+        Entity* lightEntity = directionalLights[i]->entity;
+        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
+        if (transform != nullptr) {
+            glm::vec4 direction = transform->GetOrientation() * glm::vec4(0.f, 0.f, 1.f, 0.f);
+            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * -direction)[0]);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &directionalLights[i]->color[0]);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), 1.f);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), directionalLights[i]->ambientCoefficient);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 0.f);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
+            
+            glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+        }
+    }
     
     if (!depthTest)
         glDisable(GL_DEPTH_TEST);
@@ -174,26 +201,4 @@ void DeferredLighting::BindForTexReading() {
 
 void DeferredLighting::SetReadBuffer(TEXTURE_TYPE textureType){
     glReadBuffer(GL_COLOR_ATTACHMENT0 + textureType);
-}
-
-void DeferredLighting::BindLighting(Entity* camera, const glm::vec2& screenSize, float scale){
-    // Bind light information for lighting pass
-    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
-    glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
-    
-    glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::DIFFUSE);
-    glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), DeferredLighting::NORMAL);
-    glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
-    glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
-    
-    glUniform1f(mShaderProgram->GetUniformLocation("scale"), scale);
-    
-    glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * glm::vec4(0.f, 1.f, 0.f, 1.f))[0]);
-    glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &glm::vec3(1.f, 1.f, 1.f)[0]);
-    glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), 0.1f);
-    glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), 0.2f);
-    glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 90.f);
-    glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
-    
-    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(projectionMat)[0][0]);
 }

@@ -28,6 +28,7 @@
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
 #include <Component/RelativeTransform.hpp>
+#include <Component/DirectionalLight.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include <Component/Collider2DRectangle.hpp>
@@ -68,6 +69,13 @@ int main() {
     Caves::CaveSystem* theMap = GameEntityCreator().CreateMap();
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
+    
+    entity = scene.CreateEntity();
+    Component::Transform* transform = entity->AddComponent<Component::Transform>();
+    transform->pitch = 90.f;
+    Component::DirectionalLight* light = entity->AddComponent<Component::DirectionalLight>();
+    light->color = glm::vec3(1.f, 1.f, 1.f);
+    light->ambientCoefficient = 0.2f;
     
     // Main game loop.
     double lastTime = glfwGetTime();
