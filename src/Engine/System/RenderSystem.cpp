@@ -5,6 +5,7 @@
 #include "../Shader/Shader.hpp"
 #include "../Shader/ShaderProgram.hpp"
 
+#include "../MainWindow.hpp"
 #include "../Resources.hpp"
 #include "Default3D.frag.hpp"
 #include "Default3D.vert.hpp"
@@ -16,21 +17,30 @@
 #include "../Component/Mesh.hpp"
 #include <string>
 
+#include "../Lighting/DeferredLighting.hpp"
+
 using namespace System;
 
 RenderSystem::RenderSystem() {
-    mVertShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
-    mFragShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ mVertShader, mFragShader });
+    mVertexShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(DEFAULT3D_FRAG, DEFAULT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
+    
+    mDeferredLighting = new DeferredLighting(MainWindow::GetInstance()->GetSize());
 }
 
 RenderSystem::~RenderSystem() {
+    delete mDeferredLighting;
+    
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mFragmentShader);
     Resources().FreeShaderProgram(mShaderProgram);
-    Resources().FreeShader(mVertShader);
-    Resources().FreeShader(mFragShader);
 }
 
 void RenderSystem::Render(Scene& scene) {
+    glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
+    
+    mDeferredLighting->SetTarget();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     mShaderProgram->Use();
@@ -47,8 +57,7 @@ void RenderSystem::Render(Scene& scene) {
     // Render from camera.
     if (camera != nullptr) {
         glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
-        //TODO: DO NOT USE SET VIEWPORT SIZE!
-        glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(glm::vec2(800, 600));
+        glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
 
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
@@ -63,9 +72,15 @@ void RenderSystem::Render(Scene& scene) {
                 // Render model.
                 glm::mat4 modelMat = model->GetComponent<Component::Transform>()->modelMatrix;
                 glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
+                glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
+                glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
 
                 glDrawElements(GL_TRIANGLES, model->GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
             }
         }
     }
+    
+    mDeferredLighting->ResetTarget();
+    //mDeferredLighting->ShowTextures(screenSize);
+    mDeferredLighting->Render(camera, screenSize);
 }

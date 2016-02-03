@@ -22,7 +22,7 @@ namespace Component {
 /// Contains a bunch of entities.
 class Scene {
 
-    /// %Scene is friend with Enity to gain access to components
+    /// %Scene is friend with Entity to gain access to components.
     friend class Entity;
 
     public:
@@ -32,50 +32,39 @@ class Scene {
         /// Destructor.
         ~Scene();
 
-        /// Create new Entity in Scene.
+        /// Create new Entity in the scene.
         Entity* CreateEntity();
-        /// Clear Scene of all items.
+        
+        /// Clear the scene of all entities.
         void Clear();
 
-        ///Adds component to map, used externally.
+        /// Adds component to map, used externally.
         /**
-         *@param component component that will be added to map.
+         *@param component %Component that will be added to map.
          */
         template <typename T> void AddComponentToList(T* component);
-
-        ///Gets number of elements in maps or entity list.
-        template <typename T> unsigned int Size() const;
         
         /// Updates all model matrices in %Scene.
         void UpdateModelMatrices();
 
-        ///Gets all components of a specific type.
+        /// Gets all components of a specific type.
         /**
-         * @param returnVector Vector that will keep components.
+         * @return A vector of pointers to all components of the specified scene.
          */
-        //template <typename T> void GetAll(std::vector<T*> &returnVector);
-
-        ///Gets all components of a specific type, returns a vector.
         template <typename T> std::vector<T*> GetAll();
 
     private:
-        ///Adds component to list internally.
-        /**
-         * @param component The component that will be added.
-         * @param componentType The type of the component.
-         */
-        void AddComponentToList(Component::SuperComponent* component, const type_info* componentType);
+        // Adds component to list internally.
+        void AddComponentToList(Component::SuperComponent* component, const std::type_info* componentType);
 
-        ///List of all entities created in this scene.
+        // List of all entities created in this scene.
         std::vector<Entity*> mEntityVector;
 
-        ///multimap that maps component type to multiple components.
         std::map<const std::type_info*, std::vector<Component::SuperComponent*> > mComponents;
-
 };
 
 template<typename T> void Scene::AddComponentToList(T* component){
-    const type_info* componentType = &typeid(component);
+    const std::type_info* componentType = &typeid(component);
     AddComponentToList(component, componentType);
     return;
 }

@@ -65,6 +65,8 @@ set(EMBEDDED_INPUT
         shaders/Default2D.vert
         shaders/SingleColor2D.frag
         shaders/Texture2D.frag
+        shaders/Post.vert
+        shaders/Deferred.frag
         shaders/Particle.vert
         shaders/Particle.geom
         shaders/Particle.frag
@@ -124,6 +126,7 @@ set(ENGINE_SRCS
         src/Engine/Geometry/Square.cpp
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Geometry/Cube.cpp
+        src/Engine/Lighting/DeferredLighting.cpp
         src/Engine/Shader/Shader.cpp
         src/Engine/Shader/ShaderProgram.cpp
         src/Engine/Util/FileSystem.cpp
@@ -165,6 +168,7 @@ set(ENGINE_HEADERS
         src/Engine/Geometry/Square.hpp
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Geometry/Cube.hpp
+        src/Engine/Lighting/DeferredLighting.hpp
         src/Engine/Shader/Shader.hpp
         src/Engine/Shader/ShaderProgram.hpp
         src/Engine/Util/FileSystem.hpp
