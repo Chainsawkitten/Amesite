@@ -23,7 +23,7 @@ Entity* Scene::CreateEntity() {
     return entity;
 }
 
-void Scene::AddComponentToList(Component::SuperComponent* component, const type_info* componentType) {
+void Scene::AddComponentToList(Component::SuperComponent* component, const std::type_info* componentType) {
     mComponents[componentType].push_back(component);
 }
 

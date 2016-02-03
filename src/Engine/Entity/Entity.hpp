@@ -54,7 +54,7 @@ class Entity {
          * @param component The component that will be added.
          * @param componentType The type of the component.
          */
-        void AddComponent(Component::SuperComponent* component, const type_info* componentType);
+        void AddComponent(Component::SuperComponent* component, const std::type_info* componentType);
 };
 
 
@@ -82,7 +82,7 @@ template <> inline Component::RelativeTransform* Entity::AddComponent<Component:
 
 template <typename T> T* Entity::AddComponent() {
     T* component = new T(this);
-    const type_info* componentType = &typeid(component);
+    const std::type_info* componentType = &typeid(component);
     AddComponent(component, componentType);
     mScene->AddComponentToList(component, componentType);
     return component;

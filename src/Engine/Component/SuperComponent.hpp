@@ -20,5 +20,5 @@ namespace Component {
              * Default: Must point to an Entity.
              */
             Entity* entity;
-        };
+    };
 }
