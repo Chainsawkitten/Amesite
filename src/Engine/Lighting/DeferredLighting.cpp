@@ -13,6 +13,7 @@
 #include "../Component/Lens.hpp"
 #include "../Component/DirectionalLight.hpp"
 #include "../Component/PointLight.hpp"
+#include "../Component/SpotLight.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 DeferredLighting::DeferredLighting(const glm::vec2& size) {
@@ -179,6 +180,23 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), pointLights[i]->attenuation);
             glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), pointLights[i]->ambientCoefficient);
             glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 180.f);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
+            
+            glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+        }
+    }
+    
+    // Render all spot lights.
+    std::vector<Component::SpotLight*> spotLights = scene.GetAll<Component::SpotLight>();
+    for (int i=0; i<spotLights.size(); i++) {
+        Entity* lightEntity = spotLights[i]->entity;
+        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
+        if (transform != nullptr) {
+            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * glm::vec4(transform->position, 1.0))[0]);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &spotLights[i]->color[0]);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), spotLights[i]->attenuation);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), spotLights[i]->ambientCoefficient);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), spotLights[i]->coneAngle);
             glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
             
             glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
