@@ -15,7 +15,6 @@
 //#include "Engine/Particles/PointParticleEmitter.hpp"
 //#include "Engine/Particles/ParticleSystem.hpp"
 
-#include "System/RenderSystem.hpp"
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
@@ -65,8 +64,8 @@ int main() {
     GameEntityCreator().SetScene(&scene);
 
     Entity* entity = GameEntityCreator().CreateCamera(glm::vec3(0.f, 10.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    entity = GameEntityCreator().CreateBasicEnemy(glm::vec3(0.f, 0.f, 0.f));
-	entity = GameEntityCreator().CreateCube(glm::vec3(3.f, 0.f, .3f));
+    entity = GameEntityCreator().CreateBasicEnemy(glm::vec3(-1.f, 0.f, 0.f));
+	entity = GameEntityCreator().CreateCube(glm::vec3(3.f, 0.f, 3.f));
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     

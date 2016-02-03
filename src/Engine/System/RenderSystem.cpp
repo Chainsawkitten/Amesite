@@ -60,7 +60,6 @@ void RenderSystem::Render(const Scene& scene) {
 			scene.GetAll<Component::Mesh>(meshes);
             if (meshes[i]->entity->GetComponent<Component::Transform>() != nullptr) {
 				Entity* model = meshes[i]->entity;
-				Log() << std::to_string(meshes[i]->entity->GetComponent<Component::Transform>()->position.x);
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
 
                 // Render model.
