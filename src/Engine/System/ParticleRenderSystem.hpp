@@ -2,7 +2,7 @@
 
 class Scene;
 
-#include <>
+#include "ParticleSystem.hpp"
 
 namespace System {
     /// System to render particles
@@ -17,6 +17,7 @@ namespace System {
 
         /// Render
         void Render(const Scene& scene);
+
     private:
         // Vertex buffer.
         GLuint mVertexBuffer = 0;

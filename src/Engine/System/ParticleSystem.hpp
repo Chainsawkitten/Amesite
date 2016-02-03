@@ -66,9 +66,6 @@ namespace System {
              */
              void Update(Scene& scene, double time);
         private:
-            // Helper functions
-            void BindPointData();
-
             // System properties
             unsigned int mParticleCount;
             unsigned int mMaxParticleCount;

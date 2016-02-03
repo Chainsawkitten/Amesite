@@ -1,18 +1,51 @@
-#include "ParticleRenderSystem.h"
+#include "ParticleRenderSystem.hpp"
 
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <vector>
+#include "../Resources.hpp"
 
+#include "../Scene/Scene.hpp"
+#include "../Entity/Entity.hpp"
+#include "../Component/Transform.hpp"
+#include "../Component/Physics.hpp"
 
-System::ParticleRenderSystem::ParticleRenderSystem()
+#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
+
+using namespace System;
+
+ParticleRenderSystem::ParticleRenderSystem()
 {
+    // Vertex buffer
+    glGenBuffers(1, &mVertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, mMaxParticleCount * sizeof(ParticleSystem::Particle), NULL, GL_DYNAMIC_DRAW);
+
+    // Define vertex data layout
+    glGenVertexArrays(1, &mVertexAttribute);
+    glBindVertexArray(mVertexAttribute);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(0));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 3));
+    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 5));
+    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 6));
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 7));
+
+    glBindVertexArray(0);
 }
 
 
-System::ParticleRenderSystem::~ParticleRenderSystem()
+ParticleRenderSystem::~ParticleRenderSystem()
 {
     glDeleteBuffers(1, &mVertexBuffer);
 }
 
-void System::ParticleRenderSystem::Render(const Scene & scene)
+void ParticleRenderSystem::Render(const Scene & scene)
 {
     // Don't write to depth buffer.
     GLboolean depthWriting;
@@ -25,7 +58,7 @@ void System::ParticleRenderSystem::Render(const Scene & scene)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-    mShaderProgram->Use();
+    //mShaderProgram->Use();
 
     glUniform1i(mShaderProgram->GetUniformLocation("baseImage"), 0);
 

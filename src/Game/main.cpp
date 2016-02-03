@@ -92,16 +92,14 @@ int main() {
 
     //Particle type.
     cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.texture = particleTexture;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMinLifetime = 6.f;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMaxLifetime = 10.f;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMinVelocity = glm::vec3(-0.025f, -0.01f, -0.025f);
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMaxVelocity = glm::vec3(0.025f, -0.1f, 0.025f);
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMinSize = glm::vec2(0.025f, 0.025f);
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mMaxSize = glm::vec2(0.05f, 0.05f);
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mUniformScaling = true;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.mColor = glm::vec3(.3f, .3f, 1.f);
-
-    particleSystem.AddParticleEmitter(cameraEntity->GetComponent<Component::ParticleEmitter>());
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime = 6.f;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime = 10.f;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(-0.025f, -0.01f, -0.025f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.025f, -0.1f, 0.025f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.minSize = glm::vec2(0.025f, 0.025f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.maxSize = glm::vec2(0.05f, 0.05f);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.uniformScaling = true;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(.3f, .3f, 1.f);
 
     cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 35.f, 35.f);
     cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 50.f, 0.f);
@@ -117,10 +115,7 @@ int main() {
         lastTime = glfwGetTime();
         
         // PhysicsSystem.
-        physicsSystem.Update(scene, deltaTime);
-
-        // Update ParticleSystem
-        particleSystem.Update(deltaTime, scene);
+        //physicsSystem.Update(scene, deltaTime);
 
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
@@ -132,8 +127,8 @@ int main() {
         window->Update();
 
         // Render particle system
-        particleSystem->Update(deltaTime, cameraEntity);
-        particleSystem->Render(cameraEntity, window->GetSize());
+        //particleSystem->Update(deltaTime, cameraEntity);
+        //particleSystem->Render(cameraEntity, window->GetSize());
         
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
 
@@ -159,7 +154,6 @@ int main() {
     Resources().FreeCube();
     
     delete window;
-    delete particleSystem;
     
     glfwTerminate();
     

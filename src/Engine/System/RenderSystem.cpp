@@ -81,4 +81,6 @@ void RenderSystem::Render(const Scene& scene) {
             }
         }
     }
+    // Render particle system
+    Particlerendersystem->render(this);
 }

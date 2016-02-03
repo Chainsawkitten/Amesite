@@ -50,7 +50,6 @@ class Scene {
     private:
         std::vector<Entity*> mEntityVec;
 
-        /// A list of all the particles in the scene 
         std::vector<System::ParticleSystem::Particle> mParticles;
 
         std::vector<Component::Lens*> mLensComponentVec;
