@@ -37,12 +37,12 @@ void RenderSystem::Render(Scene& scene) {
    
     Entity* camera = nullptr;
 
-	//Find last camera.
-	std::vector<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
-	for (unsigned int i = 0; i < lenses.size(); i++) {
-		if (lenses[i]->entity->GetComponent<Component::Transform>() != nullptr)
-			camera = lenses[i]->entity;
-	};
+    //Find last camera.
+    std::vector<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
+    for (unsigned int i = 0; i < lenses.size(); i++) {
+        if (lenses[i]->entity->GetComponent<Component::Transform>() != nullptr)
+            camera = lenses[i]->entity;
+    };
 
     // Render from camera.
     if (camera != nullptr) {
@@ -57,7 +57,7 @@ void RenderSystem::Render(Scene& scene) {
         std::vector<Component::Mesh*> meshes = scene.GetAll<Component::Mesh>();
         for (unsigned int i = 0; i < meshes.size(); i++) {
             if (meshes[i]->entity->GetComponent<Component::Transform>() != nullptr) {
-				Entity* model = meshes[i]->entity;
+                Entity* model = meshes[i]->entity;
                 glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
 
                 // Render model.

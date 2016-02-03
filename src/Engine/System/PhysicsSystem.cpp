@@ -15,7 +15,7 @@ PhysicsSystem::~PhysicsSystem() {
 }
 
 void PhysicsSystem::Update(Scene& scene, float deltaTime) {
-	std::vector<Component::Physics*> physicsObjects;
+    std::vector<Component::Physics*> physicsObjects;
     physicsObjects = scene.GetAll<Component::Physics>();
     for (unsigned int i = 0; i < physicsObjects.size(); i++) {
         Component::Physics* physicsComp = physicsObjects[i];

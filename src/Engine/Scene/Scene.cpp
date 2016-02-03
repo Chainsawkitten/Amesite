@@ -28,13 +28,13 @@ void Scene::AddComponentToList(Component::SuperComponent* component, const type_
 }
 
 void Scene::Clear() {
-	//TODO: CLEAR STUFF
+    //TODO: CLEAR STUFF
 }
 
 void Scene::UpdateModelMatrices() {
-	std::vector<Component::Transform*> transforms;
-	transforms = GetAll<Component::Transform>();
-	for (unsigned int i = 0; i < transforms.size(); i++)
-		transforms[i]->UpdateModelMatrix();
+    std::vector<Component::Transform*> transforms;
+    transforms = GetAll<Component::Transform>();
+    for (unsigned int i = 0; i < transforms.size(); i++)
+        transforms[i]->UpdateModelMatrix();
         
 }

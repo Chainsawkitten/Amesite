@@ -30,16 +30,16 @@ class Entity {
         /// Destructor.
         ~Entity();
 
-		///Adds component with type T
+        ///Adds component with type T
         template <typename T> T* AddComponent();
 
-		///Gets component with type T
+        ///Gets component with type T
         template <typename T> T* GetComponent();
 
-		///Unordered map containing components.
-		/**
-		 * Maps component type to component.
-		 */
+        ///Unordered map containing components.
+        /**
+         * Maps component type to component.
+         */
         std::unordered_map<const std::type_info*, Component::SuperComponent*> components;
 
     private:
@@ -49,21 +49,21 @@ class Entity {
          */
         Scene* mScene;
 
-		///Adds a component to this entity and to the scene.
-		/**
-		 * @param component The component that will be added.
-		 * @param componentType The type of the component.
-		 */
-		void AddComponent(Component::SuperComponent* component, const type_info* componentType);
+        ///Adds a component to this entity and to the scene.
+        /**
+         * @param component The component that will be added.
+         * @param componentType The type of the component.
+         */
+        void AddComponent(Component::SuperComponent* component, const type_info* componentType);
 };
 
 
 template <typename T> T* Entity::GetComponent() {
-	if (this->components.count(&typeid(T*)) != 0) {
-		return static_cast<T*>(this->components[&typeid(T*)]);
-	} else {
-		return nullptr;
-	}
+    if (this->components.count(&typeid(T*)) != 0) {
+        return static_cast<T*>(this->components[&typeid(T*)]);
+    } else {
+        return nullptr;
+    }
 }
 
 template <> inline Component::RelativeTransform* Entity::AddComponent<Component::RelativeTransform>() {
@@ -81,9 +81,9 @@ template <> inline Component::RelativeTransform* Entity::AddComponent<Component:
 }
 
 template <typename T> T* Entity::AddComponent() {
-	T* component = new T(this);
-	const type_info* componentType = &typeid(component);
-	AddComponent(component, componentType);
-	mScene->AddComponentToList(component, componentType);
-	return component;
+    T* component = new T(this);
+    const type_info* componentType = &typeid(component);
+    AddComponent(component, componentType);
+    mScene->AddComponentToList(component, componentType);
+    return component;
 }

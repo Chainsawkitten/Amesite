@@ -21,5 +21,5 @@ Entity::~Entity() {
 }
 
 void Entity::AddComponent(Component::SuperComponent* component, const type_info* componentType) {
-	this->components[componentType] = component;
+    this->components[componentType] = component;
 }

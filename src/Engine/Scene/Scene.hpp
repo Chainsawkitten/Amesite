@@ -14,7 +14,7 @@ namespace Component {
     class Lens;
     class Mesh;
     class RelativeTransform;
-	class SuperComponent;
+    class SuperComponent;
     class Physics;
 }
 
@@ -33,50 +33,50 @@ class Scene {
 
         /// Create new Entity in Scene.
         Entity* CreateEntity();
-		/// Clear Scene of all items.
+        /// Clear Scene of all items.
         void Clear();
 
-		///Adds component to map, used externally.
-		/**
-		 *@param component component that will be added to map.
-		 */
-		template <typename T> void AddComponentToList(T* component);
+        ///Adds component to map, used externally.
+        /**
+         *@param component component that will be added to map.
+         */
+        template <typename T> void AddComponentToList(T* component);
 
-		///Gets number of elements in maps or entity list.
-		template <typename T> unsigned int Size() const;
-		
-		/// Updates all model matrices in %Scene.
-		void UpdateModelMatrices();
+        ///Gets number of elements in maps or entity list.
+        template <typename T> unsigned int Size() const;
+        
+        /// Updates all model matrices in %Scene.
+        void UpdateModelMatrices();
 
-		///Gets all components of a specific type.
-		/**
-		 * @param returnVector Vector that will keep components.
-		 */
-		//template <typename T> void GetAll(std::vector<T*> &returnVector);
+        ///Gets all components of a specific type.
+        /**
+         * @param returnVector Vector that will keep components.
+         */
+        //template <typename T> void GetAll(std::vector<T*> &returnVector);
 
         ///Gets all components of a specific type, returns a vector.
         template <typename T> std::vector<T*> GetAll();
 
     private:
-		///Adds component to list internally.
-		/**
-		 * @param component The component that will be added.
-		 * @param componentType The type of the component.
-		 */
-		void AddComponentToList(Component::SuperComponent* component, const type_info* componentType);
+        ///Adds component to list internally.
+        /**
+         * @param component The component that will be added.
+         * @param componentType The type of the component.
+         */
+        void AddComponentToList(Component::SuperComponent* component, const type_info* componentType);
 
-		///List of all entities created in this scene.
+        ///List of all entities created in this scene.
         std::vector<Entity*> mEntityVector;
 
-		///multimap that maps component type to multiple components.
-		//std::multimap < const std::type_info*, Component::SuperComponent* > mComponents;
+        ///multimap that maps component type to multiple components.
+        //std::multimap < const std::type_info*, Component::SuperComponent* > mComponents;
         std::map<const std::type_info*, std::vector<Component::SuperComponent*> > mComponents;
 
 };
 
 template<typename T> void Scene::AddComponentToList(T* component){
-	const type_info* componentType = &typeid(component);
-	AddComponentToList(component, componentType);
+    const type_info* componentType = &typeid(component);
+    AddComponentToList(component, componentType);
     return;
 }
 
@@ -95,7 +95,7 @@ template <typename T> std::vector<T*> Scene::GetAll() {
 // Size<T>()
 //Special case for entity vector
 template<> inline unsigned int Scene::Size<Entity>() const {
-	return this->mEntityVector.size();
+    return this->mEntityVector.size();
 }
 
 //General case
