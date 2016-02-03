@@ -18,3 +18,10 @@ void RelativeTransform::UpdateModelMatrix() {
     else
         modelMatrix = glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
 }
+
+glm::vec3 RelativeTransform::GetWorldScale() const {
+    if (parentEntity != nullptr)
+        return parentEntity->GetComponent<Component::Transform>()->scale * scale;
+    else
+        return scale;
+}

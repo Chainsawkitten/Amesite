@@ -19,6 +19,8 @@ namespace Component {
 
             /// Update model matrix.
             void UpdateModelMatrix();
+
+            glm::vec3 GetWorldScale() const;
             
             /// Parent Entity.
             /**
