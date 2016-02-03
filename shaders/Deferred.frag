@@ -42,7 +42,10 @@ vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecu
 		float distanceToLight = length(light.position.xyz - position);
 		attenuation = 1.0 / (1.0 + light.attenuation * pow(distanceToLight, 2));
 		
-		// TODO: Spot light.
+		// Spot light.
+		float lightToSurfaceAngle = degrees(acos(dot(-surfaceToLight, normalize(light.direction))));
+		if (lightToSurfaceAngle > light.coneAngle)
+			attenuation = 0.0;
 	}
 	
 	// Ambient.
