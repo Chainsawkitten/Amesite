@@ -65,6 +65,12 @@ class ParticleSystem {
          * @param position Position to emit particle at.
          */
         void EmitParticle(glm::vec3 position);
+
+        /// Decide where the emitter should emit before rendering.
+        /**
+         * @param emitter for which to calculate emission
+         */
+        void EmitParticle(Component::ParticleEmitter* emitter);
         
         /// Update all the system's particles, spawn new particles etc.
         /**

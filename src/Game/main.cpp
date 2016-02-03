@@ -56,9 +56,6 @@ int main() {
     ParticleSystem* particleSystem;
     Texture2D* particleTexture;
 
-    // Particle texture.
-    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
-
     Caves::CaveSystem testCaveSystem(&scene);
     testCaveSystem.GenerateCaveSystem();
     
@@ -103,11 +100,14 @@ int main() {
     cameraEntity->GetComponent<Component::ParticleEmitter>()->origin = glm::vec3(0.f, 0.f, 0.f);
     cameraEntity->GetComponent<Component::ParticleEmitter>()->size = glm::vec3(40.f, 15.f, 40.f);
     cameraEntity->GetComponent<Component::ParticleEmitter>()->relative = true;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->follow = cameraEntity;
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->timeToNext = 5.0;
 
     cameraEntity->GetComponent<Component::Transform>()->Move(-5.0f, 12.5f, -5.0f);
     cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 90.f, 0.f);
 
-    Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
+    // Particle texture.
+    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
 
     //Particle type.
     ParticleType dustParticle;
@@ -121,11 +121,13 @@ int main() {
     dustParticle.mUniformScaling = true;
     dustParticle.mColor = glm::vec3(.3f, .3f, 1.f);
 
-    particleSystem = new ParticleSystem(dustParticle, 1000);
 
-    // Emitters.
+    particleSystem = new ParticleSystem(dustParticle, 1000);
     particleSystem->AddParticleEmitter(cameraEntity->GetComponent<Component::ParticleEmitter>());
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->Update(5.0, cameraEntity, particleSystem);
+    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleSystem = particleSystem;
+
+    // Test texture
+    Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
     // Main game loop.
     double lastTime = glfwGetTime();

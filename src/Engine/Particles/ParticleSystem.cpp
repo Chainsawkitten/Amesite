@@ -93,13 +93,34 @@ void ParticleSystem::Update(double time, Entity* follow) {
         }
     }
     
-    for (Component::ParticleEmitter* emitter : mEmitters)
-        emitter->Update(time, follow, this);
+    for (Component::ParticleEmitter* emitter : mEmitters) {
+        emitter->timeToNext -= time;
+        while (emitter->timeToNext < 0.0) {
+            emitter->timeToNext += emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+            EmitParticle(emitter);
+        }
+    }
     
     if (mParticleCount > 0) {
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         glBufferSubData(GL_ARRAY_BUFFER, 0, mParticleCount * sizeof(ParticleSystem::Particle), &this->mParticles[0]);
     }
+}
+
+void ParticleSystem::EmitParticle(Component::ParticleEmitter* emitter) {
+    glm::vec3 position;
+    if (emitter->emitterType == Component::ParticleEmitter::CUBOID) {
+        position.x = emitter->origin.x - emitter->size.x / 2.f + rand() / (RAND_MAX / emitter->size.x);
+        position.y = emitter->origin.y - emitter->size.y / 2.f + rand() / (RAND_MAX / emitter->size.y);
+        position.z = emitter->origin.z - emitter->size.z / 2.f + rand() / (RAND_MAX / emitter->size.z);
+    }
+    else if (emitter->emitterType == Component::ParticleEmitter::POINT) {
+        position = emitter->origin;
+    }
+    if (emitter->relative) {
+        position += emitter->follow->GetComponent<Component::Transform>()->position;
+    }
+    EmitParticle(position);
 }
 
 void ParticleSystem::Render(Entity* camera, const glm::vec2& screenSize) {
