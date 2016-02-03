@@ -124,10 +124,6 @@ int main() {
         // Update ParticleSystem
         particleSystem->Update(deltaTime, cameraEntity);
 
-        // Move collision cubes.
-        collisionCubeA->GetComponent<Component::Transform>()->position = cubeAOrigin + glm::vec3(glm::cos(rotation), 0.f, -glm::sin(rotation));
-        collisionCubeB->GetComponent<Component::Transform>()->position = cubeBOrigin + glm::vec3(glm::cos(rotation), 0.f, glm::sin(rotation));
-
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
 
@@ -161,9 +157,11 @@ int main() {
     }
     
     Resources().FreeTexture2DFromFile(testTexture);
+    Resources().FreeTexture2DFromFile(particleTexture);
     Resources().FreeCube();
     
     delete window;
+    delete particleSystem;
     
     glfwTerminate();
     
