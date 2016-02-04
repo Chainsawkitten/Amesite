@@ -22,10 +22,6 @@ namespace Caves {
             Entity* GenerateCaveSystem(Scene* scene);
 
             static const float mMap[25][25];
-            
-        private:
-            Scene* mScene;
-            
 
     };
 }

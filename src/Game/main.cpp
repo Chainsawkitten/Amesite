@@ -124,73 +124,10 @@ int main() {
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
-   
+    Log() << to_string(lastTimeRender);
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
-
-        //int xPos = (int)(cubeEntity->GetComponent<Component::Transform>()->position[0] / 5 + 25.f / 2.f + 0.5f);
-        //int zPos = (int)(cubeEntity->GetComponent<Component::Transform>()->position[2] / 5 + 25.f / 2.f + 0.25f);
-        /*
-        float caveCollide = *testCaveSystem.mMap[xPos, zPos];
-
-        if (testCaveSystem.mMap[xPos][zPos] == 1.f) {
-
-            cubeEntity->GetComponent<Component::Transform>()->position = glm::vec3(25, 0, 15);
-            cubeEntity->GetComponent<Component::Physics>()->velocity = glm::vec3(0, 0, 0);
-
-            Log() << "You died " << "\n";
-            testLog += "You died with a score of " + std::to_string(score) + "\n";
-
-            startTime = time(nullptr);
-            score = 0;
-
-            for (int i = 0; i < 25; i++) {
-                for (int j = 0; j < 25; j++) {
-                    if (testCaveSystem.mMap[i][j] == -2.f) {
-
-                        testCaveSystem.mMap[i][j] = -1;
-
-                    }
-                }
-            }
-
-        }
-        if (testCaveSystem.mMap[xPos][zPos] == -1.f) {
-
-            score++;
-            Log() << "score! " << "\n";
-            testCaveSystem.mMap[xPos][zPos] = -2;
-
-        }
-
-        if (score == 5) {
-
-            Log() << "You win! Your time was: " << (int)(time(nullptr) - startTime) << "\n";
-            testLog += "You win! Your time was: " + std::to_string((int)(time(nullptr) - startTime)) + "\n";
-
-            ofstream myfile;
-            const time_t now = time(nullptr);
-            string fileName(std::asctime(localtime(&now)));
-            fileName = fileName.substr(0, fileName.size() - 2);
-            fileName += ".txt";
-            fileName = space2underscore(fileName);
-
-            Log() << fileName << "\n";
-
-            myfile.open("../logs/Move_Tests/Session_" + std::to_string(session) + "_A-" + std::to_string(playerAcceleration).substr(0, 5) + "_S-" + std::to_string(playerMaxSpeed).substr(0,3) + "_D-" + std::to_string(playerDrag).substr(0,5) + "_" + fileName);
-            myfile << testLog;
-            myfile.close();
-
-            testLog = "Player acceleration: " + std::to_string(playerAcceleration) + "\n";
-            testLog += "Player max velocity: " + std::to_string(playerMaxSpeed) + "\n";
-            testLog += "Player drag: " + std::to_string(playerDrag) + "\n";
-            score = 0;
-            session++;
-
-        }
-
-        */
         
         // ControllerSystem
         controllerSystem.Update(scene, deltaTime);
