@@ -43,13 +43,6 @@ const float CaveSystem::mMap[25][25] = {
     { 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f }
 };
 
-CaveSystem::CaveSystem() {
-}
-
-CaveSystem::~CaveSystem() {
-    
-}
-
 Entity* CaveSystem::GenerateCaveSystem(Scene* scene) {
     Entity* map = scene->CreateEntity();
     map->AddComponent<Component::Transform>();

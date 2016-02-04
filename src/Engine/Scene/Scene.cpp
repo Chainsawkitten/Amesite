@@ -3,6 +3,7 @@
 #include "../Entity/Entity.hpp"
 
 Scene::Scene() {
+    mParticlesVector = new std::vector<System::ParticleSystem::Particle>;
 }
 
 Scene::~Scene() {
@@ -37,6 +38,7 @@ void Scene::ClearAll() {
         it.second.shrink_to_fit();
     }
     mComponents.clear();
+    delete mParticlesVector;
 }
 
 void Scene::UpdateModelMatrices() {

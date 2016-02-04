@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include <vector>
 #include <iterator>
+#include "../System/ParticleSystem.hpp"
 
 class Entity;
 
@@ -43,7 +44,7 @@ class Scene {
         /**
          * @return A vector of pointers to all components of the specified scene.
          */
-        template <typename T> std::vector<T*> GetAll();
+        template <typename T> std::vector<T*>& GetAll();
 
         /// Gets all item of a specific type.
         /**
@@ -51,18 +52,25 @@ class Scene {
          */
         template <typename T> std::vector<T*>* GetVector() { return nullptr; };
 
+        /// Gets all item of a specific type.
+        /**
+        * @return A pointer to a vector of pointers to all items of the specified scene.
+        */
+        template <typename T> std::vector<T>* GetVectorContents();
+
         /// Contains data about which entities in the scene this entity intersects with.
         struct Collision {
             Entity* entity = nullptr;
             std::vector<Entity*> intersect;
         };
-
     private:
         // Adds component to list internally.
         void AddComponentToList(Component::SuperComponent* component, const std::type_info* componentType);
 
         // List of all entities created in this scene.
         std::vector<Entity*> mEntityVector;
+        
+        std::vector<System::ParticleSystem::Particle>* mParticlesVector;
 
         // Map containing vectors of components.
         std::map<const std::type_info*, std::vector<Component::SuperComponent*>> mComponents;
@@ -78,15 +86,8 @@ template<typename T> void Scene::AddComponentToList(T* component) {
 }
 
 // GetAll<T>
-template <typename T> std::vector<T*> Scene::GetAll() {
-    auto found = mComponents.find(&typeid(T*));
-    std::vector<T*> returnVector;
-    if (found == mComponents.end())
-        return returnVector;
-    returnVector.reserve(found->second.size());
-    for (unsigned int i = 0; i < found->second.size(); ++i)
-        returnVector.push_back(static_cast<T*>(found->second[i]));
-    return returnVector;
+template <typename T> inline std::vector<T*>& Scene::GetAll() {
+    return reinterpret_cast<std::vector<T*>&>(mComponents[&typeid(T*)]);
 }
 
 template<> inline std::vector<Entity*>* Scene::GetVector() {
@@ -95,4 +96,8 @@ template<> inline std::vector<Entity*>* Scene::GetVector() {
 
 template<> inline std::vector<Scene::Collision*>* Scene::GetVector() {
     return &mCollisionVector;
+}
+
+template<> inline std::vector<System::ParticleSystem::Particle>* Scene::GetVectorContents() {
+    return mParticlesVector;
 }
