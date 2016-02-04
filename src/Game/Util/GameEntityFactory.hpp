@@ -26,7 +26,7 @@ class GameEntityFactory {
          * @param origin The enemy's starting position
          * @return The enemy entity.
          */
-        Entity* CreateBasicEnemy(glm::vec3 origin);
+        Entity* CreateBasicEnemy(const glm::vec3& origin);
        
         /// Create a player.
         /**
@@ -34,14 +34,14 @@ class GameEntityFactory {
          * @param player Who controls the player.
          * @return The player entity.
          */
-        Entity* CreatePlayer(glm::vec3 origin, InputHandler::Player player);
+        Entity* CreatePlayer(const glm::vec3& origin, InputHandler::Player player);
 
 		/// Create a cube for testing purposes.
         /**
          * @param origin The cube's starting position
          * @return The cube entity.
          */
-		Entity* CreateCube(glm::vec3 origin);
+		Entity* CreateCube(const glm::vec3& origin);
         
         /// Create a bullet.
         /**
@@ -49,7 +49,7 @@ class GameEntityFactory {
          * @param direction The direction the bullet is traveling in.
          * @return The bullet entity.
          */
-        Entity* CreateBullet(glm::vec3 position, glm::vec3 direction);
+        Entity* CreateBullet(const glm::vec3& position, const glm::vec3& direction);
 
         /// Create a camera.
         /**
@@ -57,7 +57,7 @@ class GameEntityFactory {
          * @param rotation The camera's starting orientation.
          * @return The camera entity.
          */
-        Entity* CreateCamera(glm::vec3 origin, glm::vec3 rotation);
+        Entity* CreateCamera(const glm::vec3& origin, const glm::vec3& rotation);
 
         /// Sets scene that the factory is coupled to.
         /**

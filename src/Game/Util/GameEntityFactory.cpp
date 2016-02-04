@@ -30,7 +30,7 @@ GameEntityFactory::GameEntityFactory(){
     mScene = nullptr;
 }
 
-Entity* GameEntityFactory::CreateBasicEnemy( glm::vec3 origin ) {
+Entity* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
     Entity* enemyEntity = mScene->CreateEntity();
     enemyEntity->AddComponent<Component::Mesh>();
     enemyEntity->AddComponent<Component::Transform>();
@@ -43,7 +43,7 @@ Entity* GameEntityFactory::CreateBasicEnemy( glm::vec3 origin ) {
     return enemyEntity;
 }
 
-Entity* GameEntityFactory::CreatePlayer(glm::vec3 origin, InputHandler::Player player) {
+Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::Player player) {
     
     Entity* playerEntity = mScene->CreateEntity();
     playerEntity->AddComponent<Component::Mesh>();
@@ -64,7 +64,7 @@ Entity* GameEntityFactory::CreatePlayer(glm::vec3 origin, InputHandler::Player p
     return playerEntity;
 }
 
-Entity* GameEntityFactory::CreateCube( glm::vec3 origin ) {
+Entity* GameEntityFactory::CreateCube(const glm::vec3& origin) {
 	Entity* cubeEntity = mScene->CreateEntity();
 	cubeEntity->AddComponent<Component::Mesh>();
 	cubeEntity->AddComponent<Component::Transform>();
@@ -75,7 +75,7 @@ Entity* GameEntityFactory::CreateCube( glm::vec3 origin ) {
 	return cubeEntity;
 }
 
-Entity* GameEntityFactory::CreateBullet(glm::vec3 position, glm::vec3 direction) {
+Entity* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::vec3& direction) {
     Entity* bullet = mScene->CreateEntity();
     Component::Transform* transform = bullet->AddComponent<Component::Transform>();
     transform->position = position;
@@ -89,18 +89,18 @@ Entity* GameEntityFactory::CreateBullet(glm::vec3 position, glm::vec3 direction)
     return bullet;
 }
 
-Entity* GameEntityFactory::CreateCamera( glm::vec3 origin, glm::vec3 rotation ) {
+Entity* GameEntityFactory::CreateCamera(const glm::vec3& origin, const glm::vec3& rotation) {
     Entity* cameraEntity = mScene->CreateEntity();
     cameraEntity->AddComponent<Component::Transform>();
     cameraEntity->AddComponent<Component::Lens>();
 
     cameraEntity->GetComponent<Component::Transform>()->position = origin;
-    cameraEntity->GetComponent<Component::Transform>()->Rotate( rotation.x, rotation.y, rotation.z );
+    cameraEntity->GetComponent<Component::Transform>()->Rotate(rotation.x, rotation.y, rotation.z);
 
     return cameraEntity;
 }
 
-void GameEntityFactory::SetScene( Scene* scene ) {
+void GameEntityFactory::SetScene(Scene* scene) {
     mScene = scene;
 }
 
