@@ -1,13 +1,8 @@
 #include "DamageSystem.hpp"
-
 #include <Engine/Scene/Scene.hpp>
-
 #include <Entity/Entity.hpp>
-
 #include "../Component/Health.hpp"
-
 #include "../Component/Damage.hpp"
-
 #include <vector>
 
 using namespace System;
