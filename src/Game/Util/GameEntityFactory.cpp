@@ -106,7 +106,7 @@ void GameEntityFactory::CreateCuboidParticle(Entity * camera, Texture2D* particl
     emitter->size = glm::vec3(40.f, 15.f, 40.f);
     emitter->relative = true;
     emitter->follow = camera;
-    emitter->timeToNext = 5.0;
+    emitter->timeToNext = 0.5;
 
     //Particle type.
     emitter->particleType.texture = particleTexture;
