@@ -52,6 +52,12 @@ class Scene {
          */
         template <typename T> std::vector<T*>* GetVector() { return nullptr; };
 
+        /// Gets all item of a specific type.
+        /**
+        * @return A pointer to a vector of pointers to all items of the specified scene.
+        */
+        template <typename T> std::vector<T>* GetVectorContents();
+
         /// Contains data about which entities in the scene this entity intersects with.
         struct Collision {
             Entity* entity = nullptr;
@@ -64,7 +70,7 @@ class Scene {
         // List of all entities created in this scene.
         std::vector<Entity*> mEntityVector;
         
-        std::vector<System::ParticleSystem::Particle*> mParticlesVector;
+        std::vector<System::ParticleSystem::Particle>* mParticlesVector;
 
         // Map containing vectors of components.
         std::map<const std::type_info*, std::vector<Component::SuperComponent*>> mComponents;
@@ -92,6 +98,6 @@ template<> inline std::vector<Scene::Collision*>* Scene::GetVector() {
     return &mCollisionVector;
 }
 
-template<> inline std::vector<System::ParticleSystem::Particle*>* Scene::GetVector() {
-    return &mParticlesVector;
+template<> inline std::vector<System::ParticleSystem::Particle>* Scene::GetVectorContents() {
+    return mParticlesVector;
 }

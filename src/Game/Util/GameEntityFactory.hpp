@@ -6,6 +6,7 @@
 
 class Scene;
 class Entity;
+class Texture2D;
 
 class GameEntityFactory {
     public:
@@ -54,7 +55,7 @@ class GameEntityFactory {
         void SetScene(Scene* scene);
 
         /// Creates a cuboid dust particle system.
-        void CreateCuboidParticle(Entity* camera);
+        void CreateCuboidParticle(Entity* camera, Texture2D* particleTexture);
 
          /// Create a map.
         Entity* CreateMap();

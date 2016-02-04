@@ -87,7 +87,7 @@ void GameEntityFactory::SetScene( Scene* scene ) {
     mScene = scene;
 }
 
-void GameEntityFactory::CreateCuboidParticle(Entity * camera)
+void GameEntityFactory::CreateCuboidParticle(Entity * camera, Texture2D* particleTexture)
 {
     camera->AddComponent<Component::ParticleEmitter>();
 
@@ -105,10 +105,6 @@ void GameEntityFactory::CreateCuboidParticle(Entity * camera)
     emitter->relative = true;
     emitter->follow = camera;
     emitter->timeToNext = 5.0;
-
-    // Particle texture.
-    Texture2D* particleTexture;
-    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
 
     //Particle type.
     emitter->particleType.texture = particleTexture;

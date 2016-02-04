@@ -19,6 +19,7 @@
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
 #include <System/ParticleSystem.hpp>
+#include <System/ParticleRenderSystem.hpp>
 
 #include "../Game/System/ControllerSystem.hpp"
 
@@ -64,6 +65,15 @@ int main() {
     glewInit();
     window->Init();
 
+    // Particle System.
+    System::ParticleSystem* particleSystem;
+    particleSystem = new System::ParticleSystem;
+    particleSystem->SetActive();
+
+    // Particle texture.
+    Texture2D* particleTexture;
+    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
+
     // RenderSystem.
     System::RenderSystem renderSystem;
 
@@ -86,12 +96,6 @@ int main() {
     Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_TWO);
     Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_TWO);
 
-    // Particle System
-    System::ParticleSystem* particleSystem;
-    particleSystem = new System::ParticleSystem;
-    particleSystem->SetActive();
-    
-
     GameEntityCreator().SetScene(&scene);
 
     int score = 0;
@@ -107,7 +111,7 @@ int main() {
     Entity* theMap = GameEntityCreator().CreateMap();
 
     // Create dust particles
-    GameEntityCreator().CreateCuboidParticle(mainCamera);
+    GameEntityCreator().CreateCuboidParticle(mainCamera, particleTexture);
 
     // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
@@ -147,6 +151,9 @@ int main() {
         // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
 
+        // ParticleSystem
+        particleSystem->Update(scene, deltaTime);
+
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
 
@@ -158,10 +165,6 @@ int main() {
 
         // Input testing.
         window->Update();
-
-        // Render particle system
-        //particleSystem->Update(deltaTime, cameraEntity);
-        //particleSystem->Render(cameraEntity, window->GetSize());
         
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f));
 
@@ -183,7 +186,7 @@ int main() {
     }
     
     Resources().FreeTexture2DFromFile(testTexture);
-    //Resources().FreeTexture2DFromFile(particleTexture);
+    Resources().FreeTexture2DFromFile(particleTexture);
     Resources().FreeCube();
     Resources().FreeCube();
     

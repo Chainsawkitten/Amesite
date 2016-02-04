@@ -68,7 +68,9 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera)
 	if (Particle()->ParticleCount() > 0) {
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 		// Return vector by value or no?
-		glBufferSubData(GL_ARRAY_BUFFER, 0, Particle()->ParticleCount() *sizeof(ParticleSystem::Particle), scene.GetVector<ParticleSystem::Particle>());
+        std::vector<ParticleSystem::Particle>* particles = scene.GetVectorContents<ParticleSystem::Particle>();
+
+		glBufferSubData(GL_ARRAY_BUFFER, 0, Particle()->ParticleCount() *sizeof(ParticleSystem::Particle), particles->data());
 	}
 
     // Don't write to depth buffer.

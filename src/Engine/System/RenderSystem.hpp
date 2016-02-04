@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ParticleRenderSystem.hpp"
+
 class Entity;
 class Scene;
 class Shader;
@@ -28,5 +30,9 @@ namespace System {
             ShaderProgram* mShaderProgram;
 
             DeferredLighting* mDeferredLighting;
+
+
+            // Particle Render system.
+            ParticleRenderSystem particleRenderSystem;
     };
 }
