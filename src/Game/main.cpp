@@ -7,14 +7,20 @@
 
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
-//#include "CaveSystem/CaveSystem.hpp"
+#include "CaveSystem/CaveSystem.hpp"
+#include "../Game/Component/Controller.hpp"
+
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
+
+//#include <crtdbg.h>
 
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
 #include <System/ParticleSystem.hpp>
+
+#include "../Game/System/ControllerSystem.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -25,6 +31,8 @@
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
 #include <Component/RelativeTransform.hpp>
+#include <Component/DirectionalLight.hpp>
+#include <Component/SpotLight.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include <Component/ParticleEmitter.hpp>
@@ -33,34 +41,50 @@
 #include <Texture/Texture2D.hpp>
 
 #include <thread>
+#include <fstream>
 
 using namespace std;
 
+std::string space2underscore(std::string text);
+
 int main() {
+
+    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
     // Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
         freopen(FileSystem::SavePath("Modership", "GameLog.txt").c_str(), "a", stderr);
-    
+
     Log() << "Game started - " << time(nullptr) << "\n";
-    
+
     if (!glfwInit())
         return 1;
-    
+
     MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Modership", GameSettings::GetInstance().GetBool("Debug Context"));
     glewInit();
     window->Init();
-    
+
     // RenderSystem.
     System::RenderSystem renderSystem;
+
+    // Scene and Entites. 
+    Scene scene;
 
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;
 
-    // CollisionSystem.
-    System::CollisionSystem collisionSystem;
+    // ControllerSystem
+    System::ControllerSystem controllerSystem;
 
-    // Scene and Entites. 
-    Scene scene;
+    Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_ONE);
+    Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_ONE);
+    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_ONE);
+    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_ONE);
+
+    Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_TWO);
+    Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_TWO);
+    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_TWO);
+    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_TWO);
 
     // Particle System
     /*System::ParticleSystem particleSystem;
@@ -98,21 +122,52 @@ int main() {
     
     GameEntityCreator().SetScene(&scene);
 
-    Entity* entity = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    entity = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
-    Caves::CaveSystem* theMap = GameEntityCreator().CreateMap();
+    int score = 0;
+    time_t startTime = time(nullptr);
+    int session = 0;
+
+    // CollisionSystem.
+    System::CollisionSystem collisionSystem;
+
+    Entity* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
+    Entity* player = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    Entity* theMap = GameEntityCreator().CreateMap();
 
     // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
+    // Directional light.
+    Entity* dirLight = scene.CreateEntity();
+    Component::Transform* transform = dirLight->AddComponent<Component::Transform>();
+    transform->pitch = 90.f;
+    Component::DirectionalLight* dLight = dirLight->AddComponent<Component::DirectionalLight>();
+    dLight->color = glm::vec3(0.1f, 0.1f, 0.1f);
+    dLight->ambientCoefficient = 0.2f;
+    
+    // Spot light.
+    Entity* spotLight = scene.CreateEntity();
+    transform = spotLight->AddComponent<Component::Transform>();
+    transform->position = glm::vec3(0.f, 1.f, 0.f);
+    transform->yaw = 90.f;
+    Component::SpotLight* sLight = spotLight->AddComponent<Component::SpotLight>();
+    sLight->color = glm::vec3(1.f, 1.f, 1.f);
+    sLight->attenuation = 0.1f;
+    sLight->coneAngle = 30.f;
+
+    spotLight->AddComponent<Component::Physics>();
+    spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
+    
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
-    float rotation = 0;
-   
+    Log() << to_string(lastTimeRender);
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
+        
+        // ControllerSystem
+        controllerSystem.Update(scene, deltaTime);
 
         // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
@@ -120,7 +175,7 @@ int main() {
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
 
-        // Check collisions
+        // Check collisions.
         collisionSystem.Update(scene);
 
         // Render.
@@ -155,6 +210,7 @@ int main() {
     Resources().FreeTexture2DFromFile(testTexture);
     //Resources().FreeTexture2DFromFile(particleTexture);
     Resources().FreeCube();
+    Resources().FreeCube();
     
     delete window;
     
@@ -164,4 +220,17 @@ int main() {
     
     Log() << "Game ended - " << time(nullptr) << "\n";
     return 0;
+
+}
+
+std::string space2underscore(std::string text) {
+    for (std::string::iterator it = text.begin(); it != text.end(); ++it) {
+        if (*it == ' ') {
+            *it = '_';
+        }
+        else if (*it == ':') {
+            *it = '-';
+        }
+    }
+    return text;
 }

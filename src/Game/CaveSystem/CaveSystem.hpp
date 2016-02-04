@@ -13,17 +13,15 @@ namespace Caves {
             /**
              * @param scene Pointer to the active scene.
              */
-            CaveSystem(Scene* scene);
+            CaveSystem();
             
             /// Destructor.
             ~CaveSystem();
 
             /// Creates a cave system from map out of cubes.
-            Entity* GenerateCaveSystem();
-            
-        private:
-            Scene* mScene;
-            
+            Entity* GenerateCaveSystem(Scene* scene);
+
             static const float mMap[25][25];
+
     };
 }

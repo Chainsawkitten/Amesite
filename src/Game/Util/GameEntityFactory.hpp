@@ -2,13 +2,10 @@
 
 #include <glm\glm.hpp>
 
+#include <Util\Input.hpp>
+
 class Scene;
 class Entity;
-
-namespace Caves{
-    class CaveSystem;
-}
-
 
 class GameEntityFactory {
     public:
@@ -20,12 +17,6 @@ class GameEntityFactory {
         
         /// Default constructor
         GameEntityFactory();
-
-        /// Constructor
-        /**
-         *@param scene The scene that the factory will be coupled to.
-         */
-        GameEntityFactory(Scene* scene);
         
         /// Destructor.
         ~GameEntityFactory();
@@ -35,11 +26,18 @@ class GameEntityFactory {
          *@param origin The enemy's starting position
          */
         Entity* CreateBasicEnemy(glm::vec3 origin);
+       
+        /// Create a player.
+        /**
+         *@param origin The player's starting position
+         *@param Who controls the player
+         */
+        Entity* GameEntityFactory::CreatePlayer(glm::vec3 origin, InputHandler::Player player);
 
 		/// Create a cube for testing purposes.
         /**
-        *@param origin The cube's starting position
-        */
+         *@param origin The cube's starting position
+         */
 		Entity* CreateCube(glm::vec3 origin);
 
         /// Create a camera.
@@ -55,7 +53,8 @@ class GameEntityFactory {
          */
         void SetScene(Scene* scene);
 
-        Caves::CaveSystem* CreateMap();
+         /// Create a map.
+        Entity* CreateMap();
 
     private:
         Scene* mScene;

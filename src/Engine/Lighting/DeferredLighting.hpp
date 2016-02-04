@@ -6,6 +6,7 @@
 namespace Geometry {
     class Square;
 }
+class Scene;
 class Entity;
 class Shader;
 class ShaderProgram;
@@ -50,18 +51,18 @@ class DeferredLighting {
         
         /// Render the lighting in the scene.
 		/**
+         * @param scene Scene to get the lights from.
 		 * @param camera Camera to use.
 		 * @param screenSize Size of the screen in pixels.
 		 * @param scale Scaling to apply to texture coordinates.
 		 */
-		void Render(Entity* camera, const glm::vec2& screenSize, float scale = 1.f);
+		void Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, float scale = 1.f);
         
 	private:
         static void AttachTexture(GLuint texture, unsigned int width, unsigned int height, GLenum attachment, GLint internalFormat);
         void BindForReading();
         void BindForTexReading();
         void SetReadBuffer(TEXTURE_TYPE textureType);
-        void BindLighting(Entity* camera, const glm::vec2& screenSize, float scale);
         
 		GLuint mTextures[NUM_TEXTURES];
         

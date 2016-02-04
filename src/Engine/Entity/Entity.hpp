@@ -6,20 +6,6 @@
 #include "../Component/RelativeTransform.hpp"
 #include "../Scene/Scene.hpp"
 
-namespace Component {
-    class Transform;
-    class Lens;
-    class Mesh;
-    class RelativeTransform;
-    class Physics;
-    //class Collider2DRectangle;
-    class Collider2DCircle;
-    class ParticleEmitter;
-    class SuperComponent;
-}
-
-class Scene;
-
 class Entity {
     public:
         /// Create new Entity.

@@ -2,16 +2,7 @@
 
 #include "../Entity/Entity.hpp"
 
-#include "../Component/Transform.hpp"
-#include "../Component/Lens.hpp"
-#include "../Component/Mesh.hpp"
-#include "../Component/RelativeTransform.hpp"
-#include "../Component/SuperComponent.hpp"
-#include "../Component/Physics.hpp"
-#include "../Component/ParticleEmitter.hpp"
-
 Scene::Scene() {
-
 }
 
 Scene::~Scene() {
@@ -29,22 +20,19 @@ void Scene::AddComponentToList(Component::SuperComponent* component, const std::
 }
 
 void Scene::ClearAll() {
-    for (Entity* entity : mEntityVector) {
+    for (Entity* entity : mEntityVector)
         delete entity;
-    }
     mEntityVector.clear();
     mEntityVector.shrink_to_fit();
 
-    for (Collision* collision : mCollisionVector) {
+    for (Collision* collision : mCollisionVector)
         delete collision;
-    }
     mCollisionVector.clear();
     mCollisionVector.shrink_to_fit();
 
     for (auto it : mComponents) {
-        for (Component::SuperComponent* component : it.second) {
+        for (Component::SuperComponent* component : it.second)
             delete component;
-        }
         it.second.clear();
         it.second.shrink_to_fit();
     }

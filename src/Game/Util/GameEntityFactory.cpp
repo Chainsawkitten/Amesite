@@ -7,11 +7,14 @@
 #include <Component/RelativeTransform.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include <Component/Collider2DRectangle.hpp>
+#include <Component/Physics.hpp>
+
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
 #include "../CaveSystem/CaveSystem.hpp"
 
 #include <Scene/Scene.hpp>
+#include "../Component/Controller.hpp"
 
 GameEntityFactory& GameEntityFactory::GetInstance() {
     static GameEntityFactory instance;
@@ -21,10 +24,6 @@ GameEntityFactory& GameEntityFactory::GetInstance() {
 
 GameEntityFactory::GameEntityFactory(){
     mScene = nullptr;
-}
-
-GameEntityFactory::GameEntityFactory( Scene* scene ) {
-    mScene = scene;
 }
 
 Entity* GameEntityFactory::CreateBasicEnemy( glm::vec3 origin ) {
@@ -38,6 +37,25 @@ Entity* GameEntityFactory::CreateBasicEnemy( glm::vec3 origin ) {
     enemyEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
 
     return enemyEntity;
+}
+
+Entity* GameEntityFactory::CreatePlayer(glm::vec3 origin, InputHandler::Player player) {
+    
+    Entity* playerEntity = mScene->CreateEntity();
+    playerEntity->AddComponent<Component::Mesh>();
+    playerEntity->AddComponent<Component::Transform>();
+    playerEntity->AddComponent<Component::Collider2DCircle>();
+    playerEntity->AddComponent<Component::Physics>();
+    playerEntity->AddComponent<Component::Controller>();
+
+    playerEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    playerEntity->GetComponent<Component::Transform>()->position = origin;
+    playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
+    playerEntity->GetComponent<Component::Controller>()->playerID = player;
+
+    //playerEntity->AddComponent<Component::Player>();
+
+    return playerEntity;
 }
 
 Entity* GameEntityFactory::CreateCube( glm::vec3 origin ) {
@@ -66,10 +84,9 @@ void GameEntityFactory::SetScene( Scene* scene ) {
     mScene = scene;
 }
 
-Caves::CaveSystem * GameEntityFactory::CreateMap() {
-    Caves::CaveSystem* theMap = new Caves::CaveSystem( mScene );
-    theMap->GenerateCaveSystem();
-    return theMap;
+Entity* GameEntityFactory::CreateMap() {
+    Caves::CaveSystem cave = Caves::CaveSystem();
+    return cave.GenerateCaveSystem(mScene);
 }
 
 GameEntityFactory::~GameEntityFactory() {

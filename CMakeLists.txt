@@ -142,6 +142,9 @@ set(ENGINE_SRCS
         src/Engine/Component/Collider2DRectangle.cpp
         src/Engine/Component/Collider2DCircle.cpp
         src/Engine/Component/ParticleEmitter.cpp
+        src/Engine/Component/DirectionalLight.cpp
+        src/Engine/Component/PointLight.cpp
+        src/Engine/Component/SpotLight.cpp
         src/Engine/Entity/Entity.cpp
         src/Engine/Scene/Scene.cpp
         src/Engine/System/RenderSystem.cpp
@@ -183,6 +186,9 @@ set(ENGINE_HEADERS
         src/Engine/Component/Collider2DRectangle.hpp
         src/Engine/Component/Collider2DCircle.hpp
         src/Engine/Component/ParticleEmitter.hpp
+        src/Engine/Component/DirectionalLight.hpp
+        src/Engine/Component/PointLight.hpp
+        src/Engine/Component/SpotLight.hpp
         src/Engine/Entity/Entity.hpp
         src/Engine/Scene/Scene.hpp
         src/Engine/System/RenderSystem.hpp
@@ -206,12 +212,16 @@ set(GAME_SRCS
         src/Game/Util/GameSettings.cpp
         src/Game/CaveSystem/CaveSystem.cpp
         src/Game/Util/GameEntityFactory.cpp
+        src/Game/System/ControllerSystem.cpp
+        src/Game/Component/Controller.cpp
     )
 
 set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
         src/Game/CaveSystem/CaveSystem.hpp
         src/Game/Util/GameEntityFactory.hpp
+        src/Game/System/ControllerSystem.hpp
+        src/Game/Component/Controller.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

@@ -4,7 +4,7 @@
 #include "../Scene/Scene.hpp"
 
 #include "../Component/Collider2DCircle.hpp"
-#include "../Component/Collider2DRectangle.hpp"
+//#include "../Component/Collider2DRectangle.hpp"
 #include "../Component/Transform.hpp"
 
 #include <glm/glm.hpp>
@@ -117,16 +117,17 @@ void CollisionSystem::Update(Scene& scene) {
     //    }
     //}
 
+    //TODO SWEEP AND PRUNE
+
     // Circle vs Circle
     std::vector<Component::Collider2DCircle*> collider2DCircle = scene.GetAll<Component::Collider2DCircle>();
     for (unsigned int x = 0; x < collider2DCircle.size(); x++) {
         Collider2DCircle* colliderX = collider2DCircle.at(x);
         Scene::Collision* collisionX = nullptr;
         // check if collisionX is in mCollisonVec
-        for (unsigned int i = 0; i < collisionVector->size() && collisionX == nullptr; i++) {
+        for (unsigned int i = 0; i < collisionVector->size() && collisionX == nullptr; i++)
             if (collisionVector->at(i)->entity == colliderX->entity)
                 collisionX = collisionVector->at(i);
-        }
 
         for (unsigned int y = x + 1; y < collider2DCircle.size(); y++) {
             Collider2DCircle* colliderY = collider2DCircle.at(y);
@@ -140,10 +141,9 @@ void CollisionSystem::Update(Scene& scene) {
 
                 // check if collisionY is in mCollisonVec
                 Scene::Collision* collisionY = nullptr;
-                for (unsigned int i = 0; i < collisionVector->size() && collisionY == nullptr; i++) {
+                for (unsigned int i = 0; i < collisionVector->size() && collisionY == nullptr; i++)
                     if (collisionVector->at(i)->entity == colliderY->entity)
                         collisionY = collisionVector->at(i);
-                }
 
                 // if collisionY isn't in vector;
                 if (collisionY == nullptr) {
