@@ -61,6 +61,7 @@ Entity* CaveSystem::GenerateCaveSystem(Scene* scene) {
                 //wall->AddComponent<Component::Collider2DCircle>()->radius = 1;
                 wall->GetComponent<Component::Mesh>()->geometry = cube;
                 wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j), 0.f, -float(i)) + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
+                wall->GetComponent<Component::Transform>()->pitch = 45;
             }
             if (mMap[i][j] == -1.f) {
 

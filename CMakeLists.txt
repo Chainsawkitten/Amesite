@@ -213,7 +213,9 @@ set(GAME_SRCS
         src/Game/CaveSystem/CaveSystem.cpp
         src/Game/Util/GameEntityFactory.cpp
         src/Game/System/ControllerSystem.cpp
+        src/Game/Util/CameraUpdate.cpp
         src/Game/Component/Controller.cpp
+        src/Game/Util/ControlSchemes.cpp
     )
 
 set(GAME_HEADERS
@@ -221,7 +223,9 @@ set(GAME_HEADERS
         src/Game/CaveSystem/CaveSystem.hpp
         src/Game/Util/GameEntityFactory.hpp
         src/Game/System/ControllerSystem.hpp
+        src/Game/Util/CameraUpdate.hpp
         src/Game/Component/Controller.hpp
+        src/Game/Util/ControlSchemes.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
