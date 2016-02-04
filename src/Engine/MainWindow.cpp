@@ -1,5 +1,6 @@
 #include "Util/Log.hpp"
 #include "MainWindow.hpp"
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 MainWindow* MainWindow::mInstance = nullptr;

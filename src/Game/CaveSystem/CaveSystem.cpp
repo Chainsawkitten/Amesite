@@ -69,6 +69,16 @@ Entity* CaveSystem::GenerateCaveSystem(Scene* scene) {
                 wall->GetComponent<Component::Mesh>()->geometry = cube;
                 wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j), 0.f, -float(i)) + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
             }
+            if (mMap[i][j] == -1.f) {
+
+                Entity* wall = scene->CreateEntity();
+                wall->AddComponent<Component::RelativeTransform>()->parentEntity = map;
+                wall->AddComponent<Component::Mesh>();
+                wall->GetComponent<Component::Mesh>()->geometry = cube;
+                wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j), 0.f, -float(i)) + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
+                wall->GetComponent<Component::Transform>()->scale = glm::vec3(0.2f, 0.2f, 0.2f);
+
+            }
         }
     }
     return map;
