@@ -34,7 +34,7 @@ void ControllerSystem::Update(Scene& scene, float deltaTime) {
         float x = Input()->ButtonValue(Input()->MOVE_X, controllerObjects[i]->playerID);
         float z = Input()->ButtonValue(Input()->MOVE_Z, controllerObjects[i]->playerID);
 
-        glm::vec3 speedVec = glm::vec3(x * deltaTime, 0, z * deltaTime);
+        glm::vec3 speedVec = glm::vec3(x * 6000 * deltaTime, 0, z * 6000 * deltaTime);
 
         Component::Physics* physicsComponent = controllerObjects[i]->entity->GetComponent<Component::Physics>();
 

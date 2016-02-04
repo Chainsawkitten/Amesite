@@ -8,6 +8,7 @@
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
 #include "CaveSystem/CaveSystem.hpp"
+#include "../Game/Component/Controller.hpp"
 
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
@@ -120,6 +121,9 @@ int main() {
     sLight->color = glm::vec3(1.f, 1.f, 1.f);
     sLight->attenuation = 0.1f;
     sLight->coneAngle = 30.f;
+
+    spotLight->AddComponent<Component::Physics>();
+    spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     
     // Main game loop.
     double lastTime = glfwGetTime();
