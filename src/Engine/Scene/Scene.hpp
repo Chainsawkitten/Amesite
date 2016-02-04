@@ -43,7 +43,7 @@ class Scene {
         /**
          * @return A vector of pointers to all components of the specified scene.
          */
-        template <typename T> std::vector<T*> GetAll();
+        template <typename T> std::vector<T*>& GetAll();
 
         /// Gets all item of a specific type.
         /**
@@ -84,15 +84,12 @@ template<typename T> void Scene::AddComponentToList(T* component) {
 }
 
 // GetAll<T>
-template <typename T> std::vector<T*> Scene::GetAll() {
+template <typename T> inline std::vector<T*>& Scene::GetAll() {
     auto found = mComponents.find(&typeid(T*));
     std::vector<T*> returnVector;
     if (found == mComponents.end())
         return returnVector;
-    returnVector.reserve(found->second.size());
-    for (unsigned int i = 0; i < found->second.size(); ++i)
-        returnVector.push_back(static_cast<T*>(found->second[i]));
-    return returnVector;
+    return reinterpret_cast<std::vector<T*>&>(found->second);
 }
 
 template<> inline std::vector<Entity*>* Scene::GetVector() {

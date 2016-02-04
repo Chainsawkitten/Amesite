@@ -20,8 +20,8 @@ namespace Caves {
 
             /// Creates a cave system from map out of cubes.
             Entity* GenerateCaveSystem(Scene* scene);
-            
-        private:
+
             static const float mMap[25][25];
+
     };
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <string>
 #include <vector>
@@ -42,7 +43,8 @@ class InputHandler {
         enum Button {
             MOVE_X = 0, ///< Move in X axis
             MOVE_Z, ///< Move in Z axis
-            AIM_XZ, ///< Aim in XZ - plane
+            AIM_X, ///< Aim in X axis
+            AIM_Z, ///< Aim in Z axis
             SHOOT, ///< Fire bullet
             QUIT, ///< Quit game
             BUTTONS, ///< Total number of inputs - joystick
