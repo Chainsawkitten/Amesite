@@ -4,7 +4,7 @@
 #include "../Scene/Scene.hpp"
 
 #include "../Component/Collider2DCircle.hpp"
-#include "../Component/Collider2DRectangle.hpp"
+//#include "../Component/Collider2DRectangle.hpp"
 #include "../Component/Transform.hpp"
 
 #include <glm/glm.hpp>
@@ -116,6 +116,8 @@ void CollisionSystem::Update(Scene& scene) {
     //        }
     //    }
     //}
+
+    //TODO SWEEP AND PRUNE
 
     // Circle vs Circle
     std::vector<Component::Collider2DCircle*> collider2DCircle = scene.GetAll<Component::Collider2DCircle>();

@@ -4,19 +4,11 @@
 #include <typeinfo>
 #include <vector>
 #include <iterator>
-#include <algorithm>
 
 class Entity;
 
 namespace Component {
-    class Transform;
-    class Lens;
-    class Mesh;
-    class RelativeTransform;
     class SuperComponent;
-    class Physics;
-    class Collider2DCircle;
-    //class Collider2DRectangle;
 }
 
 /// Contains a bunch of entities.

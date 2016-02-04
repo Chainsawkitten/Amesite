@@ -78,9 +78,8 @@ void RenderSystem::Render(Scene& scene) {
                 glDrawElements(GL_TRIANGLES, model->GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
             }
         }
+        mDeferredLighting->ResetTarget();
+        //mDeferredLighting->ShowTextures(screenSize);
+        mDeferredLighting->Render(camera, screenSize);
     }
-    
-    mDeferredLighting->ResetTarget();
-    //mDeferredLighting->ShowTextures(screenSize);
-    mDeferredLighting->Render(camera, screenSize);
 }

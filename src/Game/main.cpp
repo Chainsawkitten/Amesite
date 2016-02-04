@@ -11,6 +11,8 @@
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
+//#include <crtdbg.h>
+
 //#include "Engine/Particles/CuboidParticleEmitter.hpp"
 //#include "Engine/Particles/PointParticleEmitter.hpp"
 //#include "Engine/Particles/ParticleSystem.hpp"
@@ -39,6 +41,7 @@
 using namespace std;
 
 int main() {
+    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     // Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
         freopen(FileSystem::SavePath("Modership", "GameLog.txt").c_str(), "a", stderr);
@@ -66,9 +69,9 @@ int main() {
 
     GameEntityCreator().SetScene(&scene);
 
-    Entity* entity = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    entity = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
-    Caves::CaveSystem* theMap = GameEntityCreator().CreateMap();
+    Entity* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
+    Entity* theMap = GameEntityCreator().CreateMap();
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
@@ -116,6 +119,7 @@ int main() {
     }
     
     Resources().FreeTexture2DFromFile(testTexture);
+    Resources().FreeCube();
     Resources().FreeCube();
     
     delete window;
