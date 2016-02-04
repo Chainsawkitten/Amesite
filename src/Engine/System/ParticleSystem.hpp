@@ -59,9 +59,10 @@ namespace System {
              */
             unsigned int MaxParticleCount() const;
 
-            /// Emit a particle a the given position.
+            /// Emit a particle at the given position.
             /**
              * @param position Position to emit particle at.
+             * @param emitter The emitter that emits the particle.
              */
             void EmitParticle(glm::vec3 position, Component::ParticleEmitter* emitter);
 
@@ -73,10 +74,11 @@ namespace System {
 
             /// Update all the system's particles, spawn new particles etc.
             /**
+             * @param scene Scene to update.
              * @param time Time since last frame (in seconds).
-             * @param follow Entity to follow (only needs to be sent if there are relative emitters).
              */
              void Update(Scene& scene, double time);
+             
         private:
             Scene* mScene;
             static ParticleSystem* mActiveInstance;
