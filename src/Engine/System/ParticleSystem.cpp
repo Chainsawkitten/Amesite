@@ -15,6 +15,8 @@
 
 using namespace System;
 
+ParticleSystem* ParticleSystem::mActiveInstance = nullptr;
+
 ParticleSystem::ParticleSystem() { 
     this->mMaxParticleCount = 1000;
     mParticleCount = 0;
@@ -106,6 +108,6 @@ void ParticleSystem::SetActive() {
 	mActiveInstance = this;
 }
 
-ParticleSystem* Particle() {
+ParticleSystem* System::Particle() {
 	return ParticleSystem::GetActiveInstance();
 }

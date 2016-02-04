@@ -4,12 +4,9 @@
 #include <typeinfo>
 #include <vector>
 #include <iterator>
+#include "../System/ParticleSystem.hpp"
 
 class Entity;
-
-namespace System {
-	class ParticleSystem;
-}
 
 namespace Component {
     class SuperComponent;

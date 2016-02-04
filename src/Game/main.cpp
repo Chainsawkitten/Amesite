@@ -87,39 +87,11 @@ int main() {
     Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_TWO);
 
     // Particle System
-    /*System::ParticleSystem particleSystem;
-    Texture2D* particleTexture;
+    System::ParticleSystem* particleSystem;
+    particleSystem = new System::ParticleSystem;
+    particleSystem->SetActive();
+    
 
-    cameraEntity->AddComponent<Component::ParticleEmitter>();
-    
-    // Particle emitter.
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->emitterType = Component::ParticleEmitter::CUBOID;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->follow = cameraEntity;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->maxEmitTime = 0.02;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->minEmitTime = 0.01;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->timeToNext = cameraEntity->GetComponent<Component::ParticleEmitter>()->minEmitTime +((double)rand() / RAND_MAX) * (cameraEntity->GetComponent<Component::ParticleEmitter>()->maxEmitTime - cameraEntity->GetComponent<Component::ParticleEmitter>()->minEmitTime);
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->lifetime = 0.0;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->origin = glm::vec3(0.f, 0.f, 0.f);
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->size = glm::vec3(40.f, 15.f, 40.f);
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->relative = true;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->follow = cameraEntity;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->timeToNext = 5.0;
-    
-    // Particle texture.
-    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
-
-    //Particle type.
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.texture = particleTexture;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime = 6.f;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime = 10.f;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(-0.025f, -0.01f, -0.025f);
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.025f, -0.1f, 0.025f);
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.minSize = glm::vec2(0.025f, 0.025f);
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.maxSize = glm::vec2(0.05f, 0.05f);
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.uniformScaling = true;
-    cameraEntity->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(.3f, .3f, 1.f);*/
-    
-    
     GameEntityCreator().SetScene(&scene);
 
     int score = 0;
@@ -133,6 +105,9 @@ int main() {
     Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
     Entity* player = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     Entity* theMap = GameEntityCreator().CreateMap();
+
+    // Create dust particles
+    GameEntityCreator().CreateCuboidParticle(mainCamera);
 
     // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");

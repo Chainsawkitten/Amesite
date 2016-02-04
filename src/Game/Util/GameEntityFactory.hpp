@@ -47,11 +47,14 @@ class GameEntityFactory {
          */
         Entity* CreateCamera(glm::vec3 origin, glm::vec3 rotation);
 
-        ///Sets scene that the factory is coupled to.
+        /// Sets scene that the factory is coupled to.
         /**
          *@param scene Scene that the factory will be coupled to.
          */
         void SetScene(Scene* scene);
+
+        /// Creates a cuboid dust particle system.
+        void CreateCuboidParticle(Entity* camera);
 
          /// Create a map.
         Entity* CreateMap();
