@@ -1,9 +1,11 @@
 #include "Square.hpp"
+
 #include "Default2D.vert.hpp"
 #include "SingleColor2D.frag.hpp"
 #include "../Resources.hpp"
 #include "../Shader/Shader.hpp"
 #include "../Shader/ShaderProgram.hpp"
+#include "../MainWindow.hpp"
 
 using namespace Geometry;
 
@@ -73,7 +75,7 @@ unsigned int Square::GetIndexCount() const {
     return mIndexNr;
 }
 
-void Square::Render(const glm::vec2 &position, const glm::vec2 &size, const glm::vec3 &color, const glm::vec2& screenSize) const {
+void Square::Render(const glm::vec2 &position, const glm::vec2 &size, const glm::vec3 &color) const {
     // Disable depth testing.
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
     glDisable(GL_DEPTH_TEST);
@@ -85,6 +87,7 @@ void Square::Render(const glm::vec2 &position, const glm::vec2 &size, const glm:
     glUniform3fv(mShaderProgram->GetUniformLocation("color"), 1, &color[0]);
     
     // Set location and size.
+    glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
     glUniform2fv(mShaderProgram->GetUniformLocation("position"), 1, &(position / screenSize)[0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("size"), 1, &(size / screenSize)[0]);
     

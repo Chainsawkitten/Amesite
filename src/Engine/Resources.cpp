@@ -47,22 +47,22 @@ ShaderProgram* ResourceManager::CreateShaderProgram(std::initializer_list<const 
     for (auto shader : shaders) {
         switch (shader->GetShaderType()) {
         case GL_COMPUTE_SHADER:
-            key.computeShader = shader;
+            key.computeShader = shader->GetSource();
             break;
         case GL_VERTEX_SHADER:
-            key.vertexShader = shader;
+            key.vertexShader = shader->GetSource();
             break;
         case GL_TESS_CONTROL_SHADER:
-            key.tessControlShader = shader;
+            key.tessControlShader = shader->GetSource();
             break;
         case GL_TESS_EVALUATION_SHADER:
-            key.tessEvaluationShader = shader;
+            key.tessEvaluationShader = shader->GetSource();
             break;
         case GL_GEOMETRY_SHADER:
-            key.geometryShader = shader;
+            key.geometryShader = shader->GetSource();
             break;
         case GL_FRAGMENT_SHADER:
-            key.fragmentShader = shader;
+            key.fragmentShader = shader->GetSource();
             break;
         }
     }

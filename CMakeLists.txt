@@ -65,6 +65,8 @@ set(EMBEDDED_INPUT
         shaders/Default2D.vert
         shaders/SingleColor2D.frag
         shaders/Texture2D.frag
+        shaders/Post.vert
+        shaders/Deferred.frag
         shaders/Particle.vert
         shaders/Particle.geom
         shaders/Particle.frag
@@ -124,6 +126,7 @@ set(ENGINE_SRCS
         src/Engine/Geometry/Square.cpp
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Geometry/Cube.cpp
+        src/Engine/Lighting/DeferredLighting.cpp
         src/Engine/Shader/Shader.cpp
         src/Engine/Shader/ShaderProgram.cpp
         src/Engine/Util/FileSystem.cpp
@@ -165,6 +168,7 @@ set(ENGINE_HEADERS
         src/Engine/Geometry/Square.hpp
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Geometry/Cube.hpp
+        src/Engine/Lighting/DeferredLighting.hpp
         src/Engine/Shader/Shader.hpp
         src/Engine/Shader/ShaderProgram.hpp
         src/Engine/Util/FileSystem.hpp
@@ -204,15 +208,17 @@ set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Util/GameSettings.cpp
         src/Game/CaveSystem/CaveSystem.cpp
-        src/Game/Player/Player.cpp
-        src/Game/Turret/Turret.cpp
+        src/Game/Util/GameEntityFactory.cpp
+        src/Game/System/ControllerSystem.cpp
+        src/Game/Component/Controller.cpp
     )
 
 set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
         src/Game/CaveSystem/CaveSystem.hpp
-        src/Game/Player/Player.hpp
-        src/Game/Turret/Turret.hpp
+        src/Game/Util/GameEntityFactory.hpp
+        src/Game/System/ControllerSystem.hpp
+        src/Game/Component/Controller.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

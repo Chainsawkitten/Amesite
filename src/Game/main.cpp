@@ -11,12 +11,20 @@
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
+//#include "Engine/Particles/CuboidParticleEmitter.hpp"
+//#include "Engine/Particles/PointParticleEmitter.hpp"
+//#include "Engine/Particles/ParticleSystem.hpp"
+
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
 
+#include "../Game/System/ControllerSystem.hpp"
+
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
+
+#include "Game/Util/GameEntityFactory.hpp"
 
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
@@ -60,43 +68,13 @@ int main() {
     // Scene and Entites. 
     Scene scene;
 
-    Entity* cubeEntity = scene.CreateEntity();
-    cubeEntity->AddComponent<Component::Mesh>();
-    cubeEntity->AddComponent<Component::Transform>();
-    cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-    cubeEntity->AddComponent<Component::Physics>();
-    cubeEntity->GetComponent<Component::Transform>()->position = glm::vec3(25, 0, 15);
-
-    Entity* turretJoint = scene.CreateEntity();
-    turretJoint->AddComponent<Component::RelativeTransform>();
-    turretJoint->GetComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
-
-    Entity* turretEntity = scene.CreateEntity();
-    turretEntity->AddComponent<Component::Mesh>();
-    turretEntity->AddComponent<Component::RelativeTransform>();
-    turretEntity->GetComponent<Component::RelativeTransform>()->parentEntity = turretJoint;
-    turretEntity->GetComponent<Component::RelativeTransform>()->Move(1, 0, 0);
-    turretEntity->GetComponent<Component::RelativeTransform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-
-    turretEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;
 
+    // ControllerSystem
+    System::ControllerSystem controllerSystem;
+
     Caves::CaveSystem testCaveSystem(&scene);
-
-    Entity* map = testCaveSystem.GenerateCaveSystem();
-    map->GetComponent<Component::Transform>()->scale = glm::vec3(5.f, 5.f, 5.f);
-    map->GetComponent<Component::Transform>()->Rotate(0, 0, 180);
-    map->GetComponent<Component::Transform>()->Rotate(-90, 0, 180);
-
-
-    map->AddComponent<Component::Physics>();
-    map->GetComponent<Component::Physics>();
-
-    Entity* cameraEntity = scene.CreateEntity();
-    cameraEntity->AddComponent<Component::Lens>();
-    cameraEntity->AddComponent<Component::RelativeTransform>()->parentEntity = cubeEntity;
 
     Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_ONE);
     Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_ONE);
@@ -108,10 +86,12 @@ int main() {
     Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_TWO);
     Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_TWO);
 
-    Turret turret(turretJoint, turretEntity);
+    GameEntityCreator().SetScene(&scene);
 
-    cameraEntity->GetComponent<Component::Transform>()->Move(0.f, 50.f, 20.f);
-    cameraEntity->GetComponent<Component::Transform>()->Rotate(0.f, 70.f, 0.f);
+    Entity* camera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    Entity* enemy = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
+    Entity* player = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    Caves::CaveSystem* theMap = GameEntityCreator().CreateMap();
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
 
@@ -127,22 +107,19 @@ int main() {
     float playerMaxSpeed = 40;
     float playerDrag = 1.5f;
 
-    Player player(cubeEntity, playerAcceleration);
-    cubeEntity->GetComponent<Component::Physics>()->maxVelocity = playerMaxSpeed;
-    cubeEntity->GetComponent<Component::Physics>()->velocityDragFactor = playerDrag;
-    player.SetTurret(&turret);
-
     std::string testLog = "Player acceleration: " + std::to_string(playerAcceleration) + "\n";
     testLog += "Player max velocity: " + std::to_string(playerMaxSpeed) + "\n";
     testLog += "Player drag: " + std::to_string(playerDrag) + "\n";
 
+    float rotation = 0;
+   
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
 
-        int xPos = (int)(cubeEntity->GetComponent<Component::Transform>()->position[0] / 5 + 25.f / 2.f + 0.5f);
-        int zPos = (int)(cubeEntity->GetComponent<Component::Transform>()->position[2] / 5 + 25.f / 2.f + 0.25f);
-
+        //int xPos = (int)(cubeEntity->GetComponent<Component::Transform>()->position[0] / 5 + 25.f / 2.f + 0.5f);
+        //int zPos = (int)(cubeEntity->GetComponent<Component::Transform>()->position[2] / 5 + 25.f / 2.f + 0.25f);
+/*
         float caveCollide = *testCaveSystem.mMap[xPos, zPos];
 
         if (testCaveSystem.mMap[xPos][zPos] == 1.f) {
@@ -200,9 +177,12 @@ int main() {
             session++;
 
         }
+
+*/
         
-        player.Update(0.01f);
-        
+        // ControllerSystem
+        controllerSystem.Update(scene, deltaTime);
+
         // PhysicsSystem.
         physicsSystem.Update(scene, deltaTime);
 
@@ -215,7 +195,7 @@ int main() {
         // Input testing.
         window->Update();
         
-        testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f), window->GetSize());
+        testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f));
 
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
