@@ -69,6 +69,17 @@ Entity* GameEntityFactory::CreateCube( glm::vec3 origin ) {
 	return cubeEntity;
 }
 
+Entity* GameEntityFactory::CreateBullet(glm::vec3 position, glm::vec3 direction) {
+    Entity* bullet = mScene->CreateEntity();
+    Component::Transform* transform = bullet->AddComponent<Component::Transform>();
+    transform->position = position;
+    
+    Component::Mesh* mesh = bullet->AddComponent<Component::Mesh>();
+    mesh->geometry = Resources().CreateCube();
+    
+    return bullet;
+}
+
 Entity* GameEntityFactory::CreateCamera( glm::vec3 origin, glm::vec3 rotation ) {
     Entity* cameraEntity = mScene->CreateEntity();
     cameraEntity->AddComponent<Component::Transform>();

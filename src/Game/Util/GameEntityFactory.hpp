@@ -38,6 +38,14 @@ class GameEntityFactory {
          *@param origin The cube's starting position
          */
 		Entity* CreateCube(glm::vec3 origin);
+        
+        /// Create a bullet.
+        /**
+         * @param position The bullet's starting position.
+         * @param direction The direction the bullet is traveling in.
+         * @return The bullet entity.
+         */
+        Entity* CreateBullet(glm::vec3 position, glm::vec3 direction);
 
         /// Create a camera.
         /**
