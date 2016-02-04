@@ -6,7 +6,7 @@ class Entity;
 
 
 namespace Component {
-    ///Component describing a circle.
+    /// %Component describing a circle.
     class Collider2DCircle : public SuperComponent {
         public:
             /// Create new %Collider2DCircle.

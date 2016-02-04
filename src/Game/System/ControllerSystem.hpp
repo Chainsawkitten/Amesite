@@ -3,7 +3,7 @@
 class Scene;
 
 namespace System {
-    /// System to let the user control entities in a scene.
+    /// %System to let the user control entities in a scene.
     class ControllerSystem {
     public:
         /// Update Scene containing entities. Moves entities according to player input.

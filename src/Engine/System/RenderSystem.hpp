@@ -9,7 +9,7 @@ class ShaderProgram;
 class DeferredLighting;
 
 namespace System {
-    /// System to render a scene.
+    /// %System to render a scene.
     class RenderSystem {
         public:
             /// Create render system.

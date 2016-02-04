@@ -3,7 +3,7 @@
 #include <Engine/Component/SuperComponent.hpp>
 
 namespace Component {
-    /// Component spawning other entities.
+    /// %Component spawning other entities.
     class Spawner : public SuperComponent {
         public:
             /// Create new spawner.

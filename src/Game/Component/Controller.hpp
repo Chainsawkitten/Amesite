@@ -4,7 +4,7 @@
 #include <Util/Input.hpp>
 
 namespace Component {
-    /// Component providing player control.
+    /// %Component providing player control.
     class Controller : public SuperComponent {
         public:
             /// Create new %Player.
