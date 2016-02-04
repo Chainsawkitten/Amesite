@@ -1,11 +1,11 @@
 #include "ControllerSystem.hpp"
 
-#include <Engine\Scene\Scene.hpp>
-#include <Engine\Entity\Entity.hpp>
-#include <Engine\Component\Transform.hpp>
-#include <Engine\Component\Physics.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/Physics.hpp>
 
-#include "..\Component\Controller.hpp"
+#include "../Component/Controller.hpp"
 
 using namespace System;
 

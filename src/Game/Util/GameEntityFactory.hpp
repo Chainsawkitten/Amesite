@@ -1,8 +1,7 @@
 #pragma once
 
-#include <glm\glm.hpp>
-
-#include <Util\Input.hpp>
+#include <glm/glm.hpp>
+#include <Util/Input.hpp>
 
 class Scene;
 class Entity;
