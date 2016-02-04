@@ -5,7 +5,7 @@
 #include <GL/glew.h>
 
 namespace Component {
-	class ParticleEmitter;
+    class ParticleEmitter;
 }
 
 class Scene;
@@ -14,23 +14,23 @@ namespace System {
     /// Handles particles.
     class ParticleSystem {
         public:
-			/// A particle in the particle emitter.
-			struct Particle {
-				/// Position.
-				glm::vec3 worldPos;
+            /// A particle in the particle emitter.
+            struct Particle {
+                /// Position.
+                glm::vec3 worldPos;
 
-				/// Size.
-				glm::vec2 size;
+                /// Size.
+                glm::vec2 size;
 
-				/// Life (in seconds)
-				float life;
+                /// Life (in seconds)
+                float life;
 
-				/// Lifetime (in seconds)
-				float lifetime;
+                /// Lifetime (in seconds)
+                float lifetime;
 
-				/// Initial velocity.
-				glm::vec3 velocity;
-			};
+                /// Initial velocity.
+                glm::vec3 velocity;
+            };
 
             /// Create a new particle system.
             ParticleSystem();
@@ -38,14 +38,14 @@ namespace System {
             /// Destructor.
             ~ParticleSystem();
 
-			/// Get currently active ParticleSystem.
-			/**
-			* @return The currently active input handler or nullptr.
-			*/
-			static ParticleSystem* GetActiveInstance();
+            /// Get currently active ParticleSystem.
+            /**
+            * @return The currently active input handler or nullptr.
+            */
+            static ParticleSystem* GetActiveInstance();
 
-			/// Set as currently active ParticleSystem.
-			void SetActive();
+            /// Set as currently active ParticleSystem.
+            void SetActive();
 
             /// Get the amount of particles.
             /**
@@ -78,18 +78,18 @@ namespace System {
              */
              void Update(Scene& scene, double time);
         private:
-			Scene* mScene;
-			static ParticleSystem* mActiveInstance;
+            Scene* mScene;
+            static ParticleSystem* mActiveInstance;
             // System properties
             unsigned int mParticleCount;
             unsigned int mMaxParticleCount;
     };
 
-	/// Get currently active ParticleSystem.
-	/**
-	* @return The currently active ParticleSystem or nullptr.
-	*/
-	ParticleSystem* Particle();
+    /// Get currently active ParticleSystem.
+    /**
+    * @return The currently active ParticleSystem or nullptr.
+    */
+    ParticleSystem* Particle();
 }
 
 

@@ -59,20 +59,20 @@ void ParticleSystem::EmitParticle(glm::vec3 position, Component::ParticleEmitter
 }
 
 void ParticleSystem::Update(Scene& scene, double time) {
-	mScene = &scene;
+    mScene = &scene;
     std::vector<Particle>* particleVector = scene.GetVectorContents<Particle>();
     if (particleVector!= nullptr && !particleVector->empty()) {
         for (std::vector<int>::size_type i = 0; i != particleVector->size(); i++) {
             particleVector->at(i).life += static_cast<float>(time);         
-			if (particleVector->at(i).life >= particleVector->at(i).lifetime) {
-				particleVector->erase(particleVector->begin() + i);
+            if (particleVector->at(i).life >= particleVector->at(i).lifetime) {
+                particleVector->erase(particleVector->begin() + i);
                 mParticleCount--;
                 i--;
             }
         }
     }
-	std::vector<Component::ParticleEmitter*> particleEmitters;
-	particleEmitters = scene.GetAll<Component::ParticleEmitter>();
+    std::vector<Component::ParticleEmitter*> particleEmitters;
+    particleEmitters = scene.GetAll<Component::ParticleEmitter>();
     for (unsigned int i = 0; i < particleEmitters.size(); i++) {
         Component::ParticleEmitter* emitter = particleEmitters[i];
         emitter->timeToNext -= time;
@@ -100,13 +100,13 @@ void ParticleSystem::EmitParticle(Component::ParticleEmitter* emitter) {
 }
 
 ParticleSystem* ParticleSystem::GetActiveInstance() {
-	return mActiveInstance;
+    return mActiveInstance;
 }
 
 void ParticleSystem::SetActive() {
-	mActiveInstance = this;
+    mActiveInstance = this;
 }
 
 ParticleSystem* System::Particle() {
-	return ParticleSystem::GetActiveInstance();
+    return ParticleSystem::GetActiveInstance();
 }
