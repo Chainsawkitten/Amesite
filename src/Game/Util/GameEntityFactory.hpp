@@ -22,20 +22,23 @@ class GameEntityFactory {
         
         /// Create a basic enemy.
         /**
-         *@param origin The enemy's starting position
+         * @param origin The enemy's starting position
+         * @return The enemy entity.
          */
         Entity* CreateBasicEnemy(glm::vec3 origin);
        
         /// Create a player.
         /**
-         *@param origin The player's starting position.
-         *@param player Who controls the player.
+         * @param origin The player's starting position.
+         * @param player Who controls the player.
+         * @return The player entity.
          */
         Entity* CreatePlayer(glm::vec3 origin, InputHandler::Player player);
 
 		/// Create a cube for testing purposes.
         /**
-         *@param origin The cube's starting position
+         * @param origin The cube's starting position
+         * @return The cube entity.
          */
 		Entity* CreateCube(glm::vec3 origin);
         
@@ -49,8 +52,9 @@ class GameEntityFactory {
 
         /// Create a camera.
         /**
-         *@param origin The camera's starting position.
-         *@param rotation The camera's starting orientation.
+         * @param origin The camera's starting position.
+         * @param rotation The camera's starting orientation.
+         * @return The camera entity.
          */
         Entity* CreateCamera(glm::vec3 origin, glm::vec3 rotation);
 
@@ -60,7 +64,10 @@ class GameEntityFactory {
          */
         void SetScene(Scene* scene);
 
-         /// Create a map.
+        /// Create a map.
+        /**
+         * @return The map entity.
+         */ 
         Entity* CreateMap();
 
     private:
