@@ -18,8 +18,11 @@
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
+#include <System/ParticleSystem.hpp>
+#include <System/ParticleRenderSystem.hpp>
 
-#include "../Game/System/ControllerSystem.hpp"
+#include "Game/System/ControllerSystem.hpp"
+#include "Util/CameraUpdate.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -34,6 +37,7 @@
 #include <Component/SpotLight.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
+#include <Component/ParticleEmitter.hpp>
 //#include <Component/Collider2DRectangle.hpp>
 
 #include <Texture/Texture2D.hpp>
@@ -62,6 +66,15 @@ int main() {
     glewInit();
     window->Init();
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
+
+    // Particle System.
+    System::ParticleSystem* particleSystem;
+    particleSystem = new System::ParticleSystem;
+    particleSystem->SetActive();
+
+    // Particle texture.
+    Texture2D* particleTexture;
+    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
 
     // RenderSystem.
     System::RenderSystem renderSystem;
@@ -97,12 +110,23 @@ int main() {
     System::CollisionSystem collisionSystem;
 
     Entity* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    mainCamera->AddComponent<Component::Physics>();
     Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
-    Entity* player = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    
+    Entity* player1 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    Entity* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+    std::vector<Entity*> players;
+    players.push_back(player1);
+    players.push_back(player2);
+
     Entity* theMap = GameEntityCreator().CreateMap();
     
     GameEntityCreator().CreateBullet(glm::vec3(1.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f));
 
+    // Create dust particles
+    GameEntityCreator().CreateCuboidParticle(mainCamera, particleTexture);
+
+    // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
     // Directional light.
@@ -122,9 +146,6 @@ int main() {
     sLight->color = glm::vec3(1.f, 1.f, 1.f);
     sLight->attenuation = 0.1f;
     sLight->coneAngle = 30.f;
-
-    spotLight->AddComponent<Component::Physics>();
-    spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -139,6 +160,13 @@ int main() {
 
         // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
+
+
+        // UpdateCamera
+        UpdateCamera(mainCamera, players);
+
+        // ParticleSystem
+        particleSystem->Update(scene, deltaTime);
 
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
@@ -172,10 +200,12 @@ int main() {
     }
     
     Resources().FreeTexture2DFromFile(testTexture);
+    Resources().FreeTexture2DFromFile(particleTexture);
     Resources().FreeCube();
     Resources().FreeCube();
     
     delete window;
+    delete particleSystem;
     
     glfwTerminate();
     

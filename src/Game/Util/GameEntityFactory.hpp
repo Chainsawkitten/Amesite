@@ -5,6 +5,7 @@
 
 class Scene;
 class Entity;
+class Texture2D;
 
 class GameEntityFactory {
     public:
@@ -60,9 +61,16 @@ class GameEntityFactory {
 
         /// Sets scene that the factory is coupled to.
         /**
-         *@param scene Scene that the factory will be coupled to.
+         * @param scene Scene that the factory will be coupled to.
          */
         void SetScene(Scene* scene);
+
+        /// Creates a cuboid dust particle system.
+        /**
+         * @param camera - entity which the system relates to.
+         * @param particleTexture the particles should sample from.
+         */
+        void CreateCuboidParticle(Entity* camera, Texture2D* particleTexture);
 
         /// Create a map.
         /**
