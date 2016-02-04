@@ -6,6 +6,7 @@
 #include <Engine/Component/Physics.hpp>
 
 #include "../Component/Controller.hpp"
+#include "../Component/Spawner.hpp"
 #include <Util/Log.hpp>
 #include "../Util/GameEntityFactory.hpp"
 
@@ -22,7 +23,8 @@ void ControllerSystem::Update(Scene& scene, float deltaTime) {
         float x = Input()->ButtonValue(Input()->MOVE_X, controllerObjects[i]->playerID);
         float z = Input()->ButtonValue(Input()->MOVE_Z, controllerObjects[i]->playerID);
         
-        if (Input()->Pressed(Input()->SHOOT, controllerObjects[i]->playerID)) {
+        Component::Spawner* spawnerComponent = controllerObjects[i]->entity->GetComponent<Component::Spawner>();
+        if (spawnerComponent != nullptr && Input()->Pressed(Input()->SHOOT, controllerObjects[i]->playerID)) {
             Log() << "Shoot pressed\n";
             GameEntityCreator().SetScene(&scene);
             GameEntityCreator().CreateBullet(transformComponent->position, glm::vec3(1.f, 0.f, 0.f));

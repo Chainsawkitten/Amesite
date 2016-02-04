@@ -8,6 +8,7 @@
 #include <Component/Collider2DCircle.hpp>
 #include <Component/Collider2DRectangle.hpp>
 #include <Component/Physics.hpp>
+#include "../Component/Spawner.hpp"
 
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
@@ -47,6 +48,7 @@ Entity* GameEntityFactory::CreatePlayer(glm::vec3 origin, InputHandler::Player p
     playerEntity->AddComponent<Component::Collider2DCircle>();
     playerEntity->AddComponent<Component::Physics>();
     playerEntity->AddComponent<Component::Controller>();
+    playerEntity->AddComponent<Component::Spawner>();
 
     playerEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     playerEntity->GetComponent<Component::Transform>()->position = origin;
