@@ -72,6 +72,7 @@ Entity* CaveSystem::GenerateCaveSystem(Scene* scene) {
                 //light->AddComponent<Component::RelativeTransform>()->parentEntity = wall;
                 //light->GetComponent<Component::Transform>()->position.y = 1;
                 //light->AddComponent<Component::PointLight>();
+                wall->GetComponent<Component::Transform>()->pitch = 45;
             }
             if (mMap[i][j] == -1.f) {
 

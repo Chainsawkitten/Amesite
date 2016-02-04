@@ -4,6 +4,7 @@
 #include <algorithm>
 
 Scene::Scene() {
+    mParticlesVector = new std::vector<System::ParticleSystem::Particle>;
 }
 
 Scene::~Scene() {
@@ -36,6 +37,7 @@ void Scene::ClearAll() {
             delete component;
     }
     mComponents.clear();
+    delete mParticlesVector;
 }
 
 void Scene::UpdateModelMatrices() {

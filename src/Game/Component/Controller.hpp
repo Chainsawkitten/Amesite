@@ -17,12 +17,16 @@ namespace Component {
 
             /// Destructor.
             ~Controller();
-            
-            /// Id for controll
-            /**
-             * Default: InputHandler::PLAYER_ONE
-             */
+
+            /// Stores the playerID, (p1/p2).
             InputHandler::Player playerID;
+
+            /// Stores the control scheme function for this controller.
+            /**
+             * @param The controller %Component.
+             * @param The delta time of the frame.
+             */
+            void(*ControlScheme)(Controller* controller, float deltaTime);
 
     };
 

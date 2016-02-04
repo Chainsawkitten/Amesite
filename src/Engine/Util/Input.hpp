@@ -48,6 +48,10 @@ class InputHandler {
             SHOOT, ///< Fire bullet
             QUIT, ///< Quit game
             BUTTONS, ///< Total number of inputs - joystick
+            UP, ///< Move up
+            DOWN, ///< Move down
+            RIGHT, ///< Move right
+            LEFT, ///< Move left
         };
 
         /// Player codes

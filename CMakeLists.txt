@@ -141,6 +141,7 @@ set(ENGINE_SRCS
         src/Engine/Component/Physics.cpp
         src/Engine/Component/Collider2DRectangle.cpp
         src/Engine/Component/Collider2DCircle.cpp
+        src/Engine/Component/ParticleEmitter.cpp
         src/Engine/Component/DirectionalLight.cpp
         src/Engine/Component/PointLight.cpp
         src/Engine/Component/SpotLight.cpp
@@ -149,12 +150,10 @@ set(ENGINE_SRCS
         src/Engine/System/RenderSystem.cpp
         src/Engine/System/PhysicsSystem.cpp
         src/Engine/System/CollisionSystem.cpp
+        src/Engine/System/ParticleSystem.cpp
+        src/Engine/System/ParticleRenderSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
-        src/Engine/Particles/CuboidParticleEmitter.cpp
-        src/Engine/Particles/ParticleEmitter.cpp
-        src/Engine/Particles/ParticleSystem.cpp
-        src/Engine/Particles/PointParticleEmitter.cpp
     )
 
 set(ENGINE_HEADERS
@@ -186,6 +185,7 @@ set(ENGINE_HEADERS
         src/Engine/Component/Physics.hpp
         src/Engine/Component/Collider2DRectangle.hpp
         src/Engine/Component/Collider2DCircle.hpp
+        src/Engine/Component/ParticleEmitter.hpp
         src/Engine/Component/DirectionalLight.hpp
         src/Engine/Component/PointLight.hpp
         src/Engine/Component/SpotLight.hpp
@@ -194,13 +194,10 @@ set(ENGINE_HEADERS
         src/Engine/System/RenderSystem.hpp
         src/Engine/System/PhysicsSystem.hpp
         src/Engine/System/CollisionSystem.hpp
+        src/Engine/System/ParticleSystem.hpp
+        src/Engine/System/ParticleRenderSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
-        src/Engine/Particles/CuboidParticleEmitter.hpp
-        src/Engine/Particles/ParticleEmitter.hpp
-        src/Engine/Particles/ParticleSystem.hpp
-        src/Engine/Particles/ParticleType.hpp
-        src/Engine/Particles/PointParticleEmitter.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
@@ -213,26 +210,33 @@ set_property(TARGET Engine PROPERTY CXX_STANDARD_REQUIRED ON)
 set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Util/GameSettings.cpp
-        src/Game/CaveSystem/CaveSystem.cpp
         src/Game/Util/GameEntityFactory.cpp
+        src/Game/Util/CameraUpdate.cpp
+        src/Game/Util/ControlSchemes.cpp
+        src/Game/CaveSystem/CaveSystem.cpp
         src/Game/System/ControllerSystem.cpp
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
+        src/Game/Component/Controller.cpp
     )
 
 set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
-        src/Game/CaveSystem/CaveSystem.hpp
+        src/Game/Util/GameSettings.hpp
         src/Game/Util/GameEntityFactory.hpp
+        src/Game/Util/CameraUpdate.hpp
+        src/Game/Util/ControlSchemes.hpp
+        src/Game/CaveSystem/CaveSystem.hpp
         src/Game/System/ControllerSystem.hpp
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
+        src/Game/Component/Controller.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

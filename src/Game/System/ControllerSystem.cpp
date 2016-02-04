@@ -6,6 +6,8 @@
 #include <Engine/Component/Physics.hpp>
 
 #include "../Component/Controller.hpp"
+#include "../Util/ControlSchemes.hpp"
+
 
 using namespace System;
 
@@ -26,28 +28,7 @@ void ControllerSystem::Update(Scene& scene, float deltaTime) {
     std::vector<Component::Controller*> controllerObjects;
     controllerObjects = scene.GetAll<Component::Controller>();
 
-    for (unsigned int i = 0; i < controllerObjects.size(); i++) {
-
-        //Move the player
-        float x = (float)Input()->ButtonValue(Input()->MOVE_X, controllerObjects[i]->playerID);
-        float z = (float)Input()->ButtonValue(Input()->MOVE_Z, controllerObjects[i]->playerID);
-
-        glm::vec3 speedVec = glm::vec3(x * 6000 * deltaTime, 0, z * 6000 * deltaTime);
-
-        Component::Physics* physicsComponent = controllerObjects[i]->entity->GetComponent<Component::Physics>();
-
-        //If there's a physics component attached we use it to move.
-        if (physicsComponent != NULL) {
-
-            if (glm::abs(x) + glm::abs(z) > 0.3f)
-                physicsComponent->acceleration = speedVec;
-            else
-                physicsComponent->acceleration = glm::vec3(0, 0, 0);
-
-        }
-        else if (glm::abs(x) + glm::abs(z) > 0.3f)
-            controllerObjects[i]->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime, 0, z * deltaTime));
-    
-    }
+    for (unsigned int i = 0; i < controllerObjects.size(); i++)
+        controllerObjects[i]->ControlScheme(controllerObjects[i], deltaTime);
 
 }
