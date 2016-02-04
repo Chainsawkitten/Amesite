@@ -93,16 +93,19 @@ int main() {
     Input()->AssignJoystick(InputHandler::MOVE_Z, true, InputHandler::LEFT_STICK_Y, InputHandler::PLAYER_ONE);
     Input()->AssignJoystick(InputHandler::AIM_X, true, InputHandler::RIGHT_STICK_X, InputHandler::PLAYER_ONE);
     Input()->AssignJoystick(InputHandler::AIM_Z, true, InputHandler::RIGHT_STICK_Y, InputHandler::PLAYER_ONE);
+    Input()->AssignJoystick(InputHandler::SHOOT, false, InputHandler::RIGHT_BUMPER, InputHandler::PLAYER_ONE);
     
     Input()->AssignJoystick(InputHandler::MOVE_X, true, InputHandler::LEFT_STICK_X, InputHandler::PLAYER_TWO);
     Input()->AssignJoystick(InputHandler::MOVE_Z, true, InputHandler::LEFT_STICK_Y, InputHandler::PLAYER_TWO);
     Input()->AssignJoystick(InputHandler::AIM_X, true, InputHandler::RIGHT_STICK_X, InputHandler::PLAYER_TWO);
     Input()->AssignJoystick(InputHandler::AIM_Z, true, InputHandler::RIGHT_STICK_Y, InputHandler::PLAYER_TWO);
+    Input()->AssignJoystick(InputHandler::SHOOT, false, InputHandler::RIGHT_BUMPER, InputHandler::PLAYER_TWO);
     
     Input()->AssignKeyboard(InputHandler::UP, GLFW_KEY_W, InputHandler::PLAYER_ONE);
     Input()->AssignKeyboard(InputHandler::DOWN, GLFW_KEY_S, InputHandler::PLAYER_ONE);
     Input()->AssignKeyboard(InputHandler::RIGHT, GLFW_KEY_D, InputHandler::PLAYER_ONE);
     Input()->AssignKeyboard(InputHandler::LEFT, GLFW_KEY_A, InputHandler::PLAYER_ONE);
+    //Input()->AssignKeyboard(InputHandler::SHOOT, GLFW_KEY_T, InputHandler::PLAYER_ONE);
     
     GameEntityCreator().SetScene(&scene);
     
