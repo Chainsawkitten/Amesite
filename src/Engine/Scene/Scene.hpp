@@ -85,11 +85,7 @@ template<typename T> void Scene::AddComponentToList(T* component) {
 
 // GetAll<T>
 template <typename T> inline std::vector<T*>& Scene::GetAll() {
-    auto found = mComponents.find(&typeid(T*));
-    std::vector<T*> returnVector;
-    if (found == mComponents.end())
-        return returnVector;
-    return reinterpret_cast<std::vector<T*>&>(found->second);
+    return reinterpret_cast<std::vector<T*>&>(mComponents[&typeid(T*)]);
 }
 
 template<> inline std::vector<Entity*>* Scene::GetVector() {
