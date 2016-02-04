@@ -14,5 +14,11 @@ namespace Component {
             
             /// Destructor.
             ~Spawner();
+            
+            /// Elapsed time since last spawn (in second).
+            float timeSinceSpawn;
+            
+            /// Delay between spawns.
+            float delay;
     };
 }

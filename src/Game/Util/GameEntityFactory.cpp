@@ -54,6 +54,7 @@ Entity* GameEntityFactory::CreatePlayer(glm::vec3 origin, InputHandler::Player p
     playerEntity->GetComponent<Component::Transform>()->position = origin;
     playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
     playerEntity->GetComponent<Component::Controller>()->playerID = player;
+    playerEntity->GetComponent<Component::Spawner>()->delay = 1.f;
 
     //playerEntity->AddComponent<Component::Player>();
 

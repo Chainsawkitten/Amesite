@@ -24,10 +24,14 @@ void ControllerSystem::Update(Scene& scene, float deltaTime) {
         float z = Input()->ButtonValue(Input()->MOVE_Z, controllerObjects[i]->playerID);
         
         Component::Spawner* spawnerComponent = controllerObjects[i]->entity->GetComponent<Component::Spawner>();
-        if (spawnerComponent != nullptr && Input()->Pressed(Input()->SHOOT, controllerObjects[i]->playerID)) {
-            Log() << "Shoot pressed\n";
-            GameEntityCreator().SetScene(&scene);
-            GameEntityCreator().CreateBullet(transformComponent->position, glm::vec3(1.f, 0.f, 0.f));
+        if (spawnerComponent != nullptr) {
+            spawnerComponent->timeSinceSpawn += deltaTime;
+            if (Input()->Pressed(Input()->SHOOT, controllerObjects[i]->playerID) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
+                Log() << "Shoot pressed\n";
+                GameEntityCreator().SetScene(&scene);
+                GameEntityCreator().CreateBullet(transformComponent->position, glm::vec3(1.f, 0.f, 0.f));
+                spawnerComponent->timeSinceSpawn = 0.0f;
+            }
         }
 
         glm::vec3 speedVec = glm::vec3(x * 6000 * deltaTime, 0, z * 6000 * deltaTime);
