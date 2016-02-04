@@ -64,6 +64,7 @@ class Scene {
         // List of all entities created in this scene.
         std::vector<Entity*> mEntityVector;
 
+        // Map containing vectors of components.
         std::map<const std::type_info*, std::vector<Component::SuperComponent*>> mComponents;
 
         // List of all collisons in this scene.
