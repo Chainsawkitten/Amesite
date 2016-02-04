@@ -217,6 +217,7 @@ set(GAME_SRCS
         src/Game/Util/CameraUpdate.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.hpp
+        src/Game/Util/ControlSchemes.cpp
     )
 
 set(GAME_HEADERS
@@ -227,6 +228,7 @@ set(GAME_HEADERS
         src/Game/Util/CameraUpdate.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.cpp
+        src/Game/Util/ControlSchemes.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

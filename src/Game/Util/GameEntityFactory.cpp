@@ -9,6 +9,7 @@
 #include <Component/Collider2DRectangle.hpp>
 #include <Component/Physics.hpp>
 #include "../Component/Spawner.hpp"
+#include <Component/SpotLight.hpp>
 #include <Component/ParticleEmitter.hpp>
 
 #include <Geometry/Geometry3D.hpp>
@@ -19,6 +20,8 @@
 
 #include <Scene/Scene.hpp>
 #include "../Component/Controller.hpp"
+
+#include <../Game/Util/ControlSchemes.hpp>
 
 GameEntityFactory& GameEntityFactory::GetInstance() {
     static GameEntityFactory instance;
@@ -57,9 +60,8 @@ Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     playerEntity->GetComponent<Component::Transform>()->position = origin;
     playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
     playerEntity->GetComponent<Component::Controller>()->playerID = player;
+    playerEntity->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
     playerEntity->GetComponent<Component::Spawner>()->delay = 1.f;
-
-    //playerEntity->AddComponent<Component::Player>();
 
     return playerEntity;
 }
