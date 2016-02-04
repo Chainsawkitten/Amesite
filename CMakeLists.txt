@@ -216,7 +216,11 @@ set(GAME_SRCS
         src/Game/CaveSystem/CaveSystem.cpp
         src/Game/Util/GameEntityFactory.cpp
         src/Game/System/ControllerSystem.cpp
+        src/Game/System/HealthSystem.cpp
+        src/Game/System/DamageSystem.cpp
         src/Game/Component/Controller.cpp
+        src/Game/Component/Health.cpp
+        src/Game/Component/Damage.cpp
     )
 
 set(GAME_HEADERS
@@ -224,7 +228,11 @@ set(GAME_HEADERS
         src/Game/CaveSystem/CaveSystem.hpp
         src/Game/Util/GameEntityFactory.hpp
         src/Game/System/ControllerSystem.hpp
+        src/Game/System/HealthSystem.hpp
+        src/Game/System/DamageSystem.hpp
         src/Game/Component/Controller.hpp
+        src/Game/Component/Health.hpp
+        src/Game/Component/Damage.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

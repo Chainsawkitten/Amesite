@@ -20,6 +20,8 @@
 #include <System/CollisionSystem.hpp>
 
 #include "../Game/System/ControllerSystem.hpp"
+#include "../Game/System/HealthSystem.hpp"
+#include "../Game/System/DamageSystem.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -71,8 +73,14 @@ int main() {
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;
 
-    // ControllerSystem
+    // ControllerSystem.
     System::ControllerSystem controllerSystem;
+
+    // HealthSystem.
+    System::HealthSystem healthSystem;
+
+    // DamageSystem.
+    System::DamageSystem damageSystem;
 
     Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_ONE);
     Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_ONE);
@@ -130,7 +138,7 @@ int main() {
         lastTime = glfwGetTime();
         
         // ControllerSystem
-        controllerSystem.Update(scene, deltaTime);
+        controllerSystem.Update(scene, (float)deltaTime);
 
         // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
@@ -140,6 +148,12 @@ int main() {
 
         // Check collisions.
         collisionSystem.Update(scene);
+
+        // Update health
+        healthSystem.Update(scene, (float)deltaTime);
+
+        // Update damage
+        damageSystem.Update(scene);
 
         // Render.
         renderSystem.Render(scene);
