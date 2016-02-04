@@ -156,7 +156,7 @@ int main() {
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
-    Log() << to_string(lastTimeRender);
+    Log() << to_string(lastTimeRender) << "\n";
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
