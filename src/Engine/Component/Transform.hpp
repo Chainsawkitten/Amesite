@@ -28,7 +28,7 @@ namespace Component {
              */
             glm::vec3 GetWorldPosition() const;
 
-            /// Get scale from model matrix.
+            /// Get scale of the entity.
             /**
              * @return The entity's scale.
              */

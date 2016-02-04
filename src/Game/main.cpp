@@ -98,7 +98,6 @@ int main() {
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
-    float rotation = 0;
    
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
@@ -110,7 +109,7 @@ int main() {
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
 
-        // Check collisions
+        // Check collisions.
         collisionSystem.Update(scene);
 
         // Render.

@@ -51,6 +51,7 @@ class Scene {
          */
         template <typename T> std::vector<T*>* GetVector() { return nullptr; };
 
+        /// Contains data about which entities in the scene this entity intersects with.
         struct Collision {
             Entity* entity = nullptr;
             std::vector<Entity*> intersect;
@@ -69,7 +70,7 @@ class Scene {
         std::vector<Collision*> mCollisionVector;
 };
 
-template<typename T> void Scene::AddComponentToList(T* component){
+template<typename T> void Scene::AddComponentToList(T* component) {
     const std::type_info* componentType = &typeid(component);
     AddComponentToList(component, componentType);
     return;
