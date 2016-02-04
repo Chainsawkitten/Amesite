@@ -23,7 +23,7 @@ void ControllerSystem::Update(Scene& scene, float deltaTime) {
         Component::Spawner* spawnerComponent = controllerObjects[i]->entity->GetComponent<Component::Spawner>();
         if (spawnerComponent != nullptr) {
             spawnerComponent->timeSinceSpawn += deltaTime;
-            if (Input()->Pressed(InputHandler::SHOOT, controllerObjects[i]->playerID)) {// && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
+            if (Input()->Pressed(InputHandler::SHOOT, controllerObjects[i]->playerID) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
                 Log() << "Shoot\n";
                 GameEntityCreator().SetScene(&scene);
                 

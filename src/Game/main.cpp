@@ -51,41 +51,41 @@ using namespace std;
 std::string space2underscore(std::string text);
 
 int main() {
-
+    
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
+    
     // Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
         freopen(FileSystem::SavePath("Modership", "GameLog.txt").c_str(), "a", stderr);
-
+    
     Log() << "Game started - " << time(nullptr) << "\n";
-
+    
     if (!glfwInit())
         return 1;
-
+    
     MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Modership", GameSettings::GetInstance().GetBool("Debug Context"));
     glewInit();
     window->Init();
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
-
+    
     // Particle System.
     System::ParticleSystem* particleSystem;
     particleSystem = new System::ParticleSystem;
     particleSystem->SetActive();
-
+    
     // Particle texture.
     Texture2D* particleTexture;
     particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
-
+    
     // RenderSystem.
     System::RenderSystem renderSystem;
-
+    
     // Scene and Entites. 
     Scene scene;
-
+    
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;
-
+    
     // ControllerSystem
     System::ControllerSystem controllerSystem;
     
@@ -105,7 +105,7 @@ int main() {
     Input()->AssignKeyboard(InputHandler::DOWN, GLFW_KEY_S, InputHandler::PLAYER_ONE);
     Input()->AssignKeyboard(InputHandler::RIGHT, GLFW_KEY_D, InputHandler::PLAYER_ONE);
     Input()->AssignKeyboard(InputHandler::LEFT, GLFW_KEY_A, InputHandler::PLAYER_ONE);
-    //Input()->AssignKeyboard(InputHandler::SHOOT, GLFW_KEY_T, InputHandler::PLAYER_ONE);
+    Input()->AssignKeyboard(InputHandler::SHOOT, GLFW_KEY_T, InputHandler::PLAYER_ONE);
     
     GameEntityCreator().SetScene(&scene);
     
@@ -115,7 +115,7 @@ int main() {
     
     // CollisionSystem.
     System::CollisionSystem collisionSystem;
-
+    
     Entity* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     mainCamera->AddComponent<Component::Physics>();
     Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
@@ -125,14 +125,14 @@ int main() {
     std::vector<Entity*> players;
     players.push_back(player1);
     players.push_back(player2);
-
+    
     Entity* theMap = GameEntityCreator().CreateMap();
     
     GameEntityCreator().CreateBullet(glm::vec3(1.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f));
-
+    
     // Create dust particles
     GameEntityCreator().CreateCuboidParticle(mainCamera, particleTexture);
-
+    
     // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
@@ -150,15 +150,15 @@ int main() {
     spotLight->GetComponent<Component::RelativeTransform>()->parentEntity = player1;
     //spotLight->GetComponent<Component::RelativeTransform>()->pitch = 45.f;
     spotLight->AddComponent<Component::Mesh>()->geometry = player1->GetComponent<Component::Mesh>()->geometry;
-
+    
     spotLight->AddComponent<Component::SpotLight>()->coneAngle = 90;
     spotLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
     //player->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
-
+    
     spotLight->AddComponent<Component::Physics>();
     spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     spotLight->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickRotate;
-
+    
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
@@ -169,31 +169,30 @@ int main() {
         
         // ControllerSystem
         controllerSystem.Update(scene, deltaTime);
-
+        
         // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
-
-
+        
         // UpdateCamera
         UpdateCamera(mainCamera, players);
-
+        
         // ParticleSystem
         particleSystem->Update(scene, deltaTime);
-
+        
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
-
+        
         // Check collisions.
         collisionSystem.Update(scene);
-
+        
         // Render.
         renderSystem.Render(scene);
-
+        
         // Input testing.
         window->Update();
         
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f));
-
+        
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))

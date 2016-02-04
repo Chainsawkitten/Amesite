@@ -25,7 +25,7 @@
 
 GameEntityFactory& GameEntityFactory::GetInstance() {
     static GameEntityFactory instance;
-
+    
     return instance;
 }
 
@@ -38,16 +38,15 @@ Entity* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
     enemyEntity->AddComponent<Component::Mesh>();
     enemyEntity->AddComponent<Component::Transform>();
     enemyEntity->AddComponent<Component::Collider2DCircle>();
-
+    
     enemyEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     enemyEntity->GetComponent<Component::Transform>()->position = origin;
     enemyEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
-
+    
     return enemyEntity;
 }
 
 Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::Player player) {
-    
     Entity* playerEntity = mScene->CreateEntity();
     playerEntity->AddComponent<Component::Mesh>();
     playerEntity->AddComponent<Component::Transform>();
@@ -55,26 +54,26 @@ Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     playerEntity->AddComponent<Component::Physics>();
     playerEntity->AddComponent<Component::Controller>();
     playerEntity->AddComponent<Component::Spawner>();
-
+    
     playerEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     playerEntity->GetComponent<Component::Transform>()->position = origin;
     playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
     playerEntity->GetComponent<Component::Controller>()->playerID = player;
     playerEntity->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
     playerEntity->GetComponent<Component::Spawner>()->delay = 1.f;
-
+    
     return playerEntity;
 }
 
 Entity* GameEntityFactory::CreateCube(const glm::vec3& origin) {
-	Entity* cubeEntity = mScene->CreateEntity();
-	cubeEntity->AddComponent<Component::Mesh>();
-	cubeEntity->AddComponent<Component::Transform>();
-
-	cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-	cubeEntity->GetComponent<Component::Transform>()->position = origin;
-
-	return cubeEntity;
+    Entity* cubeEntity = mScene->CreateEntity();
+    cubeEntity->AddComponent<Component::Mesh>();
+    cubeEntity->AddComponent<Component::Transform>();
+    
+    cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    cubeEntity->GetComponent<Component::Transform>()->position = origin;
+    
+    return cubeEntity;
 }
 
 Entity* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::vec3& direction) {
@@ -95,10 +94,10 @@ Entity* GameEntityFactory::CreateCamera(const glm::vec3& origin, const glm::vec3
     Entity* cameraEntity = mScene->CreateEntity();
     cameraEntity->AddComponent<Component::Transform>();
     cameraEntity->AddComponent<Component::Lens>();
-
+    
     cameraEntity->GetComponent<Component::Transform>()->position = origin;
     cameraEntity->GetComponent<Component::Transform>()->Rotate(rotation.x, rotation.y, rotation.z);
-
+    
     return cameraEntity;
 }
 
@@ -108,10 +107,10 @@ void GameEntityFactory::SetScene(Scene* scene) {
 
 void GameEntityFactory::CreateCuboidParticle(Entity * camera, Texture2D* particleTexture) {
     camera->AddComponent<Component::ParticleEmitter>();
-
+    
     // Particle emitter.
     Component::ParticleEmitter* emitter = camera->GetComponent<Component::ParticleEmitter>();
-
+    
     emitter->emitterType = Component::ParticleEmitter::CUBOID;
     emitter->follow = camera;
     emitter->maxEmitTime = 0.02;
@@ -123,7 +122,7 @@ void GameEntityFactory::CreateCuboidParticle(Entity * camera, Texture2D* particl
     emitter->relative = true;
     emitter->follow = camera;
     emitter->timeToNext = 5.0;
-
+    
     //Particle type.
     emitter->particleType.texture = particleTexture;
     emitter->particleType.minLifetime = 6.f;
@@ -142,7 +141,7 @@ Entity* GameEntityFactory::CreateMap() {
 }
 
 GameEntityFactory::~GameEntityFactory() {
-
+    
 }
 
 GameEntityFactory& GameEntityCreator() {

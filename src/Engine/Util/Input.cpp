@@ -15,7 +15,7 @@ void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
 InputHandler* InputHandler::mActiveInstance = nullptr;
 
 InputHandler::InputHandler(GLFWwindow* window) {
-    this->mWindow = window;
+    mWindow = window;
     inputMap[window] = this;
 
     // Init mouse state.
@@ -92,7 +92,7 @@ void InputHandler::Update() {
     for (int player = 0; player < (PLAYERS - 1); player++) {
         for (int button = 0; button < BUTTONS; button++) {
             double value = 0.0;
-            for (auto &key : mBindings[player*BUTTONS + button]) {
+            for (int key : mBindings[player*BUTTONS + button]) {
 
                 // Switch the different input devices.
                 switch (mBindingDevice[player][button]) {
@@ -105,23 +105,16 @@ void InputHandler::Update() {
                     if (mJoystickAxis[player][button]) {
                         value = (abs(mJoystickAxisData[player][key])>mThreshold) ? value = mJoystickAxisData[player][key] : value = 0.0;
                     // Buttons of joystick.
-                    } else {
-                        if (mJoystickButtonPressed[player][mBindings[button][0]] == GLFW_PRESS) {
-                            value = 1.0;
-                        } else {
-                            value = 0.0;
-                        }
+                    } else if (mJoystickButtonPressed[player][mBindings[button][0]] == GLFW_PRESS) {
+                        value = 1.0;
                     }
                     break;
-                default:
-                    value = 0.0;
-                    break;
                 }
-                mButtonTriggered[player][button] = (mButtonValue[player][button] == 1.0) && (value == 1.0);
-                mButtonReleased[player][button] = (mButtonValue[player][button] == 0.0) && (value == 0.0);
-                mButtonValue[player][button] = value;
-
             }
+            
+            mButtonTriggered[player][button] = (mButtonValue[player][button] == 1.0) && (value == 1.0);
+            mButtonReleased[player][button] = (mButtonValue[player][button] == 0.0) && (value == 0.0);
+            mButtonValue[player][button] = value;
         }
     }
     // Update the 'Anyone' input section
