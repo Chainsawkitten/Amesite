@@ -97,6 +97,8 @@ int main() {
     Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
     Entity* player = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     Entity* theMap = GameEntityCreator().CreateMap();
+    
+    GameEntityCreator().CreateBullet(glm::vec3(1.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f));
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     

@@ -74,6 +74,9 @@ Entity* GameEntityFactory::CreateBullet(glm::vec3 position, glm::vec3 direction)
     Component::Transform* transform = bullet->AddComponent<Component::Transform>();
     transform->position = position;
     
+    Component::Physics* physics = bullet->AddComponent<Component::Physics>();
+    physics->velocity = direction;
+    
     Component::Mesh* mesh = bullet->AddComponent<Component::Mesh>();
     mesh->geometry = Resources().CreateCube();
     
