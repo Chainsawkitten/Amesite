@@ -21,6 +21,8 @@
 #include <System/ParticleSystem.hpp>
 #include <System/ParticleRenderSystem.hpp>
 
+#include "Game/System/HealthSystem.hpp"
+#include "Game/System/DamageSystem.hpp"
 #include "Game/System/ControllerSystem.hpp"
 #include "Util/CameraUpdate.hpp"
 
@@ -38,7 +40,6 @@
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include <Component/ParticleEmitter.hpp>
-//#include <Component/Collider2DRectangle.hpp>
 
 #include <Texture/Texture2D.hpp>
 
@@ -85,8 +86,14 @@ int main() {
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;
 
-    // ControllerSystem
+    // ControllerSystem.
     System::ControllerSystem controllerSystem;
+
+    // HealthSystem.
+    System::HealthSystem healthSystem;
+
+    // DamageSystem.
+    System::DamageSystem damageSystem;
 
     Input()->AssignJoystick(InputHandler::MOVE_X, true, InputHandler::LEFT_STICK_X, InputHandler::PLAYER_ONE);
     Input()->AssignJoystick(InputHandler::MOVE_Z, true, InputHandler::LEFT_STICK_Y, InputHandler::PLAYER_ONE);
@@ -112,6 +119,7 @@ int main() {
     // CollisionSystem.
     System::CollisionSystem collisionSystem;
 
+    Entity* batCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     Entity* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     mainCamera->AddComponent<Component::Physics>();
     Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
@@ -162,7 +170,7 @@ int main() {
         lastTime = glfwGetTime();
         
         // ControllerSystem
-        controllerSystem.Update(scene, deltaTime);
+        controllerSystem.Update(scene, (float)deltaTime);
 
         // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
@@ -179,6 +187,12 @@ int main() {
 
         // Check collisions.
         collisionSystem.Update(scene);
+
+        // Update health
+        healthSystem.Update(scene, (float)deltaTime);
+
+        // Update damage
+        damageSystem.Update(scene);
 
         // Render.
         renderSystem.Render(scene);

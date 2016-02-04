@@ -1,12 +1,10 @@
 #pragma once
 
-#include <Engine\Component\SuperComponent.hpp>
+#include <Engine/Component/SuperComponent.hpp>
 #include <Util/Input.hpp>
 
-class InputHandler;
-
 namespace Component {
-    ///Component providing player control.
+    ///Component providing control.
     class Controller : public SuperComponent {
 
         public:

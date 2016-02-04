@@ -21,7 +21,7 @@ void RelativeTransform::UpdateModelMatrix() {
 
 glm::vec3 RelativeTransform::GetWorldScale() const {
     if (parentEntity != nullptr)
-        return parentEntity->GetComponent<Component::Transform>()->scale * scale;
+        return parentEntity->GetComponent<Component::Transform>()->GetWorldScale() * scale;
     else
         return scale;
 }
