@@ -217,6 +217,7 @@ set(GAME_SRCS
         src/Game/Util/GameEntityFactory.cpp
         src/Game/System/ControllerSystem.cpp
         src/Game/Component/Controller.cpp
+	src/Game/ControlSchemes.cpp
     )
 
 set(GAME_HEADERS
@@ -225,6 +226,7 @@ set(GAME_HEADERS
         src/Game/Util/GameEntityFactory.hpp
         src/Game/System/ControllerSystem.hpp
         src/Game/Component/Controller.hpp
+        src/Game/ControlSchemes.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

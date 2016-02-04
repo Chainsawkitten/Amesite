@@ -40,6 +40,7 @@
 
 #include <thread>
 #include <fstream>
+#include "ControlSchemes.hpp"
 
 using namespace std;
 
@@ -84,6 +85,11 @@ int main() {
     Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_TWO);
     Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_TWO);
 
+    Input()->AssignKeyboard(Input()->UP, 87, Input()->PLAYER_ONE);
+    Input()->AssignKeyboard(Input()->DOWN, 83, Input()->PLAYER_ONE);
+    Input()->AssignKeyboard(Input()->RIGHT, 68, Input()->PLAYER_ONE);
+    Input()->AssignKeyboard(Input()->LEFT, 65, Input()->PLAYER_ONE);
+
     GameEntityCreator().SetScene(&scene);
 
     int score = 0;
@@ -110,17 +116,19 @@ int main() {
     
     // Spot light.
     Entity* spotLight = scene.CreateEntity();
-    transform = spotLight->AddComponent<Component::Transform>();
-    transform->position = glm::vec3(0.f, 1.f, 0.f);
-    transform->yaw = 90.f;
-    Component::SpotLight* sLight = spotLight->AddComponent<Component::SpotLight>();
-    sLight->color = glm::vec3(1.f, 1.f, 1.f);
-    sLight->attenuation = 0.1f;
-    sLight->coneAngle = 30.f;
+    spotLight->AddComponent<Component::RelativeTransform>()->Move(0, 5, 0);
+    spotLight->GetComponent<Component::RelativeTransform>()->parentEntity = player;
+    //spotLight->GetComponent<Component::RelativeTransform>()->pitch = 45.f;
+    spotLight->AddComponent<Component::Mesh>()->geometry = player->GetComponent<Component::Mesh>()->geometry;
+
+    spotLight->AddComponent<Component::SpotLight>()->coneAngle = 90;
+    spotLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
+    //player->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
 
     spotLight->AddComponent<Component::Physics>();
     spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
-    
+    spotLight->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickRotate;
+
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();

@@ -21,6 +21,7 @@ namespace Component {
             ~Controller();
 
             InputHandler::Player playerID;
+            void(*ControlScheme)(Controller* controller, float deltaTime);
 
     };
 
