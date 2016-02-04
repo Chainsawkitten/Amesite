@@ -22,6 +22,18 @@ namespace Component {
             /// Update model matrix.
             virtual void UpdateModelMatrix();
 
+            /// Get world position from model matrix.
+            /**
+             * @return The entity's world position.
+             */
+            glm::vec3 GetWorldPosition() const;
+
+            /// Get scale of the entity.
+            /**
+             * @return The entity's scale.
+             */
+            virtual glm::vec3 GetWorldScale() const;
+
             /// Get orientation matrix.
             /**
              * @return The entity's orientation matrix.

@@ -6,19 +6,6 @@
 #include "../Component/RelativeTransform.hpp"
 #include "../Scene/Scene.hpp"
 
-namespace Component {
-    class Transform;
-    class Lens;
-    class Mesh;
-    class RelativeTransform;
-    class Physics;
-    class Collider2DRectangle;
-    class Collider2DCircle;
-    class SuperComponent;
-}
-
-class Scene;
-
 class Entity {
     public:
         /// Create new Entity.
@@ -57,7 +44,6 @@ class Entity {
         void AddComponent(Component::SuperComponent* component, const std::type_info* componentType);
 };
 
-
 template <typename T> T* Entity::GetComponent() {
     if (this->components.count(&typeid(T*)) != 0) {
         return static_cast<T*>(this->components[&typeid(T*)]);
@@ -74,7 +60,6 @@ template <> inline Component::RelativeTransform* Entity::AddComponent<Component:
             AddComponent(mRelativeTransform, &typeid(mRelativeTransform));
 
             mScene->AddComponentToList(mRelativeTransform, &typeid(Component::Transform*));
-            mScene->AddComponentToList(mRelativeTransform, &typeid(mRelativeTransform));
             return mRelativeTransform;
         }
     return nullptr;

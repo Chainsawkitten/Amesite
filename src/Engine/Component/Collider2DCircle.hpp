@@ -11,14 +11,17 @@ namespace Component {
         public:
             /// Create new %Collider2DCircle.
             /**
-            * @param entity Pointer to which Entity this %Component corresponds.
-            */
+             * @param entity Pointer to which Entity this %Component corresponds.
+             */
             Collider2DCircle(Entity* entity);
 
-            ///Destructor
+            /// Destructor.
             ~Collider2DCircle();
 
-            ///Radius of circle
+            /// Radius of circle.
+            /**
+             * Default: 1.f
+             */
             float radius;
     };
 }

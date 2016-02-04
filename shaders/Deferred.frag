@@ -38,9 +38,9 @@ vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecu
 		attenuation = 1.0;
 	} else {
 		// Point light.
-		surfaceToLight = normalize(light.position.xyz - position);
-		float distanceToLight = length(light.position.xyz - position);
-		attenuation = 1.0 / (1.0 + light.attenuation * pow(distanceToLight, 2));
+		vec3 toLight = light.position.xyz - position;
+		surfaceToLight = normalize(toLight);
+		attenuation = 1.0 / (1.0 + light.attenuation * (toLight.x * toLight.x + toLight.y * toLight.y + toLight.z * toLight.z));
 		
 		// Spot light.
 		float lightToSurfaceAngle = degrees(acos(dot(-surfaceToLight, normalize(light.direction))));
@@ -49,7 +49,7 @@ vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecu
 	}
 	
 	// Ambient.
-	vec3 ambient = light.ambientCoefficient * surfaceColor * light.intensities;
+	vec3 ambient = light.ambientCoefficient * surfaceColor;
 	
 	// Diffuse
 	float diffuseCoefficient = max(0.0, dot(normal, surfaceToLight));

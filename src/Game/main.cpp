@@ -8,12 +8,11 @@
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
 #include "CaveSystem/CaveSystem.hpp"
+
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
-//#include "Engine/Particles/CuboidParticleEmitter.hpp"
-//#include "Engine/Particles/PointParticleEmitter.hpp"
-//#include "Engine/Particles/ParticleSystem.hpp"
+//#include <crtdbg.h>
 
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
@@ -30,9 +29,11 @@
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
 #include <Component/RelativeTransform.hpp>
+#include <Component/DirectionalLight.hpp>
+#include <Component/SpotLight.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
-#include <Component/Collider2DRectangle.hpp>
+//#include <Component/Collider2DRectangle.hpp>
 
 #include <Texture/Texture2D.hpp>
 
@@ -48,7 +49,9 @@ using namespace std;
 std::string space2underscore(std::string text);
 
 int main() {
-    
+
+    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
     // Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
         freopen(FileSystem::SavePath("Modership", "GameLog.txt").c_str(), "a", stderr);
@@ -74,8 +77,6 @@ int main() {
     // ControllerSystem
     System::ControllerSystem controllerSystem;
 
-    Caves::CaveSystem testCaveSystem(&scene);
-
     Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_ONE);
     Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_ONE);
     Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_ONE);
@@ -88,30 +89,41 @@ int main() {
 
     GameEntityCreator().SetScene(&scene);
 
-    Entity* camera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    Entity* enemy = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
-    Entity* player = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
-    Caves::CaveSystem* theMap = GameEntityCreator().CreateMap();
-
-    Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
-
-    // Main game loop.
-    double lastTime = glfwGetTime();
-    double lastTimeRender = glfwGetTime();
-
     int score = 0;
     time_t startTime = time(nullptr);
     int session = 0;
 
-    float playerAcceleration = 6000;
-    float playerMaxSpeed = 40;
-    float playerDrag = 1.5f;
+    // CollisionSystem.
+    System::CollisionSystem collisionSystem;
 
-    std::string testLog = "Player acceleration: " + std::to_string(playerAcceleration) + "\n";
-    testLog += "Player max velocity: " + std::to_string(playerMaxSpeed) + "\n";
-    testLog += "Player drag: " + std::to_string(playerDrag) + "\n";
+    Entity* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
+    Entity* player = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    Entity* theMap = GameEntityCreator().CreateMap();
 
-    float rotation = 0;
+    Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
+    
+    // Directional light.
+    Entity* dirLight = scene.CreateEntity();
+    Component::Transform* transform = dirLight->AddComponent<Component::Transform>();
+    transform->pitch = 90.f;
+    Component::DirectionalLight* dLight = dirLight->AddComponent<Component::DirectionalLight>();
+    dLight->color = glm::vec3(0.1f, 0.1f, 0.1f);
+    dLight->ambientCoefficient = 0.2f;
+    
+    // Spot light.
+    Entity* spotLight = scene.CreateEntity();
+    transform = spotLight->AddComponent<Component::Transform>();
+    transform->position = glm::vec3(0.f, 1.f, 0.f);
+    transform->yaw = 90.f;
+    Component::SpotLight* sLight = spotLight->AddComponent<Component::SpotLight>();
+    sLight->color = glm::vec3(1.f, 1.f, 1.f);
+    sLight->attenuation = 0.1f;
+    sLight->coneAngle = 30.f;
+    
+    // Main game loop.
+    double lastTime = glfwGetTime();
+    double lastTimeRender = glfwGetTime();
    
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
@@ -119,7 +131,7 @@ int main() {
 
         //int xPos = (int)(cubeEntity->GetComponent<Component::Transform>()->position[0] / 5 + 25.f / 2.f + 0.5f);
         //int zPos = (int)(cubeEntity->GetComponent<Component::Transform>()->position[2] / 5 + 25.f / 2.f + 0.25f);
-/*
+        /*
         float caveCollide = *testCaveSystem.mMap[xPos, zPos];
 
         if (testCaveSystem.mMap[xPos][zPos] == 1.f) {
@@ -178,16 +190,19 @@ int main() {
 
         }
 
-*/
+        */
         
         // ControllerSystem
         controllerSystem.Update(scene, deltaTime);
 
         // PhysicsSystem.
-        physicsSystem.Update(scene, deltaTime);
+        physicsSystem.Update(scene, (float)deltaTime);
 
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
+
+        // Check collisions.
+        collisionSystem.Update(scene);
 
         // Render.
         renderSystem.Render(scene);
@@ -215,6 +230,7 @@ int main() {
     }
     
     Resources().FreeTexture2DFromFile(testTexture);
+    Resources().FreeCube();
     Resources().FreeCube();
     
     delete window;
