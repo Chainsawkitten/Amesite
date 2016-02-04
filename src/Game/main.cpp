@@ -191,6 +191,7 @@ int main() {
     Resources().FreeCube();
     
     delete window;
+    delete particleSystem;
     
     glfwTerminate();
     
