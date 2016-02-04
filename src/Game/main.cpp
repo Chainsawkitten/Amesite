@@ -19,7 +19,8 @@
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
 
-#include "../Game/System/ControllerSystem.hpp"
+#include "Game/System/ControllerSystem.hpp"
+#include "Game/System/CameraSystem.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -74,6 +75,9 @@ int main() {
     // ControllerSystem
     System::ControllerSystem controllerSystem;
 
+    // CameraSystem
+    System::CameraSystem cameraSystem;
+
     Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_ONE);
     Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_ONE);
     Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_ONE);
@@ -96,6 +100,7 @@ int main() {
     Entity* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
     Entity* player = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    Entity* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
     Entity* theMap = GameEntityCreator().CreateMap();
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
@@ -117,9 +122,6 @@ int main() {
     sLight->color = glm::vec3(1.f, 1.f, 1.f);
     sLight->attenuation = 0.1f;
     sLight->coneAngle = 30.f;
-
-    spotLight->AddComponent<Component::Physics>();
-    spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -131,6 +133,9 @@ int main() {
         
         // ControllerSystem
         controllerSystem.Update(scene, deltaTime);
+
+        // CameraSystem
+        cameraSystem.Update(scene, deltaTime);
 
         // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
