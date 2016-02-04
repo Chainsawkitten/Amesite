@@ -29,14 +29,15 @@ class GameEntityFactory {
        
         /// Create a player.
         /**
-        *@param origin The enemy's starting position
-        */
+         *@param origin The player's starting position
+         *@param Who controls the player
+         */
         Entity* GameEntityFactory::CreatePlayer(glm::vec3 origin, InputHandler::Player player);
 
 		/// Create a cube for testing purposes.
         /**
-        *@param origin The cube's starting position
-        */
+         *@param origin The cube's starting position
+         */
 		Entity* CreateCube(glm::vec3 origin);
 
         /// Create a camera.
