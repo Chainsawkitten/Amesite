@@ -52,8 +52,7 @@ ParticleRenderSystem::ParticleRenderSystem() {
 }
 
 
-ParticleRenderSystem::~ParticleRenderSystem()
-{
+ParticleRenderSystem::~ParticleRenderSystem() {
     Resources().FreeShaderProgram(mParticleShaderProgram);
     Resources().FreeShader(mParticleVertShader);
     Resources().FreeShader(mParticleGeomShader);
@@ -62,8 +61,7 @@ ParticleRenderSystem::~ParticleRenderSystem()
     glDeleteBuffers(1, &mVertexBuffer);
 }
 
-void ParticleRenderSystem::Render(Scene & scene, Entity* camera)
-{
+void ParticleRenderSystem::Render(Scene & scene, Entity* camera) {
     if (Particle()->ParticleCount() > 0) {
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         // Return vector by value or no?
@@ -72,53 +70,56 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera)
         glBufferSubData(GL_ARRAY_BUFFER, 0, Particle()->ParticleCount() *sizeof(ParticleSystem::Particle), particles->data());
     }
 
-    // Don't write to depth buffer.
-    GLboolean depthWriting;
-    glGetBooleanv(GL_DEPTH_WRITEMASK, &depthWriting);
-    glDepthMask(GL_FALSE);
-
-    // Blending
-    GLboolean blending;
-    glGetBooleanv(GL_BLEND, &blending);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
     std::vector<Component::ParticleEmitter*> emitters = scene.GetAll<Component::ParticleEmitter>();
-    Component::ParticleEmitter* emitter = emitters[0]; 
-    //Todo: send all textures at once and which which to render using a defined type in GLSL.
-    mParticleShaderProgram->Use();
+    if (!emitters.empty()) {
 
-    glUniform1i(mParticleShaderProgram->GetUniformLocation("baseImage"), 0);
-    
-    glActiveTexture(GL_TEXTURE0 + 0);
-    glBindTexture(GL_TEXTURE_2D, emitter->particleType.texture->GetTextureID());
+        // Don't write to depth buffer.
+        GLboolean depthWriting;
+        glGetBooleanv(GL_DEPTH_WRITEMASK, &depthWriting);
+        glDepthMask(GL_FALSE);
 
-    glBindVertexArray(mVertexAttribute);
+        // Blending
+        GLboolean blending;
+        glGetBooleanv(GL_BLEND, &blending);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-    // Base image texture
-    glActiveTexture(GL_TEXTURE0 + 0);
-    glBindTexture(GL_TEXTURE_2D, emitter->particleType.texture->GetTextureID());
+        Component::ParticleEmitter* emitter = emitters[0];
+        //Todo: send all textures at once and which which to render using a defined type in GLSL.
+        mParticleShaderProgram->Use();
 
-    // Send the matrices to the shader.
-    glm::mat4 view = camera->GetComponent<Component::Transform>()->GetOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
-    glm::vec3 up(glm::inverse(camera->GetComponent<Component::Transform>()->GetOrientation())* glm::vec4(0, 1, 0, 1));
-    camera->GetComponent<Component::Transform>()->position;
+        glUniform1i(mParticleShaderProgram->GetUniformLocation("baseImage"), 0);
 
-    // Ugly hardcoded resolution.
-    glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraPosition"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
-    glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraUp"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
-    glUniformMatrix4fv(mParticleShaderProgram->GetUniformLocation("viewProjectionMatrix"), 1, GL_FALSE, &(camera->GetComponent<Component::Lens>()->GetProjection(glm::vec2(800.f, 600.f)) * view)[0][0]);
+        glActiveTexture(GL_TEXTURE0 + 0);
+        glBindTexture(GL_TEXTURE_2D, emitter->particleType.texture->GetTextureID());
 
-    float alpha[3] = { emitter->particleType.startAlpha, emitter->particleType.midAlpha, emitter->particleType.endAlpha };
-    glUniform1fv(mParticleShaderProgram->GetUniformLocation("alpha"), 3, alpha);
+        glBindVertexArray(mVertexAttribute);
 
-    glUniform3fv(mParticleShaderProgram->GetUniformLocation("color"), 1, &emitter->particleType.color[0]);
+        // Base image texture
+        glActiveTexture(GL_TEXTURE0 + 0);
+        glBindTexture(GL_TEXTURE_2D, emitter->particleType.texture->GetTextureID());
 
-    // Draw the triangles
-    glDrawArrays(GL_POINTS, 0, Particle()->ParticleCount());
+        // Send the matrices to the shader.
+        glm::mat4 view = camera->GetComponent<Component::Transform>()->GetOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
+        glm::vec3 up(glm::inverse(camera->GetComponent<Component::Transform>()->GetOrientation())* glm::vec4(0, 1, 0, 1));
+        camera->GetComponent<Component::Transform>()->position;
 
-    // Reset state values we've changed.
-    glDepthMask(depthWriting);
-    if (!blending)
-        glDisable(GL_BLEND);
+        // Ugly hardcoded resolution.
+        glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraPosition"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
+        glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraUp"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
+        glUniformMatrix4fv(mParticleShaderProgram->GetUniformLocation("viewProjectionMatrix"), 1, GL_FALSE, &(camera->GetComponent<Component::Lens>()->GetProjection(glm::vec2(800.f, 600.f)) * view)[0][0]);
+
+        float alpha[3] = { emitter->particleType.startAlpha, emitter->particleType.midAlpha, emitter->particleType.endAlpha };
+        glUniform1fv(mParticleShaderProgram->GetUniformLocation("alpha"), 3, alpha);
+
+        glUniform3fv(mParticleShaderProgram->GetUniformLocation("color"), 1, &emitter->particleType.color[0]);
+
+        // Draw the triangles
+        glDrawArrays(GL_POINTS, 0, Particle()->ParticleCount());
+
+        // Reset state values we've changed.
+        glDepthMask(depthWriting);
+        if (!blending)
+            glDisable(GL_BLEND);
+    }
 }
