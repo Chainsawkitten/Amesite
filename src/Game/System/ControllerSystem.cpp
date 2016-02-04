@@ -6,7 +6,7 @@
 #include <Engine\Component\Physics.hpp>
 
 #include "..\Component\Controller.hpp"
-#include "..\ControlSchemes.hpp"
+#include "..\Util\ControlSchemes.hpp"
 
 using namespace System;
 

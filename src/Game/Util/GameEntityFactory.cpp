@@ -20,7 +20,7 @@
 #include <Scene/Scene.hpp>
 #include "../Component/Controller.hpp"
 
-#include <../Game/ControlSchemes.hpp>
+#include <../Game/Util/ControlSchemes.hpp>
 
 GameEntityFactory& GameEntityFactory::GetInstance() {
     static GameEntityFactory instance;

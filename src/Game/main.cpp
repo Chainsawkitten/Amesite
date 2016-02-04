@@ -44,7 +44,7 @@
 
 #include <thread>
 #include <fstream>
-#include "ControlSchemes.hpp"
+#include "Util/ControlSchemes.hpp"
 
 using namespace std;
 
@@ -88,20 +88,20 @@ int main() {
     // ControllerSystem
     System::ControllerSystem controllerSystem;
 
-    Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_ONE);
-    Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_ONE);
-    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_ONE);
-    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_ONE);
+    Input()->AssignJoystick(Input()->MOVE_X, true, InputHandler::LEFT_STICK_X, InputHandler::PLAYER_ONE);
+    Input()->AssignJoystick(Input()->MOVE_Z, true, InputHandler::LEFT_STICK_Y, InputHandler::PLAYER_ONE);
+    Input()->AssignJoystick(Input()->AIM_X, true, InputHandler::RIGHT_STICK_Y, InputHandler::PLAYER_ONE);
+    Input()->AssignJoystick(Input()->AIM_Z, true, InputHandler::RIGHT_STICK_X, InputHandler::PLAYER_ONE);
 
-    Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_TWO);
-    Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_TWO);
-    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_TWO);
-    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_TWO);
+    Input()->AssignJoystick(Input()->MOVE_X, true, InputHandler::LEFT_STICK_X, InputHandler::PLAYER_TWO);
+    Input()->AssignJoystick(Input()->MOVE_Z, true, InputHandler::LEFT_STICK_Y, InputHandler::PLAYER_TWO);
+    Input()->AssignJoystick(Input()->AIM_X, true, InputHandler::RIGHT_STICK_Y, InputHandler::PLAYER_TWO);
+    Input()->AssignJoystick(Input()->AIM_Z, true, InputHandler::RIGHT_STICK_X, InputHandler::PLAYER_TWO);
 
-    Input()->AssignKeyboard(Input()->UP, 87, Input()->PLAYER_ONE);
-    Input()->AssignKeyboard(Input()->DOWN, 83, Input()->PLAYER_ONE);
-    Input()->AssignKeyboard(Input()->RIGHT, 68, Input()->PLAYER_ONE);
-    Input()->AssignKeyboard(Input()->LEFT, 65, Input()->PLAYER_ONE);
+    Input()->AssignKeyboard(Input()->UP, 87, InputHandler::PLAYER_ONE);
+    Input()->AssignKeyboard(Input()->DOWN, 83, InputHandler::PLAYER_ONE);
+    Input()->AssignKeyboard(Input()->RIGHT, 68, InputHandler::PLAYER_ONE);
+    Input()->AssignKeyboard(Input()->LEFT, 65, InputHandler::PLAYER_ONE);
 
     GameEntityCreator().SetScene(&scene);
 

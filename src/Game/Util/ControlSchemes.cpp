@@ -12,8 +12,8 @@ void ControlScheme::StickMove(Component::Controller* controller, float deltaTime
     Entity* entity = controller->entity;
 
     //Move the player
-    float x = Input()->ButtonValue(Input()->MOVE_X, controller->playerID);
-    float z = Input()->ButtonValue(Input()->MOVE_Z, controller->playerID);
+    float x = Input()->ButtonValue(InputHandler::MOVE_X, controller->playerID);
+    float z = Input()->ButtonValue(InputHandler::MOVE_Z, controller->playerID);
 
     glm::vec3 speedVec = glm::vec3(x * 6000 * deltaTime, 0, z * 6000 * deltaTime);
 
@@ -37,8 +37,8 @@ void ControlScheme::StickRotate(Component::Controller* controller, float deltaTi
 
     Entity* entity = controller->entity;
 
-    float a = Input()->ButtonValue(Input()->AIM_X, controller->playerID);
-    float b = Input()->ButtonValue(Input()->AIM_Z, controller->playerID);
+    float a = Input()->ButtonValue(InputHandler::AIM_X, controller->playerID);
+    float b = Input()->ButtonValue(InputHandler::AIM_Z, controller->playerID);
 
     if (glm::abs(a) + glm::abs(b) > 0.3f && glm::abs(a) > 0) {
 
@@ -54,10 +54,10 @@ void ControlScheme::ArrowKeyRotate(Component::Controller* controller, float delt
 
     Entity* entity = controller->entity;
 
-    float up = Input()->ButtonValue(Input()->UP, controller->playerID);
-    float down = Input()->ButtonValue(Input()->DOWN, controller->playerID);
-    float right = Input()->ButtonValue(Input()->RIGHT, controller->playerID);
-    float left = Input()->ButtonValue(Input()->LEFT, controller->playerID);
+    float up = Input()->ButtonValue(InputHandler::UP, controller->playerID);
+    float down = Input()->ButtonValue(InputHandler::DOWN, controller->playerID);
+    float right = Input()->ButtonValue(InputHandler::RIGHT, controller->playerID);
+    float left = Input()->ButtonValue(InputHandler::LEFT, controller->playerID);
 
     Log() << left;
 
@@ -149,10 +149,10 @@ void ControlScheme::ArrowKeysMove(Component::Controller* controller, float delta
     Entity* entity = controller->entity;
 
     //Move the player
-    float up = Input()->ButtonValue(Input()->UP, controller->playerID);
-    float down = Input()->ButtonValue(Input()->DOWN, controller->playerID);
-    float right = Input()->ButtonValue(Input()->RIGHT, controller->playerID);
-    float left = Input()->ButtonValue(Input()->LEFT, controller->playerID);
+    float up = Input()->ButtonValue(InputHandler::UP, controller->playerID);
+    float down = Input()->ButtonValue(InputHandler::DOWN, controller->playerID);
+    float right = Input()->ButtonValue(InputHandler::RIGHT, controller->playerID);
+    float left = Input()->ButtonValue(InputHandler::LEFT, controller->playerID);
 
     glm::vec3 speedVec = glm::vec3((right - left) * 6000 * deltaTime, 0, (down - up) * 6000 * deltaTime);
 
