@@ -76,14 +76,14 @@ int main() {
 
     Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_ONE);
     Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_ONE);
-    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_ONE);
-    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_ONE);
+    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_X, Input()->PLAYER_ONE);
+    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_ONE);
     Input()->AssignJoystick(Input()->SHOOT, false, Input()->RIGHT_BUMPER, Input()->PLAYER_ONE);
 
     Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_TWO);
     Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_TWO);
-    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_TWO);
-    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_TWO);
+    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_X, Input()->PLAYER_TWO);
+    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_TWO);
     Input()->AssignJoystick(Input()->SHOOT, false, Input()->RIGHT_BUMPER, Input()->PLAYER_TWO);
 
     GameEntityCreator().SetScene(&scene);
