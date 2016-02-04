@@ -7,13 +7,10 @@
 
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
-//#include "CaveSystem/CaveSystem.hpp"
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
-//#include "Engine/Particles/CuboidParticleEmitter.hpp"
-//#include "Engine/Particles/PointParticleEmitter.hpp"
-//#include "Engine/Particles/ParticleSystem.hpp"
+//#include <crtdbg.h>
 
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
@@ -32,7 +29,7 @@
 #include <Component/SpotLight.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
-#include <Component/Collider2DRectangle.hpp>
+//#include <Component/Collider2DRectangle.hpp>
 
 #include <Texture/Texture2D.hpp>
 
@@ -41,6 +38,7 @@
 using namespace std;
 
 int main() {
+    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     // Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
         freopen(FileSystem::SavePath("Modership", "GameLog.txt").c_str(), "a", stderr);
@@ -60,31 +58,34 @@ int main() {
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;
 
+    // CollisionSystem.
+    System::CollisionSystem collisionSystem;
+
     // Scene and Entites. 
     Scene scene;
 
     GameEntityCreator().SetScene(&scene);
 
-    Entity* entity = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    entity = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
-    Caves::CaveSystem* theMap = GameEntityCreator().CreateMap();
+    Entity* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
+    Entity* theMap = GameEntityCreator().CreateMap();
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
     // Directional light.
-    entity = scene.CreateEntity();
-    Component::Transform* transform = entity->AddComponent<Component::Transform>();
+    Entity* dirLight = scene.CreateEntity();
+    Component::Transform* transform = dirLight->AddComponent<Component::Transform>();
     transform->pitch = 90.f;
-    Component::DirectionalLight* dLight = entity->AddComponent<Component::DirectionalLight>();
+    Component::DirectionalLight* dLight = dirLight->AddComponent<Component::DirectionalLight>();
     dLight->color = glm::vec3(0.1f, 0.1f, 0.1f);
     dLight->ambientCoefficient = 0.2f;
     
     // Spot light.
-    entity = scene.CreateEntity();
-    transform = entity->AddComponent<Component::Transform>();
+    Entity* spotLight = scene.CreateEntity();
+    transform = spotLight->AddComponent<Component::Transform>();
     transform->position = glm::vec3(0.f, 1.f, 0.f);
     transform->yaw = 90.f;
-    Component::SpotLight* sLight = entity->AddComponent<Component::SpotLight>();
+    Component::SpotLight* sLight = spotLight->AddComponent<Component::SpotLight>();
     sLight->color = glm::vec3(1.f, 1.f, 1.f);
     sLight->attenuation = 0.1f;
     sLight->coneAngle = 30.f;
@@ -92,17 +93,19 @@ int main() {
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
-    float rotation = 0;
    
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
-        
+
         // PhysicsSystem.
-        physicsSystem.Update(scene, deltaTime);
+        physicsSystem.Update(scene, (float)deltaTime);
 
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
+
+        // Check collisions.
+        collisionSystem.Update(scene);
 
         // Render.
         renderSystem.Render(scene);
@@ -130,6 +133,7 @@ int main() {
     }
     
     Resources().FreeTexture2DFromFile(testTexture);
+    Resources().FreeCube();
     Resources().FreeCube();
     
     delete window;

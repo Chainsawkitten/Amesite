@@ -56,7 +56,7 @@ void RenderSystem::Render(Scene& scene) {
 
     // Render from camera.
     if (camera != nullptr) {
-        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
+        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
         glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
 
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
@@ -78,9 +78,8 @@ void RenderSystem::Render(Scene& scene) {
                 glDrawElements(GL_TRIANGLES, model->GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
             }
         }
+        mDeferredLighting->ResetTarget();
+        //mDeferredLighting->ShowTextures(screenSize);
+        mDeferredLighting->Render(scene, camera, screenSize);
     }
-    
-    mDeferredLighting->ResetTarget();
-    //mDeferredLighting->ShowTextures(screenSize);
-    mDeferredLighting->Render(scene, camera, screenSize);
 }

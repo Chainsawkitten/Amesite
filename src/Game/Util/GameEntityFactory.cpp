@@ -23,10 +23,6 @@ GameEntityFactory::GameEntityFactory(){
     mScene = nullptr;
 }
 
-GameEntityFactory::GameEntityFactory( Scene* scene ) {
-    mScene = scene;
-}
-
 Entity* GameEntityFactory::CreateBasicEnemy( glm::vec3 origin ) {
     Entity* enemyEntity = mScene->CreateEntity();
     enemyEntity->AddComponent<Component::Mesh>();
@@ -66,10 +62,9 @@ void GameEntityFactory::SetScene( Scene* scene ) {
     mScene = scene;
 }
 
-Caves::CaveSystem * GameEntityFactory::CreateMap() {
-    Caves::CaveSystem* theMap = new Caves::CaveSystem( mScene );
-    theMap->GenerateCaveSystem();
-    return theMap;
+Entity* GameEntityFactory::CreateMap() {
+    Caves::CaveSystem cave = Caves::CaveSystem();
+    return cave.GenerateCaveSystem(mScene);
 }
 
 GameEntityFactory::~GameEntityFactory() {

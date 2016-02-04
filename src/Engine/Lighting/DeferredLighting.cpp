@@ -153,7 +153,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     
     // Render all directional lights.
     std::vector<Component::DirectionalLight*> directionalLights = scene.GetAll<Component::DirectionalLight>();
-    for (int i=0; i<directionalLights.size(); i++) {
+    for (unsigned int i=0; i<directionalLights.size(); i++) {
         Entity* lightEntity = directionalLights[i]->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
@@ -171,7 +171,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     
     // Render all point lights.
     std::vector<Component::PointLight*> pointLights = scene.GetAll<Component::PointLight>();
-    for (int i=0; i<pointLights.size(); i++) {
+    for (unsigned int i=0; i<pointLights.size(); i++) {
         Entity* lightEntity = pointLights[i]->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
@@ -188,7 +188,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     
     // Render all spot lights.
     std::vector<Component::SpotLight*> spotLights = scene.GetAll<Component::SpotLight>();
-    for (int i=0; i<spotLights.size(); i++) {
+    for (unsigned int i=0; i<spotLights.size(); i++) {
         Entity* lightEntity = spotLights[i]->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {

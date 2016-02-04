@@ -5,11 +5,6 @@
 class Scene;
 class Entity;
 
-namespace Component {
-    class Transform;
-    class Mesh;
-}
-
 namespace Caves {
     /// Generates caves for the player to explore.
     class CaveSystem {
@@ -18,17 +13,15 @@ namespace Caves {
             /**
              * @param scene Pointer to the active scene.
              */
-            CaveSystem(Scene* scene);
+            CaveSystem();
             
             /// Destructor.
             ~CaveSystem();
 
             /// Creates a cave system from map out of cubes.
-            Entity* GenerateCaveSystem();
+            Entity* GenerateCaveSystem(Scene* scene);
             
         private:
-            Scene* mScene;
-            
             static const float mMap[25][25];
     };
 }

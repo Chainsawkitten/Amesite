@@ -19,6 +19,12 @@ namespace Component {
 
             /// Update model matrix.
             void UpdateModelMatrix();
+
+            /// Get scale of the entity.
+            /**
+             * @return The entity's scale relative to a parent.
+             */
+            glm::vec3 GetWorldScale() const;
             
             /// Parent Entity.
             /**

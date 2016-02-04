@@ -5,11 +5,6 @@
 class Scene;
 class Entity;
 
-namespace Caves{
-    class CaveSystem;
-}
-
-
 class GameEntityFactory {
     public:
         /// Get the instance of the class.
@@ -20,12 +15,6 @@ class GameEntityFactory {
         
         /// Default constructor
         GameEntityFactory();
-
-        /// Constructor
-        /**
-         *@param scene The scene that the factory will be coupled to.
-         */
-        GameEntityFactory(Scene* scene);
         
         /// Destructor.
         ~GameEntityFactory();
@@ -55,7 +44,8 @@ class GameEntityFactory {
          */
         void SetScene(Scene* scene);
 
-        Caves::CaveSystem* CreateMap();
+         /// Create a map.
+        Entity* CreateMap();
 
     private:
         Scene* mScene;
