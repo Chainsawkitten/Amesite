@@ -39,10 +39,6 @@
 #include <Texture/Texture2D.hpp>
 
 #include <thread>
-
-#include "Player/Player.hpp"
-#include "Turret/Turret.hpp"
-
 #include <fstream>
 
 using namespace std;
