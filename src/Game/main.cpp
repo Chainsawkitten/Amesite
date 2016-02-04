@@ -61,6 +61,7 @@ int main() {
     MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Modership", GameSettings::GetInstance().GetBool("Debug Context"));
     glewInit();
     window->Init();
+    window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
 
     // RenderSystem.
     System::RenderSystem renderSystem;
