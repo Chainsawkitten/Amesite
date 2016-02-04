@@ -80,6 +80,6 @@ void RenderSystem::Render(Scene& scene) {
         }
         mDeferredLighting->ResetTarget();
         //mDeferredLighting->ShowTextures(screenSize);
-        mDeferredLighting->Render(camera, screenSize);
+        mDeferredLighting->Render(scene, camera, screenSize);
     }
 }

@@ -30,6 +30,8 @@
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
 #include <Component/RelativeTransform.hpp>
+#include <Component/DirectionalLight.hpp>
+#include <Component/SpotLight.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
 //#include <Component/Collider2DRectangle.hpp>
@@ -74,6 +76,24 @@ int main() {
     Entity* theMap = GameEntityCreator().CreateMap();
 
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
+    
+    // Directional light.
+    Entity* dirLight = scene.CreateEntity();
+    Component::Transform* transform = dirLight->AddComponent<Component::Transform>();
+    transform->pitch = 90.f;
+    Component::DirectionalLight* dLight = dirLight->AddComponent<Component::DirectionalLight>();
+    dLight->color = glm::vec3(0.1f, 0.1f, 0.1f);
+    dLight->ambientCoefficient = 0.2f;
+    
+    // Spot light.
+    Entity* spotLight = scene.CreateEntity();
+    transform = spotLight->AddComponent<Component::Transform>();
+    transform->position = glm::vec3(0.f, 1.f, 0.f);
+    transform->yaw = 90.f;
+    Component::SpotLight* sLight = spotLight->AddComponent<Component::SpotLight>();
+    sLight->color = glm::vec3(1.f, 1.f, 1.f);
+    sLight->attenuation = 0.1f;
+    sLight->coneAngle = 30.f;
     
     // Main game loop.
     double lastTime = glfwGetTime();
