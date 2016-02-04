@@ -8,7 +8,7 @@ namespace Component {
 }
 
 namespace System {
-    ///Class providing collision detection
+    /// Class providing collision detection.
     class CollisionSystem {
         public:
             /// Create %CollisionSystem.

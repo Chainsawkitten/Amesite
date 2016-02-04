@@ -7,7 +7,7 @@ class Entity;
 #include <glm\glm.hpp>
 
 namespace Component {
-    /// Component handling a camera lens.
+    /// %Component handling a camera lens.
     class Lens : public SuperComponent {
         public:
             /// Create new %Lens.

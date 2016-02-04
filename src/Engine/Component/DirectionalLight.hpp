@@ -6,7 +6,7 @@
 class Entity;
 
 namespace Component {
-    /// Component describing a directional light (like a sun).
+    /// %Component describing a directional light (like a sun).
     class DirectionalLight : public SuperComponent {
         public:
             /// Create new light.

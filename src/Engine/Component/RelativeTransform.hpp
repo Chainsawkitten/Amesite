@@ -5,7 +5,7 @@
 class Entity;
 
 namespace Component {
-    /// Component providing transformation relative to a parent Entity.
+    /// %Component providing transformation relative to a parent Entity.
     class RelativeTransform : public Transform {
         public:
             /// Create new %RelativeTransform.

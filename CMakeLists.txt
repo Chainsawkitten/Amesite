@@ -54,6 +54,7 @@ endfunction()
 # Copy resources
 set(RESOURCES
     assets/TestTexture.png
+    assets/DustParticle.png
 )
 
 file(COPY ${RESOURCES} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
@@ -218,9 +219,9 @@ set(GAME_SRCS
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
         src/Game/Component/Controller.cpp
+        src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
-        src/Game/Component/Controller.cpp
     )
 
 set(GAME_HEADERS
@@ -234,9 +235,9 @@ set(GAME_HEADERS
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/Component/Controller.hpp
+        src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
-        src/Game/Component/Controller.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
