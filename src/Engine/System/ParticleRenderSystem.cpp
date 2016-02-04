@@ -21,8 +21,7 @@
 
 using namespace System;
 
-ParticleRenderSystem::ParticleRenderSystem()
-{
+ParticleRenderSystem::ParticleRenderSystem() {
     mParticleVertShader = Resources().CreateShader(PARTICLE_VERT, PARTICLE_VERT_LENGTH, GL_VERTEX_SHADER);
     mParticleGeomShader = Resources().CreateShader(PARTICLE_GEOM, PARTICLE_GEOM_LENGTH, GL_GEOMETRY_SHADER);
     mParticleFragShader = Resources().CreateShader(PARTICLE_FRAG, PARTICLE_FRAG_LENGTH, GL_FRAGMENT_SHADER);
