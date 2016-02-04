@@ -47,6 +47,4 @@ void UpdateCamera(Entity* camera, const std::vector<Entity*>& players){
     glm::vec3 endPosition = glm::vec3(cameraX,cameraY,cameraZ);
 
     camera->GetComponent<Component::Transform>()->position = glm::vec3(cameraX, cameraY, cameraZ);
-    //camera->GetComponent<Component::Physics>()->acceleration = glm::vec3(cameraX, 0.f, cameraZ);
-    //camera->GetComponent<Component::Physics>()->acceleration = glm::vec3(cameraX, 0.f, cameraZ);
 }
