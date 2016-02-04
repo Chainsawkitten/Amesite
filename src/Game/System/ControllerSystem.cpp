@@ -27,9 +27,17 @@ void ControllerSystem::Update(Scene& scene, float deltaTime) {
         if (spawnerComponent != nullptr) {
             spawnerComponent->timeSinceSpawn += deltaTime;
             if (Input()->Pressed(Input()->SHOOT, controllerObjects[i]->playerID) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
-                Log() << "Shoot pressed\n";
                 GameEntityCreator().SetScene(&scene);
-                GameEntityCreator().CreateBullet(transformComponent->position, glm::vec3(1.f, 0.f, 0.f));
+                
+                glm::vec2 direction = glm::vec2(Input()->ButtonValue(Input()->AIM_X, controllerObjects[i]->playerID), Input()->ButtonValue(Input()->AIM_X, controllerObjects[i]->playerID));
+                float directionLength = glm::length(direction);
+                if (directionLength < 0.001f)
+                    direction = glm::vec2(1.f, 0.f);
+                else
+                    direction = direction / directionLength;
+                
+                float bulletSpeed = 10.f;
+                GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y));
                 spawnerComponent->timeSinceSpawn = 0.0f;
             }
         }
