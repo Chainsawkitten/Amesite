@@ -18,6 +18,8 @@
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
+#include <System/ParticleSystem.hpp>
+#include <System/ParticleRenderSystem.hpp>
 
 #include "../Game/System/ControllerSystem.hpp"
 
@@ -34,6 +36,7 @@
 #include <Component/SpotLight.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
+#include <Component/ParticleEmitter.hpp>
 //#include <Component/Collider2DRectangle.hpp>
 
 #include <Texture/Texture2D.hpp>
@@ -61,6 +64,15 @@ int main() {
     MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Modership", GameSettings::GetInstance().GetBool("Debug Context"));
     glewInit();
     window->Init();
+
+    // Particle System.
+    System::ParticleSystem* particleSystem;
+    particleSystem = new System::ParticleSystem;
+    particleSystem->SetActive();
+
+    // Particle texture.
+    Texture2D* particleTexture;
+    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
 
     // RenderSystem.
     System::RenderSystem renderSystem;
@@ -98,6 +110,10 @@ int main() {
     Entity* player = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     Entity* theMap = GameEntityCreator().CreateMap();
 
+    // Create dust particles
+    GameEntityCreator().CreateCuboidParticle(mainCamera, particleTexture);
+
+    // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
     // Directional light.
@@ -135,6 +151,9 @@ int main() {
         // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
 
+        // ParticleSystem
+        particleSystem->Update(scene, deltaTime);
+
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
 
@@ -167,10 +186,12 @@ int main() {
     }
     
     Resources().FreeTexture2DFromFile(testTexture);
+    Resources().FreeTexture2DFromFile(particleTexture);
     Resources().FreeCube();
     Resources().FreeCube();
     
     delete window;
+    delete particleSystem;
     
     glfwTerminate();
     
