@@ -21,7 +21,8 @@
 #include <System/ParticleSystem.hpp>
 #include <System/ParticleRenderSystem.hpp>
 
-#include "../Game/System/ControllerSystem.hpp"
+#include "Game/System/ControllerSystem.hpp"
+#include "Util/CameraUpdate.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -106,8 +107,15 @@ int main() {
     System::CollisionSystem collisionSystem;
 
     Entity* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    mainCamera->AddComponent<Component::Physics>();
     Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
-    Entity* player = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    
+    Entity* player1 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    Entity* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+    std::vector<Entity*> players;
+    players.push_back(player1);
+    players.push_back(player2);
+
     Entity* theMap = GameEntityCreator().CreateMap();
 
     // Create dust particles
@@ -133,9 +141,6 @@ int main() {
     sLight->color = glm::vec3(1.f, 1.f, 1.f);
     sLight->attenuation = 0.1f;
     sLight->coneAngle = 30.f;
-
-    spotLight->AddComponent<Component::Physics>();
-    spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -150,6 +155,10 @@ int main() {
 
         // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
+
+
+        // UpdateCamera
+        UpdateCamera(mainCamera, players);
 
         // ParticleSystem
         particleSystem->Update(scene, deltaTime);
