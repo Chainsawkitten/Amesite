@@ -71,6 +71,19 @@ void InputHandler::Update() {
         mMouseStateLast[i] = mMouseState[i];
         mMouseState[i] = (glfwGetMouseButton(mWindow, i) == GLFW_PRESS);
     }
+
+    // Check if controller was disconnected or reconnected.
+    for (int player = 0; player < PLAYERS - 1; player++) {
+        if (glfwJoystickPresent(player) == GLFW_FALSE && mActiveJoystick[player]) {
+            mActiveJoystick[player] = false;
+            Log() << "Player " << player+1 << " joystick was disconnected! \n";
+        }
+        else if (glfwJoystickPresent(player) == GLFW_TRUE && !mActiveJoystick[player]) {
+            mActiveJoystick[player] = true;
+            Log() << "Player " << player+1 <<" joystick ("<< glfwGetJoystickName(player) <<") was connected!" << "\n";
+        }
+    }
+
     mLastScroll = mScroll;
     mScroll = 0.0;
 
@@ -83,7 +96,7 @@ void InputHandler::Update() {
     int buttonTwoCount = 0;
 
     // Update joystick axis and buttons
-    for (int player = 0; player < PLAYERS - 1; player++) {
+    for (int player = 0; player < PLAYERS - 1 && mActiveJoystick[player]; player++) {
         mJoystickAxisData[player] = glfwGetJoystickAxes(player, &axisOneCount);
         mJoystickButtonPressed[player] = glfwGetJoystickButtons(player, &buttonOneCount);
     }

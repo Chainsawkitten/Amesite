@@ -11,6 +11,8 @@
 #include "../Component/Spawner.hpp"
 #include <Component/SpotLight.hpp>
 #include <Component/ParticleEmitter.hpp>
+#include "../Component/Controller.hpp"
+#include "../Component/Damage.hpp"
 
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
@@ -19,7 +21,6 @@
 #include <Texture/Texture2D.hpp>
 
 #include <Scene/Scene.hpp>
-#include "../Component/Controller.hpp"
 
 #include <../Game/Util/ControlSchemes.hpp>
 
@@ -54,11 +55,15 @@ Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     playerEntity->AddComponent<Component::Physics>();
     playerEntity->AddComponent<Component::Controller>();
     playerEntity->AddComponent<Component::Spawner>();
+    playerEntity->AddComponent<Component::Damage>();
     
     playerEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     playerEntity->GetComponent<Component::Transform>()->position = origin;
     playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
     playerEntity->GetComponent<Component::Controller>()->playerID = player;
+    
+    playerEntity->GetComponent<Component::Damage>()->damageAmount = 10.f;
+    
     playerEntity->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
     playerEntity->GetComponent<Component::Spawner>()->delay = 1.f;
     
