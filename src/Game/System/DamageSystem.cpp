@@ -24,10 +24,6 @@ void DamageSystem::Update(Scene& scene) {
     IF HIT
     healthComponent->cooldown = healthComponent->maxCooldown;
     healthComponent->health -= healthComponent->toughness * damageComponenet->damageAmount;
-
-    IF health < 0
-    remove entity(health)
-    remove enityt(damage)
     */
 
     for (auto damageComponent : damageVector) {
