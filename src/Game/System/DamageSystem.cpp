@@ -52,17 +52,17 @@ void DamageSystem::Update(Scene& scene) {
                 //TODO: Implement actual coop spawning
                 health->entity->GetComponent<Component::Transform>()->Move(0.f, -0.5f, 0.f);
                 health->entity->GetComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-                health->entity->GetComponent<Component::Physics>()->velocityDragFactor = 10000.f;
+                health->entity->GetComponent<Component::Physics>()->maxVelocity = 0.f;
                 health->cooldown = 10.f;
                 health->activated = false;
             }
             else if (health->entity->GetComponent<Component::Controller>() != nullptr && health->activated == false) {
-                health->cooldown -= 0.1f;
+                health->cooldown -= 0.01f;
                 if (health->cooldown < 0.f) {
                     health->health = 100.f;
                     health->entity->GetComponent<Component::Transform>()->Move(0.f, 0.5f, 0.f);
                     health->entity->GetComponent<Component::Transform>()->scale = glm::vec3(1.0f, 1.0f, 1.0f);
-                    health->entity->GetComponent<Component::Physics>()->velocityDragFactor = 1.0f;
+                    health->entity->GetComponent<Component::Physics>()->maxVelocity = 20.f;
                     health->activated = true;
                 }
             } else {
