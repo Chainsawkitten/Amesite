@@ -52,14 +52,6 @@ class GameEntityFactory {
          */
         Entity* CreateBullet(const glm::vec3& position, const glm::vec3& direction, int faction);
 
-        /// Create a bullet.
-        /**
-        * @param position The bullet's starting position.
-        * @param direction The direction the bullet is traveling in.
-        * @return The bullet entity.
-        */
-        Entity* CreateEnemyBullet(const glm::vec3& position, const glm::vec3& direction, int faction);
-
         /// Create a camera.
         /**
          * @param origin The camera's starting position.
