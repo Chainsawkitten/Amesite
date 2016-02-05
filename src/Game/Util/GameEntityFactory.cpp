@@ -65,6 +65,7 @@ Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     playerEntity->GetComponent<Component::Damage>()->damageAmount = 10.f;
     
     playerEntity->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
+    playerEntity->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ButtonShoot);
     playerEntity->GetComponent<Component::Spawner>()->delay = 1.f;
     
     return playerEntity;
