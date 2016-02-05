@@ -27,10 +27,7 @@ void DamageSystem::Update(Scene& scene) {
         if((*collisionVector)[i]->entity->GetComponent<Component::Health>() != nullptr) {                               //Does the colliding entity have a health component?
             int numberOfIntersections = (*collisionVector)[i]->intersect.size();
             for (int j = 0; j < numberOfIntersections; j++) {
-                if ( (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>() != nullptr) {               //Does the intersecting entities have a damage component?
-                    
-                    Log() << (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->faction << " : " << (*collisionVector)[i]->entity->GetComponent<Component::Health>()->faction << "\n";
-                    
+                if ( (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>() != nullptr) {               //Does the intersecting entities have a damage component?    
                     if ((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->faction != (*collisionVector)[i]->entity->GetComponent<Component::Health>()->faction) {
                         //Does the damaging entity belong to the same faction as the health entity.
                         (*collisionVector)[i]->entity->GetComponent<Component::Health>()->health -= (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->damageAmount;
