@@ -140,26 +140,18 @@ int main() {
     Component::DirectionalLight* dLight = dirLight->AddComponent<Component::DirectionalLight>();
     dLight->color = glm::vec3(0.1f, 0.1f, 0.1f);
     dLight->ambientCoefficient = 0.2f;
-    
-    // Spot light.
-    Entity* spotLight = scene.CreateEntity();
-    spotLight->AddComponent<Component::RelativeTransform>()->Move(0, 5, 0);
-    spotLight->GetComponent<Component::RelativeTransform>()->parentEntity = player1;
-    //spotLight->GetComponent<Component::RelativeTransform>()->pitch = 45.f;
-    spotLight->AddComponent<Component::Mesh>()->geometry = player1->GetComponent<Component::Mesh>()->geometry;
-
-    spotLight->AddComponent<Component::SpotLight>()->coneAngle = 90;
-    spotLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
-    //player->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
-
-    spotLight->AddComponent<Component::Physics>();
-    spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
-    spotLight->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickRotate;
 
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
     Log() << to_string(lastTimeRender);
+
+    int p1OldGridPosX = 12;
+    int p1OldGridPosZ = 12;
+    
+    int p2OldGridPosX = 12;
+    int p2OldGridPosZ = 12;
+
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
@@ -170,6 +162,9 @@ int main() {
 
         // ControllerSystem
         controllerSystem.Update(scene, deltaTime);
+
+        // PhysicsSystem.
+        physicsSystem.Update(scene, (float)deltaTime);
 
         float p1X = player1->GetComponent<Component::Transform>()->position.x + (25.f / 2.f) * 10;
         float p1Z = player1->GetComponent<Component::Transform>()->position.z + (25.f / 2.f) * 10;
@@ -186,27 +181,57 @@ int main() {
 
         if (p1Collide) {
 
-            player1->GetComponent<Component::Transform>()->position = p1OldPos;
+            if (p1OldGridPosX != (int)p1X) {
+
+                glm::vec3 velocity = player1->GetComponent<Component::Physics>()->velocity;
+
+                player1->GetComponent<Component::Transform>()->position = p1OldPos + (glm::vec3(-velocity.x, 0, velocity.z) * (float)deltaTime);
+                player1->GetComponent<Component::Physics>()->velocity = glm::vec3(-velocity.x, 0, velocity.z);//-glm::normalize(player1->GetComponent<Component::Physics>()->velocity) * 1000.f;
+                player1->GetComponent<Component::Physics>()->acceleration = -glm::normalize(player1->GetComponent<Component::Physics>()->acceleration);
+
+            }
+            if (p1OldGridPosZ != (int)p1Z) {
+
+                glm::vec3 velocity = player1->GetComponent<Component::Physics>()->velocity;
+
+                player1->GetComponent<Component::Transform>()->position = p1OldPos + (glm::vec3(velocity.x, 0, -velocity.z) * (float)deltaTime);
+                player1->GetComponent<Component::Physics>()->velocity = glm::vec3(velocity.x, 0, -velocity.z);//-glm::normalize(player1->GetComponent<Component::Physics>()->velocity) * 1000.f;
+                player1->GetComponent<Component::Physics>()->acceleration = -glm::normalize(player1->GetComponent<Component::Physics>()->acceleration);
+
+            }
+
 
         }
         if (p2Collide) {
 
-            player2->GetComponent<Component::Transform>()->position = p2OldPos;
+            if (p2OldGridPosX != (int)p2X) {
+
+                glm::vec3 velocity = player2->GetComponent<Component::Physics>()->velocity;
+
+                player2->GetComponent<Component::Transform>()->position = p2OldPos + (glm::vec3(-velocity.x, 0, velocity.z) * (float)deltaTime);
+                player2->GetComponent<Component::Physics>()->velocity = glm::vec3(-velocity.x, 0, velocity.z);//-glm::normalize(player1->GetComponent<Component::Physics>()->velocity) * 1000.f;
+                player2->GetComponent<Component::Physics>()->acceleration = -glm::normalize(player2->GetComponent<Component::Physics>()->acceleration);
+
+            }
+            if (p2OldGridPosZ != (int)p2Z) {
+
+                glm::vec3 velocity = player2->GetComponent<Component::Physics>()->velocity;
+
+                player2->GetComponent<Component::Transform>()->position = p2OldPos + (glm::vec3(velocity.x, 0, -velocity.z) * (float)deltaTime);
+                player2->GetComponent<Component::Physics>()->velocity = glm::vec3(velocity.x, 0, -velocity.z);//-glm::normalize(player1->GetComponent<Component::Physics>()->velocity) * 1000.f;
+                player2->GetComponent<Component::Physics>()->acceleration = -glm::normalize(player2->GetComponent<Component::Physics>()->acceleration);
+
+            }
+
 
         }
 
+        p1OldGridPosX = (int)p1X;
+        p1OldGridPosZ = (int)p1Z;
+        p2OldGridPosX = (int)p2X;
+        p2OldGridPosZ = (int)p2Z;
 
-        if (Caves::CaveSystem::mMap[(int)p1X][(int)p1Z] == 1) {
 
-            //GameEntityCreator().CreateCube(player1->GetComponent<Component::Transform>()->position)->GetComponent<Component::Transform>()->scale = glm::vec3(0.7f, 0.7f, 0.7f);
-            //player1->GetComponent<Component::Transform>()->position = glm::vec3(0, 0, 0);
-
-        }
-
-        Log() << p1X << " : " << p1Z << "\n";
-
-        // PhysicsSystem.
-        physicsSystem.Update(scene, (float)deltaTime);
 
         // UpdateCamera
         UpdateCamera(mainCamera, players);
