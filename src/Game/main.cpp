@@ -116,10 +116,6 @@ int main() {
     
     GameEntityCreator().SetScene(&scene);
     
-    int score = 0;
-    time_t startTime = time(nullptr);
-    int session = 0;
-    
     // CollisionSystem.
     System::CollisionSystem collisionSystem;
     
@@ -166,7 +162,7 @@ int main() {
     
     spotLight->AddComponent<Component::Physics>();
     spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
-    spotLight->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickRotate;
+    spotLight->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::StickRotate);
     
 
     int p1OldGridPosX = 12;
