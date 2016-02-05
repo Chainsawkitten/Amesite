@@ -120,12 +120,10 @@ void GameEntityFactory::CreateCuboidParticle(Entity * camera, Texture2D* particl
     emitter->follow = camera;
     emitter->maxEmitTime = 0.02;
     emitter->minEmitTime = 0.01;
-    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
     emitter->lifetime = 0.0;
     emitter->origin = glm::vec3(0.f, 0.f, 0.f);
-    emitter->size = glm::vec3(40.f, 15.f, 40.f);
+    emitter->size = glm::vec3(20.f, 15.f, 20.f);
     emitter->relative = true;
-    emitter->follow = camera;
     emitter->timeToNext = 5.0;
     
     //Particle type.
@@ -137,7 +135,34 @@ void GameEntityFactory::CreateCuboidParticle(Entity * camera, Texture2D* particl
     emitter->particleType.minSize = glm::vec2(0.025f, 0.025f);
     emitter->particleType.maxSize = glm::vec2(0.05f, 0.05f);
     emitter->particleType.uniformScaling = true;
-    emitter->particleType.color = glm::vec3(.3f, .3f, 1.f);
+    emitter->particleType.color = glm::vec3(.1f, .1f, .1f);
+}
+
+void GameEntityFactory::CreatePointParticle(Entity * object, Texture2D* particleTexture) {
+    object->AddComponent<Component::ParticleEmitter>();
+
+    // Particle emitter.
+    Component::ParticleEmitter* emitter = object->GetComponent<Component::ParticleEmitter>();
+
+    emitter->emitterType = Component::ParticleEmitter::POINT;
+    emitter->maxEmitTime = 0.05;
+    emitter->minEmitTime = 0.03;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 0.0;
+    emitter->relative = true;
+    emitter->follow = object;
+    emitter->origin = glm::vec3(0.f, 2.f, 0.f);
+
+    //Particle type.
+    emitter->particleType.texture = particleTexture;
+    emitter->particleType.minLifetime = .1f;
+    emitter->particleType.maxLifetime = .2f;
+    emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -8.f);
+    emitter->particleType.maxVelocity = glm::vec3(.3f, 0.f, -3.f);
+    emitter->particleType.minSize = glm::vec2(.5f, .5f);
+    emitter->particleType.maxSize = glm::vec2(1.f, 1.f);
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::vec3(1.f, 0.5f, 0.5f);
 }
 
 Entity* GameEntityFactory::CreateMap() {

@@ -72,6 +72,13 @@ class GameEntityFactory {
          */
         void CreateCuboidParticle(Entity* camera, Texture2D* particleTexture);
 
+        /// Creates a cuboid dust particle system.
+        /**
+        * @param camera - entity which the system relates to.
+        * @param particleTexture the particles should sample from.
+        */
+        void CreatePointParticle(Entity* object, Texture2D* particleTexture);
+
         /// Create a map.
         /**
          * @return The map entity.
