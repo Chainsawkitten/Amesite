@@ -3,16 +3,16 @@
 class Scene;
 
 namespace System {
-    /// System to update the physics of a scene.
+    /// %System to update damage dealing entities.
     class DamageSystem {
     public:
-        /// Create physics system.
+        /// Create damage system.
         DamageSystem();
 
         /// Destructor.
         ~DamageSystem();
 
-        /// Update Scene containing entities. Updates hits between damage and health componenets.
+        /// Update Scene containing entities. Updates hits between damage and health components.
         /**
          * @param scene The scene to update.
          */

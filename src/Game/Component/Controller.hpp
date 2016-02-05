@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Engine/Component/SuperComponent.hpp>
+#include <Component/SuperComponent.hpp>
 #include <Util/Input.hpp>
 #include <vector>
 
