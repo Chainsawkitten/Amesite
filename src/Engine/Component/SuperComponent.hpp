@@ -3,7 +3,7 @@
 class Entity;
 
 namespace Component {
-    /// Component which all Components generalize.
+    /// %Component which all Components generalize.
     class SuperComponent {
         public:
             /// Create new %SuperComponent.

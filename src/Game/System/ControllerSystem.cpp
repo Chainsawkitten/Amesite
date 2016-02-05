@@ -6,48 +6,41 @@
 #include <Engine/Component/Physics.hpp>
 
 #include "../Component/Controller.hpp"
+#include "../Component/Spawner.hpp"
+#include <Util/Log.hpp>
+#include "../Util/GameEntityFactory.hpp"
+#include "../Util/ControlSchemes.hpp"
 
 using namespace System;
 
-ControllerSystem::ControllerSystem() {
-
-
-
-}
-
-ControllerSystem::~ControllerSystem() {
-
-
-
-}
-
 void ControllerSystem::Update(Scene& scene, float deltaTime) {
-
     std::vector<Component::Controller*> controllerObjects;
     controllerObjects = scene.GetAll<Component::Controller>();
-
-    for (unsigned int i = 0; i < controllerObjects.size(); i++) {
-
-        //Move the player
-        float x = (float)Input()->ButtonValue(Input()->MOVE_X, controllerObjects[i]->playerID);
-        float z = (float)Input()->ButtonValue(Input()->MOVE_Z, controllerObjects[i]->playerID);
-
-        glm::vec3 speedVec = glm::vec3(x * 6000 * deltaTime, 0, z * 6000 * deltaTime);
-
-        Component::Physics* physicsComponent = controllerObjects[i]->entity->GetComponent<Component::Physics>();
-
-        //If there's a physics component attached we use it to move.
-        if (physicsComponent != NULL) {
-
-            if (glm::abs(x) + glm::abs(z) > 0.3f)
-                physicsComponent->acceleration = speedVec;
-            else
-                physicsComponent->acceleration = glm::vec3(0, 0, 0);
-
-        }
-        else if (glm::abs(x) + glm::abs(z) > 0.3f)
-            controllerObjects[i]->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime, 0, z * deltaTime));
     
+    for (unsigned int i = 0; i < controllerObjects.size(); i++) {
+        Component::Transform* transformComponent = controllerObjects[i]->entity->GetComponent<Component::Transform>();
+        
+        Component::Spawner* spawnerComponent = controllerObjects[i]->entity->GetComponent<Component::Spawner>();
+        if (spawnerComponent != nullptr) {
+            spawnerComponent->timeSinceSpawn += deltaTime;
+            if (Input()->Pressed(InputHandler::SHOOT, controllerObjects[i]->playerID) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
+                Log() << "Shoot\n";
+                GameEntityCreator().SetScene(&scene);
+                
+                glm::vec2 direction = glm::vec2(Input()->ButtonValue(Input()->AIM_X, controllerObjects[i]->playerID), Input()->ButtonValue(Input()->AIM_Z, controllerObjects[i]->playerID));
+                float directionLength = glm::length(direction);
+                if (directionLength < 0.001f) 
+                    direction = glm::vec2(1.f, 0.f);
+                else
+                    direction = direction / directionLength;
+                
+                float bulletSpeed = 10.f;
+                GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y));
+                spawnerComponent->timeSinceSpawn = 0.0f;
+            }
+        }
     }
-
+    
+    for (unsigned int i = 0; i < controllerObjects.size(); i++)
+        controllerObjects[i]->ControlScheme(controllerObjects[i], deltaTime);
 }

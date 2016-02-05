@@ -50,5 +50,6 @@ namespace Component {
              * Default: 0.f
              */
             float cooldown;
+
     };
 }

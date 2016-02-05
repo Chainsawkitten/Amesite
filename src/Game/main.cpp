@@ -18,10 +18,13 @@
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
+#include <System/ParticleSystem.hpp>
+#include <System/ParticleRenderSystem.hpp>
 
-#include "../Game/System/ControllerSystem.hpp"
-#include "../Game/System/HealthSystem.hpp"
-#include "../Game/System/DamageSystem.hpp"
+#include "Game/System/HealthSystem.hpp"
+#include "Game/System/DamageSystem.hpp"
+#include "Game/System/ControllerSystem.hpp"
+#include "Util/CameraUpdate.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -36,76 +39,108 @@
 #include <Component/SpotLight.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
-//#include <Component/Collider2DRectangle.hpp>
+#include <Component/ParticleEmitter.hpp>
 
 #include <Texture/Texture2D.hpp>
 
 #include <thread>
 #include <fstream>
+#include "Util/ControlSchemes.hpp"
 
 using namespace std;
 
 std::string space2underscore(std::string text);
 
 int main() {
-
+    
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
+    
     // Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
         freopen(FileSystem::SavePath("Modership", "GameLog.txt").c_str(), "a", stderr);
-
+    
     Log() << "Game started - " << time(nullptr) << "\n";
-
+    
     if (!glfwInit())
         return 1;
-
+    
     MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Modership", GameSettings::GetInstance().GetBool("Debug Context"));
     glewInit();
     window->Init();
-
+    window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
+    
+    // Particle System.
+    System::ParticleSystem* particleSystem;
+    particleSystem = new System::ParticleSystem;
+    particleSystem->SetActive();
+    
+    // Particle texture.
+    Texture2D* particleTexture;
+    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
+    
     // RenderSystem.
     System::RenderSystem renderSystem;
-
+    
     // Scene and Entites. 
     Scene scene;
-
+    
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;
-
+    
     // ControllerSystem.
     System::ControllerSystem controllerSystem;
-
+    
     // HealthSystem.
     System::HealthSystem healthSystem;
-
+    
     // DamageSystem.
     System::DamageSystem damageSystem;
-
-    Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_ONE);
-    Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_ONE);
-    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_ONE);
-    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_ONE);
-
-    Input()->AssignJoystick(Input()->MOVE_X, true, Input()->LEFT_STICK_X, Input()->PLAYER_TWO);
-    Input()->AssignJoystick(Input()->MOVE_Z, true, Input()->LEFT_STICK_Y, Input()->PLAYER_TWO);
-    Input()->AssignJoystick(Input()->AIM_X, true, Input()->RIGHT_STICK_Y, Input()->PLAYER_TWO);
-    Input()->AssignJoystick(Input()->AIM_Z, true, Input()->RIGHT_STICK_X, Input()->PLAYER_TWO);
-
+    
+    Input()->AssignJoystick(InputHandler::MOVE_X, true, InputHandler::LEFT_STICK_X, InputHandler::PLAYER_ONE);
+    Input()->AssignJoystick(InputHandler::MOVE_Z, true, InputHandler::LEFT_STICK_Y, InputHandler::PLAYER_ONE);
+    Input()->AssignJoystick(InputHandler::AIM_X, true, InputHandler::RIGHT_STICK_X, InputHandler::PLAYER_ONE);
+    Input()->AssignJoystick(InputHandler::AIM_Z, true, InputHandler::RIGHT_STICK_Y, InputHandler::PLAYER_ONE);
+    Input()->AssignJoystick(InputHandler::SHOOT, false, InputHandler::RIGHT_BUMPER, InputHandler::PLAYER_ONE);
+    
+    Input()->AssignJoystick(InputHandler::MOVE_X, true, InputHandler::LEFT_STICK_X, InputHandler::PLAYER_TWO);
+    Input()->AssignJoystick(InputHandler::MOVE_Z, true, InputHandler::LEFT_STICK_Y, InputHandler::PLAYER_TWO);
+    Input()->AssignJoystick(InputHandler::AIM_X, true, InputHandler::RIGHT_STICK_X, InputHandler::PLAYER_TWO);
+    Input()->AssignJoystick(InputHandler::AIM_Z, true, InputHandler::RIGHT_STICK_Y, InputHandler::PLAYER_TWO);
+    Input()->AssignJoystick(InputHandler::SHOOT, false, InputHandler::RIGHT_BUMPER, InputHandler::PLAYER_TWO);
+    
+    Input()->AssignKeyboard(InputHandler::UP, GLFW_KEY_W, InputHandler::PLAYER_ONE);
+    Input()->AssignKeyboard(InputHandler::DOWN, GLFW_KEY_S, InputHandler::PLAYER_ONE);
+    Input()->AssignKeyboard(InputHandler::RIGHT, GLFW_KEY_D, InputHandler::PLAYER_ONE);
+    Input()->AssignKeyboard(InputHandler::LEFT, GLFW_KEY_A, InputHandler::PLAYER_ONE);
+    //Input()->AssignKeyboard(InputHandler::SHOOT, GLFW_KEY_T, InputHandler::PLAYER_ONE);
+    
     GameEntityCreator().SetScene(&scene);
-
+    
     int score = 0;
     time_t startTime = time(nullptr);
     int session = 0;
-
+    
     // CollisionSystem.
     System::CollisionSystem collisionSystem;
-
-    Entity* batCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    Entity* theJoker = GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
-    Entity* player = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
-    Entity* theMap = GameEntityCreator().CreateMap();
-
+    
+    Entity* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    mainCamera->AddComponent<Component::Physics>();
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
+    
+    Entity* player1 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    Entity* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+    std::vector<Entity*> players;
+    players.push_back(player1);
+    players.push_back(player2);
+    
+    GameEntityCreator().CreateMap();
+    
+    GameEntityCreator().CreateBullet(glm::vec3(1.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f));
+    
+    // Create dust particles
+    GameEntityCreator().CreateCuboidParticle(mainCamera, particleTexture);
+    
+    // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
     // Directional light.
@@ -118,51 +153,59 @@ int main() {
     
     // Spot light.
     Entity* spotLight = scene.CreateEntity();
-    transform = spotLight->AddComponent<Component::Transform>();
-    transform->position = glm::vec3(0.f, 1.f, 0.f);
-    transform->yaw = 90.f;
-    Component::SpotLight* sLight = spotLight->AddComponent<Component::SpotLight>();
-    sLight->color = glm::vec3(1.f, 1.f, 1.f);
-    sLight->attenuation = 0.1f;
-    sLight->coneAngle = 30.f;
-
+    spotLight->AddComponent<Component::RelativeTransform>()->Move(0, 5, 0);
+    spotLight->GetComponent<Component::RelativeTransform>()->parentEntity = player1;
+    //spotLight->GetComponent<Component::RelativeTransform>()->pitch = 45.f;
+    spotLight->AddComponent<Component::Mesh>()->geometry = player1->GetComponent<Component::Mesh>()->geometry;
+    
+    spotLight->AddComponent<Component::SpotLight>()->coneAngle = 90;
+    spotLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
+    //player->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
+    
     spotLight->AddComponent<Component::Physics>();
     spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
+    spotLight->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickRotate;
     
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
-    Log() << to_string(lastTimeRender);
+    Log() << to_string(lastTimeRender) << "\n";
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
         
         // ControllerSystem
-        controllerSystem.Update(scene, (float)deltaTime);
-
+        controllerSystem.Update(scene, static_cast<float>(deltaTime));
+        
         // PhysicsSystem.
-        physicsSystem.Update(scene, (float)deltaTime);
-
+        physicsSystem.Update(scene, static_cast<float>(deltaTime));
+        
+        // UpdateCamera
+        UpdateCamera(mainCamera, players);
+        
+        // ParticleSystem
+        particleSystem->Update(scene, deltaTime);
+        
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
-
+        
         // Check collisions.
         collisionSystem.Update(scene);
-
+        
         // Update health
-        healthSystem.Update(scene, (float)deltaTime);
+        healthSystem.Update(scene, static_cast<float>(deltaTime));
 
         // Update damage
         damageSystem.Update(scene);
-
+        
         // Render.
         renderSystem.Render(scene);
-
+        
         // Input testing.
         window->Update();
         
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f));
-
+        
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))
@@ -181,10 +224,12 @@ int main() {
     }
     
     Resources().FreeTexture2DFromFile(testTexture);
+    Resources().FreeTexture2DFromFile(particleTexture);
     Resources().FreeCube();
     Resources().FreeCube();
     
     delete window;
+    delete particleSystem;
     
     glfwTerminate();
     
@@ -192,7 +237,6 @@ int main() {
     
     Log() << "Game ended - " << time(nullptr) << "\n";
     return 0;
-
 }
 
 std::string space2underscore(std::string text) {

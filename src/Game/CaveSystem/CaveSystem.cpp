@@ -13,6 +13,7 @@
 #include <Component/PointLight.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include <Component/Physics.hpp>
+#include "../Component/Health.hpp"
 
 using namespace Caves;
 
@@ -60,7 +61,8 @@ Entity* CaveSystem::GenerateCaveSystem(Scene* scene) {
                 Entity* wall = scene->CreateEntity();
                 wall->AddComponent<Component::RelativeTransform>()->parentEntity = map;
                 wall->AddComponent<Component::Mesh>();
-                //wall->AddComponent<Component::Collider2DCircle>()->radius = 1;
+                wall->AddComponent<Component::Collider2DCircle>()->radius = 1.f;
+                wall->AddComponent<Component::Health>();
                 //wall->AddComponent<Component::Physics>()->angularaAcceleration.y = 1;
                 wall->GetComponent<Component::Mesh>()->geometry = cube;
                 wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j), 0.f, -float(i)) + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
@@ -70,6 +72,7 @@ Entity* CaveSystem::GenerateCaveSystem(Scene* scene) {
                 //light->AddComponent<Component::RelativeTransform>()->parentEntity = wall;
                 //light->GetComponent<Component::Transform>()->position.y = 1;
                 //light->AddComponent<Component::PointLight>();
+                wall->GetComponent<Component::Transform>()->pitch = 45;
             }
             if (mMap[i][j] == -1.f) {
 

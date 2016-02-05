@@ -7,7 +7,7 @@ class Entity;
 #include <glm/glm.hpp>
 
 namespace Component {
-    /// Component providing transformation.
+    /// %Component providing transformation.
     class Transform : public SuperComponent {
         public:
             /// Create new %Transform.
