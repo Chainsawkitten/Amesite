@@ -51,14 +51,14 @@ Entity* GameEntityFactory::CreatePlayer(glm::vec3 origin, InputHandler::Player p
     playerEntity->AddComponent<Component::Mesh>();
     playerEntity->AddComponent<Component::Transform>();
     playerEntity->AddComponent<Component::Collider2DCircle>();
-    playerEntity->AddComponent<Component::Physics>();
+    //playerEntity->AddComponent<Component::Physics>();
     playerEntity->AddComponent<Component::Controller>();
 
     playerEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     playerEntity->GetComponent<Component::Transform>()->position = origin;
     playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
     playerEntity->GetComponent<Component::Controller>()->playerID = player;
-    playerEntity->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
+    playerEntity->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::ArrowKeysMove;
 
     return playerEntity;
 }

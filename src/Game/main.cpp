@@ -123,6 +123,9 @@ int main() {
     players.push_back(player2);
 
     Entity* theMap = GameEntityCreator().CreateMap();
+    theMap->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
+    theMap->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
+    theMap->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
 
     // Create dust particles
     GameEntityCreator().CreateCuboidParticle(mainCamera, particleTexture);
@@ -161,12 +164,49 @@ int main() {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
         
+        glm::vec3 p1OldPos = player1->GetComponent<Component::Transform>()->position;
+        glm::vec3 p2OldPos = player2->GetComponent<Component::Transform>()->position;
+
+
         // ControllerSystem
         controllerSystem.Update(scene, deltaTime);
 
+        float p1X = player1->GetComponent<Component::Transform>()->position.x + (25.f / 2.f) * 10;
+        float p1Z = player1->GetComponent<Component::Transform>()->position.z + (25.f / 2.f) * 10;
+        p1Z = (250 - p1Z) / 10 + 0.4f;
+        p1X = p1X / 10 + 0.4f;
+
+        float p2X = player2->GetComponent<Component::Transform>()->position.x + (25.f / 2.f) * 10;
+        float p2Z = player2->GetComponent<Component::Transform>()->position.z + (25.f / 2.f) * 10;
+        p2Z = (250 - p2Z) / 10 + 0.4f;
+        p2X = p2X / 10 + 0.4f;
+
+        bool p1Collide = Caves::CaveSystem::mMap[(int)p1X][(int)p1Z] == 1;
+        bool p2Collide = Caves::CaveSystem::mMap[(int)p2X][(int)p2Z] == 1;
+
+        if (p1Collide) {
+
+            player1->GetComponent<Component::Transform>()->position = p1OldPos;
+
+        }
+        if (p2Collide) {
+
+            player2->GetComponent<Component::Transform>()->position = p2OldPos;
+
+        }
+
+
+        if (Caves::CaveSystem::mMap[(int)p1X][(int)p1Z] == 1) {
+
+            //GameEntityCreator().CreateCube(player1->GetComponent<Component::Transform>()->position)->GetComponent<Component::Transform>()->scale = glm::vec3(0.7f, 0.7f, 0.7f);
+            //player1->GetComponent<Component::Transform>()->position = glm::vec3(0, 0, 0);
+
+        }
+
+        Log() << p1X << " : " << p1Z << "\n";
+
         // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
-
 
         // UpdateCamera
         UpdateCamera(mainCamera, players);

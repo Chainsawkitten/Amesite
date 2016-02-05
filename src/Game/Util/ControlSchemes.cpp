@@ -167,7 +167,7 @@ void ControlScheme::ArrowKeysMove(Component::Controller* controller, float delta
             physicsComponent->acceleration = glm::vec3(0, 0, 0);
 
     }
-    else if (glm::abs(up) + glm::abs(down) > 0.3f)
-        controller->entity->GetComponent<Component::Transform>()->Move((right - left) * 6000 * deltaTime, 0, (down - up) * deltaTime * 20);
+    else if (glm::abs(up) + glm::abs(down) + glm::abs(right) + glm::abs(left) > 0.3f)
+        controller->entity->GetComponent<Component::Transform>()->Move((right - left) * 20 * deltaTime, 0, (down - up) * deltaTime * 20);
 
 }

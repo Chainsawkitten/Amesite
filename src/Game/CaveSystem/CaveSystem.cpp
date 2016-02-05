@@ -50,7 +50,6 @@ Entity* CaveSystem::GenerateCaveSystem(Scene* scene) {
     map->GetComponent<Component::Physics>()->angularDragFactor = 0;
     map->GetComponent<Component::Physics>()->gravityFactor = 0;
     map->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f, 0.f, 0.f);
-    map->GetComponent<Component::Physics>()->angularVelocity = glm::vec3(0.f, 0.01f, 0.f);
     Geometry::Geometry3D* cube = Resources().CreateCube();
     for (int i = 0; i < 25; i++) {
         for (int j = 0; j < 25; j++) {
@@ -61,7 +60,7 @@ Entity* CaveSystem::GenerateCaveSystem(Scene* scene) {
                 //wall->AddComponent<Component::Collider2DCircle>()->radius = 1;
                 wall->GetComponent<Component::Mesh>()->geometry = cube;
                 wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j), 0.f, -float(i)) + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
-                wall->GetComponent<Component::Transform>()->pitch = 45;
+                wall->GetComponent<Component::Transform>()->pitch = 0;
             }
             if (mMap[i][j] == -1.f) {
 
