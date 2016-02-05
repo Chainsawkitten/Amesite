@@ -6,6 +6,9 @@
 #include <Component/Physics.hpp>
 
 #include <../Game/Component/Controller.hpp>
+#include <Component/Transform.hpp>
+#include "../Component/Spawner.hpp"
+#include "../Util/GameEntityFactory.hpp"
 #include <Util/Log.hpp>
 
 void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
@@ -94,6 +97,28 @@ void ControlScheme::ArrowKeyRotate(Component::Controller* controller, float delt
             entity->GetComponent<Component::Transform>()->yaw = 270 + 45.f;
         } else {
             entity->GetComponent<Component::Transform>()->yaw = 270.f;
+        }
+    }
+}
+
+void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTime) {
+    Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
+    
+    Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
+    if (spawnerComponent != nullptr) {
+        spawnerComponent->timeSinceSpawn += deltaTime;
+        if (Input()->Pressed(controller->playerID, InputHandler::SHOOT) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
+            Log() << "Shoot\n";
+            glm::vec2 direction = glm::vec2(Input()->ButtonValue(controller->playerID, Input()->AIM_X), Input()->ButtonValue(controller->playerID, Input()->AIM_Z));
+            float directionLength = glm::length(direction);
+            if (directionLength < 0.001f) 
+                direction = glm::vec2(1.f, 0.f);
+            else
+                direction = direction / directionLength;
+            
+            float bulletSpeed = 10.f;
+            GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y));
+            spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }
 }
