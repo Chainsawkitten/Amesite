@@ -6,7 +6,11 @@
 #include "../Component/Health.hpp"
 #include "../Component/Damage.hpp"
 #include "../Component/Controller.hpp"
+#include <Component\Collider2DCircle.hpp>
+
 #include <vector>
+
+#include <Util/Log.hpp>
 
 using namespace System;
 
@@ -24,10 +28,19 @@ void DamageSystem::Update(Scene& scene) {
             int numberOfIntersections = (*collisionVector)[i]->intersect.size();
             for (int j = 0; j < numberOfIntersections; j++) {
                 if ( (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>() != nullptr) {               //Does the intersecting entities have a damage component?
-                    if((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->faction != (*collisionVector)[i]->entity->GetComponent<Component::Health>()->faction)        //Does the damaging entity belong to the same faction as the health entity.
-                        (*collisionVector)[i]->entity->GetComponent<Component::Health>()->health -= (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->damageAmount;   //Reduce health by damage.
-                    //scene.RemoveEntity((*collisionVector)[i]->entity);
-                    (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->entity->GetComponent<Component::Transform>()->position = glm::vec3(10000.f, 10000.f, 10000.f); //TODO: EXTREMELY TEMPORARY SOLUTION!
+                    
+                    Log() << (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->faction << " : " << (*collisionVector)[i]->entity->GetComponent<Component::Health>()->faction << "\n";
+                    
+                    if ((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->faction != (*collisionVector)[i]->entity->GetComponent<Component::Health>()->faction) {
+                        //Does the damaging entity belong to the same faction as the health entity.
+                        (*collisionVector)[i]->entity->GetComponent<Component::Health>()->health -= (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->damageAmount;
+                        (*collisionVector)[i]->intersect[j]->GetComponent<Component::Collider2DCircle>()->radius = 0.f;
+                        (*collisionVector)[i]->intersect[j]->GetComponent<Component::Transform>()->position = glm::vec3(10000.f, 0, 0);
+                        
+                    }//Reduce health by damage.
+                    
+                                                                                                                                                                                            //scene.RemoveEntity((*collisionVector)[i]->entity);
+                     //TODO: EXTREMELY TEMPORARY SOLUTION!
                 }
             }
         }
@@ -48,7 +61,7 @@ void DamageSystem::Update(Scene& scene) {
     for (auto health : scene.GetAll<Component::Health>()) {
         if (health->health < 0.f) {
             // If the killed entity is a player, do other stuff.
-            if (health->entity->GetComponent<Component::Controller>() != nullptr && health->activated == true) {
+            if (health->entity->GetComponent<Component::Controller>() != nullptr && health->activated == true && health->faction == 0) {
                 //TODO: Implement actual coop spawning
                 health->entity->GetComponent<Component::Transform>()->Move(0.f, -0.5f, 0.f);
                 health->entity->GetComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -56,8 +69,8 @@ void DamageSystem::Update(Scene& scene) {
                 health->cooldown = 10.f;
                 health->activated = false;
             }
-            else if (health->entity->GetComponent<Component::Controller>() != nullptr && health->activated == false) {
-                health->cooldown -= 0.01f;
+            else if (health->entity->GetComponent<Component::Controller>() != nullptr && health->activated == false && health->faction == 0) {
+                health->cooldown -= 0.1f;
                 if (health->cooldown < 0.f) {
                     health->health = 100.f;
                     health->entity->GetComponent<Component::Transform>()->Move(0.f, 0.5f, 0.f);
@@ -66,7 +79,9 @@ void DamageSystem::Update(Scene& scene) {
                     health->activated = true;
                 }
             } else {
-                scene.RemoveEntity(health->entity);
+                //scene.RemoveEntity(health->entity);
+                health->entity->GetComponent<Component::Transform>()->position = glm::vec3(1000.f, 1000.f, 1000.f);
+                health->entity->GetComponent<Component::Collider2DCircle>()->radius = 0.f;
             }
         }
     }

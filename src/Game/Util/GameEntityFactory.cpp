@@ -40,11 +40,19 @@ Entity* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
     enemyEntity->AddComponent<Component::Mesh>();
     enemyEntity->AddComponent<Component::Transform>();
     enemyEntity->AddComponent<Component::Collider2DCircle>();
-    
+    enemyEntity->AddComponent<Component::Physics>();
+    enemyEntity->AddComponent<Component::Spawner>();
+    enemyEntity->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShoot);
+    enemyEntity->AddComponent<Component::Health>();
+
     enemyEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     enemyEntity->GetComponent<Component::Transform>()->position = origin;
     enemyEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
-    
+    enemyEntity->GetComponent<Component::Spawner>()->delay = 0.75f;
+    enemyEntity->GetComponent<Component::Health>()->faction = 1;
+    enemyEntity->GetComponent<Component::Health>()->health = 1;
+
+
     return enemyEntity;
 }
 
@@ -57,16 +65,18 @@ Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     playerEntity->AddComponent<Component::Controller>();
     playerEntity->AddComponent<Component::Spawner>();
     playerEntity->AddComponent<Component::Health>();
-    playerEntity->GetComponent<Component::Health>()->faction = 1;
 
     playerEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     playerEntity->GetComponent<Component::Transform>()->position = origin;
     playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
+    playerEntity->AddComponent<Component::Physics>()->velocityDragFactor = 1.5f;
     playerEntity->GetComponent<Component::Controller>()->playerID = player;
-    
     playerEntity->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     playerEntity->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ButtonShoot);
+    playerEntity->GetComponent<Component::Controller>()->mSpeed = 3000;
+
     playerEntity->GetComponent<Component::Spawner>()->delay = 1.f;
+    playerEntity->GetComponent<Component::Health>()->faction = 0;
     
     return playerEntity;
 }
@@ -82,8 +92,12 @@ Entity* GameEntityFactory::CreateCube(const glm::vec3& origin) {
     return cubeEntity;
 }
 
-Entity* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::vec3& direction) {
+Entity* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::vec3& direction, int faction) {
     Entity* bullet = mScene->CreateEntity();
+
+    bullet->AddComponent<Component::Collider2DCircle>();
+    bullet->GetComponent<Component::Collider2DCircle>()->radius = 0.25f;
+
     Component::Transform* transform = bullet->AddComponent<Component::Transform>();
     transform->position = position;
     transform->scale = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -96,29 +110,8 @@ Entity* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::ve
 
     Component::Damage* damage = bullet->AddComponent<Component::Damage>();
     damage->damageAmount = 10.f;
-    damage->faction = 1;
+    damage->faction = faction;
     
-    return bullet;
-}
-
-Entity* GameEntityFactory::CreateEnemyBullet(const glm::vec3& position, const glm::vec3& direction) {
-    Entity* bullet = mScene->CreateEntity();
-    Component::Transform* transform = bullet->AddComponent<Component::Transform>();
-    transform->position = position;
-    transform->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-
-    Component::Collider2DCircle* collider2DCircle = bullet->AddComponent<Component::Collider2DCircle>();
-
-    Component::Physics* physics = bullet->AddComponent<Component::Physics>();
-    physics->velocity = direction;
-
-    Component::Mesh* mesh = bullet->AddComponent<Component::Mesh>();
-    mesh->geometry = Resources().CreateCube();
-
-    Component::Damage* damage = bullet->AddComponent<Component::Damage>();
-    damage->damageAmount = 10.f;
-    damage->faction = 2;
-
     return bullet;
 }
 

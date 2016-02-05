@@ -53,7 +53,7 @@ namespace Component {
             /**
              * Default: 0.f, 0.f, 0.f
              */
-            glm::vec3 angularaAcceleration;
+            glm::vec3 angularAcceleration;
 
             /// Friction factor. Describes the procentage of the velocity that is lost each second. 
             /**

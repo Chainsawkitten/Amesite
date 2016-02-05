@@ -19,8 +19,12 @@ namespace Component {
             
             /// Which player is controlling the entity.
             InputHandler::Player playerID;
+            
+            /// The speed of the controller
+            float mSpeed;
 
             /// Stores the control scheme functions for this controller.
             std::vector<void (*)(Controller* controller, float deltaTime)> controlSchemes;
+
     };
 }
