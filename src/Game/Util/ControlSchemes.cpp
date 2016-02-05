@@ -118,3 +118,19 @@ void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTi
         }
     }
 }
+
+void ControlScheme::AlwaysShoot(Component::Controller* controller, float deltaTime) {
+    Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
+    
+    Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
+    if (spawnerComponent != nullptr) {
+        spawnerComponent->timeSinceSpawn += deltaTime;
+        if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
+            glm::vec2 direction = glm::vec2(1.f, 0.f);
+            
+            float bulletSpeed = 10.f;
+            GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y));
+            spawnerComponent->timeSinceSpawn = 0.0f;
+        }
+    }
+}

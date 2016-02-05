@@ -33,4 +33,11 @@ namespace ControlScheme {
      * @param deltaTime Time since last frame (in seconds).
      */
     void ButtonShoot(Component::Controller* controller, float deltaTime);
+    
+    /// Constantly fires bullets.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void AlwaysShoot(Component::Controller* controller, float deltaTime);
 }
