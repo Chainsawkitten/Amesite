@@ -7,6 +7,7 @@ class Scene;
 class Entity;
 class Texture2D;
 
+/// Factory responsible for creating prefab entities.
 class GameEntityFactory {
     public:
         /// Get the instance of the class.
@@ -50,6 +51,14 @@ class GameEntityFactory {
          * @return The bullet entity.
          */
         Entity* CreateBullet(const glm::vec3& position, const glm::vec3& direction);
+
+        /// Create a bullet.
+        /**
+        * @param position The bullet's starting position.
+        * @param direction The direction the bullet is traveling in.
+        * @return The bullet entity.
+        */
+        Entity* CreateEnemyBullet(const glm::vec3& position, const glm::vec3& direction);
 
         /// Create a camera.
         /**

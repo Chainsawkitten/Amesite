@@ -17,44 +17,37 @@ InputHandler* InputHandler::mActiveInstance = nullptr;
 InputHandler::InputHandler(GLFWwindow* window) {
     mWindow = window;
     inputMap[window] = this;
-
+    
     // Init mouse state.
-    for (int i = 0; i<3; i++) {
-        mMouseState[i] = false;
-        mMouseStateLast[i] = false;
-    }
     glfwSetScrollCallback(window, scrollCallback);
     mLastScroll = 0.0;
     mScroll = 0.0;
-
+    
     // Init button states.
     for (int player = 0; player < PLAYERS; player++) {
         for (int button = 0; button < BUTTONS; button++) {
             mButtonReleased[player][button] = true;
             mButtonTriggered[player][button] = false;
             mButtonValue[player][button] = 0.0;
-            mJoystickAxis[player][button] = false;
         }
     }
-
+    
     // Discover joysticks.
     for (int player = 0; player < PLAYERS - 1; player++) {
-        mActiveJoystick[player] = false;
+        mJoystickActive[player] = false;
         if (glfwJoystickPresent(player)) {
             Log() << glfwGetJoystickName(player) << " detected! \n";
-            mActiveJoystick[player] = true;
+            mJoystickActive[player] = true;
         }
     }
-
-    mBindings = new std::vector<int>[PLAYERS*BUTTONS];
-
+    
     glfwSetCharCallback(window, characterCallback);
     mText = "";
     mTempText = "";
 }
 
 InputHandler::~InputHandler() {
-    delete[] mBindings;
+    
 }
 
 InputHandler* InputHandler::GetActiveInstance() {
@@ -66,96 +59,84 @@ void InputHandler::SetActive() {
 }
 
 void InputHandler::Update() {
-    // Update mouse.
-    for (int i = 0; i<3; i++) {
-        mMouseStateLast[i] = mMouseState[i];
-        mMouseState[i] = (glfwGetMouseButton(mWindow, i) == GLFW_PRESS);
-    }
-
     // Check if controller was disconnected or reconnected.
     for (int player = 0; player < PLAYERS - 1; player++) {
-        if (glfwJoystickPresent(player) == GLFW_FALSE && mActiveJoystick[player]) {
-            mActiveJoystick[player] = false;
+        if (glfwJoystickPresent(player) == GLFW_FALSE && mJoystickActive[player]) {
+            mJoystickActive[player] = false;
             Log() << "Player " << player+1 << " joystick was disconnected! \n";
-        }
-        else if (glfwJoystickPresent(player) == GLFW_TRUE && !mActiveJoystick[player]) {
-            mActiveJoystick[player] = true;
+        } else if (glfwJoystickPresent(player) == GLFW_TRUE && !mJoystickActive[player]) {
+            mJoystickActive[player] = true;
             Log() << "Player " << player+1 <<" joystick ("<< glfwGetJoystickName(player) <<") was connected!" << "\n";
         }
     }
-
+    
     mLastScroll = mScroll;
     mScroll = 0.0;
-
+    
     glfwGetCursorPos(mWindow, &mCursorX, &mCursorY);
-
+    
     // Joystick counters.
-    int axisOneCount = 0;
-    int axisTwoCount = 0;
-    int buttonOneCount = 0;
-    int buttonTwoCount = 0;
-
-    // Update joystick axis and buttons
-    for (int player = 0; player < PLAYERS - 1 && mActiveJoystick[player]; player++) {
-        mJoystickAxisData[player] = glfwGetJoystickAxes(player, &axisOneCount);
-        mJoystickButtonPressed[player] = glfwGetJoystickButtons(player, &buttonOneCount);
+    int axisCount = 0;
+    int buttonCount = 0;
+    const float* joystickAxisData[PLAYERS];
+    const unsigned char* joystickButtonPressed[PLAYERS];
+    
+    // Update joystick axis and buttons.
+    for (int player = 0; player < PLAYERS - 1 && mJoystickActive[player]; player++) {
+        joystickAxisData[player] = glfwGetJoystickAxes(player, &axisCount);
+        joystickButtonPressed[player] = glfwGetJoystickButtons(player, &buttonCount);
     }
-
-    // Update button states depending on bindings.
-    for (int player = 0; player < (PLAYERS - 1); player++) {
-        for (int button = 0; button < BUTTONS; button++) {
-            double value = 0.0;
-            for (int key : mBindings[player*BUTTONS + button]) {
-
-                // Switch the different input devices.
-                switch (mBindingDevice[player][button]) {
-                case KEYBOARD:
-                    if (glfwGetKey(mWindow, key) == GLFW_PRESS)
-                        value = 1.0;
-                    break;
-                case JOYSTICK:
-                    // Scalar axis of joystick.
-                    if (mJoystickAxis[player][button]) {
-                        value = (abs(mJoystickAxisData[player][key])>mThreshold) ? value = mJoystickAxisData[player][key] : value = 0.0;
-                    // Buttons of joystick.
-                    } else if (mJoystickButtonPressed[player][mBindings[button][0]] == GLFW_PRESS) {
-                        value = 1.0;
-                    }
-                    break;
+    
+    // Get button states.
+    double values[PLAYERS-1][BUTTONS] = { { 0.0 } };
+    for (Binding binding : mBindings) {
+        double value = 0.0;
+        switch (binding.device) {
+        case KEYBOARD:
+            if (glfwGetKey(mWindow, binding.index) == GLFW_PRESS)
+                value = 1.0;
+            break;
+        case MOUSE:
+            if (glfwGetMouseButton(mWindow, binding.index) == GLFW_PRESS)
+                value = 1.0;
+            break;
+        case JOYSTICK:
+            if (mJoystickActive[binding.player]) {
+                if (binding.axis) {
+                    value = (abs(joystickAxisData[binding.player][binding.index]) > mThreshold) ? value = joystickAxisData[binding.player][binding.index] : value = 0.0;
+                } else if (joystickButtonPressed[binding.player][binding.index] == GLFW_PRESS) {
+                    value = 1.0;
                 }
             }
+            break;
+        }
+        
+        if (values[binding.player][binding.button] == 0.0)
+            values[binding.player][binding.button] = value;
+    }
+    
+    // Update triggered and released.
+    for (int player=0; player<PLAYERS-1; player++) {
+        for (int button=0; button<BUTTONS; button++) {
+            mButtonTriggered[player][button] = (mButtonValue[player][button] == 1.0) && (values[player][button] == 1.0);
+            mButtonReleased[player][button] = (mButtonValue[player][button] == 0.0) && (values[player][button] == 0.0);
+            mButtonValue[player][button] = values[player][button];
             
-            mButtonTriggered[player][button] = (mButtonValue[player][button] == 1.0) && (value == 1.0);
-            mButtonReleased[player][button] = (mButtonValue[player][button] == 0.0) && (value == 0.0);
-            mButtonValue[player][button] = value;
+            // Update anyone buttons.
+            if (mButtonTriggered[player][button])
+                mButtonTriggered[ANYONE][button] = true;
+            
+            if (mButtonTriggered[player][button])
+                mButtonTriggered[ANYONE][button] = true;
+            
+            if (mButtonValue[player][button] != 0.0)
+                mButtonValue[ANYONE][button] = mButtonValue[player][button];
         }
     }
-    // Update the 'Anyone' input section
-    for (int button = 0; button < BUTTONS; button++) {
-        mButtonTriggered[ANYONE][button] = mButtonTriggered[PLAYER_ONE][button] || mButtonTriggered[PLAYER_TWO][button];
-        mButtonReleased[ANYONE][button] = mButtonReleased[PLAYER_ONE][button] || mButtonReleased[PLAYER_TWO][button];
-        if (mButtonValue[PLAYER_ONE][button] == 1.0 || mButtonValue[PLAYER_ONE][button] == 1.0) {
-            mButtonValue[ANYONE][button] = 1.0;
-        } else {
-            mButtonValue[ANYONE][button] = 0.0;
-        }
-    }
-
+    
     // Update text.
     mText = mTempText;
     mTempText = "";
-}
-
-bool InputHandler::MousePressed(int button) const {
-    return mMouseState[button] && !mMouseStateLast[button];
-}
-
-bool InputHandler::MouseDown(int button) const {
-    return mMouseState[button];
-}
-
-bool InputHandler::MouseReleased(int button) const {
-    return !mMouseState[button] && mMouseStateLast[button];
 }
 
 bool InputHandler::ScrollUp() const {
@@ -178,44 +159,35 @@ void InputHandler::CenterCursor() {
     int width, height;
     glfwGetFramebufferSize(mWindow, &width, &height);
     glfwSetCursorPos(mWindow, width / 2, height / 2);
-
+    
     mCursorX = static_cast<double>(width / 2);
     mCursorY = static_cast<double>(height / 2);
 }
-void InputHandler::AssignJoystick(Button button, bool axis, int index, Player player) {
-    if (!ActiveJoystick(player)) {
-        Log() << "Error binding key, Player " << player+1 << " has no joystick connected!\n";
-        return;
-    }
-    mBindings[BUTTONS*player + button].push_back(index);
-    mJoystickAxis[player][button] = axis;
-    mBindingDevice[player][button] = JOYSTICK;
+
+void InputHandler::AssignButton(Player player, Button button, Device device, int index, bool axis) {
+    Binding binding;
+    binding.player = player;
+    binding.button = button;
+    binding.device = device;
+    binding.index = index;
+    binding.axis = axis;
+    
+    mBindings.push_back(binding);
 }
 
-double InputHandler::ButtonValue(Button button, Player player) const {
+double InputHandler::ButtonValue(Player player, Button button) const {
     return mButtonValue[player][button];
 }
 
-void InputHandler::AssignKeyboard(Button button, int key, Player player) {
-    mBindings[BUTTONS*player + button].push_back(key);
-    mBindingDevice[player][button] = KEYBOARD;
-}
-
-bool InputHandler::Pressed(Button button, Player player) {
-    if (mJoystickAxis[player][button])
-        Log() << "You are checking if a scalar axis is pressed or not - this will almost never be true.";
+bool InputHandler::Pressed(Player player, Button button) {
     return mButtonValue[player][button] == 1.0;
 }
 
-bool InputHandler::Triggered(Button button, Player player) {
-    if (mJoystickAxis[player][button])
-        Log() << "You are checking if a scalar axis is triggered or not - this will almost never be true.";
+bool InputHandler::Triggered(Player player, Button button) {
     return mButtonTriggered[player][button];
 }
 
-bool InputHandler::Released(Button button, Player player) {
-    if (mJoystickAxis[player][button])
-        Log() << "You are checking if a scalar axis is released or not - this is almost always true.";
+bool InputHandler::Released(Player player, Button button) {
     return mButtonReleased[player][button];
 }
 
@@ -231,8 +203,8 @@ void InputHandler::ScrollCallback(double yoffset) {
     mScroll += yoffset;
 }
 
-bool InputHandler::ActiveJoystick(Player player) {
-    return mActiveJoystick[player];
+bool InputHandler::JoystickActive(Player player) {
+    return mJoystickActive[player];
 }
 
 InputHandler* Input() {

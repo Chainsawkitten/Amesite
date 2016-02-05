@@ -58,13 +58,14 @@ Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     playerEntity->AddComponent<Component::Controller>();
     playerEntity->AddComponent<Component::Spawner>();
     playerEntity->AddComponent<Component::Health>();
-    
+    playerEntity->GetComponent<Component::Health>()->faction = 1;
     playerEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     playerEntity->GetComponent<Component::Transform>()->position = origin;
     playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
     playerEntity->GetComponent<Component::Controller>()->playerID = player;
-    
-    playerEntity->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
+    playerEntity->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
+    playerEntity->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ButtonShoot);
+
     playerEntity->GetComponent<Component::Spawner>()->delay = 1.f;
     
     return playerEntity;
@@ -85,19 +86,39 @@ Entity* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::ve
     Entity* bullet = mScene->CreateEntity();
     Component::Transform* transform = bullet->AddComponent<Component::Transform>();
     transform->position = position;
-    
+    transform->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+
     Component::Physics* physics = bullet->AddComponent<Component::Physics>();
     physics->velocity = direction;
     
     Component::Mesh* mesh = bullet->AddComponent<Component::Mesh>();
     mesh->geometry = Resources().CreateCube();
 
-    Component::Collider2DCircle* collider = bullet->AddComponent<Component::Collider2DCircle>();
-    collider->radius = 0.5f;
+    Component::Damage* damage = bullet->AddComponent<Component::Damage>();
+    damage->damageAmount = 10.f;
+    damage->faction = 1;
+    
+    return bullet;
+}
+
+Entity* GameEntityFactory::CreateEnemyBullet(const glm::vec3& position, const glm::vec3& direction) {
+    Entity* bullet = mScene->CreateEntity();
+    Component::Transform* transform = bullet->AddComponent<Component::Transform>();
+    transform->position = position;
+    transform->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+
+    Component::Collider2DCircle* collider2DCircle = bullet->AddComponent<Component::Collider2DCircle>();
+
+    Component::Physics* physics = bullet->AddComponent<Component::Physics>();
+    physics->velocity = direction;
+
+    Component::Mesh* mesh = bullet->AddComponent<Component::Mesh>();
+    mesh->geometry = Resources().CreateCube();
 
     Component::Damage* damage = bullet->AddComponent<Component::Damage>();
-    damage->damageAmount = 200;
-    
+    damage->damageAmount = 10.f;
+    damage->faction = 2;
+
     return bullet;
 }
 

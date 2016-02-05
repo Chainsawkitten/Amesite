@@ -20,7 +20,7 @@ class InputHandler {
             RIGHT_STICK_Y, ///< Right stick X axis
             RIGHT_STICK_X, ///< Right stick Y axis
         };
-
+        
         /// Xbox 360 controller button index
         enum XBOXButtonIndex {
             A = 0, ///< A button
@@ -38,7 +38,7 @@ class InputHandler {
             D_PAD_DOWN, ///< D-pad down
             D_PAD_LEFT, ///< D-pad left
         };
-
+        
         /// Button codes.
         enum Button {
             MOVE_X = 0, ///< Move in X axis
@@ -53,7 +53,7 @@ class InputHandler {
             LEFT, ///< Move left
             BUTTONS, ///< Total number of inputs
         };
-
+        
         /// Player codes
         enum Player {
             PLAYER_ONE = 0, ///< Player one
@@ -61,191 +61,168 @@ class InputHandler {
             ANYONE, ///< Any of the two players
             PLAYERS, ///< Number of players
         };
-
+        
         /// Input device codes
         enum Device {
             KEYBOARD = 0, ///< Keyboard input
+            MOUSE, ///< Mouse buttons
             JOYSTICK, ///< Joystick input
             INPUT_DEVICES, ///< Number of input devices
         };
-
+        
         /// Create new input handler.
         /**
          * @param window %Window to get input for.
          */
         InputHandler(GLFWwindow* window);
-
+        
         /// Destructor.
         ~InputHandler();
-
+        
         /// Get currently active input handler.
         /**
          * @return The currently active input handler or nullptr.
          */
         static InputHandler* GetActiveInstance();
-
+        
         /// Set as currently active input handler.
         void SetActive();
-
+        
         /// Update input state.
         void Update();
-
-        /// Get whether a mouse button was pressed.
-        /**
-         * @param button Mouse button to check. Either GLFW_MOUSE_BUTTON_LEFT, GLFW_MOUSE_BUTTON_RIGHT or GLFW_MOUSE_BUTTON_MIDDLE.
-         * @return Whether button has been pressed since last frame
-         */
-        bool MousePressed(int button) const;
-
-        /// Get whether a mouse button is down.
-        /**
-         * @param button Mouse button to check. Either GLFW_MOUSE_BUTTON_LEFT, GLFW_MOUSE_BUTTON_RIGHT or GLFW_MOUSE_BUTTON_MIDDLE.
-         * @return Whether button is down
-         */
-        bool MouseDown(int button) const;
-
-        /// Get whether a mouse button was released.
-        /**
-         * @param button Mouse button to check. Either GLFW_MOUSE_BUTTON_LEFT, GLFW_MOUSE_BUTTON_RIGHT or GLFW_MOUSE_BUTTON_MIDDLE.
-         * @return Whether button has been released since last frame
-         */
-        bool MouseReleased(int button) const;
-
+        
         /// Get whether user has moved scroll wheel up.
         /**
          * @return Whether user has scrolled up
          */
         bool ScrollUp() const;
-
+        
         /// Get whether user has moved scroll wheel down.
         /**
          * @return Whether user has scrolled down
          */
         bool ScrollDown() const;
-
+        
         /// Get cursor's horizontal position.
         /**
          * @return X-position of the cursor
          */
         double CursorX() const;
-
+        
         /// Get cursor's vertical position.
         /**
          * @return Y-position of the cursor
          */
         double CursorY() const;
-
+        
         /// Centers the cursor to the middle of the window.
         void CenterCursor();
-
-        /// Assign a joystick key to a button.
+        
+        /// Assign a button binding.
         /**
-         * @param button The button to assign a key to.
-         * @param axis - is it an axis (==TRUE)? or is it a button (==FALSE).
-         * @param index of the key in GLFW - See enums for XBOX input in Input.hpp
-         * @param player to check (0 player 1, 1 is player2, 2 is player3)
+         * See <a href="http://www.glfw.org/docs/latest/group__keys.html">GLFW keyboard documentation</a> for indices for keys.
+         * For mouse buttons, either GLFW_MOUSE_BUTTON_LEFT, GLFW_MOUSE_BUTTON_RIGHT or GLFW_MOUSE_BUTTON_MIDDLE.
+         * See Input.hpp for XBOX buttons.
+         * @param player Player for which the binding is valid.
+         * @param button Which button to bind.
+         * @param device Which device (KEYBOARD, MOUSE or JOYSTICK).
+         * @param index Index of the key.
+         * @param axis Whether the button is a joystick axis.
          */
-        void AssignJoystick(Button button, bool axis, int index, Player player);
-
-        /// Gets the value of an axis on joystick
+        void AssignButton(Player player, Button button, Device device, int index, bool axis=false);
+        
+        /// Gets the value of an axis on joystick.
         /**
+         * @param player Which player to check.
          * @param button The button to check.
-         * @param player to check (0 player 1, 1 is player2, 2 is player3)
          * @return a float with a value between -1 and 1 - representing axis value.
          */
-        double ButtonValue(Button button, Player player) const;
-
-        /// Assign a keyboard key to a button.
-        /**
-         * @param button The button to assign a key to.
-         * @param key The <a href="http://www.glfw.org/docs/latest/group__keys.html">keyboard key</a> to assign.
-         * @param player - the player to check (0 is anyone, 1 is player1, 2 is player2)
-         */
-        void AssignKeyboard(Button button, int key, Player player);
-
+        double ButtonValue(Player player, Button button) const;
+        
         /// Gets whether a button is currently down.
         /**
+         * @param player Which player to check.
          * @param button The button to check.
-         * @param player to check (0 player 1, 1 is player2, 2 is player3)
          * @return Whether the button is down
          */
-        bool Pressed(Button button, Player player);
-
+        bool Pressed(Player player, Button button);
+        
         /// Gets whether a button was just pressed.
         /**
          * Checks whether a button was pressed between the last two calls to update().
+         * @param player Which player to check.
          * @param button The button to check.
-         * @param player to check (0 player 1, 1 is player2, 2 is player3)
          * @return Whether the button was pressed
          */
-        bool Triggered(Button button, Player player);
-
+        bool Triggered(Player player, Button button);
+        
         /// Gets whether a button was just released.
         /**
          * Checks whether a button was released between the last two calls to update().
+         * @param player Which player to check.
          * @param button The button to check.
-         * @param player to check (0 player 1, 1 is player2, 2 is player3)
          * @return Whether the button was released
          */
-        bool Released(Button button, Player player);
-
+        bool Released(Player player, Button button);
+        
         /// Get text input since last frame.
         /**
          * @return Text input since last frame.
          */
         const std::string& Text() const;
-
+        
         /// GLFW character callback.
         /**
          * @param codePoint Unicode code point.
          */
         void CharacterCallback(unsigned int codePoint);
-
+        
         /// GLFW scrolling callback.
         /**
          * @param yoffset Offset along the Y-axis.
          */
         void ScrollCallback(double yoffset);
-
-        /// Check if the joystick is active/connected
+        
+        /// Check if the joystick is active/connected.
         /**
-        * @param player for who to check joystick.
-        * @return whether joystick is active or not.
+        * @param player Player for whom to check joystick.
+        * @return Whether joystick is active or not.
         */
-        bool ActiveJoystick(Player player);
-
+        bool JoystickActive(Player player);
+        
     private:
         static InputHandler* mActiveInstance;
-
+        
         GLFWwindow* mWindow;
-
-        // Mouse states
-        bool mMouseState[3];
-        bool mMouseStateLast[3];
-
-        double mCursorX, mCursorY;
-        double mLastScroll;
-        double mScroll;
-        const double mThreshold = 0.2;
-
-        std::string mText, mTempText;
-
-        // Binding information, differentiate input devices.
-        int mBindingDevice[PLAYERS][BUTTONS];
-
-        // Active joysticks
-        bool mActiveJoystick[PLAYERS - 1];
-
+        
         // Bindings
-        std::vector<int>* mBindings;
+        struct Binding {
+            Player player;
+            Button button;
+            Device device;
+            int index;
+            bool axis;
+        };
+        std::vector<Binding> mBindings;
+        
+        // Button values.
         double mButtonValue[PLAYERS][BUTTONS];
         bool mButtonReleased[PLAYERS][BUTTONS];
         bool mButtonTriggered[PLAYERS][BUTTONS];
-
+        
+        // Mouse states.
+        double mCursorX, mCursorY;
+        double mLastScroll;
+        double mScroll;
+        
+        // Text input.
+        std::string mText, mTempText;
+        
+        // Whether the joysticks are active.
+        bool mJoystickActive[PLAYERS - 1];
+        
         // Joystick
-        bool mJoystickAxis[PLAYERS][BUTTONS];
-        const float* mJoystickAxisData[PLAYERS];
-        const unsigned char* mJoystickButtonPressed[PLAYERS];
+        const double mThreshold = 0.2;
 };
 
 /// Get currently active input handler.
