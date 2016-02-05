@@ -7,6 +7,7 @@ class Scene;
 class Entity;
 class Texture2D;
 
+/// Factory responsible for creating prefab entities.
 class GameEntityFactory {
     public:
         /// Get the instance of the class.

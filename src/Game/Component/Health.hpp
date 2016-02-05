@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Engine/Component/SuperComponent.hpp>
+#include <Component/SuperComponent.hpp>
 
 namespace Component {
-    ///Component providing player control.
+    /// %Component containing health.
     class Health : public SuperComponent {
         public:
-            /// Create new %Health.
+            /// Create new health component.
             /**
              * @param entity Pointer to which Entity this %Component corresponds.
              */
@@ -23,11 +23,11 @@ namespace Component {
 
             /// Max health
             /**
-            * Default: 100.f
-            */
+             * Default: 100.f
+             */
             float maxHealth;
 
-            /// Toughness, procent of damage taken.
+            /// Toughness, percent of damage taken.
             /**
              * Default: 1.f
              */
@@ -45,22 +45,22 @@ namespace Component {
              */
             float regenAmount;
 
-            /// Cooldown, time left until regaining helth again. If cooldown < 0.f entity regain health;
+            /// Cooldown, time left until regaining health again. If cooldown < 0.f entity regain health;
             /**
              * Default: 0.f
              */
             float cooldown;
 
-            /// Faction, ID of the faction this health belongs to (Players, enemies)
+            /// Faction, ID of the faction this health belongs to (players, enemies).
             /**
              * Default: 0
              */
             int faction;
 
-            /// Activated, tells you if this entity is in a alive state.
+            /// Activated, tells you if this entity is alive.
             /**
-            * Default: true
-            */
+             * Default: true
+             */
             bool activated;
     };
 }
