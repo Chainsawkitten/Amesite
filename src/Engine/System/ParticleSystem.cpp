@@ -36,7 +36,6 @@ unsigned int ParticleSystem::MaxParticleCount() const {
 
 void ParticleSystem::EmitParticle(glm::vec3 position, Component::ParticleEmitter* emitter) {
     if (mParticleCount < mMaxParticleCount) {
-        Log() << (int)mParticleCount << "\n";
         Particle particle;
         
         particle.worldPos = position;
