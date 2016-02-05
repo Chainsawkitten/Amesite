@@ -1,10 +1,11 @@
 #include "Scene.hpp"
 
 #include "../Entity/Entity.hpp"
+#include <Engine/GameObject/SuperGameObject.hpp>
+
 #include <algorithm>
 
 Scene::Scene() {
-    mParticlesVector = new std::vector<System::ParticleSystem::Particle>;
 }
 
 Scene::~Scene() {
@@ -36,12 +37,19 @@ void Scene::ClearAll() {
     mCollisionVector.clear();
     mCollisionVector.shrink_to_fit();
 
+    for (GameObject::SuperGameObject* gameObject : mGameObjectVector)
+        delete gameObject;
+    mGameObjectVector.clear();
+    mGameObjectVector.shrink_to_fit();
+
     for (auto& it : mComponents) {
         for (Component::SuperComponent* component : it.second)
             delete component;
     }
     mComponents.clear();
-    delete mParticlesVector;
+
+    mParticlesVector.clear();
+    mParticlesVector.shrink_to_fit();
 }
 
 void Scene::UpdateModelMatrices() {

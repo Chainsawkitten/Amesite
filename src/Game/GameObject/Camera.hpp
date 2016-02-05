@@ -6,15 +6,15 @@ class Scene;
 class Entity;
 
 namespace GameObject {
-    /// A bullet
-    class Bullet : public SuperGameObject {
+    /// A Camera
+    class Camera : public SuperGameObject {
         public:
             /// Create %Bullet
             /**
-             * @param scene Pointer to which Scene %Bullet Enities' are contained.
+             * @param scene Pointer to which Scene %Camera Enities' are contained.
              */
-            Bullet(Scene* scene);
+            Camera(Scene* scene);
            
-            ~Bullet();
+            ~Camera();
     };
 }

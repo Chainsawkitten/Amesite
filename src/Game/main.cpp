@@ -50,6 +50,10 @@
 #include "Util/ControlSchemes.hpp"
 
 #include "Game/GameObject/Bullet.hpp"
+#include "Game/GameObject/Player.hpp"
+#include "Game/GameObject/Camera.hpp"
+#include "Game/GameObject/Enemy.hpp"
+#include "Game/GameObject/Cave.hpp"
 
 using namespace std;
 
@@ -88,9 +92,6 @@ int main() {
     
     // Scene and Entites. 
     Scene scene;
-    
-    GameObject::Bullet b = GameObject::Bullet(&scene);
-    b.GetEntity("body")->GetComponent<Component::Transform>()->position.z = 4.f;
 
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;
@@ -99,10 +100,10 @@ int main() {
     System::ControllerSystem controllerSystem;
     
     // HealthSystem.
-    System::HealthSystem healthSystem;
+    //System::HealthSystem healthSystem;
     
     // DamageSystem.
-    System::DamageSystem damageSystem;
+    //System::DamageSystem damageSystem;
     
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
@@ -125,27 +126,27 @@ int main() {
     GameEntityCreator().SetScene(&scene);
     
     // CollisionSystem.
-    System::CollisionSystem collisionSystem;
+    //System::CollisionSystem collisionSystem;
+
+    GameObject::Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    GameObject::Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
     
-    Entity* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    mainCamera->AddComponent<Component::Physics>();
-    
-    Entity* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
-    Entity* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+    GameObject::Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
 
     std::vector<Entity*> players;
-    players.push_back(player1);
-    //players.push_back(player2);
+    players.push_back(player1->GetEntity("body"));
+    players.push_back(player2->GetEntity("body"));
 
-    Entity* theMap = GameEntityCreator().CreateMap();
-    theMap->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
-    theMap->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
-    theMap->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
+    GameObject::Cave* map = GameEntityCreator().CreateMap();
+    Entity* mapEntity = map->GetEntity("map");
+    mapEntity->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
+    mapEntity->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
+    mapEntity->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
     
     // Create dust particles
-    GameEntityCreator().CreatePointParticle(player1, particleTexture);
-    GameEntityCreator().CreatePointParticle(player2, particleTexture);
-    GameEntityCreator().CreateCuboidParticle(player1, particleTexture);
+    //GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), particleTexture);
+    //GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), particleTexture);
+    //GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), particleTexture);
     
     // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
@@ -158,41 +159,13 @@ int main() {
     dLight->color = glm::vec3(0.1f, 0.1f, 0.1f);
     dLight->ambientCoefficient = 0.2f;
 
-    // Spot light.
-    Entity* spotLight = scene.CreateEntity();
-    spotLight->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
-    spotLight->GetComponent<Component::RelativeTransform>()->parentEntity = player1;
-    spotLight->GetComponent<Component::RelativeTransform>()->scale = glm::vec3(0.3f, 0.3f, 0.3f);
-    spotLight->AddComponent<Component::Mesh>()->geometry = player1->GetComponent<Component::Mesh>()->geometry;
-
-    spotLight->AddComponent<Component::SpotLight>()->coneAngle = 90;
-    spotLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
-
-    spotLight->AddComponent<Component::Physics>();
-    spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
-    spotLight->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::StickRotate);
-
-    // Spot light.
-    Entity* spotLight2 = scene.CreateEntity();
-    spotLight2->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
-    spotLight2->GetComponent<Component::RelativeTransform>()->parentEntity = player2;
-    spotLight2->GetComponent<Component::RelativeTransform>()->scale = glm::vec3(0.3f, 0.3f, 0.3f);
-    spotLight2->AddComponent<Component::Mesh>()->geometry = player1->GetComponent<Component::Mesh>()->geometry;
-
-    spotLight2->AddComponent<Component::SpotLight>()->coneAngle = 90;
-    spotLight2->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
-
-    spotLight2->AddComponent<Component::Physics>();
-    spotLight2->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
-    spotLight2->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::StickRotate);
-
 
     GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
 
     //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
     //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
@@ -211,7 +184,7 @@ int main() {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
 
-        glm::vec3 p1OldPos = player1->GetComponent<Component::Transform>()->position;
+        //glm::vec3 p1OldPos = player1->GetEntity("body")->GetComponent<Component::Transform>()->position;
         //glm::vec3 p2OldPos = player2->GetComponent<Component::Transform>()->position;
         // ControllerSystem
         controllerSystem.Update(scene, static_cast<float>(deltaTime));
@@ -219,31 +192,31 @@ int main() {
         // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
 
-        GridCollide(player1, deltaTime);
-        GridCollide(player2, deltaTime);
+        //GridCollide(player1->GetEntity("body"), deltaTime);
+        //GridCollide(player2->GetEntity("body"), deltaTime);
 
         // UpdateCamera
-        UpdateCamera(mainCamera, players);
+        UpdateCamera(mainCamera->GetEntity("body"), players);
         
         // ParticleSystem
-        particleSystem->Update(scene, deltaTime);
+        //particleSystem->Update(scene, deltaTime);
         
         // Updates model matrices for this frame.
         scene.UpdateModelMatrices();
         
         // Check collisions.
-        collisionSystem.Update(scene);
+        //collisionSystem.Update(scene);
         
         // Update health
-        healthSystem.Update(scene, static_cast<float>(deltaTime));
+        //healthSystem.Update(scene, static_cast<float>(deltaTime));
         
         // Update damage
-        damageSystem.Update(scene);
+        //damageSystem.Update(scene);
 
-        if (player1->GetComponent<Component::Health>()->health < 0.01f) {
-            // Remove player
-            player1->GetComponent<Component::Physics>()->maxVelocity = 0.f;
-        }
+        //if (player1->GetEntity("body")->GetComponent<Component::Health>()->health < 0.01f) {
+        //    // Remove player
+        //    player1->GetEntity("body")->GetComponent<Component::Physics>()->maxVelocity = 0.f;
+        //}
 
         //std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
         //for (auto collsion : *collisionVector)
@@ -279,8 +252,8 @@ int main() {
     
     Resources().FreeTexture2DFromFile(testTexture);
     Resources().FreeTexture2DFromFile(particleTexture);
-    Resources().FreeCube();
-    Resources().FreeCube();
+    //Resources().FreeCube();
+    //Resources().FreeCube();
     
     delete window;
     delete particleSystem;
@@ -303,7 +276,7 @@ bool GridCollide(Entity* entity, float deltaTime) {
     z = (250 - z) / 10 + 0.4f;
     x = x / 10 + 0.4f;
 
-    if (Caves::CaveSystem::mMap[(int)x][(int)z]) {
+    if (GameObject::Cave::mMap[(int)x][(int)z]) {
 
         float oldX = x - physics->velocity.x * deltaTime;
         float oldZ = z + physics->velocity.z * deltaTime;

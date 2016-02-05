@@ -6,10 +6,11 @@ using namespace GameObject;
 
 SuperGameObject::SuperGameObject(Scene* scene) {
     mScene = scene;
+    mScene->GetVector<SuperGameObject>()->push_back(this);
 }
 
 SuperGameObject::~SuperGameObject() {
-    Clear();
+    //Clear();
 }
 
 void SuperGameObject::Clear() {
