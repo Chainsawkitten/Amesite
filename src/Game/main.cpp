@@ -40,6 +40,7 @@
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include <Component/ParticleEmitter.hpp>
+#include "Component/Health.hpp"
 
 #include <Texture/Texture2D.hpp>
 
@@ -127,7 +128,7 @@ int main() {
     mainCamera->AddComponent<Component::Physics>();
     GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
     
-    Entity* player1 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    Entity* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     Entity* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
     std::vector<Entity*> players;
     players.push_back(player1);
@@ -275,8 +276,12 @@ int main() {
         
         // Update health
         healthSystem.Update(scene, static_cast<float>(deltaTime));
-
+        //player1->GetComponent<Component::Health>()->health -= 1.0f;
+        //Log() << player1->GetComponent<Component::Health>()->health;
+        //Log() << "\n";
         // Update damage
+        GameEntityCreator().CreateEnemyBullet(glm::vec3(-4.f,0.f,-4.f), glm::vec3(0.f, 0.f, 1.f) );
+
         damageSystem.Update(scene);
         
         // Render.

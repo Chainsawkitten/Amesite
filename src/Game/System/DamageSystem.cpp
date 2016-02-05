@@ -24,7 +24,8 @@ void DamageSystem::Update(Scene& scene) {
             int numberOfIntersections = (*collisionVector)[i]->intersect.size();
             for (int j = 0; j < numberOfIntersections; j++) {
                 if ( (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>() != nullptr) {
-                    (*collisionVector)[i]->entity->GetComponent<Component::Health>()->health -= (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->damageAmount;
+                    if((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->faction != (*collisionVector)[i]->entity->GetComponent<Component::Health>()->faction)
+                        (*collisionVector)[i]->entity->GetComponent<Component::Health>()->health -= (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->damageAmount;
                     //scene.RemoveEntity((*collisionVector)[i]->entity);
                 }
             }
@@ -46,19 +47,26 @@ void DamageSystem::Update(Scene& scene) {
     for (auto health : scene.GetAll<Component::Health>()) {
         if (health->health < 0.f) {
             // If the killed entity is a player, do other stuff.
-            if (health->entity->GetComponent<Component::Controller>() != nullptr) {
-                if(health->cooldown < 0.f){
-                    //TODO: Implement actual coop spawning
-                    health->entity->GetComponent<Component::Transform>()->Move(0.f, -0.5f, 0.f);
-                    health->entity->GetComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-                    health->entity->GetComponent<Component::Physics>()->velocityDragFactor = 0.1f;
-                    health->cooldown = 10.f;
-                } else if (health->cooldown > 0.f) {
-
-                }
+            if (health->entity->GetComponent<Component::Controller>() != nullptr && health->activated == true) {
+                //TODO: Implement actual coop spawning
+                health->entity->GetComponent<Component::Transform>()->Move(0.f, -0.5f, 0.f);
+                health->entity->GetComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+                health->entity->GetComponent<Component::Physics>()->velocityDragFactor = 10000.f;
+                health->cooldown = 10.f;
+                health->activated = false;
             }
-                
-            scene.RemoveEntity(health->entity);
+            else if (health->entity->GetComponent<Component::Controller>() != nullptr && health->activated == false) {
+                health->cooldown -= 0.1f;
+                if (health->cooldown < 0.f) {
+                    health->health = 100.f;
+                    health->entity->GetComponent<Component::Transform>()->Move(0.f, 0.5f, 0.f);
+                    health->entity->GetComponent<Component::Transform>()->scale = glm::vec3(1.0f, 1.0f, 1.0f);
+                    health->entity->GetComponent<Component::Physics>()->velocityDragFactor = 1.0f;
+                    health->activated = true;
+                }
+            } else {
+                scene.RemoveEntity(health->entity);
+            }
         }
     }
 }
