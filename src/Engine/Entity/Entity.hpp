@@ -2,10 +2,10 @@
 
 #include <unordered_map>
 #include <typeinfo>
-#include "../Util/log.hpp"
 #include "../Component/RelativeTransform.hpp"
 #include "../Scene/Scene.hpp"
 
+/// %Entity containing various components.
 class Entity {
     public:
         /// Create new Entity.
@@ -17,13 +17,19 @@ class Entity {
         /// Destructor.
         ~Entity();
 
-        ///Adds component with type T
+        /// Adds component with type T.
+        /**
+         * @return The created component.
+         */
         template <typename T> T* AddComponent();
 
-        ///Gets component with type T
+        /// Gets component with type T.
+        /**
+         * @return The requested component (or nullptr).
+         */
         template <typename T> T* GetComponent();
 
-        ///Unordered map containing components.
+        /// Unordered map containing components.
         /**
          * Maps component type to component.
          */

@@ -7,7 +7,7 @@ class Entity;
 #include <glm/glm.hpp>
 
 namespace Component {
-    /// Component providing transformation.
+    /// %Component providing transformation.
     class Transform : public SuperComponent {
         public:
             /// Create new %Transform.
@@ -22,7 +22,7 @@ namespace Component {
             /// Update model matrix.
             virtual void UpdateModelMatrix();
 
-            /// Get world position from model matrix.
+            /// Get world position of the entity.
             /**
              * @return The entity's world position.
              */
@@ -33,6 +33,7 @@ namespace Component {
              * @return The entity's scale.
              */
             virtual glm::vec3 GetWorldScale() const;
+
 
             /// Get orientation matrix.
             /**

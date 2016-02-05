@@ -1,8 +1,7 @@
 #pragma once
 
-#include <glm\glm.hpp>
-
-#include <Util\Input.hpp>
+#include <glm/glm.hpp>
+#include <Util/Input.hpp>
 
 class Scene;
 class Entity;
@@ -25,28 +24,40 @@ class GameEntityFactory {
         /// Create a basic enemy.
         /**
          * @param origin The enemy's starting position
+         * @return The enemy entity.
          */
-        Entity* CreateBasicEnemy(glm::vec3 origin);
+        Entity* CreateBasicEnemy(const glm::vec3& origin);
        
         /// Create a player.
         /**
          * @param origin The player's starting position.
          * @param player Who controls the player.
+         * @return The player entity.
          */
-        Entity* CreatePlayer(glm::vec3 origin, InputHandler::Player player);
+        Entity* CreatePlayer(const glm::vec3& origin, InputHandler::Player player);
 
 		/// Create a cube for testing purposes.
         /**
          * @param origin The cube's starting position
+         * @return The cube entity.
          */
-		Entity* CreateCube(glm::vec3 origin);
+		Entity* CreateCube(const glm::vec3& origin);
+        
+        /// Create a bullet.
+        /**
+         * @param position The bullet's starting position.
+         * @param direction The direction the bullet is traveling in.
+         * @return The bullet entity.
+         */
+        Entity* CreateBullet(const glm::vec3& position, const glm::vec3& direction);
 
         /// Create a camera.
         /**
          * @param origin The camera's starting position.
          * @param rotation The camera's starting orientation.
+         * @return The camera entity.
          */
-        Entity* CreateCamera(glm::vec3 origin, glm::vec3 rotation);
+        Entity* CreateCamera(const glm::vec3& origin, const glm::vec3& rotation);
 
         /// Sets scene that the factory is coupled to.
         /**
@@ -61,7 +72,10 @@ class GameEntityFactory {
          */
         void CreateCuboidParticle(Entity* camera, Texture2D* particleTexture);
 
-         /// Create a map.
+        /// Create a map.
+        /**
+         * @return The map entity.
+         */ 
         Entity* CreateMap();
 
     private:
