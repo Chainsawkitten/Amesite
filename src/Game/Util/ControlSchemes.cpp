@@ -10,7 +10,10 @@
 #include "../Component/Spawner.hpp"
 #include "../Util/GameEntityFactory.hpp"
 
+void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
+
 void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
+
     // Move the player
     float x = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_X);
     float z = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_Z);
@@ -20,7 +23,7 @@ void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
         z = Input()->Pressed(controller->playerID, InputHandler::DOWN) - Input()->Pressed(controller->playerID, InputHandler::UP);
     }
 
-    glm::vec3 speedVec = glm::vec3(x * 6000 * deltaTime, 0, z * 6000 * deltaTime);
+    glm::vec3 speedVec = glm::vec3(x * controller->mSpeed * deltaTime, 0, z * controller->mSpeed * deltaTime);
 
     Component::Physics* physicsComponent = controller->entity->GetComponent<Component::Physics>();
 
@@ -31,7 +34,7 @@ void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
         else
             physicsComponent->acceleration = glm::vec3(0, 0, 0);
     } else if (glm::abs(x) + glm::abs(z) > 0.3f) {
-        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime, 0, z * deltaTime));
+        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->mSpeed, 0, z * deltaTime));
     }
 }
 
@@ -98,6 +101,27 @@ void ControlScheme::ArrowKeyRotate(Component::Controller* controller, float delt
     }
 }
 
+void ControlScheme::ArrowKeysMove(Component::Controller* controller, float deltaTime) {
+    Entity* entity = controller->entity;
+
+    // Move the player
+    bool up = Input()->Pressed(controller->playerID, InputHandler::UP);
+    bool down = Input()->Pressed(controller->playerID, InputHandler::DOWN);
+    bool right = Input()->Pressed(controller->playerID, InputHandler::RIGHT);
+    bool left = Input()->Pressed(controller->playerID, InputHandler::LEFT);
+
+    glm::vec3 speedVec = glm::vec3((right - left) * controller->mSpeed * deltaTime, 0.f, (down - up) * controller->mSpeed * deltaTime);
+
+    Component::Physics* physicsComponent = entity->GetComponent<Component::Physics>();
+
+    // If there's a physics component attached we use it to move.
+    if (physicsComponent != nullptr)
+        physicsComponent->acceleration = speedVec;
+    else
+        controller->entity->GetComponent<Component::Transform>()->Move(speedVec);
+
+}
+
 void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTime) {
     Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
     
@@ -112,12 +136,13 @@ void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTi
             else
                 direction = direction / directionLength;
             
-            float bulletSpeed = 10.f;
-            GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y));
+            float bulletSpeed = 40.f;
+            GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y), 0);
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }
 }
+
 
 void ControlScheme::AlwaysShoot(Component::Controller* controller, float deltaTime) {
     Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
@@ -126,11 +151,47 @@ void ControlScheme::AlwaysShoot(Component::Controller* controller, float deltaTi
     if (spawnerComponent != nullptr) {
         spawnerComponent->timeSinceSpawn += deltaTime;
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
-            glm::vec2 direction = glm::vec2(1.f, 0.f);
+            glm::vec2 direction = glm::vec2(1 - ((rand() % 1000) / 1000.f) * 2, 1 - ((rand() % 1000) / 1000.f) * 2);
             
             float bulletSpeed = 10.f;
-            GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y));
+            GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y), 1);
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }
+}
+
+void ControlScheme::AutoRotate(Component::Controller* controller, float deltaTime) {
+    Entity* entity = controller->entity;
+    
+    Component::Physics* physicsComponent = entity->GetComponent<Component::Physics>();
+
+    // If there's a physics component attached we use it to move.
+    if (physicsComponent != nullptr)
+        physicsComponent->angularVelocity = glm::vec3(0, controller->mSpeed, 0);
+    else
+        entity->GetComponent<Component::Transform>()->yaw += controller->mSpeed;
+
+}
+
+void ControlScheme::RandomMove(Component::Controller* controller, float deltaTime) {
+
+    // Move the player
+    float x = 1 - ((rand() % 1000 + 1) / 1000.f) * 2;
+    float z = 1 - ((rand() % 1000 + 1) / 1000.f) * 2;
+
+    glm::vec3 speedVec = glm::vec3(x * controller->mSpeed * deltaTime, 0, z * controller->mSpeed * deltaTime);
+
+    Component::Physics* physicsComponent = controller->entity->GetComponent<Component::Physics>();
+
+    // If there's a physics component attached we use it to move.
+    if (physicsComponent != nullptr) {
+        if (glm::abs(x) + glm::abs(z) > 0.3f)
+            physicsComponent->acceleration = speedVec;
+        else
+            physicsComponent->acceleration = glm::vec3(0, 0, 0);
+    }
+    else if (glm::abs(x) + glm::abs(z) > 0.3f) {
+        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->mSpeed, 0, z * deltaTime * controller->mSpeed));
+    }
+
 }
