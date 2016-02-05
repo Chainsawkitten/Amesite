@@ -125,14 +125,14 @@ void CollisionSystem::Update(Scene& scene) {
         Collider2DCircle* colliderX = collider2DCircle.at(x);
         Scene::Collision* collisionX = nullptr;
 
+        // check if collisionX is in mCollisonVec
+        for (unsigned int i = 0; i < collisionVector->size() && collisionX == nullptr; i++)
+            if (collisionVector->at(i)->entity == colliderX->entity)
+                collisionX = collisionVector->at(i);
+
         for (unsigned int y = x + 1; y < collider2DCircle.size(); y++) {
             Collider2DCircle* colliderY = collider2DCircle.at(y);
             if (CircleVSCircle(colliderX, colliderY)) {
-                // check if collisionX is in mCollisonVec
-                for (unsigned int i = 0; i < collisionVector->size() && collisionX == nullptr; i++)
-                    if (collisionVector->at(i)->entity == colliderX->entity)
-                        collisionX = collisionVector->at(i);
-
                 // x and y intersect each other.
                 if (collisionX == nullptr) {
                     collisionX = new Scene::Collision();

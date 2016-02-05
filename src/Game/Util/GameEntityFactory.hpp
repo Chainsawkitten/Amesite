@@ -50,15 +50,7 @@ class GameEntityFactory {
          * @param direction The direction the bullet is traveling in.
          * @return The bullet entity.
          */
-        Entity* CreateBullet(const glm::vec3& position, const glm::vec3& direction);
-
-        /// Create a bullet.
-        /**
-        * @param position The bullet's starting position.
-        * @param direction The direction the bullet is traveling in.
-        * @return The bullet entity.
-        */
-        Entity* CreateEnemyBullet(const glm::vec3& position, const glm::vec3& direction);
+        Entity* CreateBullet(const glm::vec3& position, const glm::vec3& direction, int faction);
 
         /// Create a camera.
         /**
@@ -74,12 +66,19 @@ class GameEntityFactory {
          */
         void SetScene(Scene* scene);
 
-        /// Creates a cuboid dust particle system.
+        /// Creates a cuboid dust particle emitter and bind it to an Entity.
         /**
          * @param camera - entity which the system relates to.
          * @param particleTexture the particles should sample from.
          */
-        void CreateCuboidParticle(Entity* camera, Texture2D* particleTexture);
+        void CreateCuboidParticle(Entity* object, Texture2D* particleTexture);
+
+        /// Creates a point particle emitter and bind it to an Entity.
+        /**
+        * @param object - entity which the system relates to.
+        * @param particleTexture the particles should sample from.
+        */
+        void CreatePointParticle(Entity* object, Texture2D* particleTexture);
 
         /// Create a map.
         /**

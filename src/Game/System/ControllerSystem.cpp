@@ -17,4 +17,5 @@ void ControllerSystem::Update(Scene& scene, float deltaTime) {
             controllerObjects[i]->controlSchemes[scheme](controllerObjects[i], deltaTime);
         }
     }
+
 }

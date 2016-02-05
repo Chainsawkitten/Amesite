@@ -41,11 +41,19 @@ Entity* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
     enemyEntity->AddComponent<Component::Transform>();
     
     enemyEntity->AddComponent<Component::Collider2DCircle>();
-    
+    enemyEntity->AddComponent<Component::Physics>();
+    enemyEntity->AddComponent<Component::Spawner>();
+    enemyEntity->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShoot);
+    enemyEntity->AddComponent<Component::Health>();
+
     enemyEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     enemyEntity->GetComponent<Component::Transform>()->position = origin;
     enemyEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
-    
+    enemyEntity->GetComponent<Component::Spawner>()->delay = 0.75f;
+    enemyEntity->GetComponent<Component::Health>()->faction = 1;
+    enemyEntity->GetComponent<Component::Health>()->health = 1;
+
+
     return enemyEntity;
 }
 
@@ -58,15 +66,17 @@ Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     playerEntity->AddComponent<Component::Controller>();
     playerEntity->AddComponent<Component::Spawner>();
     playerEntity->AddComponent<Component::Health>();
-    playerEntity->GetComponent<Component::Health>()->faction = 1;
     playerEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     playerEntity->GetComponent<Component::Transform>()->position = origin;
     playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
+    playerEntity->AddComponent<Component::Physics>()->velocityDragFactor = 1.5f;
     playerEntity->GetComponent<Component::Controller>()->playerID = player;
     playerEntity->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     playerEntity->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ButtonShoot);
+    playerEntity->GetComponent<Component::Controller>()->mSpeed = 3000;
 
     playerEntity->GetComponent<Component::Spawner>()->delay = 1.f;
+    playerEntity->GetComponent<Component::Health>()->faction = 0;
     
     return playerEntity;
 }
@@ -82,8 +92,12 @@ Entity* GameEntityFactory::CreateCube(const glm::vec3& origin) {
     return cubeEntity;
 }
 
-Entity* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::vec3& direction) {
+Entity* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::vec3& direction, int faction) {
     Entity* bullet = mScene->CreateEntity();
+
+    bullet->AddComponent<Component::Collider2DCircle>();
+    bullet->GetComponent<Component::Collider2DCircle>()->radius = 0.25f;
+
     Component::Transform* transform = bullet->AddComponent<Component::Transform>();
     transform->position = position;
     transform->scale = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -96,29 +110,8 @@ Entity* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::ve
 
     Component::Damage* damage = bullet->AddComponent<Component::Damage>();
     damage->damageAmount = 10.f;
-    damage->faction = 1;
+    damage->faction = faction;
     
-    return bullet;
-}
-
-Entity* GameEntityFactory::CreateEnemyBullet(const glm::vec3& position, const glm::vec3& direction) {
-    Entity* bullet = mScene->CreateEntity();
-    Component::Transform* transform = bullet->AddComponent<Component::Transform>();
-    transform->position = position;
-    transform->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-
-    Component::Collider2DCircle* collider2DCircle = bullet->AddComponent<Component::Collider2DCircle>();
-
-    Component::Physics* physics = bullet->AddComponent<Component::Physics>();
-    physics->velocity = direction;
-
-    Component::Mesh* mesh = bullet->AddComponent<Component::Mesh>();
-    mesh->geometry = Resources().CreateCube();
-
-    Component::Damage* damage = bullet->AddComponent<Component::Damage>();
-    damage->damageAmount = 10.f;
-    damage->faction = 2;
-
     return bullet;
 }
 
@@ -137,34 +130,59 @@ void GameEntityFactory::SetScene(Scene* scene) {
     mScene = scene;
 }
 
-void GameEntityFactory::CreateCuboidParticle(Entity * camera, Texture2D* particleTexture) {
-    camera->AddComponent<Component::ParticleEmitter>();
+void GameEntityFactory::CreateCuboidParticle(Entity * object, Texture2D* particleTexture) {
+    object->AddComponent<Component::ParticleEmitter>();
     
     // Particle emitter.
-    Component::ParticleEmitter* emitter = camera->GetComponent<Component::ParticleEmitter>();
+    Component::ParticleEmitter* emitter = object->GetComponent<Component::ParticleEmitter>();
     
     emitter->emitterType = Component::ParticleEmitter::CUBOID;
-    emitter->follow = camera;
-    emitter->maxEmitTime = 0.02;
+    emitter->follow = object;
+    emitter->maxEmitTime = 0.015;
     emitter->minEmitTime = 0.01;
-    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
     emitter->lifetime = 0.0;
-    emitter->origin = glm::vec3(0.f, 0.f, 0.f);
-    emitter->size = glm::vec3(40.f, 15.f, 40.f);
+    emitter->origin = glm::vec3(0.f, 5.f, 0.f);
+    emitter->size = glm::vec3(40.f, 20.f, 40.f);
     emitter->relative = true;
-    emitter->follow = camera;
     emitter->timeToNext = 5.0;
     
     //Particle type.
     emitter->particleType.texture = particleTexture;
-    emitter->particleType.minLifetime = 6.f;
-    emitter->particleType.maxLifetime = 10.f;
+    emitter->particleType.minLifetime = 2.f;
+    emitter->particleType.maxLifetime = 4.f;
     emitter->particleType.minVelocity = glm::vec3(-0.025f, -0.01f, -0.025f);
     emitter->particleType.maxVelocity = glm::vec3(0.025f, -0.1f, 0.025f);
     emitter->particleType.minSize = glm::vec2(0.025f, 0.025f);
     emitter->particleType.maxSize = glm::vec2(0.05f, 0.05f);
     emitter->particleType.uniformScaling = true;
-    emitter->particleType.color = glm::vec3(.3f, .3f, 1.f);
+    emitter->particleType.color = glm::vec3(1.f, 0.5f, 0.5f);
+}
+
+void GameEntityFactory::CreatePointParticle(Entity * object, Texture2D* particleTexture) {
+    object->AddComponent<Component::ParticleEmitter>();
+
+    // Particle emitter.
+    Component::ParticleEmitter* emitter = object->GetComponent<Component::ParticleEmitter>();
+
+    emitter->emitterType = Component::ParticleEmitter::POINT;
+    emitter->maxEmitTime = 0.05;
+    emitter->minEmitTime = 0.03;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 0.0;
+    emitter->relative = true;
+    emitter->follow = object;
+    emitter->origin = glm::vec3(0.f, 0.f, 0.f);
+
+    //Particle type.
+    emitter->particleType.texture = particleTexture;
+    emitter->particleType.minLifetime = .1f;
+    emitter->particleType.maxLifetime = .2f;
+    emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -.2f);
+    emitter->particleType.maxVelocity = glm::vec3(.3f, 0.f, .2f);
+    emitter->particleType.minSize = glm::vec2(.5f, .5f);
+    emitter->particleType.maxSize = glm::vec2(1.f, 1.f);
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::vec3(1.f, 0.5f, 0.5f);
 }
 
 Entity* GameEntityFactory::CreateMap() {
