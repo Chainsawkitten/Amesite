@@ -1,8 +1,9 @@
 #pragma once
 
-#include <../Game/Component/Controller.hpp>
-
 class Entity;
+namespace Component {
+    class Controller;
+}
 
 namespace ControlScheme {
 
@@ -10,14 +11,26 @@ namespace ControlScheme {
     void Empty(Component::Controller* controller, float deltaTime);
 
     /// Moves the entity with the left stick.
-    void StickMove(Component::Controller* controller, float deltaTime);
-    
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void Move(Component::Controller* controller, float deltaTime);
+
     /// Rotates the entity with the right stick.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
     void StickRotate(Component::Controller* controller, float deltaTime);
-    
+
     /// Move the entity with the keyboard.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
     void ArrowKeyRotate(Component::Controller* controller, float deltaTime);
-    
+
     /// Rotate the entity with the keyboard.
     void ArrowKeysMove(Component::Controller* controller, float deltaTime);
 
@@ -26,5 +39,19 @@ namespace ControlScheme {
 
     /// Moves the object in a random direction
     void RandomMove(Component::Controller* controller, float deltaTime);
+
+    /// Use a button to shoot.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void ButtonShoot(Component::Controller* controller, float deltaTime);
+
+    /// Constantly fires bullets.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void AlwaysShoot(Component::Controller* controller, float deltaTime);
 
 }
