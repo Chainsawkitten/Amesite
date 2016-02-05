@@ -30,6 +30,12 @@ class MainWindow {
         
         /// Initialize components.
         void Init();
+        
+        /// Set whether vsync is enabled.
+        /**
+         * @param vsync Whether to enable vsync.
+         */
+        void SetVsync(bool vsync);
 
         /// Update
         void Update();

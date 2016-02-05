@@ -4,21 +4,19 @@
 #include <Util/Input.hpp>
 
 namespace Component {
-    ///Component providing control.
+    /// %Component providing player control.
     class Controller : public SuperComponent {
-
         public:
-
             /// Create new %Controller.
             /**
              * @param entity Pointer to which Entity this %Component corresponds.
              */
             Controller(Entity* entity);
-
+            
             /// Destructor.
             ~Controller();
-
-            /// Stores the playerID, (p1/p2).
+            
+            /// Which player is controlling the entity.
             InputHandler::Player playerID;
 
             /// Stores the control scheme function for this controller.
@@ -27,7 +25,5 @@ namespace Component {
              * @param The delta time of the frame.
              */
             void(*ControlScheme)(Controller* controller, float deltaTime);
-
     };
-
 }
