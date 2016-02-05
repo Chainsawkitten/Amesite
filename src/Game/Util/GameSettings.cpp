@@ -15,6 +15,7 @@ GameSettings::GameSettings() {
     AddBoolSetting("Fullscreen", "Graphics", "Fullscreen", false);
     AddBoolSetting("Borderless", "Graphics", "Borderless Window", false);
     AddLongSetting("Target FPS", "Graphics", "Target FPS", 60);
+    AddBoolSetting("VSync", "Graphics", "VSync", false);
 }
 
 GameSettings& GameSettings::GetInstance() {

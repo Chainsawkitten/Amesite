@@ -15,6 +15,7 @@
  * Fullscreen          | Play in fullscreen mode.            | bool   | false
  * Borderless          | Use a borderless window.            | bool   | false
  * Target FPS          | FPS to aim for when rendering.      | long   | 60
+ * VSync               | Whether to enable vsync.            | bool   | false
  */
 class GameSettings : public Settings {
     public:

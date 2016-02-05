@@ -63,6 +63,12 @@ class Scene {
             Entity* entity = nullptr;
             std::vector<Entity*> intersect;
         };
+
+        /// Removes Entity from %Scene
+        /**
+         *@param entity Entity to be removed.
+         */
+        void RemoveEntity(Entity* entity);
     private:
         // Adds component to list internally.
         void AddComponentToList(Component::SuperComponent* component, const std::type_info* componentType);

@@ -53,6 +53,10 @@ void MainWindow::Init() {
         glDebugMessageCallback(DebugMessageCallback, nullptr);
 }
 
+void MainWindow::SetVsync(bool vsync) {
+    glfwSwapInterval(vsync ? 1 : 0);
+}
+
 void MainWindow::Update() {
     mInput->Update();
     mInput->SetActive();

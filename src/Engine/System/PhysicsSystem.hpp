@@ -5,7 +5,7 @@ class Scene;
 #include <glm/glm.hpp>
 
 namespace System {
-    /// System to update the physics of a scene.
+    /// %System to update the physics of a scene.
     class PhysicsSystem {
         public:
             /// Create physics system.

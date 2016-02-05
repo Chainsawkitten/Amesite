@@ -3,10 +3,16 @@
 class Scene;
 
 namespace System {
-    /// %System to let the user control entities in a scene.
-    class ControllerSystem {
+    /// System to update the physics of a scene.
+    class HealthSystem {
     public:
-        /// Update Scene containing entities. Moves entities according to player input.
+        /// Create physics system.
+        HealthSystem();
+
+        /// Destructor.
+        ~HealthSystem();
+
+        /// Update Scene containing entities. Updates Health.
         /**
          * @param scene The scene to update.
          * @param deltaTime Time since last frame (in seconds).

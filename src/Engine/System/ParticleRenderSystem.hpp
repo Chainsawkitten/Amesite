@@ -11,7 +11,7 @@ class ShaderProgram;
 #include "Particle.frag.hpp"
 
 namespace System {
-    /// System to render particles
+    /// %System to render particles
     class ParticleRenderSystem
     {
         public:

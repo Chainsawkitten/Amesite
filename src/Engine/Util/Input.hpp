@@ -47,11 +47,11 @@ class InputHandler {
             AIM_Z, ///< Aim in Z axis
             SHOOT, ///< Fire bullet
             QUIT, ///< Quit game
-            BUTTONS, ///< Total number of inputs - joystick
             UP, ///< Move up
             DOWN, ///< Move down
             RIGHT, ///< Move right
             LEFT, ///< Move left
+            BUTTONS, ///< Total number of inputs
         };
 
         /// Player codes

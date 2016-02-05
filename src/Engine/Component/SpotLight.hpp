@@ -6,7 +6,7 @@
 class Entity;
 
 namespace Component {
-    /// Component describing a spot light.
+    /// %Component describing a spot light.
     class SpotLight : public SuperComponent {
         public:
             /// Create new light.

@@ -54,6 +54,7 @@ endfunction()
 # Copy resources
 set(RESOURCES
     assets/TestTexture.png
+    assets/DustParticle.png
 )
 
 file(COPY ${RESOURCES} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
@@ -210,22 +211,33 @@ set_property(TARGET Engine PROPERTY CXX_STANDARD_REQUIRED ON)
 set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Util/GameSettings.cpp
-        src/Game/CaveSystem/CaveSystem.cpp
         src/Game/Util/GameEntityFactory.cpp
-        src/Game/System/ControllerSystem.cpp
         src/Game/Util/CameraUpdate.cpp
-        src/Game/Component/Controller.cpp
         src/Game/Util/ControlSchemes.cpp
+        src/Game/CaveSystem/CaveSystem.cpp
+        src/Game/System/ControllerSystem.cpp
+        src/Game/System/HealthSystem.cpp
+        src/Game/System/DamageSystem.cpp
+        src/Game/Component/Controller.cpp
+        src/Game/Component/Spawner.cpp
+        src/Game/Component/Health.cpp
+        src/Game/Component/Damage.cpp
     )
 
 set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
-        src/Game/CaveSystem/CaveSystem.hpp
+        src/Game/Util/GameSettings.hpp
         src/Game/Util/GameEntityFactory.hpp
-        src/Game/System/ControllerSystem.hpp
         src/Game/Util/CameraUpdate.hpp
-        src/Game/Component/Controller.hpp
         src/Game/Util/ControlSchemes.hpp
+        src/Game/CaveSystem/CaveSystem.hpp
+        src/Game/System/ControllerSystem.hpp
+        src/Game/System/HealthSystem.hpp
+        src/Game/System/DamageSystem.hpp
+        src/Game/Component/Controller.hpp
+        src/Game/Component/Spawner.hpp
+        src/Game/Component/Health.hpp
+        src/Game/Component/Damage.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
