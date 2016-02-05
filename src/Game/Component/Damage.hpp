@@ -20,5 +20,11 @@ namespace Component {
              * Default: 10.f
              */
             float damageAmount;
+
+            /// Faction, ID of the faction this health belongs to (Players, enemies)
+            /**
+            * Default: 0
+            */
+            int faction;
     };
 }
