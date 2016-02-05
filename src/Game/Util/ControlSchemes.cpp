@@ -9,7 +9,6 @@
 #include <Component/Transform.hpp>
 #include "../Component/Spawner.hpp"
 #include "../Util/GameEntityFactory.hpp"
-#include <Util/Log.hpp>
 
 void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
     // Move the player
@@ -57,8 +56,6 @@ void ControlScheme::ArrowKeyRotate(Component::Controller* controller, float delt
     bool down = Input()->Pressed(controller->playerID, InputHandler::DOWN);
     bool right = Input()->Pressed(controller->playerID, InputHandler::RIGHT);
     bool left = Input()->Pressed(controller->playerID, InputHandler::LEFT);
-
-    Log() << left;
 
     if (up) {
         if (up && right) {
@@ -108,7 +105,6 @@ void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTi
     if (spawnerComponent != nullptr) {
         spawnerComponent->timeSinceSpawn += deltaTime;
         if (Input()->Pressed(controller->playerID, InputHandler::SHOOT) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
-            Log() << "Shoot\n";
             glm::vec2 direction = glm::vec2(Input()->ButtonValue(controller->playerID, Input()->AIM_X), Input()->ButtonValue(controller->playerID, Input()->AIM_Z));
             float directionLength = glm::length(direction);
             if (directionLength < 0.001f) 
