@@ -31,18 +31,6 @@ class Scene {
         
         /// Clear the scene of everything.
         void ClearAll();
-
-        /// Adds component to map, used externally.
-        /**
-         *@param component %Component that will be added to map.
-         */
-        //template <typename T> void AddComponentToList(T* component);
-
-        /// Remove component from map, used externally.
-        /**
-         *@param component %Component that will be removed from map.
-         */
-        //template <typename T> void RemoveComponentFromList(T* component, const std::type_info* componentType);
         
         /// Updates all model matrices in %Scene.
         void UpdateModelMatrices();
@@ -61,8 +49,8 @@ class Scene {
 
         /// Gets all item of a specific type.
         /**
-        * @return A pointer to a vector of pointers to all items of the specified scene.
-        */
+         * @return A pointer to a vector of pointers to all items of the specified scene.
+         */
         template <typename T> std::vector<T>* GetVectorContents();
 
         /// Contains data about which entities in the scene this entity intersects with.
@@ -95,28 +83,12 @@ class Scene {
         std::vector<Collision*> mCollisionVector;
 };
 
-//template<typename T> void Scene::AddComponentToList(T* component) {
-//    const std::type_info* componentType = &typeid(component);
-//    AddComponentToList(component, componentType);
-//    return;
-//}
-
-//template<typename T> void Scene::RemoveComponentFromList(T* component) {
-//    std::vector<T*> vec = GetAll<T>();// &mComponents[componentType];
-//    vec.erase(std::remove(vec.begin(), vec.end(), component), vec.end());
-//}
-
-
-//template<typename T> void Scene::RemoveComponentFromList(T* component, const std::type_info* componentType) {
-//    std::vector<T*> vec = GetAll<T>();// &mComponents[componentType];
-//    vec.erase(std::remove(vec.begin(), vec.end(), component), vec.end());
-//}
-
 // GetAll<T>
 template <typename T> inline std::vector<T*>& Scene::GetAll() {
     return reinterpret_cast<std::vector<T*>&>(mComponents[&typeid(T*)]);
 }
 
+// GetVector<T>
 template<> inline std::vector<Entity*>* Scene::GetVector() {
     return &mEntityVector;
 }
@@ -125,6 +97,7 @@ template<> inline std::vector<Scene::Collision*>* Scene::GetVector() {
     return &mCollisionVector;
 }
 
+// GetVectorContents<T>
 template<> inline std::vector<System::ParticleSystem::Particle>* Scene::GetVectorContents() {
     return mParticlesVector;
 }

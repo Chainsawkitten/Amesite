@@ -5,7 +5,6 @@ Entity::Entity(Scene* scene) {
 }
 
 Entity::~Entity() {
-    //Clear();
 }
 
 void Entity::AddComponent(Component::SuperComponent* component, const std::type_info* componentType) {
@@ -17,6 +16,5 @@ void Entity::Clear() {
         delete it.second;
         mScene->RemoveComponentFromList(it.second, it.first);
     }
-
     components.clear();
 }
