@@ -13,6 +13,7 @@
 #include <Component/ParticleEmitter.hpp>
 #include "../Component/Controller.hpp"
 #include "../Component/Damage.hpp"
+#include "../Component/Health.hpp"
 
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
@@ -38,6 +39,7 @@ Entity* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
     Entity* enemyEntity = mScene->CreateEntity();
     enemyEntity->AddComponent<Component::Mesh>();
     enemyEntity->AddComponent<Component::Transform>();
+    
     enemyEntity->AddComponent<Component::Collider2DCircle>();
     
     enemyEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
@@ -55,14 +57,12 @@ Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     playerEntity->AddComponent<Component::Physics>();
     playerEntity->AddComponent<Component::Controller>();
     playerEntity->AddComponent<Component::Spawner>();
-    playerEntity->AddComponent<Component::Damage>();
+    playerEntity->AddComponent<Component::Health>();
     
     playerEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     playerEntity->GetComponent<Component::Transform>()->position = origin;
     playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
     playerEntity->GetComponent<Component::Controller>()->playerID = player;
-    
-    playerEntity->GetComponent<Component::Damage>()->damageAmount = 10.f;
     
     playerEntity->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
     playerEntity->GetComponent<Component::Spawner>()->delay = 1.f;
@@ -91,6 +91,12 @@ Entity* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::ve
     
     Component::Mesh* mesh = bullet->AddComponent<Component::Mesh>();
     mesh->geometry = Resources().CreateCube();
+
+    Component::Collider2DCircle* collider = bullet->AddComponent<Component::Collider2DCircle>();
+    collider->radius = 0.5f;
+
+    Component::Damage* damage = bullet->AddComponent<Component::Damage>();
+    damage->damageAmount = 200;
     
     return bullet;
 }

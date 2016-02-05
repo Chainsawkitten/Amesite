@@ -21,6 +21,10 @@ void Scene::AddComponentToList(Component::SuperComponent* component, const std::
     mComponents[componentType].push_back(component);
 }
 
+void Scene::RemoveComponentFromList(Component::SuperComponent* component, const std::type_info* componentType) {
+    mComponents[componentType].erase(std::remove(mComponents[componentType].begin(), mComponents[componentType].end(), component), mComponents[componentType].end());
+}
+
 void Scene::ClearAll() {
     for (Entity* entity : mEntityVector)
         delete entity;

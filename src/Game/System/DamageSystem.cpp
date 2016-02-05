@@ -22,6 +22,7 @@ void DamageSystem::Update(Scene& scene) {
             for (int j = 0; j < numberOfIntersections; j++) {
                 if ( (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>() != nullptr) {
                     (*collisionVector)[i]->entity->GetComponent<Component::Health>()->health -= (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->damageAmount;
+                    //(*collisionVector)[i]->entity->GetComponent<Component::Health>()->cooldown -= (*collisionVector)[i]->entity->GetComponent<Component::Health>()->maxCooldown;
                     //scene.RemoveEntity((*collisionVector)[i]->entity);
                 }
             }
@@ -33,12 +34,12 @@ void DamageSystem::Update(Scene& scene) {
     /* 
     IF HIT
     healthComponent->cooldown = healthComponent->maxCooldown;
-    healthComponent->health -= healthComponent->toughness * damageComponenet->damageAmount;
+    healthComponent->health -= healthComponent->toughness / damageComponenet->damageAmount;
     */
 
-    for (auto health : scene.GetAll<Component::Health>()) {
-        if (health->health < 0.f) {
-            scene.RemoveEntity(health->entity);
-        }
-    }
+    //for (auto health : scene.GetAll<Component::Health>()) {
+    //    if (health->health < 0.f) {
+    //        //scene.RemoveEntity(health->entity);
+    //    }
+    //}
 }

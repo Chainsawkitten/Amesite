@@ -3,6 +3,7 @@
 #include <map>
 #include <typeinfo>
 #include <vector>
+#include <algorithm>
 #include <iterator>
 #include "../System/ParticleSystem.hpp"
 
@@ -35,7 +36,13 @@ class Scene {
         /**
          *@param component %Component that will be added to map.
          */
-        template <typename T> void AddComponentToList(T* component);
+        //template <typename T> void AddComponentToList(T* component);
+
+        /// Remove component from map, used externally.
+        /**
+         *@param component %Component that will be removed from map.
+         */
+        //template <typename T> void RemoveComponentFromList(T* component, const std::type_info* componentType);
         
         /// Updates all model matrices in %Scene.
         void UpdateModelMatrices();
@@ -73,6 +80,9 @@ class Scene {
         // Adds component to list internally.
         void AddComponentToList(Component::SuperComponent* component, const std::type_info* componentType);
 
+        // Removes component from list internally.
+        void RemoveComponentFromList(Component::SuperComponent* component, const std::type_info* componentType);
+
         // List of all entities created in this scene.
         std::vector<Entity*> mEntityVector;
         
@@ -85,11 +95,22 @@ class Scene {
         std::vector<Collision*> mCollisionVector;
 };
 
-template<typename T> void Scene::AddComponentToList(T* component) {
-    const std::type_info* componentType = &typeid(component);
-    AddComponentToList(component, componentType);
-    return;
-}
+//template<typename T> void Scene::AddComponentToList(T* component) {
+//    const std::type_info* componentType = &typeid(component);
+//    AddComponentToList(component, componentType);
+//    return;
+//}
+
+//template<typename T> void Scene::RemoveComponentFromList(T* component) {
+//    std::vector<T*> vec = GetAll<T>();// &mComponents[componentType];
+//    vec.erase(std::remove(vec.begin(), vec.end(), component), vec.end());
+//}
+
+
+//template<typename T> void Scene::RemoveComponentFromList(T* component, const std::type_info* componentType) {
+//    std::vector<T*> vec = GetAll<T>();// &mComponents[componentType];
+//    vec.erase(std::remove(vec.begin(), vec.end(), component), vec.end());
+//}
 
 // GetAll<T>
 template <typename T> inline std::vector<T*>& Scene::GetAll() {

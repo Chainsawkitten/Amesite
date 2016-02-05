@@ -29,11 +29,17 @@ class Entity {
          */
         template <typename T> T* GetComponent();
 
+        /// Remove component of type T.
+        template <typename T> void RemoveComponent();
+
+        /// Remove entity from scene.
+        void Clear();
+
         /// Unordered map containing components.
         /**
          * Maps component type to component.
          */
-        std::unordered_map<const std::type_info*, Component::SuperComponent*> components;
+        std::unordered_map<const std::type_info*, Component::SuperComponent*> components; //TODO MAP
 
     private:
         /// Pointer to which Scene %Entity is contained.
@@ -74,7 +80,17 @@ template <> inline Component::RelativeTransform* Entity::AddComponent<Component:
 template <typename T> T* Entity::AddComponent() {
     T* component = new T(this);
     const std::type_info* componentType = &typeid(component);
-    AddComponent(component, componentType);
-    mScene->AddComponentToList(component, componentType);
+    AddComponent(component, componentType); // map
+    mScene->AddComponentToList(component, componentType); // add to vector
     return component;
+}
+
+template <typename T> void Entity::RemoveComponent() {
+    const std::type_info* componentType = &typeid(T*);
+
+    if (components.find(componentType) != components.end()) {
+        delete components[componentType]; // remove elm
+        components.erase(componentType); // remove key
+        mScene->RemoveComponentFromList(component, componentType);
+    }
 }

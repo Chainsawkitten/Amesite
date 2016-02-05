@@ -155,6 +155,7 @@ set(ENGINE_SRCS
         src/Engine/System/ParticleRenderSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
+        src/Engine/GameObject/SuperGameObject.cpp
     )
 
 set(ENGINE_HEADERS
@@ -199,6 +200,7 @@ set(ENGINE_HEADERS
         src/Engine/System/ParticleRenderSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
+        src/Engine/GameObject/SuperGameObject.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
@@ -222,6 +224,7 @@ set(GAME_SRCS
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
+        src/Game/GameObject/Bullet.cpp
     )
 
 set(GAME_HEADERS
@@ -238,6 +241,7 @@ set(GAME_HEADERS
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
+        src/Game/GameObject/Bullet.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
