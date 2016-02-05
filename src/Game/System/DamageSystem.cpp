@@ -52,6 +52,9 @@ void DamageSystem::Update(Scene& scene) {
                     health->entity->GetComponent<Component::Transform>()->Move(0.f, -0.5f, 0.f);
                     health->entity->GetComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
                     health->entity->GetComponent<Component::Physics>()->velocityDragFactor = 0.1f;
+                    health->cooldown = 10.f;
+                } else if (health->cooldown > 0.f) {
+
                 }
             }
                 
