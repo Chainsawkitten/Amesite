@@ -40,6 +40,7 @@
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include <Component/ParticleEmitter.hpp>
+#include "Component/Health.hpp"
 
 #include <Texture/Texture2D.hpp>
 
@@ -127,8 +128,8 @@ int main() {
     mainCamera->AddComponent<Component::Physics>();
     GameEntityCreator().CreateBasicEnemy(glm::vec3(-5.f, -5.f, -5.f));
     
-    Entity* player1 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
-    Entity* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    Entity* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    Entity* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
     std::vector<Entity*> players;
     players.push_back(player1);
     players.push_back(player2);
@@ -167,14 +168,7 @@ int main() {
     spotLight->AddComponent<Component::Physics>();
     spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     spotLight->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickRotate;
-    
-
-    int p1OldGridPosX = 12;
-    int p1OldGridPosZ = 12;
-
-    int p2OldGridPosX = 12;
-    int p2OldGridPosZ = 12;
-
+ 
     player2->GetComponent<Component::Controller>()->ControlScheme = ControlScheme::RandomMove;
     player2->GetComponent<Component::Controller>()->mSpeed = 3000;
 
@@ -185,8 +179,6 @@ int main() {
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
-        
-
 
         glm::vec3 p1OldPos = player1->GetComponent<Component::Transform>()->position;
         glm::vec3 p2OldPos = player2->GetComponent<Component::Transform>()->position;
@@ -214,6 +206,10 @@ int main() {
         // Update health
         healthSystem.Update(scene, static_cast<float>(deltaTime));
 
+        //Create an enemy bullet
+        if ((rand() % 25) == 1)
+            GameEntityCreator().CreateEnemyBullet(glm::vec3(-4.f,0.f,-4.f), glm::vec3(0.f, 0.f, 1.f) );
+        
         // Update damage
         damageSystem.Update(scene);
         
@@ -273,16 +269,35 @@ bool GridCollide(Entity* entity, float deltaTime) {
         float oldX = x - physics->velocity.x * deltaTime;
         float oldZ = z + physics->velocity.z * deltaTime;
 
-        if ((int)x != (int)oldX) {
-            transform->position += (glm::vec3(-physics->velocity.x, 0, physics->velocity.z) * (float)deltaTime) * 2.f;
-            physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
-            physics->acceleration = -glm::normalize(physics->acceleration);
+        if (glm::abs(physics->velocity.x) < glm::abs(physics->velocity.z)) {
+
+            if ((int)x != (int)oldX) {
+                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);//(glm::vec3(-physics->velocity.x, 0, physics->velocity.z) * (float)deltaTime) * 2.f;
+                physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
+                physics->acceleration = -glm::normalize(physics->acceleration);
+            }
+            else if ((int)z != (int)oldZ) {
+                transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
+                physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
+                physics->acceleration = -glm::normalize(physics->acceleration);
+            }
+
+        } else {
+            
+            if ((int)z != (int)oldZ) {
+                transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
+                physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
+                physics->acceleration = -glm::normalize(physics->acceleration);
+            }
+            else if ((int)x != (int)oldX) {
+                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);//(glm::vec3(-physics->velocity.x, 0, physics->velocity.z) * (float)deltaTime) * 2.f;
+                physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
+                physics->acceleration = -glm::normalize(physics->acceleration);
+            }
+
         }
-        else if ((int)z != (int)oldZ) {
-            transform->position += (glm::vec3(physics->velocity.x, 0, -physics->velocity.z) * (float)deltaTime) * 2.f;
-            physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
-            physics->acceleration = -glm::normalize(physics->acceleration);
-        }
+
+
 
         return true;
 
