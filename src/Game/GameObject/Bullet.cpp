@@ -16,13 +16,12 @@ using namespace GameObject;
 
 Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     Entity* entity = mScene->CreateEntity();
+    mEntityMap["body"] = entity;
     entity->AddComponent<Component::Damage>();
-    transform = entity->AddComponent<Component::Transform>();
-    transform->position.x = 2.f;
+    entity->AddComponent<Component::Transform>()->position.x = 2.f;
     entity->AddComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     entity->AddComponent<Component::Collider2DCircle>()->radius = 0.5;
-    physics = entity->AddComponent<Component::Physics>();
-    physics->angularaAcceleration.y = 0.2f;
+    entity->AddComponent<Component::Physics>()->angularaAcceleration.y = 0.2f;
     mEntityVector.push_back(entity);
 }
 

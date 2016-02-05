@@ -90,7 +90,7 @@ int main() {
     Scene scene;
     
     GameObject::Bullet b = GameObject::Bullet(&scene);
-    b.Clear();
+    b.GetEntity("body")->GetComponent<Component::Transform>()->position.z = 4.f;
 
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;

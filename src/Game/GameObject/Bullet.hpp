@@ -5,21 +5,16 @@
 class Scene;
 class Entity;
 
-namespace Component {
-    class Transform;
-    class Physics;
-}
-
 namespace GameObject {
     /// A bullet
     class Bullet : public SuperGameObject {
         public:
             /// Create %Bullet
+            /**
+             * @param scene Pointer to which Scene %Bullet Enitie's are contained.
+             */
             Bullet(Scene* scene);
            
             ~Bullet();
-
-            Component::Transform* transform;
-            Component::Physics* physics;
     };
 }
