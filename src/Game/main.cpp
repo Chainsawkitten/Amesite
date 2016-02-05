@@ -276,12 +276,12 @@ int main() {
         
         // Update health
         healthSystem.Update(scene, static_cast<float>(deltaTime));
-        //player1->GetComponent<Component::Health>()->health -= 1.0f;
-        //Log() << player1->GetComponent<Component::Health>()->health;
-        //Log() << "\n";
-        // Update damage
-        GameEntityCreator().CreateEnemyBullet(glm::vec3(-4.f,0.f,-4.f), glm::vec3(0.f, 0.f, 1.f) );
 
+        //Create an enemy bullet
+        if ((rand() % 25) == 1)
+            GameEntityCreator().CreateEnemyBullet(glm::vec3(-4.f,0.f,-4.f), glm::vec3(0.f, 0.f, 1.f) );
+        
+        // Update damage
         damageSystem.Update(scene);
         
         // Render.
