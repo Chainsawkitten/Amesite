@@ -145,24 +145,24 @@ void GameEntityFactory::CreateCuboidParticle(Entity * camera, Texture2D* particl
     
     emitter->emitterType = Component::ParticleEmitter::CUBOID;
     emitter->follow = camera;
-    emitter->maxEmitTime = 0.02;
+    emitter->maxEmitTime = 0.015;
     emitter->minEmitTime = 0.01;
     emitter->lifetime = 0.0;
-    emitter->origin = glm::vec3(0.f, 0.f, 0.f);
-    emitter->size = glm::vec3(20.f, 15.f, 20.f);
+    emitter->origin = glm::vec3(0.f, 5.f, 0.f);
+    emitter->size = glm::vec3(40.f, 20.f, 40.f);
     emitter->relative = true;
     emitter->timeToNext = 5.0;
     
     //Particle type.
     emitter->particleType.texture = particleTexture;
-    emitter->particleType.minLifetime = 6.f;
-    emitter->particleType.maxLifetime = 10.f;
+    emitter->particleType.minLifetime = 2.f;
+    emitter->particleType.maxLifetime = 4.f;
     emitter->particleType.minVelocity = glm::vec3(-0.025f, -0.01f, -0.025f);
     emitter->particleType.maxVelocity = glm::vec3(0.025f, -0.1f, 0.025f);
     emitter->particleType.minSize = glm::vec2(0.025f, 0.025f);
     emitter->particleType.maxSize = glm::vec2(0.05f, 0.05f);
     emitter->particleType.uniformScaling = true;
-    emitter->particleType.color = glm::vec3(.1f, .1f, .1f);
+    emitter->particleType.color = glm::vec3(1.f, 0.5f, 0.5f);
 }
 
 void GameEntityFactory::CreatePointParticle(Entity * object, Texture2D* particleTexture) {
@@ -178,14 +178,14 @@ void GameEntityFactory::CreatePointParticle(Entity * object, Texture2D* particle
     emitter->lifetime = 0.0;
     emitter->relative = true;
     emitter->follow = object;
-    emitter->origin = glm::vec3(0.f, 2.f, 0.f);
+    emitter->origin = glm::vec3(0.f, 0.f, 0.f);
 
     //Particle type.
     emitter->particleType.texture = particleTexture;
     emitter->particleType.minLifetime = .1f;
     emitter->particleType.maxLifetime = .2f;
-    emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -8.f);
-    emitter->particleType.maxVelocity = glm::vec3(.3f, 0.f, -3.f);
+    emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -.2f);
+    emitter->particleType.maxVelocity = glm::vec3(.3f, 0.f, .2f);
     emitter->particleType.minSize = glm::vec2(.5f, .5f);
     emitter->particleType.maxSize = glm::vec2(1.f, 1.f);
     emitter->particleType.uniformScaling = true;
