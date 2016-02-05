@@ -141,8 +141,8 @@ int main() {
     GameEntityCreator().CreateBullet(glm::vec3(1.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f));
     
     // Create dust particles
-    //GameEntityCreator().CreateCuboidParticle(mainCamera, particleTexture);
     GameEntityCreator().CreatePointParticle(player1, particleTexture);
+    GameEntityCreator().CreateCuboidParticle(mainCamera, particleTexture);
     
     // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
