@@ -132,8 +132,11 @@ int main() {
     std::vector<Entity*> players;
     players.push_back(player1);
     players.push_back(player2);
-    
-    GameEntityCreator().CreateMap();
+
+    Entity* theMap = GameEntityCreator().CreateMap();
+    theMap->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
+    theMap->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
+    theMap->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
     
     GameEntityCreator().CreateBullet(glm::vec3(1.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f));
     
@@ -153,19 +156,26 @@ int main() {
     
     // Spot light.
     Entity* spotLight = scene.CreateEntity();
-    spotLight->AddComponent<Component::RelativeTransform>()->Move(0, 5, 0);
+    spotLight->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
     spotLight->GetComponent<Component::RelativeTransform>()->parentEntity = player1;
-    //spotLight->GetComponent<Component::RelativeTransform>()->pitch = 45.f;
+    spotLight->GetComponent<Component::RelativeTransform>()->scale = glm::vec3(0.3f, 0.3f, 0.3f);
     spotLight->AddComponent<Component::Mesh>()->geometry = player1->GetComponent<Component::Mesh>()->geometry;
     
     spotLight->AddComponent<Component::SpotLight>()->coneAngle = 90;
     spotLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
-    //player->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
     
     spotLight->AddComponent<Component::Physics>();
     spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     spotLight->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickRotate;
     
+
+    int p1OldGridPosX = 12;
+    int p1OldGridPosZ = 12;
+
+    int p2OldGridPosX = 12;
+    int p2OldGridPosZ = 12;
+
+
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
@@ -174,12 +184,83 @@ int main() {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
         
+
+
+        glm::vec3 p1OldPos = player1->GetComponent<Component::Transform>()->position;
+        glm::vec3 p2OldPos = player2->GetComponent<Component::Transform>()->position;
         // ControllerSystem
         controllerSystem.Update(scene, static_cast<float>(deltaTime));
         
         // PhysicsSystem.
-        physicsSystem.Update(scene, static_cast<float>(deltaTime));
+        physicsSystem.Update(scene, (float)deltaTime);
+
+        float p1X = player1->GetComponent<Component::Transform>()->position.x + (25.f / 2.f) * 10;
+        float p1Z = player1->GetComponent<Component::Transform>()->position.z + (25.f / 2.f) * 10;
+        p1Z = (250 - p1Z) / 10 + 0.4f;
+        p1X = p1X / 10 + 0.4f;
+
+        float p2X = player2->GetComponent<Component::Transform>()->position.x + (25.f / 2.f) * 10;
+        float p2Z = player2->GetComponent<Component::Transform>()->position.z + (25.f / 2.f) * 10;
+        p2Z = (250 - p2Z) / 10 + 0.4f;
+        p2X = p2X / 10 + 0.4f;
+
+        bool p1Collide = Caves::CaveSystem::mMap[(int)p1X][(int)p1Z] == 1;
+        bool p2Collide = Caves::CaveSystem::mMap[(int)p2X][(int)p2Z] == 1;
+
+        if (p1Collide) {
+
+            if (p1OldGridPosX != (int)p1X) {
+
+                glm::vec3 velocity = player1->GetComponent<Component::Physics>()->velocity;
+
+                player1->GetComponent<Component::Transform>()->position = p1OldPos + (glm::vec3(-velocity.x, 0, velocity.z) * (float)deltaTime);
+                player1->GetComponent<Component::Physics>()->velocity = glm::vec3(-velocity.x, 0, velocity.z);//-glm::normalize(player1->GetComponent<Component::Physics>()->velocity) * 1000.f;
+                player1->GetComponent<Component::Physics>()->acceleration = -glm::normalize(player1->GetComponent<Component::Physics>()->acceleration);
+
+            }
+            if (p1OldGridPosZ != (int)p1Z) {
+
+                glm::vec3 velocity = player1->GetComponent<Component::Physics>()->velocity;
+
+                player1->GetComponent<Component::Transform>()->position = p1OldPos + (glm::vec3(velocity.x, 0, -velocity.z) * (float)deltaTime);
+                player1->GetComponent<Component::Physics>()->velocity = glm::vec3(velocity.x, 0, -velocity.z);//-glm::normalize(player1->GetComponent<Component::Physics>()->velocity) * 1000.f;
+                player1->GetComponent<Component::Physics>()->acceleration = -glm::normalize(player1->GetComponent<Component::Physics>()->acceleration);
+
+            }
+
+
+        }
+        if (p2Collide) {
+
+            if (p2OldGridPosX != (int)p2X) {
+
+                glm::vec3 velocity = player2->GetComponent<Component::Physics>()->velocity;
+
+                player2->GetComponent<Component::Transform>()->position = p2OldPos + (glm::vec3(-velocity.x, 0, velocity.z) * (float)deltaTime);
+                player2->GetComponent<Component::Physics>()->velocity = glm::vec3(-velocity.x, 0, velocity.z);//-glm::normalize(player1->GetComponent<Component::Physics>()->velocity) * 1000.f;
+                player2->GetComponent<Component::Physics>()->acceleration = -glm::normalize(player2->GetComponent<Component::Physics>()->acceleration);
+
+            }
+            if (p2OldGridPosZ != (int)p2Z) {
+
+                glm::vec3 velocity = player2->GetComponent<Component::Physics>()->velocity;
+
+                player2->GetComponent<Component::Transform>()->position = p2OldPos + (glm::vec3(velocity.x, 0, -velocity.z) * (float)deltaTime);
+                player2->GetComponent<Component::Physics>()->velocity = glm::vec3(velocity.x, 0, -velocity.z);//-glm::normalize(player1->GetComponent<Component::Physics>()->velocity) * 1000.f;
+                player2->GetComponent<Component::Physics>()->acceleration = -glm::normalize(player2->GetComponent<Component::Physics>()->acceleration);
+
+            }
+
+
+        }
+
+        p1OldGridPosX = (int)p1X;
+        p1OldGridPosZ = (int)p1Z;
+        p2OldGridPosX = (int)p2X;
+        p2OldGridPosZ = (int)p2Z;
         
+
+
         // UpdateCamera
         UpdateCamera(mainCamera, players);
         

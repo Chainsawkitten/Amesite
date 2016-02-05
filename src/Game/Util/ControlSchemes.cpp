@@ -31,8 +31,8 @@ void ControlScheme::StickMove(Component::Controller* controller, float deltaTime
 void ControlScheme::StickRotate(Component::Controller* controller, float deltaTime) {
     Entity* entity = controller->entity;
 
-    float a = Input()->ButtonValue(InputHandler::AIM_X, controller->playerID);
-    float b = Input()->ButtonValue(InputHandler::AIM_Z, controller->playerID);
+    float a = Input()->ButtonValue(InputHandler::AIM_Z, controller->playerID);
+    float b = Input()->ButtonValue(InputHandler::AIM_X, controller->playerID);
 
     if (glm::abs(a) + glm::abs(b) > 0.3f && glm::abs(a) > 0) {
         if(a >= 0)
@@ -101,8 +101,6 @@ void ControlScheme::ArrowKeysMove(Component::Controller* controller, float delta
     bool down = Input()->Pressed(InputHandler::DOWN, controller->playerID);
     bool right = Input()->Pressed(InputHandler::RIGHT, controller->playerID);
     bool left = Input()->Pressed(InputHandler::LEFT, controller->playerID);
-    
-    Log() << "Input()->Pressed(InputHandler::UP, controller->playerID)";
 
     glm::vec3 speedVec = glm::vec3((right - left) * 6000.f * deltaTime, 0.f, (down - up) * 6000.f * deltaTime);
 
@@ -113,4 +111,5 @@ void ControlScheme::ArrowKeysMove(Component::Controller* controller, float delta
         physicsComponent->acceleration = speedVec;
     else
         controller->entity->GetComponent<Component::Transform>()->Move(speedVec);
+
 }
