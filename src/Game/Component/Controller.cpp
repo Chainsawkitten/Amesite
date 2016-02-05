@@ -11,6 +11,7 @@ Controller::Controller(Entity* entity) : SuperComponent(entity) {
 
     playerID = InputHandler::PLAYER_ONE;
     ControlScheme = &EmptyControls;
+    mSpeed = 1;
 
 }
 

@@ -6,6 +6,9 @@ class Entity;
 
 namespace ControlScheme {
 
+    /// A scheme that doesn't do anything
+    void Empty(Component::Controller* controller, float deltaTime);
+
     /// Moves the entity with the left stick.
     void StickMove(Component::Controller* controller, float deltaTime);
     
@@ -17,5 +20,11 @@ namespace ControlScheme {
     
     /// Rotate the entity with the keyboard.
     void ArrowKeysMove(Component::Controller* controller, float deltaTime);
+
+    /// Rotates the object
+    void AutoRotate(Component::Controller* controller, float deltaTime);
+
+    /// Moves the object in a random direction
+    void RandomMove(Component::Controller* controller, float deltaTime);
 
 }

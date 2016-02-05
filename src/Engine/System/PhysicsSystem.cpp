@@ -39,15 +39,15 @@ void PhysicsSystem::Update(Scene& scene, float deltaTime) {
 
             // --- Angular Velocity ---
             // Add angular acceleration.
-            physicsComp->angularVelocity += physicsComp->angularaAcceleration * physicsComp->momentOfInertia * deltaTime;
+            physicsComp->angularVelocity += physicsComp->angularAcceleration * physicsComp->momentOfInertia * deltaTime;
             
             // Add drag.
             if (glm::length(physicsComp->angularVelocity) > 0.01f)
                 physicsComp->angularVelocity -= physicsComp->angularVelocity * physicsComp->angularDragFactor * deltaTime;
 
             // Cap angular velocity.
-            if (glm::length(physicsComp->angularaAcceleration) > physicsComp->maxAngularVelocity)
-                physicsComp->angularaAcceleration = glm::length(physicsComp->maxAngularVelocity) / glm::length(physicsComp->angularaAcceleration) * physicsComp->angularaAcceleration;
+            if (glm::length(physicsComp->angularAcceleration) > physicsComp->maxAngularVelocity)
+                physicsComp->angularAcceleration = glm::length(physicsComp->maxAngularVelocity) / glm::length(physicsComp->angularAcceleration) * physicsComp->angularAcceleration;
 
             // Update rotation.
             transformComp->pitch += physicsComp->angularVelocity.x * (360.f) * deltaTime;

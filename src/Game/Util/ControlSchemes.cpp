@@ -8,12 +8,14 @@
 #include <../Game/Component/Controller.hpp>
 #include <Util/Log.hpp>
 
+void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
+
 void ControlScheme::StickMove(Component::Controller* controller, float deltaTime) {
     // Move the player
     float x = Input()->ButtonValue(InputHandler::MOVE_X, controller->playerID);
     float z = Input()->ButtonValue(InputHandler::MOVE_Z, controller->playerID);
 
-    glm::vec3 speedVec = glm::vec3(x * 6000 * deltaTime, 0, z * 6000 * deltaTime);
+    glm::vec3 speedVec = glm::vec3(x * controller->mSpeed * deltaTime, 0, z * controller->mSpeed * deltaTime);
 
     Component::Physics* physicsComponent = controller->entity->GetComponent<Component::Physics>();
 
@@ -24,7 +26,7 @@ void ControlScheme::StickMove(Component::Controller* controller, float deltaTime
         else
             physicsComponent->acceleration = glm::vec3(0, 0, 0);
     } else if (glm::abs(x) + glm::abs(z) > 0.3f) {
-        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime, 0, z * deltaTime));
+        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->mSpeed, 0, z * deltaTime));
     }
 }
 
@@ -102,7 +104,7 @@ void ControlScheme::ArrowKeysMove(Component::Controller* controller, float delta
     bool right = Input()->Pressed(InputHandler::RIGHT, controller->playerID);
     bool left = Input()->Pressed(InputHandler::LEFT, controller->playerID);
 
-    glm::vec3 speedVec = glm::vec3((right - left) * 6000.f * deltaTime, 0.f, (down - up) * 6000.f * deltaTime);
+    glm::vec3 speedVec = glm::vec3((right - left) * controller->mSpeed * deltaTime, 0.f, (down - up) * controller->mSpeed * deltaTime);
 
     Component::Physics* physicsComponent = entity->GetComponent<Component::Physics>();
 
@@ -111,5 +113,41 @@ void ControlScheme::ArrowKeysMove(Component::Controller* controller, float delta
         physicsComponent->acceleration = speedVec;
     else
         controller->entity->GetComponent<Component::Transform>()->Move(speedVec);
+
+}
+
+void ControlScheme::AutoRotate(Component::Controller* controller, float deltaTime) {
+    Entity* entity = controller->entity;
+    
+    Component::Physics* physicsComponent = entity->GetComponent<Component::Physics>();
+
+    // If there's a physics component attached we use it to move.
+    if (physicsComponent != nullptr)
+        physicsComponent->angularVelocity = glm::vec3(0, controller->mSpeed, 0);
+    else
+        entity->GetComponent<Component::Transform>()->yaw += controller->mSpeed;
+
+}
+
+void ControlScheme::RandomMove(Component::Controller* controller, float deltaTime) {
+
+    // Move the player
+    float x = 1 - ((rand() % 1000 + 1) / 1000.f) * 2;
+    float z = 1 - ((rand() % 1000 + 1) / 1000.f) * 2;
+
+    glm::vec3 speedVec = glm::vec3(x * controller->mSpeed * deltaTime, 0, z * controller->mSpeed * deltaTime);
+
+    Component::Physics* physicsComponent = controller->entity->GetComponent<Component::Physics>();
+
+    // If there's a physics component attached we use it to move.
+    if (physicsComponent != nullptr) {
+        if (glm::abs(x) + glm::abs(z) > 0.3f)
+            physicsComponent->acceleration = speedVec;
+        else
+            physicsComponent->acceleration = glm::vec3(0, 0, 0);
+    }
+    else if (glm::abs(x) + glm::abs(z) > 0.3f) {
+        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->mSpeed, 0, z * deltaTime * controller->mSpeed));
+    }
 
 }

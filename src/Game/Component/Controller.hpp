@@ -25,5 +25,8 @@ namespace Component {
              * @param The delta time of the frame.
              */
             void(*ControlScheme)(Controller* controller, float deltaTime);
+            
+            /// The speed of the controller
+            float mSpeed;
     };
 }
