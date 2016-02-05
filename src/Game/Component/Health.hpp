@@ -45,11 +45,22 @@ namespace Component {
              */
             float regenAmount;
 
-            // Cooldown, time left until regaining helth again. If cooldown < 0.f entity regan health;
+            /// Cooldown, time left until regaining helth again. If cooldown < 0.f entity regain health;
             /**
              * Default: 0.f
              */
             float cooldown;
 
+            /// Faction, ID of the faction this health belongs to (Players, enemies)
+            /**
+             * Default: 0
+             */
+            int faction;
+
+            /// Activated, tells you if this entity is in a alive state.
+            /**
+            * Default: true
+            */
+            bool activated;
     };
 }
