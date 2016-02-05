@@ -52,7 +52,6 @@ Entity* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
     enemyEntity->GetComponent<Component::Health>()->faction = 1;
     enemyEntity->GetComponent<Component::Health>()->health = 1;
 
-
     return enemyEntity;
 }
 

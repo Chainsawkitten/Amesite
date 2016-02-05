@@ -150,51 +150,6 @@ int main() {
     dLight->color = glm::vec3(0.1f, 0.1f, 0.1f);
     dLight->ambientCoefficient = 0.2f;
 
-    // Spot light.
-    Entity* spotLight = scene.CreateEntity();
-    spotLight->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
-    spotLight->GetComponent<Component::RelativeTransform>()->parentEntity = player1;
-    spotLight->GetComponent<Component::RelativeTransform>()->scale = glm::vec3(0.3f, 0.3f, 0.3f);
-    spotLight->AddComponent<Component::Mesh>()->geometry = player1->GetComponent<Component::Mesh>()->geometry;
-
-    spotLight->AddComponent<Component::SpotLight>()->coneAngle = 90;
-    spotLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
-
-    spotLight->AddComponent<Component::Physics>();
-    spotLight->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
-    spotLight->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::StickRotate);
-
-    // Spot light.
-    Entity* spotLight2 = scene.CreateEntity();
-    spotLight2->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
-    spotLight2->GetComponent<Component::RelativeTransform>()->parentEntity = player2;
-    spotLight2->GetComponent<Component::RelativeTransform>()->scale = glm::vec3(0.3f, 0.3f, 0.3f);
-    spotLight2->AddComponent<Component::Mesh>()->geometry = player1->GetComponent<Component::Mesh>()->geometry;
-
-    spotLight2->AddComponent<Component::SpotLight>()->coneAngle = 90;
-    spotLight2->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
-
-    spotLight2->AddComponent<Component::Physics>();
-    spotLight2->AddComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
-    spotLight2->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::StickRotate);
-
-
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
-
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-
-
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
@@ -203,8 +158,6 @@ int main() {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
 
-        glm::vec3 p1OldPos = player1->GetComponent<Component::Transform>()->position;
-        glm::vec3 p2OldPos = player2->GetComponent<Component::Transform>()->position;
         // ControllerSystem
         controllerSystem.Update(scene, static_cast<float>(deltaTime));
         
@@ -291,12 +244,12 @@ bool GridCollide(Entity* entity, float deltaTime) {
         if (glm::abs(physics->velocity.x) < glm::abs(physics->velocity.z)) {
 
             if ((int)x != (int)oldX) {
-                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);//(glm::vec3(-physics->velocity.x, 0, physics->velocity.z) * (float)deltaTime) * 2.f;
+                transform->position -= glm::vec3(x - oldX, 0, 0);//(glm::vec3(-physics->velocity.x, 0, physics->velocity.z) * (float)deltaTime) * 2.f;
                 physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
                 physics->acceleration = -glm::normalize(physics->acceleration);
             }
             else if ((int)z != (int)oldZ) {
-                transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
+                transform->position += glm::vec3(0, 0, z - oldZ);
                 physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
                 physics->acceleration = -glm::normalize(physics->acceleration);
             }
