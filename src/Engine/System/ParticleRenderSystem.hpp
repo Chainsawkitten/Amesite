@@ -22,7 +22,7 @@ namespace System {
             ~ParticleRenderSystem();
 
             /// Render
-            void Render(Scene& scene, Entity* camera);
+            void Render(Scene& scene, Entity* camera, const glm::vec2& screenSize);
 
         private:
             Shader* mParticleVertShader;

@@ -66,12 +66,19 @@ class GameEntityFactory {
          */
         void SetScene(Scene* scene);
 
-        /// Creates a cuboid dust particle system.
+        /// Creates a cuboid dust particle emitter and bind it to an Entity.
         /**
          * @param camera - entity which the system relates to.
          * @param particleTexture the particles should sample from.
          */
-        void CreateCuboidParticle(Entity* camera, Texture2D* particleTexture);
+        void CreateCuboidParticle(Entity* object, Texture2D* particleTexture);
+
+        /// Creates a point particle emitter and bind it to an Entity.
+        /**
+        * @param object - entity which the system relates to.
+        * @param particleTexture the particles should sample from.
+        */
+        void CreatePointParticle(Entity* object, Texture2D* particleTexture);
 
         /// Create a map.
         /**

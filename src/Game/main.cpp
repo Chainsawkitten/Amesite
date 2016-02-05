@@ -135,7 +135,9 @@ int main() {
     theMap->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
     
     // Create dust particles
-    GameEntityCreator().CreateCuboidParticle(mainCamera, particleTexture);
+    GameEntityCreator().CreatePointParticle(player1, particleTexture);
+    GameEntityCreator().CreatePointParticle(player2, particleTexture);
+    GameEntityCreator().CreateCuboidParticle(player1, particleTexture);
     
     // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");

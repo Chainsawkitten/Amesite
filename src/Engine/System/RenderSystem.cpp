@@ -83,6 +83,6 @@ void RenderSystem::Render(Scene& scene) {
         mDeferredLighting->Render(scene, camera, screenSize);
 
         // Render the particle system
-        particleRenderSystem.Render(scene, camera);
+        particleRenderSystem.Render(scene, camera, screenSize);
     }
 }

@@ -61,7 +61,7 @@ ParticleRenderSystem::~ParticleRenderSystem() {
     glDeleteBuffers(1, &mVertexBuffer);
 }
 
-void ParticleRenderSystem::Render(Scene & scene, Entity* camera) {
+void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2& screenSize) {
     if (Particle()->ParticleCount() > 0) {
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         // Return vector by value or no?
@@ -85,7 +85,7 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera) {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
         Component::ParticleEmitter* emitter = emitters[0];
-        //Todo: send all textures at once and which which to render using a defined type in GLSL.
+        //Todo: send an atlas of all particletextures to the shader and determine where to sample using different UV coords.
         mParticleShaderProgram->Use();
 
         glUniform1i(mParticleShaderProgram->GetUniformLocation("baseImage"), 0);
@@ -107,8 +107,10 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera) {
         // Ugly hardcoded resolution.
         glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraPosition"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
         glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraUp"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
-        glUniformMatrix4fv(mParticleShaderProgram->GetUniformLocation("viewProjectionMatrix"), 1, GL_FALSE, &(camera->GetComponent<Component::Lens>()->GetProjection(glm::vec2(800.f, 600.f)) * view)[0][0]);
+        glUniformMatrix4fv(mParticleShaderProgram->GetUniformLocation("viewProjectionMatrix"), 1, GL_FALSE, &(camera->GetComponent<Component::Lens>()->GetProjection(screenSize) * view)[0][0]);
 
+
+        // Per emitter data - should be changed to a list of different particleTypes with data (per particle effect).
         float alpha[3] = { emitter->particleType.startAlpha, emitter->particleType.midAlpha, emitter->particleType.endAlpha };
         glUniform1fv(mParticleShaderProgram->GetUniformLocation("alpha"), 3, alpha);
 

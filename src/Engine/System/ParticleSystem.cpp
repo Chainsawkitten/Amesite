@@ -7,6 +7,7 @@
 #include "../Entity/Entity.hpp"
 #include "../Shader/ShaderProgram.hpp"
 #include "../Texture/Texture.hpp"
+#include "../Util/Log.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
