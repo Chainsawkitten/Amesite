@@ -115,27 +115,6 @@ Entity* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::ve
     return bullet;
 }
 
-Entity* GameEntityFactory::CreateEnemyBullet(const glm::vec3& position, const glm::vec3& direction, int faction) {
-    Entity* bullet = mScene->CreateEntity();
-    Component::Transform* transform = bullet->AddComponent<Component::Transform>();
-    transform->position = position;
-    transform->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-
-    Component::Collider2DCircle* collider2DCircle = bullet->AddComponent<Component::Collider2DCircle>();
-
-    Component::Physics* physics = bullet->AddComponent<Component::Physics>();
-    physics->velocity = direction;
-
-    Component::Mesh* mesh = bullet->AddComponent<Component::Mesh>();
-    mesh->geometry = Resources().CreateCube();
-
-    Component::Damage* damage = bullet->AddComponent<Component::Damage>();
-    damage->damageAmount = 10.f;
-    damage->faction = faction;
-
-    return bullet;
-}
-
 Entity* GameEntityFactory::CreateCamera(const glm::vec3& origin, const glm::vec3& rotation) {
     Entity* cameraEntity = mScene->CreateEntity();
     cameraEntity->AddComponent<Component::Transform>();
