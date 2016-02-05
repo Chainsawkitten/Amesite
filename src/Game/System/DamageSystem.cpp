@@ -27,6 +27,7 @@ void DamageSystem::Update(Scene& scene) {
                     if((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->faction != (*collisionVector)[i]->entity->GetComponent<Component::Health>()->faction)        //Does the damaging entity belong to the same faction as the health entity.
                         (*collisionVector)[i]->entity->GetComponent<Component::Health>()->health -= (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->damageAmount;   //Reduce health by damage.
                     //scene.RemoveEntity((*collisionVector)[i]->entity);
+                    (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->entity->GetComponent<Component::Transform>()->position = glm::vec3(10000.f, 10000.f, 10000.f); //TODO: EXTREMELY TEMPORARY SOLUTION!
                 }
             }
         }
