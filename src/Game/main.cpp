@@ -96,23 +96,23 @@ int main() {
     // DamageSystem.
     System::DamageSystem damageSystem;
     
-    Input()->AssignJoystick(InputHandler::MOVE_X, true, InputHandler::LEFT_STICK_X, InputHandler::PLAYER_ONE);
-    Input()->AssignJoystick(InputHandler::MOVE_Z, true, InputHandler::LEFT_STICK_Y, InputHandler::PLAYER_ONE);
-    Input()->AssignJoystick(InputHandler::AIM_X, true, InputHandler::RIGHT_STICK_X, InputHandler::PLAYER_ONE);
-    Input()->AssignJoystick(InputHandler::AIM_Z, true, InputHandler::RIGHT_STICK_Y, InputHandler::PLAYER_ONE);
-    Input()->AssignJoystick(InputHandler::SHOOT, false, InputHandler::RIGHT_BUMPER, InputHandler::PLAYER_ONE);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
     
-    Input()->AssignJoystick(InputHandler::MOVE_X, true, InputHandler::LEFT_STICK_X, InputHandler::PLAYER_TWO);
-    Input()->AssignJoystick(InputHandler::MOVE_Z, true, InputHandler::LEFT_STICK_Y, InputHandler::PLAYER_TWO);
-    Input()->AssignJoystick(InputHandler::AIM_X, true, InputHandler::RIGHT_STICK_X, InputHandler::PLAYER_TWO);
-    Input()->AssignJoystick(InputHandler::AIM_Z, true, InputHandler::RIGHT_STICK_Y, InputHandler::PLAYER_TWO);
-    Input()->AssignJoystick(InputHandler::SHOOT, false, InputHandler::RIGHT_BUMPER, InputHandler::PLAYER_TWO);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
     
-    Input()->AssignKeyboard(InputHandler::UP, GLFW_KEY_W, InputHandler::PLAYER_ONE);
-    Input()->AssignKeyboard(InputHandler::DOWN, GLFW_KEY_S, InputHandler::PLAYER_ONE);
-    Input()->AssignKeyboard(InputHandler::RIGHT, GLFW_KEY_D, InputHandler::PLAYER_ONE);
-    Input()->AssignKeyboard(InputHandler::LEFT, GLFW_KEY_A, InputHandler::PLAYER_ONE);
-    //Input()->AssignKeyboard(InputHandler::SHOOT, GLFW_KEY_T, InputHandler::PLAYER_ONE);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
     
     GameEntityCreator().SetScene(&scene);
     
