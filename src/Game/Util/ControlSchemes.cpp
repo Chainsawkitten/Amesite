@@ -8,10 +8,15 @@
 #include <../Game/Component/Controller.hpp>
 #include <Util/Log.hpp>
 
-void ControlScheme::StickMove(Component::Controller* controller, float deltaTime) {
+void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
     // Move the player
-    float x = Input()->ButtonValue(InputHandler::MOVE_X, controller->playerID);
-    float z = Input()->ButtonValue(InputHandler::MOVE_Z, controller->playerID);
+    float x = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_X);
+    float z = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_Z);
+    
+    if (fabs(x) < 0.001f && fabs(z) < 0.001f) {
+        x = Input()->Pressed(controller->playerID, InputHandler::RIGHT) - Input()->Pressed(controller->playerID, InputHandler::LEFT);
+        z = Input()->Pressed(controller->playerID, InputHandler::DOWN) - Input()->Pressed(controller->playerID, InputHandler::UP);
+    }
 
     glm::vec3 speedVec = glm::vec3(x * 6000 * deltaTime, 0, z * 6000 * deltaTime);
 
@@ -31,8 +36,8 @@ void ControlScheme::StickMove(Component::Controller* controller, float deltaTime
 void ControlScheme::StickRotate(Component::Controller* controller, float deltaTime) {
     Entity* entity = controller->entity;
 
-    float a = Input()->ButtonValue(InputHandler::AIM_Z, controller->playerID);
-    float b = Input()->ButtonValue(InputHandler::AIM_X, controller->playerID);
+    float a = Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z);
+    float b = Input()->ButtonValue(controller->playerID, InputHandler::AIM_X);
 
     if (glm::abs(a) + glm::abs(b) > 0.3f && glm::abs(a) > 0) {
         if(a >= 0)
@@ -45,10 +50,10 @@ void ControlScheme::StickRotate(Component::Controller* controller, float deltaTi
 void ControlScheme::ArrowKeyRotate(Component::Controller* controller, float deltaTime) {
     Entity* entity = controller->entity;
 
-    bool up = Input()->Pressed(InputHandler::UP, controller->playerID);
-    bool down = Input()->Pressed(InputHandler::DOWN, controller->playerID);
-    bool right = Input()->Pressed(InputHandler::RIGHT, controller->playerID);
-    bool left = Input()->Pressed(InputHandler::LEFT, controller->playerID);
+    bool up = Input()->Pressed(controller->playerID, InputHandler::UP);
+    bool down = Input()->Pressed(controller->playerID, InputHandler::DOWN);
+    bool right = Input()->Pressed(controller->playerID, InputHandler::RIGHT);
+    bool left = Input()->Pressed(controller->playerID, InputHandler::LEFT);
 
     Log() << left;
 
@@ -91,25 +96,4 @@ void ControlScheme::ArrowKeyRotate(Component::Controller* controller, float delt
             entity->GetComponent<Component::Transform>()->yaw = 270.f;
         }
     }
-}
-
-void ControlScheme::ArrowKeysMove(Component::Controller* controller, float deltaTime) {
-    Entity* entity = controller->entity;
-
-    // Move the player
-    bool up = Input()->Pressed(InputHandler::UP, controller->playerID);
-    bool down = Input()->Pressed(InputHandler::DOWN, controller->playerID);
-    bool right = Input()->Pressed(InputHandler::RIGHT, controller->playerID);
-    bool left = Input()->Pressed(InputHandler::LEFT, controller->playerID);
-
-    glm::vec3 speedVec = glm::vec3((right - left) * 6000.f * deltaTime, 0.f, (down - up) * 6000.f * deltaTime);
-
-    Component::Physics* physicsComponent = entity->GetComponent<Component::Physics>();
-
-    // If there's a physics component attached we use it to move.
-    if (physicsComponent != nullptr)
-        physicsComponent->acceleration = speedVec;
-    else
-        controller->entity->GetComponent<Component::Transform>()->Move(speedVec);
-
 }

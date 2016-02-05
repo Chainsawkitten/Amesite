@@ -29,7 +29,6 @@ InputHandler::InputHandler(GLFWwindow* window) {
             mButtonReleased[player][button] = true;
             mButtonTriggered[player][button] = false;
             mButtonValue[player][button] = 0.0;
-            mJoystickAxis[player][button] = false;
         }
     }
     
@@ -79,11 +78,13 @@ void InputHandler::Update() {
     // Joystick counters.
     int axisCount = 0;
     int buttonCount = 0;
+    const float* joystickAxisData[PLAYERS];
+    const unsigned char* joystickButtonPressed[PLAYERS];
     
     // Update joystick axis and buttons.
     for (int player = 0; player < PLAYERS - 1 && mJoystickActive[player]; player++) {
-        mJoystickAxisData[player] = glfwGetJoystickAxes(player, &axisCount);
-        mJoystickButtonPressed[player] = glfwGetJoystickButtons(player, &buttonCount);
+        joystickAxisData[player] = glfwGetJoystickAxes(player, &axisCount);
+        joystickButtonPressed[player] = glfwGetJoystickButtons(player, &buttonCount);
     }
     
     // Get button states.
@@ -102,8 +103,8 @@ void InputHandler::Update() {
         case JOYSTICK:
             if (mJoystickActive[binding.player]) {
                 if (binding.axis) {
-                    value = (abs(mJoystickAxisData[binding.player][binding.index]) > mThreshold) ? value = mJoystickAxisData[binding.player][binding.index] : value = 0.0;
-                } else if (mJoystickButtonPressed[binding.player][binding.index] == GLFW_PRESS) {
+                    value = (abs(joystickAxisData[binding.player][binding.index]) > mThreshold) ? value = joystickAxisData[binding.player][binding.index] : value = 0.0;
+                } else if (joystickButtonPressed[binding.player][binding.index] == GLFW_PRESS) {
                     value = 1.0;
                 }
             }
@@ -174,19 +175,19 @@ void InputHandler::AssignButton(Player player, Button button, Device device, int
     mBindings.push_back(binding);
 }
 
-double InputHandler::ButtonValue(Button button, Player player) const {
+double InputHandler::ButtonValue(Player player, Button button) const {
     return mButtonValue[player][button];
 }
 
-bool InputHandler::Pressed(Button button, Player player) {
+bool InputHandler::Pressed(Player player, Button button) {
     return mButtonValue[player][button] == 1.0;
 }
 
-bool InputHandler::Triggered(Button button, Player player) {
+bool InputHandler::Triggered(Player player, Button button) {
     return mButtonTriggered[player][button];
 }
 
-bool InputHandler::Released(Button button, Player player) {
+bool InputHandler::Released(Player player, Button button) {
     return mButtonReleased[player][button];
 }
 

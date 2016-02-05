@@ -133,37 +133,37 @@ class InputHandler {
         
         /// Gets the value of an axis on joystick.
         /**
+         * @param player Which player to check.
          * @param button The button to check.
-         * @param player to check (0 player 1, 1 is player2, 2 is player3)
          * @return a float with a value between -1 and 1 - representing axis value.
          */
-        double ButtonValue(Button button, Player player) const;
+        double ButtonValue(Player player, Button button) const;
         
         /// Gets whether a button is currently down.
         /**
+         * @param player Which player to check.
          * @param button The button to check.
-         * @param player to check (0 player 1, 1 is player2, 2 is player3)
          * @return Whether the button is down
          */
-        bool Pressed(Button button, Player player);
+        bool Pressed(Player player, Button button);
         
         /// Gets whether a button was just pressed.
         /**
          * Checks whether a button was pressed between the last two calls to update().
+         * @param player Which player to check.
          * @param button The button to check.
-         * @param player to check (0 player 1, 1 is player2, 2 is player3)
          * @return Whether the button was pressed
          */
-        bool Triggered(Button button, Player player);
+        bool Triggered(Player player, Button button);
         
         /// Gets whether a button was just released.
         /**
          * Checks whether a button was released between the last two calls to update().
+         * @param player Which player to check.
          * @param button The button to check.
-         * @param player to check (0 player 1, 1 is player2, 2 is player3)
          * @return Whether the button was released
          */
-        bool Released(Button button, Player player);
+        bool Released(Player player, Button button);
         
         /// Get text input since last frame.
         /**
@@ -223,9 +223,6 @@ class InputHandler {
         
         // Joystick
         const double mThreshold = 0.2;
-        bool mJoystickAxis[PLAYERS][BUTTONS];
-        const float* mJoystickAxisData[PLAYERS];
-        const unsigned char* mJoystickButtonPressed[PLAYERS];
 };
 
 /// Get currently active input handler.

@@ -23,11 +23,11 @@ void ControllerSystem::Update(Scene& scene, float deltaTime) {
         Component::Spawner* spawnerComponent = controllerObjects[i]->entity->GetComponent<Component::Spawner>();
         if (spawnerComponent != nullptr) {
             spawnerComponent->timeSinceSpawn += deltaTime;
-            if (Input()->Pressed(InputHandler::SHOOT, controllerObjects[i]->playerID) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
+            if (Input()->Pressed(controllerObjects[i]->playerID, InputHandler::SHOOT) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
                 Log() << "Shoot\n";
                 GameEntityCreator().SetScene(&scene);
                 
-                glm::vec2 direction = glm::vec2(Input()->ButtonValue(Input()->AIM_X, controllerObjects[i]->playerID), Input()->ButtonValue(Input()->AIM_Z, controllerObjects[i]->playerID));
+                glm::vec2 direction = glm::vec2(Input()->ButtonValue(controllerObjects[i]->playerID, Input()->AIM_X), Input()->ButtonValue(controllerObjects[i]->playerID, Input()->AIM_Z));
                 float directionLength = glm::length(direction);
                 if (directionLength < 0.001f) 
                     direction = glm::vec2(1.f, 0.f);
