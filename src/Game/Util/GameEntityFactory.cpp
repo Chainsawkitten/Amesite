@@ -64,7 +64,8 @@ Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
     playerEntity->GetComponent<Component::Controller>()->playerID = player;
     
-    playerEntity->GetComponent<Component::Controller>()->ControlScheme = &ControlScheme::StickMove;
+    playerEntity->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
+    playerEntity->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ButtonShoot);
     playerEntity->GetComponent<Component::Spawner>()->delay = 1.f;
     
     return playerEntity;
