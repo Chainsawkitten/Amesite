@@ -130,14 +130,14 @@ void GameEntityFactory::SetScene(Scene* scene) {
     mScene = scene;
 }
 
-void GameEntityFactory::CreateCuboidParticle(Entity * camera, Texture2D* particleTexture) {
-    camera->AddComponent<Component::ParticleEmitter>();
+void GameEntityFactory::CreateCuboidParticle(Entity * object, Texture2D* particleTexture) {
+    object->AddComponent<Component::ParticleEmitter>();
     
     // Particle emitter.
-    Component::ParticleEmitter* emitter = camera->GetComponent<Component::ParticleEmitter>();
+    Component::ParticleEmitter* emitter = object->GetComponent<Component::ParticleEmitter>();
     
     emitter->emitterType = Component::ParticleEmitter::CUBOID;
-    emitter->follow = camera;
+    emitter->follow = object;
     emitter->maxEmitTime = 0.015;
     emitter->minEmitTime = 0.01;
     emitter->lifetime = 0.0;
