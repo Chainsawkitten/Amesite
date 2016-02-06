@@ -44,13 +44,6 @@ class GameEntityFactory {
          * @return The player GameObject.
          */
         GameObject::Player* CreatePlayer(const glm::vec3& origin, InputHandler::Player player);
-
-		/// Create a cube for testing purposes.
-        /**
-         * @param origin The cube's starting position
-         * @return The cube entity.
-         */
-		Entity* CreateCube(const glm::vec3& origin);
         
         /// Create a bullet.
         /**
@@ -76,16 +69,16 @@ class GameEntityFactory {
 
         /// Creates a cuboid dust particle emitter and bind it to an Entity.
         /**
-         * @param camera - entity which the system relates to.
+         * @param object - entity which the system relates to.
          * @param particleTexture the particles should sample from.
          */
         void CreateCuboidParticle(Entity* object, Texture2D* particleTexture);
 
         /// Creates a point particle emitter and bind it to an Entity.
         /**
-        * @param object - entity which the system relates to.
-        * @param particleTexture the particles should sample from.
-        */
+         * @param object - entity which the system relates to.
+         * @param particleTexture the particles should sample from.
+         */
         void CreatePointParticle(Entity* object, Texture2D* particleTexture);
 
         /// Create a map.

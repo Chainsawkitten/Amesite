@@ -2,52 +2,34 @@
 #include <GLFW/glfw3.h>
 #include <MainWindow.hpp>
 
+#include <Texture/Texture2D.hpp>
 #include <Geometry/Cube.hpp>
 #include <Resources.hpp>
 
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
-#include "CaveSystem/CaveSystem.hpp"
-#include "../Game/Component/Controller.hpp"
-#include "../Game/Component/Health.hpp"
-
+#include "Util/ControlSchemes.hpp"
+#include "Util/GameEntityFactory.hpp"
+#include "Util/CameraUpdate.hpp"
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
-#include <crtdbg.h>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
 #include <System/ParticleSystem.hpp>
-#include <System/ParticleRenderSystem.hpp>
-
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
 #include "Game/System/ControllerSystem.hpp"
-#include "Util/CameraUpdate.hpp"
-
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
-
-#include "Game/Util/GameEntityFactory.hpp"
+#include "Game/System/LifeTimeSystem.hpp"
 
 #include <Component/Transform.hpp>
-#include <Component/Lens.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/RelativeTransform.hpp>
 #include <Component/DirectionalLight.hpp>
-#include <Component/SpotLight.hpp>
 #include <Component/Physics.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/ParticleEmitter.hpp>
-#include "Component/Health.hpp"
-
-#include <Texture/Texture2D.hpp>
-
-#include <thread>
-#include <fstream>
-#include "Util/ControlSchemes.hpp"
+#include "../Game/Component/Health.hpp"
 
 #include "Game/GameObject/Bullet.hpp"
 #include "Game/GameObject/Player.hpp"
@@ -55,13 +37,15 @@
 #include "Game/GameObject/Enemy.hpp"
 #include "Game/GameObject/Cave.hpp"
 
-using namespace std;
+#include <thread>
+#include <vector>
+//#include <crtdbg.h>
 
 bool GridCollide(Entity* entity, float deltaTime);
 
 int main() {
     
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     
     // Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
@@ -77,33 +61,21 @@ int main() {
     window->Init();
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
     
-    // Particle System.
-    System::ParticleSystem* particleSystem;
-    particleSystem = new System::ParticleSystem;
-    particleSystem->SetActive();
-   
-
     // Particle texture.
     Texture2D* particleTexture;
     particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
-    
-    // RenderSystem.
-    System::RenderSystem renderSystem;
-    
-    // Scene and Entites. 
+
     Scene scene;
 
-    // PhysicsSystem.
+    System::ParticleSystem particleSystem;
+    particleSystem.SetActive();
+    System::RenderSystem renderSystem;
     System::PhysicsSystem physicsSystem;
-    
-    // ControllerSystem.
     System::ControllerSystem controllerSystem;
-    
-    // HealthSystem.
-    //System::HealthSystem healthSystem;
-    
-    // DamageSystem.
-    //System::DamageSystem damageSystem;
+    System::HealthSystem healthSystem;
+    System::DamageSystem damageSystem;
+    System::CollisionSystem collisionSystem;
+    System::LifeTimeSystem lifeTimeSystem;
     
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
@@ -124,108 +96,67 @@ int main() {
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
     
     GameEntityCreator().SetScene(&scene);
-    
-    // CollisionSystem.
-    //System::CollisionSystem collisionSystem;
 
+    std::vector<Entity*> players;
     GameObject::Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     GameObject::Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+    GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), particleTexture);
+    GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), particleTexture);
+    GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), particleTexture);
+    players.push_back(player1->GetEntity("body"));
+    players.push_back(player2->GetEntity("body"));
     
     GameObject::Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
 
-    std::vector<Entity*> players;
-    players.push_back(player1->GetEntity("body"));
-    players.push_back(player2->GetEntity("body"));
-
     GameObject::Cave* map = GameEntityCreator().CreateMap();
-    Entity* mapEntity = map->GetEntity("map");
-    mapEntity->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
-    mapEntity->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
-    mapEntity->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
-    
-    // Create dust particles
-    //GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), particleTexture);
-    //GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), particleTexture);
-    //GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), particleTexture);
     
     // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
     
     // Directional light.
     Entity* dirLight = scene.CreateEntity();
-    Component::Transform* transform = dirLight->AddComponent<Component::Transform>();
-    transform->pitch = 90.f;
-    Component::DirectionalLight* dLight = dirLight->AddComponent<Component::DirectionalLight>();
-    dLight->color = glm::vec3(0.1f, 0.1f, 0.1f);
-    dLight->ambientCoefficient = 0.2f;
-
+    dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
+    dirLight->AddComponent<Component::DirectionalLight>();
+    dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.1f, 0.1f, 0.1f);
+    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.2f;
 
     GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
-
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
-
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
 
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
-    Log() << to_string(lastTimeRender) << "\n";
+    Log() << std::to_string(lastTimeRender) << "\n";
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
 
-        //glm::vec3 p1OldPos = player1->GetEntity("body")->GetComponent<Component::Transform>()->position;
-        //glm::vec3 p2OldPos = player2->GetComponent<Component::Transform>()->position;
-        // ControllerSystem
+        // Update Scene
         controllerSystem.Update(scene, static_cast<float>(deltaTime));
-        
-        // PhysicsSystem.
         physicsSystem.Update(scene, (float)deltaTime);
-
-        //GridCollide(player1->GetEntity("body"), deltaTime);
-        //GridCollide(player2->GetEntity("body"), deltaTime);
-
-        // UpdateCamera
-        UpdateCamera(mainCamera->GetEntity("body"), players);
-        
-        // ParticleSystem
-        //particleSystem->Update(scene, deltaTime);
-        
-        // Updates model matrices for this frame.
+        particleSystem.Update(scene, deltaTime);
         scene.UpdateModelMatrices();
-        
-        // Check collisions.
-        //collisionSystem.Update(scene);
-        
-        // Update health
-        //healthSystem.Update(scene, static_cast<float>(deltaTime));
-        
-        // Update damage
-        //damageSystem.Update(scene);
+        collisionSystem.Update(scene);
+        healthSystem.Update(scene, static_cast<float>(deltaTime));
+        damageSystem.Update(scene);
+        lifeTimeSystem.Update(scene, static_cast<float>(deltaTime));
 
-        //if (player1->GetEntity("body")->GetComponent<Component::Health>()->health < 0.01f) {
-        //    // Remove player
-        //    player1->GetEntity("body")->GetComponent<Component::Physics>()->maxVelocity = 0.f;
-        //}
+        // Update game logic
+        UpdateCamera(mainCamera->GetEntity("body"), players);
+        for (auto player : players) {
+            GridCollide(player, deltaTime);
+            if (player->GetComponent<Component::Health>()->health < 0.01f) {
+                player->GetComponent<Component::Physics>()->velocity.x = -10.f;
+                player->GetComponent<Component::Health>()->health = player->GetComponent<Component::Health>()->maxHealth;
+            }
+        }
 
-        //std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
-        //for (auto collsion : *collisionVector)
-        //if (collsion->entity == bullet) {
-        //    // Remove bullet
-        //    bullet->GetComponent<Component::Transform>()->position.y = 2;
-        //}
-        //
-        // Render.
+        // Render scene
         renderSystem.Render(scene);
         
         // Input testing.
@@ -252,11 +183,8 @@ int main() {
     
     Resources().FreeTexture2DFromFile(testTexture);
     Resources().FreeTexture2DFromFile(particleTexture);
-    //Resources().FreeCube();
-    //Resources().FreeCube();
     
     delete window;
-    delete particleSystem;
     
     glfwTerminate();
     
@@ -284,7 +212,7 @@ bool GridCollide(Entity* entity, float deltaTime) {
         if (glm::abs(physics->velocity.x) < glm::abs(physics->velocity.z)) {
 
             if ((int)x != (int)oldX) {
-                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);//(glm::vec3(-physics->velocity.x, 0, physics->velocity.z) * (float)deltaTime) * 2.f;
+                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);
                 physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
                 physics->acceleration = -glm::normalize(physics->acceleration);
             }
@@ -302,14 +230,12 @@ bool GridCollide(Entity* entity, float deltaTime) {
                 physics->acceleration = -glm::normalize(physics->acceleration);
             }
             else if ((int)x != (int)oldX) {
-                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);//(glm::vec3(-physics->velocity.x, 0, physics->velocity.z) * (float)deltaTime) * 2.f;
+                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);
                 physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
                 physics->acceleration = -glm::normalize(physics->acceleration);
             }
 
         }
-
-
 
         return true;
 

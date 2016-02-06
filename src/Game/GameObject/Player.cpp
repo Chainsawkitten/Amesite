@@ -30,7 +30,6 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::Health>();
     mEntityVector.push_back(body);
 
-    // SpotLight
     Entity* spotLight = mScene->CreateEntity();
     mEntityMap["spotLight"] = spotLight;
     spotLight->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);

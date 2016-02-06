@@ -55,6 +55,11 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
     map->GetComponent<Component::Physics>()->angularDragFactor = 0;
     map->GetComponent<Component::Physics>()->gravityFactor = 0;
     map->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f, 0.f, 0.f);
+    map->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
+    map->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
+    map->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
+    mEntityVector.push_back(map);
+
     Geometry::Geometry3D* cube = Resources().CreateCube();
     for (int i = 0; i < 25; i++) {
         for (int j = 0; j < 25; j++) {
@@ -68,7 +73,6 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
             }
         }
     }
-    mEntityVector.push_back(map);
 }
 
 Cave::~Cave() {

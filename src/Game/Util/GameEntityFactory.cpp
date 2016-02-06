@@ -57,17 +57,6 @@ Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     return gameObject;
 }
 
-Entity* GameEntityFactory::CreateCube(const glm::vec3& origin) {
-    Entity* cubeEntity = mScene->CreateEntity();
-    cubeEntity->AddComponent<Component::Mesh>();
-    cubeEntity->AddComponent<Component::Transform>();
-    
-    cubeEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
-    cubeEntity->GetComponent<Component::Transform>()->position = origin;
-    
-    return cubeEntity;
-}
-
 Bullet* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::vec3& direction, int faction) {
     Bullet* gameObject = new Bullet(mScene);
     gameObject->GetEntity("body")->GetComponent<Component::Transform>()->position = position;

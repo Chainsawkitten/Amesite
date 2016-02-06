@@ -7,6 +7,7 @@
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
 #include "../Component/Damage.hpp"
+#include "../Component/LifeTime.hpp"
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Mesh.hpp>
 #include <Engine/Component/Physics.hpp>
@@ -22,6 +23,7 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     entity->AddComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     entity->AddComponent<Component::Collider2DCircle>()->radius = 0.25f;
     entity->AddComponent<Component::Physics>();
+    entity->AddComponent<Component::LifeTime>()->lifeTime = 2.f;
     mEntityVector.push_back(entity);
 }
 
