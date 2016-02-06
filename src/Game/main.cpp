@@ -120,6 +120,12 @@ int main() {
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.1f, 0.1f, 0.1f);
     dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.2f;
 
+    //GameEntityCreator().CreateBullet(glm::vec3(-4.f, 0.f, -3.f), glm::vec3(0,0,1), 1);
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));

@@ -23,7 +23,7 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     entity->AddComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     entity->AddComponent<Component::Collider2DCircle>()->radius = 0.25f;
     entity->AddComponent<Component::Physics>();
-    entity->AddComponent<Component::LifeTime>()->lifeTime = 2.f;
+    entity->AddComponent<Component::LifeTime>()->lifeTime = 5.f;
     mEntityVector.push_back(entity);
 }
 
