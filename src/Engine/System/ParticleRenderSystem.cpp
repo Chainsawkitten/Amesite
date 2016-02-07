@@ -5,6 +5,7 @@
 #include <vector>
 #include "../Resources.hpp"
 #include "../Texture/Texture.hpp"
+#include "../Texture/Texture2D.hpp"
 
 #include "../Scene/Scene.hpp"
 #include "../Entity/Entity.hpp"
@@ -27,6 +28,11 @@ ParticleRenderSystem::ParticleRenderSystem() {
     mParticleFragShader = Resources().CreateShader(PARTICLE_FRAG, PARTICLE_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mParticleShaderProgram = Resources().CreateShaderProgram({ mParticleVertShader, mParticleGeomShader, mParticleFragShader });
 
+    // When textures are added to the Atlas the numRows needs to be updated.
+    mTextureAtlasNumRows = 1;
+
+    mParticleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
+    mTextureAtlas = mParticleTexture;
 
     // Vertex buffer
     glGenBuffers(1, &mVertexBuffer);
@@ -41,12 +47,18 @@ ParticleRenderSystem::ParticleRenderSystem() {
     glEnableVertexAttribArray(2);
     glEnableVertexAttribArray(3);
     glEnableVertexAttribArray(4);
+    glEnableVertexAttribArray(5);
+    glEnableVertexAttribArray(6);
+    glEnableVertexAttribArray(7);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(0));
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 3));
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 5));
     glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 6));
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 7));
+    glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 10));
+    glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 13));
+    glVertexAttribPointer(7, 1, GL_INT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 16));
 
     glBindVertexArray(0);
 }
@@ -59,19 +71,15 @@ ParticleRenderSystem::~ParticleRenderSystem() {
     Resources().FreeShader(mParticleFragShader);
 
     glDeleteBuffers(1, &mVertexBuffer);
+
+    Resources().FreeTexture2DFromFile(mParticleTexture);
 }
 
 void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2& screenSize) {
     if (Particle()->ParticleCount() > 0) {
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-        // Return vector by value or no?
         std::vector<ParticleSystem::Particle>* particles = scene.GetVectorContents<ParticleSystem::Particle>();
-
         glBufferSubData(GL_ARRAY_BUFFER, 0, Particle()->ParticleCount() *sizeof(ParticleSystem::Particle), particles->data());
-    }
-
-    std::vector<Component::ParticleEmitter*> emitters = scene.GetAll<Component::ParticleEmitter>();
-    if (!emitters.empty()) {
 
         // Don't write to depth buffer.
         GLboolean depthWriting;
@@ -84,20 +92,18 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-        Component::ParticleEmitter* emitter = emitters[0];
-        //Todo: send an atlas of all particletextures to the shader and determine where to sample using different UV coords.
         mParticleShaderProgram->Use();
 
         glUniform1i(mParticleShaderProgram->GetUniformLocation("baseImage"), 0);
 
         glActiveTexture(GL_TEXTURE0 + 0);
-        glBindTexture(GL_TEXTURE_2D, emitter->particleType.texture->GetTextureID());
+        glBindTexture(GL_TEXTURE_2D, mTextureAtlas->GetTextureID());
 
         glBindVertexArray(mVertexAttribute);
 
         // Base image texture
         glActiveTexture(GL_TEXTURE0 + 0);
-        glBindTexture(GL_TEXTURE_2D, emitter->particleType.texture->GetTextureID());
+        glBindTexture(GL_TEXTURE_2D, mTextureAtlas->GetTextureID());
 
         // Send the matrices to the shader.
         glm::mat4 view = camera->GetComponent<Component::Transform>()->GetOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
@@ -111,10 +117,10 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
 
 
         // Per emitter data - should be changed to a list of different particleTypes with data (per particle effect).
-        float alpha[3] = { emitter->particleType.startAlpha, emitter->particleType.midAlpha, emitter->particleType.endAlpha };
-        glUniform1fv(mParticleShaderProgram->GetUniformLocation("alpha"), 3, alpha);
+        //float alpha[3] = { emitter->particleType.startAlpha, emitter->particleType.midAlpha, emitter->particleType.endAlpha };
+        glUniform1iv(mParticleShaderProgram->GetUniformLocation("textureAtlasRows"), 1, &mTextureAtlasNumRows);
 
-        glUniform3fv(mParticleShaderProgram->GetUniformLocation("color"), 1, &emitter->particleType.color[0]);
+        //glUniform3fv(mParticleShaderProgram->GetUniformLocation("color"), 1, &emitter->particleType.color[0]);
 
         // Draw the triangles
         glDrawArrays(GL_POINTS, 0, Particle()->ParticleCount());

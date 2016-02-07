@@ -41,6 +41,11 @@ void ParticleSystem::EmitParticle(glm::vec3 position, Component::ParticleEmitter
         particle.worldPos = position;
         particle.life = 0.f;
         particle.lifetime = emitter->particleType.minLifetime + rand() / (RAND_MAX / (emitter->particleType.maxLifetime - emitter->particleType.minLifetime));
+        particle.textureIndex = emitter->particleType.textureIndex;
+        particle.alpha[0] = emitter->particleType.startAlpha;
+        particle.alpha[1] = emitter->particleType.midAlpha;
+        particle.alpha[2] = emitter->particleType.endAlpha;
+        particle.color = emitter->particleType.color;
         
         if (emitter->particleType.uniformScaling) {
             particle.size = emitter->particleType.minSize + (rand() / static_cast<float>(RAND_MAX)) * (emitter->particleType.maxSize - emitter->particleType.minSize);

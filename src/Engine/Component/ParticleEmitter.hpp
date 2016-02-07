@@ -10,15 +10,20 @@ namespace Component {
     class ParticleEmitter : public SuperComponent {
         public:
             /// Type of emitter
-            enum EMITTER_TYPE {
+            enum EmitterType {
                 POINT = 0, ///< Point emitter
                 CUBOID, ///< Cuboid emitter
             };
 
+            /// Texture corresponding to index in particle atlas texture.
+            enum ParticleTextureIndex {
+                DUST = 0, ///< Dust particle
+            };
+
             /// Defines a kind of particle.
             struct ParticleType {
-                /// Texture to apply to the particle.
-                Texture* texture = nullptr;
+                /// Index on texture atlas to apply to particles.
+                int textureIndex;
 
                 /// The minimum initial velocity in all directions.
                 glm::vec3 minVelocity;

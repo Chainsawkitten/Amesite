@@ -75,10 +75,6 @@ int main() {
     particleSystem = new System::ParticleSystem;
     particleSystem->SetActive();
     
-    // Particle texture.
-    Texture2D* particleTexture;
-    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
-    
     // RenderSystem.
     System::RenderSystem renderSystem;
     
@@ -109,11 +105,11 @@ int main() {
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
     
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
     
     GameEntityCreator().SetScene(&scene);
     
@@ -135,9 +131,9 @@ int main() {
     theMap->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
     
     // Create dust particles
-    GameEntityCreator().CreatePointParticle(player1, particleTexture);
-    GameEntityCreator().CreatePointParticle(player2, particleTexture);
-    GameEntityCreator().CreateCuboidParticle(player1, particleTexture);
+    GameEntityCreator().CreatePointParticle(player1, Component::ParticleEmitter::DUST);
+    GameEntityCreator().CreatePointParticle(player2, Component::ParticleEmitter::DUST);
+    GameEntityCreator().CreateCuboidParticle(player1, Component::ParticleEmitter::DUST);
     
     // Test texture
     Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
@@ -258,7 +254,6 @@ int main() {
     }
     
     Resources().FreeTexture2DFromFile(testTexture);
-    Resources().FreeTexture2DFromFile(particleTexture);
     Resources().FreeCube();
     Resources().FreeCube();
     
