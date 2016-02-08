@@ -34,9 +34,6 @@ void MainScene::Update(float deltaTime) {
     // PhysicsSystem.
     mPhysicsSystem.Update(*this, deltaTime);
 
-    //GridCollide(player1, deltaTime);
-    //GridCollide(player2, deltaTime);
-
     // UpdateCamera
     UpdateCamera(mMainCamera, mPlayers);
 
@@ -137,12 +134,9 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime) {
     x = x / 10 + 0.4f;
 
     if (GameObject::Cave::mMap[(int)x][(int)z]) {
-
         float oldX = x - physics->velocity.x * deltaTime;
         float oldZ = z + physics->velocity.z * deltaTime;
-
         if (glm::abs(physics->velocity.x) < glm::abs(physics->velocity.z)) {
-
             if ((int)x != (int)oldX) {
                 transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);
                 physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
@@ -153,10 +147,7 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime) {
                 physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
                 physics->acceleration = -glm::normalize(physics->acceleration);
             }
-
-        }
-        else {
-
+        } else {
             if ((int)z != (int)oldZ) {
                 transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
                 physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
@@ -167,13 +158,8 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime) {
                 physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
                 physics->acceleration = -glm::normalize(physics->acceleration);
             }
-
         }
-
         return true;
-
     }
-
     return false;
-
 }
