@@ -68,6 +68,9 @@ class Scene {
          *@param entity Entity to be removed.
          */
         void RemoveEntity(Entity* entity);
+
+        virtual void Update(float deltaTime) = 0;
+
     private:
         // Adds component to list internally.
         void AddComponentToList(Component::SuperComponent* component, const std::type_info* componentType);

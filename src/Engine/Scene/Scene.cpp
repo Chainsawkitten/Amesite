@@ -6,6 +6,7 @@
 #include <algorithm>
 
 Scene::Scene() {
+
 }
 
 Scene::~Scene() {
