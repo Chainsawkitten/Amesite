@@ -63,6 +63,7 @@ void MainScene::Update(float deltaTime) {
     // Update damage
     mDamageSystem.Update(*this);
 
+    // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
 
     // Render.
@@ -106,7 +107,7 @@ MainScene::MainScene() {
     GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
 
     mPlayers.push_back(player1->GetEntity("body"));
-    mPlayers.push_back(player1->GetEntity("body"));
+    mPlayers.push_back(player2->GetEntity("body"));
 
     // Create scene
     cave = GameEntityCreator().CreateMap();
