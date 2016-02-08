@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 
 #include <vector>
+#include <algorithm>
 
 using namespace System;
 using namespace Component;
@@ -20,17 +21,86 @@ CollisionSystem::CollisionSystem() {
 CollisionSystem::~CollisionSystem() {
 }
 
+struct Node {
+    Component::Collider2DCircle* collider = nullptr;
+    glm::vec2 min;
+    glm::vec2 max;
+};
+
+bool myfunction(Node& i, Node& j) { return (i.min.x<j.min.x); }
+
 void CollisionSystem::Update(Scene& scene) {
-    // Get vector from scene
+    // Get vectors from scene
     std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
+    std::vector<Component::Collider2DCircle*> collider2DCircle = scene.GetAll<Component::Collider2DCircle>();
     
     // Clear vector
     for (Scene::Collision* collision : *collisionVector) {
         delete collision;
     }
     collisionVector->clear();
+ 
+    Node node;
+    glm::vec3 pos;
+    glm::vec3 scale;
+    std::vector<Node> nodes;
+    for (auto collider : collider2DCircle) {
+        node.collider = collider;
+        pos = collider->entity->GetComponent<Component::Transform>()->GetWorldPosition();
+        scale = collider->entity->GetComponent<Component::Transform>()->GetWorldScale();
+        node.min.x = pos.x - collider->radius * scale.x;
+        node.max.x = pos.x + collider->radius * scale.x;
+        node.min.y = pos.z - collider->radius * scale.z;
+        node.max.y = pos.z + collider->radius * scale.z;
+        nodes.push_back(node);
+    }
 
-    
+    std::sort(nodes.begin(), nodes.end(), myfunction);
+
+    for (unsigned int x = 0; x < nodes.size() - 1; x++) {
+        Scene::Collision* collisionX = nullptr;
+        for (unsigned int i = x + 1; i < nodes.size() && nodes[x].max.x > nodes[i].min.x; i++) {
+            Node* a;
+            Node* b;
+            if (nodes[i].max.x < nodes[x].max.x) {
+                b = &nodes[i];
+                a = &nodes[x];
+            } else {
+                a = &nodes[i];
+                b = &nodes[x];
+            }
+            if (b->min.y < a->max.y && a->min.y < b->max.y) {
+                // Circle vs Circle
+                glm::vec3 aWPos = a->collider->entity->GetComponent<Component::Transform>()->GetWorldPosition();
+                glm::vec3 bWPos = b->collider->entity->GetComponent<Component::Transform>()->GetWorldPosition();
+                glm::vec3 aScale = a->collider->entity->GetComponent<Component::Transform>()->GetWorldScale();
+                glm::vec3 bScale = b->collider->entity->GetComponent<Component::Transform>()->GetWorldScale();
+                if (glm::length(aWPos - bWPos) < a->collider->radius * aScale.x + b->collider->radius * bScale.x) {
+                    // x and y intersect each other.
+                    if (collisionX == nullptr) {
+                        collisionX = new Scene::Collision();
+                        collisionX->entity = nodes[x].collider->entity;
+                        collisionVector->push_back(collisionX);
+                    }
+
+                    // check if collisionY is in mCollisonVec
+                    Scene::Collision* collisionY = nullptr;
+                    for (unsigned int m = 0; m < collisionVector->size() && collisionY == nullptr; m++)
+                        if (collisionVector->at(m)->entity == nodes[i].collider->entity)
+                            collisionY = collisionVector->at(m);
+
+                    // if collisionY isn't in vector;
+                    if (collisionY == nullptr) {
+                        collisionY = new Scene::Collision();
+                        collisionY->entity = nodes[i].collider->entity;
+                        collisionVector->push_back(collisionY);
+                    }
+                    collisionX->intersect.push_back(nodes[i].collider->entity);
+                    collisionY->intersect.push_back(nodes[x].collider->entity);
+                }
+            }
+        }
+    }
 
     /*for (unsigned int i = 0; i < mCollisionVec.size(); i++) {
         delete mCollisionVec.at(i);
@@ -117,52 +187,46 @@ void CollisionSystem::Update(Scene& scene) {
     //    }
     //}
 
-    //TODO SWEEP AND PRUNE
-
+    /*
     // Circle vs Circle
-    std::vector<Component::Collider2DCircle*> collider2DCircle = scene.GetAll<Component::Collider2DCircle>();
     for (unsigned int x = 0; x < collider2DCircle.size(); x++) {
         Collider2DCircle* colliderX = collider2DCircle.at(x);
         Scene::Collision* collisionX = nullptr;
 
-        if(colliderX->radius != 0){
+        // check if collisionX is in mCollisonVec
+        for (unsigned int i = 0; i < collisionVector->size() && collisionX == nullptr; i++)
+            if (collisionVector->at(i)->entity == colliderX->entity)
+                collisionX = collisionVector->at(i);
 
-            // check if collisionX is in mCollisonVec
-            for (unsigned int i = 0; i < collisionVector->size() && collisionX == nullptr; i++)
-                if (collisionVector->at(i)->entity == colliderX->entity)
-                    collisionX = collisionVector->at(i);
-
-            for (unsigned int y = x + 1; y < collider2DCircle.size(); y++) {
-                Collider2DCircle* colliderY = collider2DCircle.at(y);
-                if (CircleVSCircle(colliderX, colliderY)) {
-                    // x and y intersect each other.
-                    if (collisionX == nullptr) {
-                        collisionX = new Scene::Collision();
-                        collisionX->entity = colliderX->entity;
-                        collisionVector->push_back(collisionX);
-                    }
-
-                    // check if collisionY is in mCollisonVec
-                    Scene::Collision* collisionY = nullptr;
-                    for (unsigned int i = 0; i < collisionVector->size() && collisionY == nullptr; i++)
-                        if (collisionVector->at(i)->entity == colliderY->entity)
-                            collisionY = collisionVector->at(i);
-
-                    // if collisionY isn't in vector;
-                    if (collisionY == nullptr) {
-                        collisionY = new Scene::Collision();
-                        collisionY->entity = colliderY->entity;
-                        collisionVector->push_back(collisionY);
-                    }
-
-                    collisionX->intersect.push_back(colliderY->entity);
-                    collisionY->intersect.push_back(colliderX->entity);
+        for (unsigned int y = x + 1; y < collider2DCircle.size(); y++) {
+            Collider2DCircle* colliderY = collider2DCircle.at(y);
+            if (CircleVSCircle(colliderX, colliderY)) {
+                // x and y intersect each other.
+                if (collisionX == nullptr) {
+                    collisionX = new Scene::Collision();
+                    collisionX->entity = colliderX->entity;
+                    collisionVector->push_back(collisionX);
                 }
+
+                // check if collisionY is in mCollisonVec
+                Scene::Collision* collisionY = nullptr;
+                for (unsigned int i = 0; i < collisionVector->size() && collisionY == nullptr; i++)
+                    if (collisionVector->at(i)->entity == colliderY->entity)
+                        collisionY = collisionVector->at(i);
+
+                // if collisionY isn't in vector;
+                if (collisionY == nullptr) {
+                    collisionY = new Scene::Collision();
+                    collisionY->entity = colliderY->entity;
+                    collisionVector->push_back(collisionY);
+                }
+
+                collisionX->intersect.push_back(colliderY->entity);
+                collisionY->intersect.push_back(colliderX->entity);
             }
-
         }
-
     }
+    */
 }
 
 
@@ -267,21 +331,21 @@ void CollisionSystem::Update(Scene& scene) {
 //    }
 //    return false;
 //}
-
-bool CollisionSystem::CircleVSCircle(Collider2DCircle* aCircle, Collider2DCircle* bCircle) {
-    Transform* aTransform = aCircle->entity->GetComponent<Transform>();
-    Transform* bTransform = bCircle->entity->GetComponent<Transform>();
-    if (aTransform == nullptr)
-        return false;
-    if (bTransform == nullptr)
-        return false;
-
-    glm::vec3 circleAOrigin = aTransform->GetWorldPosition();
-    glm::vec3 circleBOrigin = bTransform->GetWorldPosition();
-    
-    glm::vec2 distance = glm::vec2(circleAOrigin.x, circleAOrigin.z) - glm::vec2(circleBOrigin.x, circleBOrigin.z);
-
-    if (glm::length(distance) < aCircle->radius * aTransform->GetWorldScale().x + bCircle->radius * bTransform->GetWorldScale().x)
-        return true;
-    return false;
-}
+//
+//bool CollisionSystem::CircleVSCircle(Collider2DCircle* aCircle, Collider2DCircle* bCircle) {
+//    Transform* aTransform = aCircle->entity->GetComponent<Transform>();
+//    Transform* bTransform = bCircle->entity->GetComponent<Transform>();
+//    if (aTransform == nullptr)
+//        return false;
+//    if (bTransform == nullptr)
+//        return false;
+//
+//    glm::vec3 circleAOrigin = aTransform->GetWorldPosition();
+//    glm::vec3 circleBOrigin = bTransform->GetWorldPosition();
+//    
+//    glm::vec2 distance = glm::vec2(circleAOrigin.x, circleAOrigin.z) - glm::vec2(circleBOrigin.x, circleBOrigin.z);
+//
+//    if (glm::length(distance) < aCircle->radius * aTransform->GetWorldScale().x + bCircle->radius * bTransform->GetWorldScale().x)
+//        return true;
+//    return false;
+//}
