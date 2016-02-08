@@ -43,8 +43,10 @@ void ControlScheme::StickRotate(Component::Controller* controller, float deltaTi
 
     float a = Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z);
     float b = Input()->ButtonValue(controller->playerID, InputHandler::AIM_X);
+    glm::vec2 direction = glm::vec2(a, b);
 
-    if (glm::abs(a) + glm::abs(b) > 0.3f && glm::abs(a) > 0) {
+    if (glm::length(direction) > Input()->Threshold()) {
+        Input()->SetLastValidAimDirection(controller->playerID, glm::vec2(b, a));
         if(a >= 0)
             entity->GetComponent<Component::Transform>()->yaw = glm::degrees(glm::atan(b / a));
         else
@@ -129,13 +131,13 @@ void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTi
     if (spawnerComponent != nullptr) {
         spawnerComponent->timeSinceSpawn += deltaTime;
         if (Input()->Pressed(controller->playerID, InputHandler::SHOOT) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
-            glm::vec2 direction = glm::vec2(Input()->ButtonValue(controller->playerID, Input()->AIM_X), Input()->ButtonValue(controller->playerID, Input()->AIM_Z));
+            glm::vec2 direction = glm::vec2(Input()->ButtonValue(controller->playerID, InputHandler::AIM_X), Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z));
             float directionLength = glm::length(direction);
-            if (directionLength < 0.001f) 
-                direction = glm::vec2(1.f, 0.f);
-            else
+            if (directionLength < Input()->Threshold()) {
+                direction = Input()->LastValidAimDirection(controller->playerID);
+            } else {
                 direction = direction / directionLength;
-            
+            }
             float bulletSpeed = 40.f;
             GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y), 0);
             spawnerComponent->timeSinceSpawn = 0.0f;

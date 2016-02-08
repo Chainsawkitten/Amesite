@@ -22,6 +22,8 @@ InputHandler::InputHandler(GLFWwindow* window) {
     glfwSetScrollCallback(window, scrollCallback);
     mLastScroll = 0.0;
     mScroll = 0.0;
+
+    
     
     // Init button states.
     for (int player = 0; player < PLAYERS; player++) {
@@ -29,6 +31,7 @@ InputHandler::InputHandler(GLFWwindow* window) {
             mButtonReleased[player][button] = true;
             mButtonTriggered[player][button] = false;
             mButtonValue[player][button] = 0.0;
+            mLastValidAimDirection.push_back(glm::vec2(1.0f, 0.0f));
         }
     }
     
@@ -103,7 +106,7 @@ void InputHandler::Update() {
         case JOYSTICK:
             if (mJoystickActive[binding.player]) {
                 if (binding.axis) {
-                    value = (abs(joystickAxisData[binding.player][binding.index]) > mThreshold) ? value = joystickAxisData[binding.player][binding.index] : value = 0.0;
+                    value = joystickAxisData[binding.player][binding.index];
                 } else if (joystickButtonPressed[binding.player][binding.index] == GLFW_PRESS) {
                     value = 1.0;
                 }
@@ -205,6 +208,21 @@ void InputHandler::ScrollCallback(double yoffset) {
 
 bool InputHandler::JoystickActive(Player player) {
     return mJoystickActive[player];
+}
+
+glm::vec2 InputHandler::LastValidAimDirection(Player player) const
+{
+    return mLastValidAimDirection.at(player);
+}
+
+void InputHandler::SetLastValidAimDirection(Player player, glm::vec2 direction)
+{
+    mLastValidAimDirection.at(player) = direction;
+}
+
+double InputHandler::Threshold()
+{
+    return mThreshold;
 }
 
 InputHandler* Input() {

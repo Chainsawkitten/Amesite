@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 #include <string>
 #include <vector>
 
@@ -189,6 +190,15 @@ class InputHandler {
         * @return Whether joystick is active or not.
         */
         bool JoystickActive(Player player);
+
+        /// Get the last valid aim 
+        glm::vec2 LastValidAimDirection(Player player) const;
+
+        /// Get the last valid aim 
+        void SetLastValidAimDirection(Player player, glm::vec2 direction);
+
+        /// Get the threshold for axis on the controller
+        double Threshold();
         
     private:
         static InputHandler* mActiveInstance;
@@ -214,6 +224,9 @@ class InputHandler {
         double mCursorX, mCursorY;
         double mLastScroll;
         double mScroll;
+
+        // Stores the last valid direction for player aiming.
+        std::vector<glm::vec2> mLastValidAimDirection;
         
         // Text input.
         std::string mText, mTempText;
@@ -222,7 +235,7 @@ class InputHandler {
         bool mJoystickActive[PLAYERS - 1];
         
         // Joystick
-        const double mThreshold = 0.2;
+        const double mThreshold = 0.3;
 };
 
 /// Get currently active input handler.
