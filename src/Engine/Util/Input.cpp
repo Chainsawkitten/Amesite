@@ -220,9 +220,14 @@ void InputHandler::SetLastValidAimDirection(Player player, glm::vec2 direction)
     mLastValidAimDirection.at(player) = direction;
 }
 
-double InputHandler::Threshold()
+double InputHandler::MoveThreshold() const
 {
-    return mThreshold;
+    return mMoveThreshold;
+}
+
+double InputHandler::AimThreshold() const
+{
+    return mAimThreshold;
 }
 
 InputHandler* Input() {

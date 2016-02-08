@@ -192,13 +192,24 @@ class InputHandler {
         bool JoystickActive(Player player);
 
         /// Get the last valid aim 
+        /**
+         * @param player for whom to retrieve last valid direction.
+         * @return vector representing direction.
+         */
         glm::vec2 LastValidAimDirection(Player player) const;
 
         /// Get the last valid aim 
+        /**
+        * @param player for whom to set last valid direction.
+        * @param direction to store.
+        */
         void SetLastValidAimDirection(Player player, glm::vec2 direction);
 
         /// Get the threshold for axis on the controller
-        double Threshold();
+        double AimThreshold() const;
+
+        /// Get the threshold for axis on the controller
+        double MoveThreshold() const;
         
     private:
         static InputHandler* mActiveInstance;
@@ -234,8 +245,9 @@ class InputHandler {
         // Whether the joysticks are active.
         bool mJoystickActive[PLAYERS - 1];
         
-        // Joystick
-        const double mThreshold = 0.3;
+        // Joystick thresholds
+        const double mMoveThreshold = 0.5;
+        const double mAimThreshold = 0.5;
 };
 
 /// Get currently active input handler.
