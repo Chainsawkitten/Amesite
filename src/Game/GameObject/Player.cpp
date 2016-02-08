@@ -16,6 +16,8 @@
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/SpotLight.hpp>
 
+#include <Engine/Component/Animation.hpp>
+
 #include "../Util/ControlSchemes.hpp"
 
 using namespace GameObject;
@@ -45,6 +47,18 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     spotLight->AddComponent<Component::Physics>();
     spotLight->AddComponent<Component::Controller>();
     mEntityVector.push_back(spotLight);
+
+    Entity* radar = mScene->CreateEntity();
+    mEntityMap["radar"] = radar;
+    radar->AddComponent<Component::RelativeTransform>()->parentEntity = body;
+    radar->GetComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+    radar->AddComponent<Component::Mesh>()->geometry = body->GetComponent<Component::Mesh>()->geometry;
+    Component::Animation::AnimationClip* dance = radar->AddComponent<Component::Animation>()->CreateAnimationClip();
+    dance->CreateKeyFrame(glm::vec3(3, 0, 0), 0, 0, 0, 2);
+    dance->CreateKeyFrame(glm::vec3(0, 0, 3), 360, 0, 0, 1);
+    dance->CreateKeyFrame(glm::vec3(-3, 0, 0), 720, 0, 0, 2);
+    dance->CreateKeyFrame(glm::vec3(0, 0, -3), 360, 0, 0, 1);
+    mEntityVector.push_back(radar);
 }
 
 Player::~Player() {

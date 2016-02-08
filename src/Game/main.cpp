@@ -21,6 +21,7 @@
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
 #include <System/ParticleSystem.hpp>
+#include <System/AnimationSystem.hpp>
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
 #include "Game/System/ControllerSystem.hpp"
@@ -76,6 +77,8 @@ int main() {
     System::DamageSystem damageSystem;
     System::CollisionSystem collisionSystem;
     System::LifeTimeSystem lifeTimeSystem;
+    System::AnimationSystem animationSystem;
+
     
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
@@ -94,9 +97,9 @@ int main() {
     std::vector<Entity*> players;
     GameObject::Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     GameObject::Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
-    GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), particleTexture);
-    GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), particleTexture);
-    GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), particleTexture);
+    //GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), particleTexture);
+    //GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), particleTexture);
+    //GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), particleTexture);
     players.push_back(player1->GetEntity("body"));
     players.push_back(player2->GetEntity("body"));
     
@@ -114,13 +117,13 @@ int main() {
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.1f, 0.1f, 0.1f);
     dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.2f;
 
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
+    /*GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));*/
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -132,9 +135,10 @@ int main() {
 
         // Update Scene
         controllerSystem.Update(scene, static_cast<float>(deltaTime));
-        physicsSystem.Update(scene, (float)deltaTime);
-        //TODO Animation
+        physicsSystem.Update(scene, static_cast<float>(deltaTime));
+        animationSystem.Update(scene, static_cast<float>(deltaTime));
         scene.UpdateModelMatrices();
+        scene.UpdateAnimationMatrices();
         particleSystem.Update(scene, deltaTime);
         collisionSystem.Update(scene);
         healthSystem.Update(scene, static_cast<float>(deltaTime));

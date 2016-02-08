@@ -2,6 +2,7 @@
 
 #include "../Entity/Entity.hpp"
 #include <Engine/GameObject/SuperGameObject.hpp>
+#include "../Component/Animation.hpp"
 
 #include <algorithm>
 
@@ -54,8 +55,15 @@ void Scene::ClearAll() {
 
 void Scene::UpdateModelMatrices() {
     std::vector<Component::Transform*> transforms = GetAll<Component::Transform>();
-    for (unsigned int i = 0; i < transforms.size(); i++)
+    for (unsigned int i = 0; i < transforms.size(); i++) {
         transforms[i]->UpdateModelMatrix();
+    }
+}
+
+void Scene::UpdateAnimationMatrices() {
+    std::vector<Component::Animation*> animationVector = GetAll<Component::Animation>();
+    for (auto animationComponent : animationVector)
+        animationComponent->animationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix * animationComponent->animationMatrix;
 }
 
 void Scene::RemoveEntity(Entity* entity) {
