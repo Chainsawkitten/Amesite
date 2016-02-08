@@ -27,12 +27,13 @@ void PhysicsSystem::Update(Scene& scene, float deltaTime) {
             physicsComp->velocity += (physicsComp->acceleration + mGravity * physicsComp->gravityFactor) * deltaTime;
 
             // Add retardation.
-            if (glm::length(physicsComp->velocity) > 0.5f)
-                physicsComp->velocity -=  physicsComp->velocity * physicsComp->velocityDragFactor * deltaTime;
-
-            // Cap velocity.
-            if (glm::length(physicsComp->velocity) > physicsComp->maxVelocity)
-                physicsComp->velocity = glm::length(physicsComp->maxVelocity) / glm::length(physicsComp->velocity) * physicsComp->velocity;
+            if (glm::length(physicsComp->velocity) > 0.5f) {
+                physicsComp->velocity -= physicsComp->velocity * physicsComp->velocityDragFactor * deltaTime;
+                // Cap velocity.
+                if (glm::length(physicsComp->velocity) > physicsComp->maxVelocity)
+                    physicsComp->velocity = glm::length(physicsComp->maxVelocity) / glm::length(physicsComp->velocity) * physicsComp->velocity;
+            } else
+                physicsComp->velocity = glm::vec3(0.f, 0.f, 0.f);
 
             // Update position.
             transformComp->position += physicsComp->velocity * deltaTime;
@@ -42,12 +43,13 @@ void PhysicsSystem::Update(Scene& scene, float deltaTime) {
             physicsComp->angularVelocity += physicsComp->angularAcceleration * physicsComp->momentOfInertia * deltaTime;
             
             // Add drag.
-            if (glm::length(physicsComp->angularVelocity) > 0.01f)
+            if (glm::length(physicsComp->angularVelocity) > 0.01f) {
                 physicsComp->angularVelocity -= physicsComp->angularVelocity * physicsComp->angularDragFactor * deltaTime;
-
-            // Cap angular velocity.
-            if (glm::length(physicsComp->angularAcceleration) > physicsComp->maxAngularVelocity)
-                physicsComp->angularAcceleration = glm::length(physicsComp->maxAngularVelocity) / glm::length(physicsComp->angularAcceleration) * physicsComp->angularAcceleration;
+                // Cap angular velocity.
+                if (glm::length(physicsComp->angularAcceleration) > physicsComp->maxAngularVelocity)
+                    physicsComp->angularAcceleration = glm::length(physicsComp->maxAngularVelocity) / glm::length(physicsComp->angularAcceleration) * physicsComp->angularAcceleration;
+            } else
+                physicsComp->angularAcceleration = glm::vec3(0.f, 0.f, 0.f);
 
             // Update rotation.
             transformComp->pitch += physicsComp->angularVelocity.x * (360.f) * deltaTime;
