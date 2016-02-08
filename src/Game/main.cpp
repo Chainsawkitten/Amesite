@@ -8,9 +8,6 @@
 
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
-#include "Util/ControlSchemes.hpp"
-#include "Util/GameEntityFactory.hpp"
-#include "Util/CameraUpdate.hpp"
 #include <Util/FileSystem.hpp>
 
 #include "System/ParticleSystem.hpp"
@@ -26,7 +23,6 @@
 using namespace std;
 
 int main() {
-    
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     
     // Enable logging if requested.
