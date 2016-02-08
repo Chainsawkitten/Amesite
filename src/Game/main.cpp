@@ -80,7 +80,7 @@ int main() {
     
     // Particle texture.
     Texture2D* particleTexture;
-    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
+    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png", true);
     
     // RenderSystem.
     System::RenderSystem renderSystem;
@@ -148,7 +148,7 @@ int main() {
     GameEntityCreator().CreateCuboidParticle(player1, particleTexture);
     
     // Test texture
-    Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png");
+    Texture2D* testTexture = Resources().CreateTexture2DFromFile("Resources/TestTexture.png", true);
     
     // Directional light.
     Entity* dirLight = scene.CreateEntity();
