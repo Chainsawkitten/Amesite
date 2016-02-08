@@ -252,7 +252,7 @@ int main() {
             title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0f) + " ms";
         window->SetTitle(title.c_str());
         
-        // Swap buffers and wait until next frame.
+        // Swap buffers and waiaaaawdawt until next frame.
         window->SwapBuffers();
         
         long wait = static_cast<long>((1.0 / GameSettings::GetInstance().GetLong("Target FPS") + lastTimeRender - glfwGetTime()) * 1000000.0);
