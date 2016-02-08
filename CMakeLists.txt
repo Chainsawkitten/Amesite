@@ -223,6 +223,7 @@ set(GAME_SRCS
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
         src/Game/Component/CameraFollow.cpp
+        src/Game/GameScenes/MainScene.cpp
     )
 
 set(GAME_HEADERS
@@ -240,6 +241,7 @@ set(GAME_HEADERS
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
         src/Game/Component/CameraFollow.hpp
+        src/Game/GameScenes/MainScene.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
