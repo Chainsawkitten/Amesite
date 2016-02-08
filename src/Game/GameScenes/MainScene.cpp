@@ -141,8 +141,7 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime) {
                 transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);
                 physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
                 physics->acceleration = -glm::normalize(physics->acceleration);
-            }
-            else if ((int)z != (int)oldZ) {
+            } else if ((int)z != (int)oldZ) {
                 transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
                 physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
                 physics->acceleration = -glm::normalize(physics->acceleration);
