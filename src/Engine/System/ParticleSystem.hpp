@@ -40,7 +40,7 @@ namespace System {
                 glm::vec3 color;
 
                 /// Texture index (for the texture atlas, left to right, top to bottom indexing)
-                int textureIndex;
+                float textureIndex;
             };
 
             /// Create a new particle system.

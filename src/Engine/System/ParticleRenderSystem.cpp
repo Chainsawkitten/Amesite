@@ -29,7 +29,7 @@ ParticleRenderSystem::ParticleRenderSystem() {
     mParticleShaderProgram = Resources().CreateShaderProgram({ mParticleVertShader, mParticleGeomShader, mParticleFragShader });
 
     // When textures are added to the Atlas the numRows needs to be updated.
-    mTextureAtlasNumRows = 1;
+    mTextureAtlasNumRows = 1.f;
 
     mParticleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
     mTextureAtlas = mParticleTexture;
@@ -58,7 +58,7 @@ ParticleRenderSystem::ParticleRenderSystem() {
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 7));
     glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 10));
     glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 13));
-    glVertexAttribPointer(7, 1, GL_INT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 16));
+    glVertexAttribPointer(7, 1, GL_FLOAT, GL_FALSE, sizeof(ParticleSystem::Particle), BUFFER_OFFSET(sizeof(float) * 16));
 
     glBindVertexArray(0);
 }
@@ -114,13 +114,7 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
         glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraPosition"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
         glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraUp"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
         glUniformMatrix4fv(mParticleShaderProgram->GetUniformLocation("viewProjectionMatrix"), 1, GL_FALSE, &(camera->GetComponent<Component::Lens>()->GetProjection(screenSize) * view)[0][0]);
-
-
-        // Per emitter data - should be changed to a list of different particleTypes with data (per particle effect).
-        //float alpha[3] = { emitter->particleType.startAlpha, emitter->particleType.midAlpha, emitter->particleType.endAlpha };
-        glUniform1iv(mParticleShaderProgram->GetUniformLocation("textureAtlasRows"), 1, &mTextureAtlasNumRows);
-
-        //glUniform3fv(mParticleShaderProgram->GetUniformLocation("color"), 1, &emitter->particleType.color[0]);
+        glUniform1fv(mParticleShaderProgram->GetUniformLocation("textureAtlasRows"), 1, &mTextureAtlasNumRows);
 
         // Draw the triangles
         glDrawArrays(GL_POINTS, 0, Particle()->ParticleCount());

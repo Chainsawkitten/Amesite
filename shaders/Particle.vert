@@ -9,13 +9,13 @@ layout(location = 3) in float particleLifetime;
 layout(location = 4) in vec3 particleVelocity;
 layout(location = 5) in float alpha[3];
 layout(location = 6) in vec3 color;
-layout(location = 7) in int textureIndex;
+layout(location = 7) in float textureIndex;
 
 out VertexData {
 	float alpha;
 	vec2 size;
 	vec3 color;
-	int textureIndex;
+	float textureIndex;
 } vertexOut;
 
 void main () {

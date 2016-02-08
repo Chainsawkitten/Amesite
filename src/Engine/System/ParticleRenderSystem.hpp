@@ -33,7 +33,7 @@ namespace System {
             ShaderProgram* mParticleShaderProgram;
 
             // When rows are added to texture atlas this needs to be updated.
-            int mTextureAtlasNumRows;
+            float mTextureAtlasNumRows;
 
             Texture* mTextureAtlas;
             Texture2D* mParticleTexture;
