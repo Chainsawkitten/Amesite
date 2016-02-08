@@ -69,6 +69,7 @@ set(EMBEDDED_INPUT
         shaders/Post.vert
         shaders/PostCopy.frag
         shaders/PostColor.frag
+        shaders/PostFXAA.frag
         shaders/Deferred.frag
         shaders/Particle.vert
         shaders/Particle.geom
@@ -160,6 +161,7 @@ set(ENGINE_SRCS
         src/Engine/Texture/Texture2D.cpp
         src/Engine/PostProcessing/PostProcessing.cpp
         src/Engine/PostProcessing/ColorFilter.cpp
+        src/Engine/PostProcessing/FXAAFilter.cpp
     )
 
 set(ENGINE_HEADERS
@@ -208,6 +210,7 @@ set(ENGINE_HEADERS
         src/Engine/PostProcessing/PostProcessing.hpp
         src/Engine/PostProcessing/Filter.hpp
         src/Engine/PostProcessing/ColorFilter.hpp
+        src/Engine/PostProcessing/FXAAFilter.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
