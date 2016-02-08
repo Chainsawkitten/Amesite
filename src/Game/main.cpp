@@ -22,6 +22,7 @@
 #include <System/ParticleRenderSystem.hpp>
 #include <PostProcessing/PostProcessing.hpp>
 #include <PostProcessing/FXAAFilter.hpp>
+#include <PostProcessing/FogFilter.hpp>
 
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
@@ -87,6 +88,7 @@ int main() {
     // Post-processing swap chain.
     PostProcessing* postProcessing = new PostProcessing(window->GetSize());
     FXAAFilter* fxaaFilter = new FXAAFilter();
+    FogFilter* fogFilter = new FogFilter(glm::vec3(1.f, 1.f, 1.f));
     
     // Scene and Entites. 
     Scene scene;
@@ -240,6 +242,20 @@ int main() {
         
         // Render.
         renderSystem.Render(scene, postProcessing->GetRenderTarget());
+        
+        // Fog.
+        // Find last camera.
+        std::vector<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
+        Component::Lens* lens;
+        for (unsigned int i = 0; i < lenses.size(); i++) {
+            if (lenses[i]->entity->GetComponent<Component::Transform>() != nullptr)
+                lens = lenses[i];
+        };
+        fogFilter->SetScreenSize(window->GetSize());
+        fogFilter->SetCamera(lens);
+        postProcessing->ApplyFilter(fogFilter);
+        
+        // Fast approximate anti-aliasing.
         if (GameSettings::GetInstance().GetBool("FXAA")) {
             fxaaFilter->SetScreenSize(window->GetSize());
             postProcessing->ApplyFilter(fxaaFilter);
@@ -274,6 +290,7 @@ int main() {
     Resources().FreeCube();
     
     delete fxaaFilter;
+    delete fogFilter;
     delete postProcessing;
     delete window;
     delete particleSystem;

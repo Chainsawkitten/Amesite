@@ -48,7 +48,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
    
     Entity* camera = nullptr;
 
-    //Find last camera.
+    // Find last camera.
     std::vector<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
     for (unsigned int i = 0; i < lenses.size(); i++) {
         if (lenses[i]->entity->GetComponent<Component::Transform>() != nullptr)
