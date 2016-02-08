@@ -9,6 +9,7 @@
 
 #include "../Component/Controller.hpp"
 #include "../Component/Health.hpp"
+#include "../Component/Spawner.hpp"
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Mesh.hpp>
 #include <Engine/Component/Physics.hpp>
@@ -22,12 +23,15 @@ using namespace GameObject;
 Player::Player(Scene* scene) : SuperGameObject(scene) {
     Entity* body = mScene->CreateEntity();
     mEntityMap["body"] = body;
-    body->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ArrowKeysMove);
+    body->AddComponent<Component::Controller>()->speed = 3000.f;
+    body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
+    body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ButtonShoot);
     body->AddComponent<Component::Transform>();
     body->AddComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     body->AddComponent<Component::Collider2DCircle>()->radius = 0.5;
-    body->AddComponent<Component::Physics>();
-    body->AddComponent<Component::Health>();
+    body->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
+    body->AddComponent<Component::Health>()->removeOnLowHealth = false;
+    body->AddComponent<Component::Spawner>()->delay = 0.05f;
     mEntityVector.push_back(body);
 
     Entity* spotLight = mScene->CreateEntity();
@@ -39,7 +43,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     spotLight->AddComponent<Component::SpotLight>()->coneAngle = 90;
     spotLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
     spotLight->AddComponent<Component::Physics>();
-    spotLight->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ArrowKeyRotate);
+    spotLight->AddComponent<Component::Controller>();
     mEntityVector.push_back(spotLight);
 }
 

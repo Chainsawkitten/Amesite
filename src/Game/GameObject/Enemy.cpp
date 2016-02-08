@@ -33,7 +33,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
 
     body->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     body->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
-    body->GetComponent<Component::Spawner>()->delay = 0.01f;
+    body->GetComponent<Component::Spawner>()->delay = 0.1f;
     body->GetComponent<Component::Health>()->faction = 1;
     body->GetComponent<Component::Health>()->health = 1;
     mEntityVector.push_back(body);

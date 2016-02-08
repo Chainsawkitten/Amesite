@@ -53,7 +53,13 @@ Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     Player* gameObject = new Player(mScene);
     gameObject->GetEntity("body")->GetComponent<Component::Transform>()->position = origin;
     gameObject->GetEntity("body")->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->GetEntity("spotLight")->AddComponent<Component::Controller>()->playerID = player;
+    gameObject->GetEntity("spotLight")->GetComponent<Component::Controller>()->playerID = player;
+    if (player == InputHandler::PLAYER_ONE) {
+        gameObject->GetEntity("spotLight")->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::StickRotate);
+    } else {
+        gameObject->GetEntity("spotLight")->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ArrowKeyRotate);
+    }
+
     return gameObject;
 }
 

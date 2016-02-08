@@ -10,7 +10,7 @@ Health::Health(Entity* entity) : SuperComponent(entity) {
     regenAmount = 1.f;
     cooldown = 0.f;
     faction = 0;
-    activated = true;
+    removeOnLowHealth = true;
 }
 
 Health::~Health() {

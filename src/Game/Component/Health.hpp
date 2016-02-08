@@ -57,10 +57,10 @@ namespace Component {
              */
             int faction;
 
-            /// Activated, tells you if this entity is alive.
+            /// Clear Entity from scene if health is zero.
             /**
              * Default: true
              */
-            bool activated;
+            bool removeOnLowHealth;
     };
 }

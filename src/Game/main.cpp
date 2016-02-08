@@ -83,17 +83,11 @@ int main() {
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
     
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
-    
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
     
     GameEntityCreator().SetScene(&scene);
 
@@ -120,12 +114,6 @@ int main() {
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.1f, 0.1f, 0.1f);
     dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.2f;
 
-    //GameEntityCreator().CreateBullet(glm::vec3(-4.f, 0.f, -3.f), glm::vec3(0,0,1), 1);
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
