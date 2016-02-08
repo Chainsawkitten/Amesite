@@ -12,6 +12,8 @@ GammaCorrectionFilter::GammaCorrectionFilter() {
     mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
     Resources().FreeShader(vertexShader);
     Resources().FreeShader(fragmentShader);
+    
+    mBrightness = 2.2f;
 }
 
 GammaCorrectionFilter::~GammaCorrectionFilter() {
@@ -23,5 +25,9 @@ ShaderProgram* GammaCorrectionFilter::GetShaderProgram() const {
 }
 
 void GammaCorrectionFilter::SetUniforms() {
-	
+	glUniform1f(mShaderProgram->GetUniformLocation("brightness"), mBrightness);
+}
+
+void GammaCorrectionFilter::SetBrightness(float brightness) {
+    mBrightness = brightness;
 }

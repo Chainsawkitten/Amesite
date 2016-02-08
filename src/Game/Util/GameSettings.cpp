@@ -17,6 +17,7 @@ GameSettings::GameSettings() {
     AddLongSetting("Target FPS", "Graphics", "Target FPS", 60);
     AddBoolSetting("VSync", "Graphics", "VSync", false);
     AddBoolSetting("FXAA", "Graphics", "FXAA", false);
+    AddDoubleSetting("Gamma", "Graphics", "Brightness", 2.2);
 }
 
 GameSettings& GameSettings::GetInstance() {

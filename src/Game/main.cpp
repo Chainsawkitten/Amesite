@@ -255,6 +255,7 @@ int main() {
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f));
         
         // Gamma correction.
+        gammaCorrectionFilter->SetBrightness(GameSettings::GetInstance().GetDouble("Gamma"));
         postProcessing->ApplyFilter(gammaCorrectionFilter);
         
         postProcessing->Render();

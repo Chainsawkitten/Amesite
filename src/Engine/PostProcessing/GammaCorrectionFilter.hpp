@@ -21,6 +21,14 @@ class GammaCorrectionFilter : public Filter {
         /// Set uniforms.
         void SetUniforms();
         
+        /// Set brightness.
+        /**
+         * @param brightness Brightness.
+         */
+        void SetBrightness(float brightness);
+        
     private:
         ShaderProgram* mShaderProgram;
+        
+        float mBrightness;
 };

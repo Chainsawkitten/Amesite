@@ -17,6 +17,7 @@
  * Target FPS          | FPS to aim for when rendering.      | long   | 60
  * VSync               | Whether to enable vsync.            | bool   | false
  * FXAA                | Whether to enable fxaa.             | bool   | false
+ * Gamma               | Gamma brightness.                   | double | 2.2
  */
 class GameSettings : public Settings {
     public:
