@@ -14,8 +14,6 @@ namespace System {
     /// Handles particles.
     class ParticleSystem {
         public:
-            /// 
-
             /// A particle in the particle emitter.
             struct Particle {
                 /// Position.
