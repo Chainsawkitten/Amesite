@@ -22,7 +22,7 @@
 #include <System/ParticleRenderSystem.hpp>
 #include <PostProcessing/PostProcessing.hpp>
 #include <PostProcessing/FXAAFilter.hpp>
-#include <PostProcessing/FogFilter.hpp>
+#include <PostProcessing/GammaCorrectionFilter.hpp>
 
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
@@ -88,7 +88,7 @@ int main() {
     // Post-processing swap chain.
     PostProcessing* postProcessing = new PostProcessing(window->GetSize());
     FXAAFilter* fxaaFilter = new FXAAFilter();
-    FogFilter* fogFilter = new FogFilter(glm::vec3(1.f, 1.f, 1.f));
+    GammaCorrectionFilter* gammaCorrectionFilter = new GammaCorrectionFilter();
     
     // Scene and Entites. 
     Scene scene;
@@ -155,8 +155,8 @@ int main() {
     Component::Transform* transform = dirLight->AddComponent<Component::Transform>();
     transform->pitch = 90.f;
     Component::DirectionalLight* dLight = dirLight->AddComponent<Component::DirectionalLight>();
-    dLight->color = glm::vec3(0.1f, 0.1f, 0.1f);
-    dLight->ambientCoefficient = 0.2f;
+    dLight->color = glm::vec3(0.01f, 0.01f, 0.01f);
+    dLight->ambientCoefficient = 0.15f;
 
     // Spot light.
     Entity* spotLight = scene.CreateEntity();
@@ -243,29 +243,21 @@ int main() {
         // Render.
         renderSystem.Render(scene, postProcessing->GetRenderTarget());
         
-        // Fog.
-        // Find last camera.
-        std::vector<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
-        Component::Lens* lens;
-        for (unsigned int i = 0; i < lenses.size(); i++) {
-            if (lenses[i]->entity->GetComponent<Component::Transform>() != nullptr)
-                lens = lenses[i];
-        };
-        fogFilter->SetScreenSize(window->GetSize());
-        fogFilter->SetCamera(lens);
-        postProcessing->ApplyFilter(fogFilter);
-        
         // Fast approximate anti-aliasing.
         if (GameSettings::GetInstance().GetBool("FXAA")) {
             fxaaFilter->SetScreenSize(window->GetSize());
             postProcessing->ApplyFilter(fxaaFilter);
         }
-        postProcessing->Render();
         
         // Input testing.
         window->Update();
         
         testTexture->Render(glm::vec2(0.f, 0.f), glm::vec2(100.f, 100.f));
+        
+        // Gamma correction.
+        postProcessing->ApplyFilter(gammaCorrectionFilter);
+        
+        postProcessing->Render();
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
@@ -290,7 +282,7 @@ int main() {
     Resources().FreeCube();
     
     delete fxaaFilter;
-    delete fogFilter;
+    delete gammaCorrectionFilter;
     delete postProcessing;
     delete window;
     delete particleSystem;

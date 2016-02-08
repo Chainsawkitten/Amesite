@@ -71,6 +71,7 @@ set(EMBEDDED_INPUT
         shaders/PostColor.frag
         shaders/PostFXAA.frag
         shaders/PostFog.frag
+        shaders/PostGamma.frag
         shaders/Deferred.frag
         shaders/Particle.vert
         shaders/Particle.geom
@@ -164,6 +165,7 @@ set(ENGINE_SRCS
         src/Engine/PostProcessing/ColorFilter.cpp
         src/Engine/PostProcessing/FXAAFilter.cpp
         src/Engine/PostProcessing/FogFilter.cpp
+        src/Engine/PostProcessing/GammaCorrectionFilter.cpp
     )
 
 set(ENGINE_HEADERS
@@ -214,6 +216,7 @@ set(ENGINE_HEADERS
         src/Engine/PostProcessing/ColorFilter.hpp
         src/Engine/PostProcessing/FXAAFilter.hpp
         src/Engine/PostProcessing/FogFilter.hpp
+        src/Engine/PostProcessing/GammaCorrectionFilter.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})

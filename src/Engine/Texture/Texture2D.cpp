@@ -27,7 +27,7 @@ Texture2D::Texture2D(const char* filename) {
         Log() << "Couldn't load image " << filename << "\n";
     
     // Give the image to OpenGL.
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, Format(components), GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, mWidth, mHeight, 0, Format(components), GL_UNSIGNED_BYTE, data);
     
     stbi_image_free(data);
     
