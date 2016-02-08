@@ -133,8 +133,9 @@ int main() {
         // Update Scene
         controllerSystem.Update(scene, static_cast<float>(deltaTime));
         physicsSystem.Update(scene, (float)deltaTime);
-        particleSystem.Update(scene, deltaTime);
+        //TODO Animation
         scene.UpdateModelMatrices();
+        particleSystem.Update(scene, deltaTime);
         collisionSystem.Update(scene);
         healthSystem.Update(scene, static_cast<float>(deltaTime));
         damageSystem.Update(scene);

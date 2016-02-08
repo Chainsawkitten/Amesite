@@ -39,8 +39,6 @@ void CollisionSystem::Update(Scene& scene) {
         delete collision;
     }
     collisionVector->clear();
-    collisionVector->shrink_to_fit();
-
  
     Node node;
     glm::vec3 pos;
@@ -189,8 +187,6 @@ void CollisionSystem::Update(Scene& scene) {
     //    }
     //}
 
-    //TODO SWEEP AND PRUNE
-
     /*
     // Circle vs Circle
     for (unsigned int x = 0; x < collider2DCircle.size(); x++) {
@@ -335,21 +331,21 @@ void CollisionSystem::Update(Scene& scene) {
 //    }
 //    return false;
 //}
-
-bool CollisionSystem::CircleVSCircle(Collider2DCircle* aCircle, Collider2DCircle* bCircle) {
-    Transform* aTransform = aCircle->entity->GetComponent<Transform>();
-    Transform* bTransform = bCircle->entity->GetComponent<Transform>();
-    if (aTransform == nullptr)
-        return false;
-    if (bTransform == nullptr)
-        return false;
-
-    glm::vec3 circleAOrigin = aTransform->GetWorldPosition();
-    glm::vec3 circleBOrigin = bTransform->GetWorldPosition();
-    
-    glm::vec2 distance = glm::vec2(circleAOrigin.x, circleAOrigin.z) - glm::vec2(circleBOrigin.x, circleBOrigin.z);
-
-    if (glm::length(distance) < aCircle->radius * aTransform->GetWorldScale().x + bCircle->radius * bTransform->GetWorldScale().x)
-        return true;
-    return false;
-}
+//
+//bool CollisionSystem::CircleVSCircle(Collider2DCircle* aCircle, Collider2DCircle* bCircle) {
+//    Transform* aTransform = aCircle->entity->GetComponent<Transform>();
+//    Transform* bTransform = bCircle->entity->GetComponent<Transform>();
+//    if (aTransform == nullptr)
+//        return false;
+//    if (bTransform == nullptr)
+//        return false;
+//
+//    glm::vec3 circleAOrigin = aTransform->GetWorldPosition();
+//    glm::vec3 circleBOrigin = bTransform->GetWorldPosition();
+//    
+//    glm::vec2 distance = glm::vec2(circleAOrigin.x, circleAOrigin.z) - glm::vec2(circleBOrigin.x, circleBOrigin.z);
+//
+//    if (glm::length(distance) < aCircle->radius * aTransform->GetWorldScale().x + bCircle->radius * bTransform->GetWorldScale().x)
+//        return true;
+//    return false;
+//}
