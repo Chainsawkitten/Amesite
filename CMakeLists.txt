@@ -67,6 +67,7 @@ set(EMBEDDED_INPUT
         shaders/SingleColor2D.frag
         shaders/Texture2D.frag
         shaders/Post.vert
+        shaders/PostCopy.frag
         shaders/Deferred.frag
         shaders/Particle.vert
         shaders/Particle.geom
@@ -116,6 +117,7 @@ endif(DOXYGEN_FOUND)
 ## Engine ##
 set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
+        src/Engine/RenderTarget.cpp
         src/Engine/Resources.cpp
         src/Engine/Audio/Listener.cpp
         src/Engine/Audio/SoundBuffer.cpp
@@ -159,6 +161,7 @@ set(ENGINE_SRCS
 
 set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
+        src/Engine/RenderTarget.hpp
         src/Engine/Resources.hpp
         src/Engine/Audio/Listener.hpp
         src/Engine/Audio/SoundBuffer.hpp
