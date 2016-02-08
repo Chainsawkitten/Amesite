@@ -21,6 +21,12 @@ namespace Component {
              */
             float damageAmount;
 
+            /// Remove Entity to which this %Component corresponds if true.
+            /**
+             * Default: true
+             */
+            bool removeOnImpact;
+
             /// Faction, ID of the faction this health belongs to (players, enemies).
             /**
              * Default: 0

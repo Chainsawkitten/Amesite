@@ -1,6 +1,6 @@
 #pragma once
 
-#include <unordered_map>
+#include <map>
 #include <typeinfo>
 #include "../Component/RelativeTransform.hpp"
 #include "../Scene/Scene.hpp"
@@ -29,25 +29,31 @@ class Entity {
          */
         template <typename T> T* GetComponent();
 
-        /// Unordered map containing components.
-        /**
-         * Maps component type to component.
-         */
-        std::unordered_map<const std::type_info*, Component::SuperComponent*> components;
+        /// Remove component of type T.
+        template <typename T> void RemoveComponent();
+
+        /// Remove %Entity from scene.
+        void Clear();
 
     private:
-        /// Pointer to which Scene %Entity is contained.
-        /**
-         * Default: Must point to a Scene
-         */
-        Scene* mScene;
-
-        ///Adds a component to this entity and to the scene.
+        // Adds a component to this entity and to the scene.
         /**
          * @param component The component that will be added.
          * @param componentType The type of the component.
          */
         void AddComponent(Component::SuperComponent* component, const std::type_info* componentType);
+
+        // Pointer to which Scene %Entity is contained.
+        /**
+         * Default: Must point to a Scene
+         */
+        Scene* mScene;
+
+        // Unordered map containing components.
+        /**
+         * Maps component type to component.
+         */
+        std::map<const std::type_info*, Component::SuperComponent*> components;
 };
 
 template <typename T> T* Entity::GetComponent() {
@@ -77,4 +83,13 @@ template <typename T> T* Entity::AddComponent() {
     AddComponent(component, componentType);
     mScene->AddComponentToList(component, componentType);
     return component;
+}
+
+template <typename T> void Entity::RemoveComponent() {
+    const std::type_info* componentType = &typeid(T*);
+    if (components.find(componentType) != components.end()) {
+        delete components[componentType];
+        components.erase(componentType);
+        mScene->RemoveComponentFromList(component, componentType);
+    }
 }
