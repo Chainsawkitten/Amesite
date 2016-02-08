@@ -204,6 +204,7 @@ set(ENGINE_HEADERS
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
         src/Engine/PostProcessing/PostProcessing.hpp
+        src/Engine/PostProcessing/Filter.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})

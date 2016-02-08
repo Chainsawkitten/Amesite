@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 class RenderTarget;
+class Filter;
 namespace Geometry {
     class Square;
 }
@@ -24,6 +25,12 @@ class PostProcessing {
          * @return Target to render to´.
          */
         RenderTarget* GetRenderTarget() const;
+        
+        /// Apply a filter to the render image.
+        /**
+         * filter %Filter to apply.
+         */
+        void ApplyFilter(Filter* filter);
         
         /// Render resulting image to screen.
         void Render();
