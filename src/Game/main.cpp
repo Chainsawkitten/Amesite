@@ -29,6 +29,7 @@
 #include <Component/Transform.hpp>
 #include <Component/DirectionalLight.hpp>
 #include <Component/Physics.hpp>
+#include <Component/ParticleEmitter.hpp>
 #include "../Game/Component/Health.hpp"
 
 #include "Game/GameObject/Bullet.hpp"
@@ -61,10 +62,7 @@ int main() {
     window->Init();
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
     
-    // Particle texture.
-    Texture2D* particleTexture;
-    particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
-
+    // Scene and Entites. 
     Scene scene;
 
     System::ParticleSystem particleSystem;
@@ -94,12 +92,13 @@ int main() {
     std::vector<Entity*> players;
     GameObject::Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     GameObject::Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
-    GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), particleTexture);
-    GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), particleTexture);
-    GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), particleTexture);
+    GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
+    GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), Component::ParticleEmitter::DUST);
+    GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
     players.push_back(player1->GetEntity("body"));
     players.push_back(player2->GetEntity("body"));
     
+
     GameObject::Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
 
     GameObject::Cave* map = GameEntityCreator().CreateMap();
@@ -177,7 +176,6 @@ int main() {
     }
     
     Resources().FreeTexture2DFromFile(testTexture);
-    Resources().FreeTexture2DFromFile(particleTexture);
     
     delete window;
     
