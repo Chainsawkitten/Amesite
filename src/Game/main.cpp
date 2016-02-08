@@ -29,6 +29,7 @@
 #include <Component/Transform.hpp>
 #include <Component/DirectionalLight.hpp>
 #include <Component/Physics.hpp>
+#include <Component/ParticleEmitter.hpp>
 #include "../Game/Component/Health.hpp"
 
 #include "Game/GameObject/Bullet.hpp"
@@ -60,14 +61,6 @@ int main() {
     glewInit();
     window->Init();
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
-    
-    // Particle System.
-    System::ParticleSystem* particleSystem;
-    particleSystem = new System::ParticleSystem;
-    particleSystem->SetActive();
-    
-    // RenderSystem.
-    System::RenderSystem renderSystem;
     
     // Scene and Entites. 
     Scene scene;
