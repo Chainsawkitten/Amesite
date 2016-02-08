@@ -20,7 +20,7 @@
 #include <System/CollisionSystem.hpp>
 #include <System/ParticleSystem.hpp>
 #include <System/ParticleRenderSystem.hpp>
-#include <RenderTarget.hpp>
+#include <PostProcessing/PostProcessing.hpp>
 
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
@@ -83,8 +83,8 @@ int main() {
     // RenderSystem.
     System::RenderSystem renderSystem;
     
-    // Target to render to.
-    RenderTarget* renderTarget = new RenderTarget(window->GetSize());
+    // Post-processing swap chain.
+    PostProcessing* postProcessing = new PostProcessing(window->GetSize());
     
     // Scene and Entites. 
     Scene scene;
@@ -237,9 +237,8 @@ int main() {
         damageSystem.Update(scene);
         
         // Render.
-        renderSystem.Render(scene, renderTarget);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        renderTarget->Render();
+        renderSystem.Render(scene, postProcessing->GetRenderTarget());
+        postProcessing->Render();
         
         // Input testing.
         window->Update();
@@ -268,7 +267,7 @@ int main() {
     Resources().FreeCube();
     Resources().FreeCube();
     
-    delete renderTarget;
+    delete postProcessing;
     delete window;
     delete particleSystem;
     

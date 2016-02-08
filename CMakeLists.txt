@@ -157,6 +157,7 @@ set(ENGINE_SRCS
         src/Engine/System/ParticleRenderSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
+        src/Engine/PostProcessing/PostProcessing.cpp
     )
 
 set(ENGINE_HEADERS
@@ -202,6 +203,7 @@ set(ENGINE_HEADERS
         src/Engine/System/ParticleRenderSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
+        src/Engine/PostProcessing/PostProcessing.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
