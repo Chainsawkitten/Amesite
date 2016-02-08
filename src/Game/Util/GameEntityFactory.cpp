@@ -82,7 +82,7 @@ void GameEntityFactory::SetScene(Scene* scene) {
     mScene = scene;
 }
 
-void GameEntityFactory::CreateCuboidParticle(Entity * object, Texture2D* particleTexture) {
+void GameEntityFactory::CreateCuboidParticle(Entity * object, int particleTextureIndex) {
     object->AddComponent<Component::ParticleEmitter>();
     
     // Particle emitter.
@@ -99,7 +99,7 @@ void GameEntityFactory::CreateCuboidParticle(Entity * object, Texture2D* particl
     emitter->timeToNext = 5.0;
     
     //Particle type.
-    emitter->particleType.texture = particleTexture;
+    emitter->particleType.textureIndex = particleTextureIndex;
     emitter->particleType.minLifetime = 2.f;
     emitter->particleType.maxLifetime = 4.f;
     emitter->particleType.minVelocity = glm::vec3(-0.025f, -0.01f, -0.025f);
@@ -110,7 +110,7 @@ void GameEntityFactory::CreateCuboidParticle(Entity * object, Texture2D* particl
     emitter->particleType.color = glm::vec3(1.f, 0.5f, 0.5f);
 }
 
-void GameEntityFactory::CreatePointParticle(Entity * object, Texture2D* particleTexture) {
+void GameEntityFactory::CreatePointParticle(Entity * object, int particleTextureIndex) {
     object->AddComponent<Component::ParticleEmitter>();
 
     // Particle emitter.
@@ -126,7 +126,7 @@ void GameEntityFactory::CreatePointParticle(Entity * object, Texture2D* particle
     emitter->origin = glm::vec3(0.f, 0.f, 0.f);
 
     //Particle type.
-    emitter->particleType.texture = particleTexture;
+    emitter->particleType.textureIndex = particleTextureIndex;
     emitter->particleType.minLifetime = .1f;
     emitter->particleType.maxLifetime = .2f;
     emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -.2f);

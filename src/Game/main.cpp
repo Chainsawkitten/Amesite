@@ -74,8 +74,7 @@ int main() {
         // Get input
         glfwPollEvents();
     }
-    
-    
+
     delete window;
     
     glfwTerminate();
