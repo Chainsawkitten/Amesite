@@ -35,6 +35,7 @@ namespace System {
             // When rows are added to texture atlas this needs to be updated.
             float mTextureAtlasNumRows;
 
+            // Texture atlas where the particle textures are found.
             Texture* mTextureAtlas;
             Texture2D* mParticleTexture;
 
