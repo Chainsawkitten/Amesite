@@ -21,6 +21,7 @@
 #include "../GameObject/Camera.hpp"
 #include <Component/ParticleEmitter.hpp>
 #include "Game/Component/Health.hpp"
+#include <Component/ParticleEmitter.hpp>
 
 #include <Texture/Texture2D.hpp>
 
@@ -99,6 +100,10 @@ MainScene::MainScene() {
     // Create players
     Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+
+    GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
+    GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), Component::ParticleEmitter::DUST);
+    GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
 
     mPlayers.push_back(player1->GetEntity("body"));
     mPlayers.push_back(player1->GetEntity("body"));
