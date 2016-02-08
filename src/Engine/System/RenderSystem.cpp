@@ -18,6 +18,7 @@
 #include <string>
 
 #include "../Lighting/DeferredLighting.hpp"
+#include "../RenderTarget.hpp"
 
 using namespace System;
 
@@ -37,7 +38,7 @@ RenderSystem::~RenderSystem() {
     Resources().FreeShaderProgram(mShaderProgram);
 }
 
-void RenderSystem::Render(Scene& scene) {
+void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
     glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
     
     mDeferredLighting->SetTarget();
@@ -47,7 +48,7 @@ void RenderSystem::Render(Scene& scene) {
    
     Entity* camera = nullptr;
 
-    //Find last camera.
+    // Find last camera.
     std::vector<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
     for (unsigned int i = 0; i < lenses.size(); i++) {
         if (lenses[i]->entity->GetComponent<Component::Transform>() != nullptr)
@@ -78,7 +79,8 @@ void RenderSystem::Render(Scene& scene) {
                 glDrawElements(GL_TRIANGLES, model->GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
             }
         }
-        mDeferredLighting->ResetTarget();
+        
+        renderTarget->SetTarget();
         //mDeferredLighting->ShowTextures(screenSize);
         mDeferredLighting->Render(scene, camera, screenSize);
 

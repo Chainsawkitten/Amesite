@@ -35,7 +35,7 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
     
     unsigned int width = static_cast<unsigned int>(size.x);
     unsigned int height = static_cast<unsigned int>(size.y);
-    AttachTexture(mTextures[DIFFUSE], width, height, GL_COLOR_ATTACHMENT0 + DIFFUSE, GL_RGB);
+    AttachTexture(mTextures[DIFFUSE], width, height, GL_COLOR_ATTACHMENT0 + DIFFUSE, GL_RGB16F);
     AttachTexture(mTextures[NORMAL], width, height, GL_COLOR_ATTACHMENT0 + NORMAL, GL_RGB16F);
     AttachTexture(mTextures[SPECULAR], width, height, GL_COLOR_ATTACHMENT0 + SPECULAR, GL_RGB);
     

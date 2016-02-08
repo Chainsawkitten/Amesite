@@ -49,6 +49,7 @@ class GameEntityFactory {
         /**
          * @param position The bullet's starting position.
          * @param direction The direction the bullet is traveling in.
+         * @param faction The faction, bullets only harm entites of other factions.
          * @return The bullet GameObject.
          */
         GameObject::Bullet* CreateBullet(const glm::vec3& position, const glm::vec3& direction, int faction);
@@ -69,15 +70,15 @@ class GameEntityFactory {
 
         /// Creates a cuboid dust particle emitter and bind it to an Entity.
         /**
-         * @param object - entity which the system relates to.
-         * @param particleTextureIndex the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex
+         * @param object Entity to which the system is relative.
+         * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
          */
         void CreateCuboidParticle(Entity* object, int particleTextureIndex);
 
         /// Creates a point particle emitter and bind it to an Entity.
         /**
-         * @param object - entity which the system relates to.
-         * @param particleTextureIndex the particles should sample from,  these are documented in Component::ParticleEmitter::ParticleTextureIndex
+         * @param object Entity to which the system is relative.
+         * @param particleTextureIndex %Texture the particles should sample from,  these are documented in Component::ParticleEmitter::ParticleTextureIndex.
          */
         void CreatePointParticle(Entity* object, int particleTextureIndex);
 

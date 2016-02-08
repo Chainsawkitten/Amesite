@@ -38,14 +38,14 @@ int main() {
     glewInit();
     window->Init();
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
-
+    
     // Scene and Entites. 
     //Scene scene;
     System::ParticleSystem mParticleSystem;
     // Make particle system active
     mParticleSystem.SetActive();
     Scene* scene = new MainScene();
-
+    
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
@@ -53,28 +53,28 @@ int main() {
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
-
+        
         scene->Update(static_cast<float>(deltaTime));
         window->Update();
-
+        
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))
             title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0f) + " ms";
         window->SetTitle(title.c_str());
-
+        
         // Swap buffers and wait until next frame.
         window->SwapBuffers();
-
+        
         long wait = static_cast<long>((1.0 / GameSettings::GetInstance().GetLong("Target FPS") + lastTimeRender - glfwGetTime()) * 1000000.0);
         if (wait > 0)
             std::this_thread::sleep_for(std::chrono::microseconds(wait));
         lastTimeRender = glfwGetTime();
-
+        
         // Get input
         glfwPollEvents();
     }
-
+    
     delete window;
     
     glfwTerminate();

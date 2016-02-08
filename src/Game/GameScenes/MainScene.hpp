@@ -12,6 +12,9 @@
 
 #include <vector>
 
+class PostProcessing;
+class FXAAFilter;
+class GammaCorrectionFilter;
 class Entity;
 namespace GameObject {
     class Cave;
@@ -20,52 +23,57 @@ namespace GameObject {
 /// The main scene for the game.
 class MainScene : public Scene {
     public:
+        ///Constructor
+        MainScene();
+        
+        ///Destructor
+        ~MainScene();
+        
         /// Update the scene.
         /**
          *@param deltaTime Time since last frame.
          */
         void Update(float deltaTime);
-
-        ///Constructor
-        MainScene();
-
-        ///Destructor
-        ~MainScene();
-
+        
     private:
         // PhysicsSystem.
         System::PhysicsSystem mPhysicsSystem;
-
+        
         // ControllerSystem.
         System::ControllerSystem mControllerSystem;
-
+        
         // HealthSystem.
         System::HealthSystem mHealthSystem;
-
+        
         // DamageSystem.
         System::DamageSystem mDamageSystem;
-
+        
         // RenderSystem.
         System::RenderSystem mRenderSystem;
-
+        
         // CollisionSystem.
         System::CollisionSystem mCollisionSystem;
-
+        
         // ParticleSystem
         System::ParticleSystem mParticleSystem;
-
+        
         // The life time system
         System::LifeTimeSystem mLifeTimeSystem;
-
+        
         // Vector containing players
         std::vector<Entity*> mPlayers;
-
+        
         // The main camera
         Entity* mMainCamera;
-
+        
         // The cave
         GameObject::Cave* cave;
-
+        
+        // Post processing.
+        PostProcessing* postProcessing;
+        FXAAFilter* fxaaFilter;
+        GammaCorrectionFilter* gammaCorrectionFilter;
+        
         // Grid collision
-        bool MainScene::GridCollide(Entity* entity, float deltaTime);
+        bool GridCollide(Entity* entity, float deltaTime);
 };

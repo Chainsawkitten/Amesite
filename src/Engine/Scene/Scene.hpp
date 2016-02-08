@@ -49,7 +49,7 @@ class Scene {
         /**
          * @return A pointer to a vector of pointers to all items of the specified scene.
          */
-        template <typename T> std::vector<T*>* GetVector() { return nullptr; };
+        template <typename T> std::vector<T*>* GetVector() { return nullptr; }
 
         /// Gets all item of a specific type.
         /**
