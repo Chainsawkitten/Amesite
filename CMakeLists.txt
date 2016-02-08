@@ -227,6 +227,7 @@ set(GAME_SRCS
         src/Game/Component/Damage.cpp
         src/Game/Component/CameraFollow.cpp
         src/Game/GameScenes/MainScene.cpp
+        src/Game/GameScenes/EmptyScene.cpp
         src/Game/Component/LifeTime.cpp
         src/Game/GameObject/Bullet.cpp
         src/Game/GameObject/Player.cpp
@@ -252,6 +253,7 @@ set(GAME_HEADERS
         src/Game/Component/Damage.hpp
         src/Game/Component/CameraFollow.hpp
         src/Game/GameScenes/MainScene.hpp
+        src/Game/GameScenes/EmptyScene.hpp
         src/Game/Component/LifeTime.hpp
         src/Game/GameObject/Bullet.hpp
         src/Game/GameObject/Player.hpp

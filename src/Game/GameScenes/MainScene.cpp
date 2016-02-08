@@ -26,7 +26,7 @@
 
 using namespace GameObject;
 
-void MainScene::Update(float deltaTime){
+void MainScene::Update(float deltaTime) {
     // ControllerSystem
     mControllerSystem.Update(*this, deltaTime);
 
@@ -69,7 +69,7 @@ void MainScene::Update(float deltaTime){
 }
 
 
-MainScene::MainScene(){
+MainScene::MainScene() {
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
@@ -114,7 +114,7 @@ MainScene::MainScene(){
     dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.2f;
 }
 
-MainScene::~MainScene(){
+MainScene::~MainScene() {
 
 }
 

@@ -16,6 +16,7 @@
 #include "System/ParticleSystem.hpp"
 
 #include "GameScenes/MainScene.hpp"
+#include "GameScenes/EmptyScene.hpp"
 
 //#include <crtdbg.h>
 

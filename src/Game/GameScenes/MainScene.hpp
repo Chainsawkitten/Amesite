@@ -17,10 +17,19 @@ namespace GameObject {
     class Cave;
 }
 
+/// The main scene for the game.
 class MainScene : public Scene {
     public:
+        /// Update the scene.
+        /**
+         *@param deltaTime Time since last frame.
+         */
         void Update(float deltaTime);
+
+        ///Constructor
         MainScene();
+
+        ///Destructor
         ~MainScene();
 
     private:
@@ -57,5 +66,6 @@ class MainScene : public Scene {
         // The cave
         GameObject::Cave* cave;
 
+        // Grid collision
         bool MainScene::GridCollide(Entity* entity, float deltaTime);
 };
