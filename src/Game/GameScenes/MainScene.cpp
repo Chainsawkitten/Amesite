@@ -105,9 +105,6 @@ MainScene::MainScene(){
 
     // Create scene
     cave = GameEntityCreator().CreateMap();
-    cave->GetEntity("map")->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
-    cave->GetEntity("map")->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
-    cave->GetEntity("map")->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
 
     // Directional light.
     Entity* dirLight = this->CreateEntity();
