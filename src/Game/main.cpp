@@ -21,6 +21,7 @@
 #include <System/ParticleSystem.hpp>
 #include <System/ParticleRenderSystem.hpp>
 #include <PostProcessing/PostProcessing.hpp>
+#include <PostProcessing/ColorFilter.hpp>
 
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
@@ -85,6 +86,7 @@ int main() {
     
     // Post-processing swap chain.
     PostProcessing* postProcessing = new PostProcessing(window->GetSize());
+    ColorFilter* colorFilter = new ColorFilter(glm::vec3(0.f, 1.f, 1.f));
     
     // Scene and Entites. 
     Scene scene;
@@ -238,6 +240,7 @@ int main() {
         
         // Render.
         renderSystem.Render(scene, postProcessing->GetRenderTarget());
+        postProcessing->ApplyFilter(colorFilter);
         postProcessing->Render();
         
         // Input testing.
@@ -267,6 +270,7 @@ int main() {
     Resources().FreeCube();
     Resources().FreeCube();
     
+    delete colorFilter;
     delete postProcessing;
     delete window;
     delete particleSystem;
