@@ -16,6 +16,7 @@
  * Borderless          | Use a borderless window.            | bool   | false
  * Target FPS          | FPS to aim for when rendering.      | long   | 60
  * VSync               | Whether to enable vsync.            | bool   | false
+ * FXAA                | Whether to enable fxaa.             | bool   | false
  */
 class GameSettings : public Settings {
     public:

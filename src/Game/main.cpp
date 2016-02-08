@@ -240,8 +240,10 @@ int main() {
         
         // Render.
         renderSystem.Render(scene, postProcessing->GetRenderTarget());
-        fxaaFilter->SetScreenSize(window->GetSize());
-        postProcessing->ApplyFilter(fxaaFilter);
+        if (GameSettings::GetInstance().GetBool("FXAA")) {
+            fxaaFilter->SetScreenSize(window->GetSize());
+            postProcessing->ApplyFilter(fxaaFilter);
+        }
         postProcessing->Render();
         
         // Input testing.
