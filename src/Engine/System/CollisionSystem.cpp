@@ -125,43 +125,38 @@ void CollisionSystem::Update(Scene& scene) {
         Collider2DCircle* colliderX = collider2DCircle.at(x);
         Scene::Collision* collisionX = nullptr;
 
-        if(colliderX->radius != 0){
+        // check if collisionX is in mCollisonVec
+        for (unsigned int i = 0; i < collisionVector->size() && collisionX == nullptr; i++)
+            if (collisionVector->at(i)->entity == colliderX->entity)
+                collisionX = collisionVector->at(i);
 
-            // check if collisionX is in mCollisonVec
-            for (unsigned int i = 0; i < collisionVector->size() && collisionX == nullptr; i++)
-                if (collisionVector->at(i)->entity == colliderX->entity)
-                    collisionX = collisionVector->at(i);
-
-            for (unsigned int y = x + 1; y < collider2DCircle.size(); y++) {
-                Collider2DCircle* colliderY = collider2DCircle.at(y);
-                if (CircleVSCircle(colliderX, colliderY)) {
-                    // x and y intersect each other.
-                    if (collisionX == nullptr) {
-                        collisionX = new Scene::Collision();
-                        collisionX->entity = colliderX->entity;
-                        collisionVector->push_back(collisionX);
-                    }
-
-                    // check if collisionY is in mCollisonVec
-                    Scene::Collision* collisionY = nullptr;
-                    for (unsigned int i = 0; i < collisionVector->size() && collisionY == nullptr; i++)
-                        if (collisionVector->at(i)->entity == colliderY->entity)
-                            collisionY = collisionVector->at(i);
-
-                    // if collisionY isn't in vector;
-                    if (collisionY == nullptr) {
-                        collisionY = new Scene::Collision();
-                        collisionY->entity = colliderY->entity;
-                        collisionVector->push_back(collisionY);
-                    }
-
-                    collisionX->intersect.push_back(colliderY->entity);
-                    collisionY->intersect.push_back(colliderX->entity);
+        for (unsigned int y = x + 1; y < collider2DCircle.size(); y++) {
+            Collider2DCircle* colliderY = collider2DCircle.at(y);
+            if (CircleVSCircle(colliderX, colliderY)) {
+                // x and y intersect each other.
+                if (collisionX == nullptr) {
+                    collisionX = new Scene::Collision();
+                    collisionX->entity = colliderX->entity;
+                    collisionVector->push_back(collisionX);
                 }
+
+                // check if collisionY is in mCollisonVec
+                Scene::Collision* collisionY = nullptr;
+                for (unsigned int i = 0; i < collisionVector->size() && collisionY == nullptr; i++)
+                    if (collisionVector->at(i)->entity == colliderY->entity)
+                        collisionY = collisionVector->at(i);
+
+                // if collisionY isn't in vector;
+                if (collisionY == nullptr) {
+                    collisionY = new Scene::Collision();
+                    collisionY->entity = colliderY->entity;
+                    collisionVector->push_back(collisionY);
+                }
+
+                collisionX->intersect.push_back(colliderY->entity);
+                collisionY->intersect.push_back(colliderX->entity);
             }
-
         }
-
     }
 }
 

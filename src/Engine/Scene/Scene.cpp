@@ -21,6 +21,10 @@ void Scene::AddComponentToList(Component::SuperComponent* component, const std::
     mComponents[componentType].push_back(component);
 }
 
+void Scene::RemoveComponentFromList(Component::SuperComponent* component, const std::type_info* componentType) {
+    mComponents[componentType].erase(std::remove(mComponents[componentType].begin(), mComponents[componentType].end(), component), mComponents[componentType].end());
+}
+
 void Scene::ClearAll() {
     for (Entity* entity : mEntityVector)
         delete entity;
@@ -47,15 +51,14 @@ void Scene::UpdateModelMatrices() {
 }
 
 void Scene::RemoveEntity(Entity* entity) {
-    // Remove entity's components
-    for (auto& it : mComponents) {
+    entity->Clear();
+    /*for (auto& it : mComponents) {
         if (entity->components[it.first] != nullptr) {
             it.second.erase(std::remove(it.second.begin(), it.second.end(), entity->components[it.first]), it.second.end());
             delete entity->components[it.first];
         }
-    }
+    }*/
 
-    //Remove Entity
     mEntityVector.erase(std::remove(mEntityVector.begin(), mEntityVector.end(), entity), mEntityVector.end());
     delete entity;
 }

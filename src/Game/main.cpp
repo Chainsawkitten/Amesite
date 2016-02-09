@@ -9,11 +9,12 @@
 #include "Util/GameSettings.hpp"
 #include "CaveSystem/CaveSystem.hpp"
 #include "../Game/Component/Controller.hpp"
+#include "../Game/Component/Health.hpp"
 
 #include <Util/FileSystem.hpp>
 #include <Util/Input.hpp>
 
-//#include <crtdbg.h>
+#include <crtdbg.h>
 
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
@@ -48,13 +49,15 @@
 #include <fstream>
 #include "Util/ControlSchemes.hpp"
 
+#include "Game/GameObject/Bullet.hpp"
+
 using namespace std;
 
 bool GridCollide(Entity* entity, float deltaTime);
 
 int main() {
     
-    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     
     // Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
@@ -74,7 +77,8 @@ int main() {
     System::ParticleSystem* particleSystem;
     particleSystem = new System::ParticleSystem;
     particleSystem->SetActive();
-    
+   
+
     // Particle texture.
     Texture2D* particleTexture;
     particleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
@@ -85,6 +89,9 @@ int main() {
     // Scene and Entites. 
     Scene scene;
     
+    GameObject::Bullet b = GameObject::Bullet(&scene);
+    b.GetEntity("body")->GetComponent<Component::Transform>()->position.z = 4.f;
+
     // PhysicsSystem.
     System::PhysicsSystem physicsSystem;
     
@@ -125,9 +132,10 @@ int main() {
     
     Entity* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     Entity* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+
     std::vector<Entity*> players;
     players.push_back(player1);
-    players.push_back(player2);
+    //players.push_back(player2);
 
     Entity* theMap = GameEntityCreator().CreateMap();
     theMap->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
@@ -184,7 +192,19 @@ int main() {
         
         // Update damage
         damageSystem.Update(scene);
-        
+
+        if (player1->GetComponent<Component::Health>()->health < 0.01f) {
+            // Remove player
+            player1->GetComponent<Component::Physics>()->maxVelocity = 0.f;
+        }
+
+        //std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
+        //for (auto collsion : *collisionVector)
+        //if (collsion->entity == bullet) {
+        //    // Remove bullet
+        //    bullet->GetComponent<Component::Transform>()->position.y = 2;
+        //}
+        //
         // Render.
         renderSystem.Render(scene);
         

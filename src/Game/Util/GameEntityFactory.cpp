@@ -39,6 +39,7 @@ Entity* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
     Entity* enemyEntity = mScene->CreateEntity();
     enemyEntity->AddComponent<Component::Mesh>();
     enemyEntity->AddComponent<Component::Transform>();
+    
     enemyEntity->AddComponent<Component::Collider2DCircle>();
     enemyEntity->AddComponent<Component::Physics>();
     enemyEntity->AddComponent<Component::Spawner>();
@@ -64,7 +65,6 @@ Entity* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     playerEntity->AddComponent<Component::Controller>();
     playerEntity->AddComponent<Component::Spawner>();
     playerEntity->AddComponent<Component::Health>();
-
     playerEntity->GetComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     playerEntity->GetComponent<Component::Transform>()->position = origin;
     playerEntity->GetComponent<Component::Collider2DCircle>()->radius = 0.5f;
