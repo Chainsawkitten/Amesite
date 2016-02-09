@@ -57,6 +57,11 @@ void MainWindow::SetVsync(bool vsync) {
     glfwSwapInterval(vsync ? 1 : 0);
 }
 
+void MainWindow::SetControllerThresholds(double aimThreshold, double moveThreshold) {
+    Input()->SetAimThreshold(aimThreshold);
+    Input()->SetMoveThreshold(moveThreshold);
+}
+
 void MainWindow::Update() {
     mInput->Update();
     mInput->SetActive();

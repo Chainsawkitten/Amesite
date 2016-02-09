@@ -61,6 +61,7 @@ int main() {
     glewInit();
     window->Init();
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
+    window->SetControllerThresholds(GameSettings::GetInstance().GetDouble("Aim Threshold"), GameSettings::GetInstance().GetDouble("Move Threshold"));
     
     // Scene and Entites. 
     Scene scene;

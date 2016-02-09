@@ -23,7 +23,9 @@ InputHandler::InputHandler(GLFWwindow* window) {
     mLastScroll = 0.0;
     mScroll = 0.0;
 
-    
+    // Init controller thresholds
+    mAimThreshold = 0.5;
+    mMoveThreshold = 0.5;
     
     // Init button states.
     for (int player = 0; player < PLAYERS; player++) {
@@ -31,7 +33,7 @@ InputHandler::InputHandler(GLFWwindow* window) {
             mButtonReleased[player][button] = true;
             mButtonTriggered[player][button] = false;
             mButtonValue[player][button] = 0.0;
-            mLastValidAimDirection.push_back(glm::vec2(1.0f, 0.0f));
+            mLastValidAimDirection[player] = glm::vec2(1.0f, 0.0f);
         }
     }
     
@@ -212,17 +214,27 @@ bool InputHandler::JoystickActive(Player player) {
 
 glm::vec2 InputHandler::LastValidAimDirection(Player player) const
 {
-    return mLastValidAimDirection.at(player);
+    return mLastValidAimDirection[player];
 }
 
 void InputHandler::SetLastValidAimDirection(Player player, glm::vec2 direction)
 {
-    mLastValidAimDirection.at(player) = direction;
+    mLastValidAimDirection[player] = direction;
 }
 
 double InputHandler::MoveThreshold() const
 {
     return mMoveThreshold;
+}
+
+void InputHandler::SetAimThreshold(double aimThreshold)
+{
+    mAimThreshold = aimThreshold;
+}
+
+void InputHandler::SetMoveThreshold(double moveThreshold)
+{
+    mMoveThreshold = moveThreshold;
 }
 
 double InputHandler::AimThreshold() const

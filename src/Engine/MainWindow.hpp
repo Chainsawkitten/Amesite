@@ -37,6 +37,13 @@ class MainWindow {
          */
         void SetVsync(bool vsync);
 
+        /// Set controller thresholds
+        /**
+         * @param aimTheshsold, threshold for aiming vector.
+         * @param moveThreshold, threshold for move vector.
+         */
+        void SetControllerThresholds(double aimThreshold, double moveThreshold);
+
         /// Update
         void Update();
         

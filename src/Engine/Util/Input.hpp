@@ -210,6 +210,12 @@ class InputHandler {
 
         /// Get the threshold for axis on the controller
         double MoveThreshold() const;
+
+        /// Set the threshold for axis on the controller
+        void SetAimThreshold(double aimThreshold);
+
+        /// Set the threshold for axis on the controller
+        void SetMoveThreshold(double moveThreshold);
         
     private:
         static InputHandler* mActiveInstance;
@@ -237,7 +243,7 @@ class InputHandler {
         double mScroll;
 
         // Stores the last valid direction for player aiming.
-        std::vector<glm::vec2> mLastValidAimDirection;
+        glm::vec2 mLastValidAimDirection[PLAYERS];
         
         // Text input.
         std::string mText, mTempText;
@@ -246,8 +252,8 @@ class InputHandler {
         bool mJoystickActive[PLAYERS - 1];
         
         // Joystick thresholds
-        const double mMoveThreshold = 0.5;
-        const double mAimThreshold = 0.5;
+        double mMoveThreshold;
+        double mAimThreshold;
 };
 
 /// Get currently active input handler.

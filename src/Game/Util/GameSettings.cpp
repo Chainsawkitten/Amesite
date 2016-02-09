@@ -16,6 +16,9 @@ GameSettings::GameSettings() {
     AddBoolSetting("Borderless", "Graphics", "Borderless Window", false);
     AddLongSetting("Target FPS", "Graphics", "Target FPS", 60);
     AddBoolSetting("VSync", "Graphics", "VSync", false);
+
+    AddDoubleSetting("Aim Threshold", "Controller", "Aim Threshold", 0.5);
+    AddDoubleSetting("Move Threshold", "Controller", "Move Threshold", 0.5);
 }
 
 GameSettings& GameSettings::GetInstance() {

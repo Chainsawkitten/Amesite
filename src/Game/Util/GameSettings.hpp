@@ -16,6 +16,8 @@
  * Borderless          | Use a borderless window.            | bool   | false
  * Target FPS          | FPS to aim for when rendering.      | long   | 60
  * VSync               | Whether to enable vsync.            | bool   | false
+ * Aim Threshold       | Deadzone on controller aim vector   | double | 0.5
+ * Move Threshold      | Deadzone on controller move vector  | double | 0.5
  */
 class GameSettings : public Settings {
     public:
