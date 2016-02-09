@@ -88,7 +88,8 @@ template <typename T> T* Entity::AddComponent() {
 template <typename T> void Entity::RemoveComponent() {
     const std::type_info* componentType = &typeid(T*);
     if (components.find(componentType) != components.end()) {
-        delete components[componentType];
+        T* component = components[componentType];
+        delete component;
         components.erase(componentType);
         mScene->RemoveComponentFromList(component, componentType);
     }

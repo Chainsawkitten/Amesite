@@ -17,6 +17,9 @@ GameSettings::GameSettings() {
     AddLongSetting("Target FPS", "Graphics", "Target FPS", 60);
     AddBoolSetting("VSync", "Graphics", "VSync", false);
 
+    AddBoolSetting("FXAA", "Graphics", "FXAA", false);
+    AddDoubleSetting("Gamma", "Graphics", "Brightness", 2.2);
+       
     AddDoubleSetting("Aim Threshold", "Controller", "Aim Threshold", 0.5);
     AddDoubleSetting("Move Threshold", "Controller", "Move Threshold", 0.5);
 }

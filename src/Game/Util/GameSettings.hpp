@@ -16,6 +16,8 @@
  * Borderless          | Use a borderless window.            | bool   | false
  * Target FPS          | FPS to aim for when rendering.      | long   | 60
  * VSync               | Whether to enable vsync.            | bool   | false
+ * FXAA                | Whether to enable fxaa.             | bool   | false
+ * Gamma               | Gamma brightness.                   | double | 2.2
  * Aim Threshold       | Deadzone on controller aim vector   | double | 0.5
  * Move Threshold      | Deadzone on controller move vector  | double | 0.5
  */
