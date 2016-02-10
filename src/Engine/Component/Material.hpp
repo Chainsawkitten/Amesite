@@ -18,6 +18,18 @@ namespace Component {
             /// Destructor.
             ~Material();
             
+            /// Set diffuse texture from file.
+            /**
+             * @param filename Path to the image file.
+             */
+            void SetDiffuse(const char* filename);
+            
+            /// Set specular texture from file.
+            /**
+             * @param filename Path to the image file.
+             */
+            void SetSpecular(const char* filename);
+            
             /// Diffuse texture.
             Texture2D* diffuse;
             

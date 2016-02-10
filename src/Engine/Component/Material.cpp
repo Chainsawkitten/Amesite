@@ -14,3 +14,17 @@ Material::~Material() {
     Resources().FreeTexture2DFromFile(diffuse);
     Resources().FreeTexture2DFromFile(specular);
 }
+
+void Material::SetDiffuse(const char* filename) {
+    if (diffuse != nullptr)
+        Resources().FreeTexture2DFromFile(diffuse);
+    
+    diffuse = Resources().CreateTexture2DFromFile(filename, true);
+}
+
+void Material::SetSpecular(const char* filename) {
+    if (specular != nullptr)
+        Resources().FreeTexture2DFromFile(specular);
+    
+    specular = Resources().CreateTexture2DFromFile(filename);
+}
