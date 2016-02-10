@@ -1,8 +1,10 @@
 #include "Picking.hpp"
 #include "../Util/Log.hpp"
+#include "../MainWindow.hpp"
 
-glm::vec4 Picking::createWorldRay(const glm::vec2& mouseCoordinates, const glm::vec2& screenSize, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
+glm::vec4 Picking::createWorldRay(const glm::vec2& mouseCoordinates, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
     //Get NDC x and y
+    glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
     float vx = ((2.0f * mouseCoordinates.x) / screenSize.x) - 1.0f;
     float vy = 1.0f - ((2.0f * mouseCoordinates.y) / screenSize.y);
 

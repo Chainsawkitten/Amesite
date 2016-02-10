@@ -167,16 +167,15 @@ void ControlScheme::AlwaysShoot(Component::Controller* controller, float deltaTi
 
 void ControlScheme::MouseShoot(Component::Controller * controller, float deltaTime) { 
     Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
-    InputHandler::MOUSE;
+    glm::vec2 mouseCoordinates( Input()->CursorX(), Input()->CursorY() );
 
     Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
     if (spawnerComponent != nullptr) {
         spawnerComponent->timeSinceSpawn += deltaTime;
         if (Input()->Pressed(controller->playerID, InputHandler::SHOOT) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
-            //glm::vec2 direction = glm::vec2(Input()->ButtonValue(controller->playerID, InputHandler::AIM_X), Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z));
-
-            glm::vec4 directionInPlane = Picking::createPlayerAimDirection(,transformComponent->position,);
-            glm::vec2 direction(directionInPlane.x, directionInPlane.z)
+            glm::vec4 worldRay = Picking::createWorldRay( mouseCoordinates, , );
+            glm::vec4 directionInPlane = Picking::createPlayerAimDirection( worldRay , glm::vec4(transformComponent->position, 1.f), );
+            glm::vec2 direction(directionInPlane.x, directionInPlane.z);
             float bulletSpeed = 40.f;
             GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y), 0);
             spawnerComponent->timeSinceSpawn = 0.0f;
