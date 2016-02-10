@@ -9,6 +9,7 @@
 #include <Component/Transform.hpp>
 #include "../Component/Spawner.hpp"
 #include "../Util/GameEntityFactory.hpp"
+#include <Util/Picking.hpp>
 
 void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
 
@@ -159,6 +160,25 @@ void ControlScheme::AlwaysShoot(Component::Controller* controller, float deltaTi
             
             float bulletSpeed = 10.f;
             GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y), 1);
+            spawnerComponent->timeSinceSpawn = 0.0f;
+        }
+    }
+}
+
+void ControlScheme::MouseShoot(Component::Controller * controller, float deltaTime) { 
+    Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
+    InputHandler::MOUSE;
+
+    Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
+    if (spawnerComponent != nullptr) {
+        spawnerComponent->timeSinceSpawn += deltaTime;
+        if (Input()->Pressed(controller->playerID, InputHandler::SHOOT) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
+            //glm::vec2 direction = glm::vec2(Input()->ButtonValue(controller->playerID, InputHandler::AIM_X), Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z));
+
+            glm::vec4 directionInPlane = Picking::createPlayerAimDirection(,transformComponent->position,);
+            glm::vec2 direction(directionInPlane.x, directionInPlane.z)
+            float bulletSpeed = 40.f;
+            GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y), 0);
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }

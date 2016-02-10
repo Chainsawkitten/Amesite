@@ -54,4 +54,6 @@ namespace ControlScheme {
      */
     void AlwaysShoot(Component::Controller* controller, float deltaTime);
 
+    void MouseShoot(Component::Controller* controller, float deltaTime);
+
 }
