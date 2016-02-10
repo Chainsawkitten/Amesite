@@ -73,6 +73,7 @@ void RenderSystem::Render(Scene& scene) {
                 // Render model.
                 glm::mat4 modelMat;
                 Component::Animation* animationComponent = model->GetComponent<Component::Animation>();
+                Component::Transform* transform = model->GetComponent<Component::Transform>();
                 if (animationComponent != nullptr)
                     modelMat = animationComponent->animationMatrix;
                 else

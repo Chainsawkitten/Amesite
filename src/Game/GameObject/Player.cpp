@@ -15,6 +15,8 @@
 #include <Engine/Component/Physics.hpp>
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/SpotLight.hpp>
+#include <Engine/Component/PointLight.hpp>
+
 
 #include <Engine/Component/Animation.hpp>
 
@@ -34,6 +36,12 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     body->AddComponent<Component::Health>()->removeOnLowHealth = false;
     body->AddComponent<Component::Spawner>()->delay = 0.05f;
+    Component::Animation::AnimationClip* idleBody = body->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
+    idleBody->CreateKeyFrame(glm::vec3(0.1, 0, 0), 2, 1, 0, 1.5, false, true);
+    idleBody->CreateKeyFrame(glm::vec3(0, 0.1, 0.1), -1, -2, 1, 1.5, false, true);
+    idleBody->CreateKeyFrame(glm::vec3(0.1, 0.1, -0.1), -2, 1, 2, 1.5, false, true);
+    idleBody->CreateKeyFrame(glm::vec3(-0.1, 0.1, 0.1), 2, 2, 1, 1.5, false, true);
+    body->GetComponent<Component::Animation>()->Start("idle");
     mEntityVector.push_back(body);
 
     Entity* spotLight = mScene->CreateEntity();
@@ -53,11 +61,13 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     radar->AddComponent<Component::RelativeTransform>()->parentEntity = body;
     radar->GetComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
     radar->AddComponent<Component::Mesh>()->geometry = body->GetComponent<Component::Mesh>()->geometry;
-    Component::Animation::AnimationClip* dance = radar->AddComponent<Component::Animation>()->CreateAnimationClip();
-    dance->CreateKeyFrame(glm::vec3(3, 0, 0), 0, 0, 0, 2);
-    dance->CreateKeyFrame(glm::vec3(0, 0, 3), 360, 0, 0, 1);
-    dance->CreateKeyFrame(glm::vec3(-3, 0, 0), 720, 0, 0, 2);
-    dance->CreateKeyFrame(glm::vec3(0, 0, -3), 360, 0, 0, 1);
+    radar->AddComponent<Component::PointLight>()->attenuation = 0.5f;
+    Component::Animation::AnimationClip* idleRadar = radar->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
+    idleRadar->CreateKeyFrame(glm::vec3(3, 0, 0), 0, 0, 0, 1, true, false);
+    idleRadar->CreateKeyFrame(glm::vec3(0, 0, 3), 360, 0, 0, 1, true, false);
+    idleRadar->CreateKeyFrame(glm::vec3(-3, 0, 0), 720, 0, 0, 1, true, false);
+    idleRadar->CreateKeyFrame(glm::vec3(0, 0, -3), 360, 0, 0, 1, true, false);
+    radar->GetComponent<Component::Animation>()->Start("idle");
     mEntityVector.push_back(radar);
 }
 

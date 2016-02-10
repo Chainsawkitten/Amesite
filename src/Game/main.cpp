@@ -40,13 +40,13 @@
 
 #include <thread>
 #include <vector>
-//#include <crtdbg.h>
+#include <crtdbg.h>
 
 bool GridCollide(Entity* entity, float deltaTime);
 
 int main() {
     
-    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     
     // Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
@@ -117,13 +117,13 @@ int main() {
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.1f, 0.1f, 0.1f);
     dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.2f;
 
-    /*GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));*/
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
 
     // Main game loop.
     double lastTime = glfwGetTime();

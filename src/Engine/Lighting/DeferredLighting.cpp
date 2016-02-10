@@ -14,6 +14,7 @@
 #include "../Component/DirectionalLight.hpp"
 #include "../Component/PointLight.hpp"
 #include "../Component/SpotLight.hpp"
+#include "../Component/Animation.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 DeferredLighting::DeferredLighting(const glm::vec2& size) {
@@ -175,8 +176,18 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Entity* lightEntity = pointLights[i]->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
-            glm::vec4 direction = viewMat * (transform->GetOrientation() * glm::vec4(0.f, 0.f, 1.f, 0.f));
-            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * glm::vec4(transform->GetWorldPosition(), 1.0))[0]);
+            glm::mat4 modelMat;
+            glm::mat4 origentationMat;
+            Component::Animation* animationComponent = lightEntity->GetComponent<Component::Animation>();
+            if (animationComponent != nullptr) {
+                modelMat = animationComponent->animationMatrix;
+                origentationMat = animationComponent->orientation;
+            } else {
+                modelMat = transform->modelMatrix;
+                origentationMat = transform->GetOrientation();
+            }
+            glm::vec4 direction = viewMat * (origentationMat * glm::vec4(0.f, 0.f, 1.f, 0.f));
+            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(modelMat[3][0], modelMat[3][1], modelMat[3][2]), 1.0)))[0]);
             glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &pointLights[i]->color[0]);
             glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), pointLights[i]->attenuation);
             glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), pointLights[i]->ambientCoefficient);
@@ -193,8 +204,19 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Entity* lightEntity = spotLights[i]->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
-            glm::vec4 direction = viewMat * (transform->GetOrientation() * glm::vec4(0.f, 0.f, 1.f, 0.f));
-            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * glm::vec4(transform->GetWorldPosition(), 1.0))[0]);
+            glm::mat4 modelMat;
+            glm::mat4 origentationMat;
+            Component::Animation* animationComponent = lightEntity->GetComponent<Component::Animation>();
+            if (animationComponent != nullptr) {
+                modelMat = animationComponent->animationMatrix;
+                origentationMat = animationComponent->orientation;
+            }
+            else {
+                modelMat = transform->modelMatrix;
+                origentationMat = transform->GetOrientation();
+            }
+            glm::vec4 direction = viewMat * (origentationMat * glm::vec4(0.f, 0.f, 1.f, 0.f));
+            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(modelMat[3][0], modelMat[3][1], modelMat[3][2]), 1.0)))[0]);
             glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &spotLights[i]->color[0]);
             glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), spotLights[i]->attenuation);
             glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), spotLights[i]->ambientCoefficient);

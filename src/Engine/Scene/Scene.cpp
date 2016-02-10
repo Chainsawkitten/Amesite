@@ -62,8 +62,13 @@ void Scene::UpdateModelMatrices() {
 
 void Scene::UpdateAnimationMatrices() {
     std::vector<Component::Animation*> animationVector = GetAll<Component::Animation>();
-    for (auto animationComponent : animationVector)
-        animationComponent->animationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix * animationComponent->animationMatrix;
+    for (auto animationComponent : animationVector) {
+        if (animationComponent->GetActiveAnimationClip() == nullptr)
+            animationComponent->animationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix;
+        else
+            animationComponent->animationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix * animationComponent->animationMatrix;
+    }
+        
 }
 
 void Scene::RemoveEntity(Entity* entity) {
