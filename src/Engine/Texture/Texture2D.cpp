@@ -50,6 +50,8 @@ Texture2D::Texture2D(const char* filename, bool srgb) {
     mVertexShader = Resources().CreateShader(DEFAULT2D_VERT, DEFAULT2D_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragmentShader = Resources().CreateShader(TEXTURE2D_FRAG, TEXTURE2D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
+    
+    mIsFromFile = true;
 }
 
 Texture2D::Texture2D(const char *source, int sourceLength, bool srgb) {
@@ -87,6 +89,8 @@ Texture2D::Texture2D(const char *source, int sourceLength, bool srgb) {
     mVertexShader = Resources().CreateShader(DEFAULT2D_VERT, DEFAULT2D_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragmentShader = Resources().CreateShader(TEXTURE2D_FRAG, TEXTURE2D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
+    
+    mIsFromFile = false;
 }
 
 Texture2D::~Texture2D() {
@@ -151,4 +155,8 @@ void Texture2D::Render(const glm::vec2 &position, const glm::vec2 &size) const {
         glEnable(GL_DEPTH_TEST);
     if (!blend)
         glDisable(GL_BLEND);
+}
+
+bool Texture2D::IsFromFile() const {
+    return mIsFromFile;
 }

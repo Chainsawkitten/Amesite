@@ -11,20 +11,20 @@ Material::Material(Entity* entity) : SuperComponent(entity) {
 }
 
 Material::~Material() {
-    Resources().FreeTexture2DFromFile(diffuse);
-    Resources().FreeTexture2DFromFile(specular);
+    Resources().FreeTexture2D(diffuse);
+    Resources().FreeTexture2D(specular);
 }
 
 void Material::SetDiffuse(const char* filename) {
     if (diffuse != nullptr)
-        Resources().FreeTexture2DFromFile(diffuse);
+        Resources().FreeTexture2D(diffuse);
     
     diffuse = Resources().CreateTexture2DFromFile(filename, true);
 }
 
 void Material::SetSpecular(const char* filename) {
     if (specular != nullptr)
-        Resources().FreeTexture2DFromFile(specular);
+        Resources().FreeTexture2D(specular);
     
     specular = Resources().CreateTexture2DFromFile(filename);
 }
