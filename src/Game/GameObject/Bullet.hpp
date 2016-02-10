@@ -11,7 +11,7 @@ namespace GameObject {
         public:
             /// Create %Bullet
             /**
-             * @param scene Pointer to which Scene %Bullet Enitie's are contained.
+             * @param scene Pointer to which Scene %Bullet Enities' are contained.
              */
             Bullet(Scene* scene);
            

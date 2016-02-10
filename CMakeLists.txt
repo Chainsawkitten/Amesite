@@ -67,6 +67,11 @@ set(EMBEDDED_INPUT
         shaders/SingleColor2D.frag
         shaders/Texture2D.frag
         shaders/Post.vert
+        shaders/PostCopy.frag
+        shaders/PostColor.frag
+        shaders/PostFXAA.frag
+        shaders/PostFog.frag
+        shaders/PostGamma.frag
         shaders/Deferred.frag
         shaders/Particle.vert
         shaders/Particle.geom
@@ -116,6 +121,7 @@ endif(DOXYGEN_FOUND)
 ## Engine ##
 set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
+        src/Engine/RenderTarget.cpp
         src/Engine/Resources.cpp
         src/Engine/Audio/Listener.cpp
         src/Engine/Audio/SoundBuffer.cpp
@@ -155,11 +161,17 @@ set(ENGINE_SRCS
         src/Engine/System/ParticleRenderSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
+        src/Engine/PostProcessing/PostProcessing.cpp
+        src/Engine/PostProcessing/ColorFilter.cpp
+        src/Engine/PostProcessing/FXAAFilter.cpp
+        src/Engine/PostProcessing/FogFilter.cpp
+        src/Engine/PostProcessing/GammaCorrectionFilter.cpp
         src/Engine/GameObject/SuperGameObject.cpp
     )
 
 set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
+        src/Engine/RenderTarget.hpp
         src/Engine/Resources.hpp
         src/Engine/Audio/Listener.hpp
         src/Engine/Audio/SoundBuffer.hpp
@@ -200,6 +212,12 @@ set(ENGINE_HEADERS
         src/Engine/System/ParticleRenderSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
+        src/Engine/PostProcessing/PostProcessing.hpp
+        src/Engine/PostProcessing/Filter.hpp
+        src/Engine/PostProcessing/ColorFilter.hpp
+        src/Engine/PostProcessing/FXAAFilter.hpp
+        src/Engine/PostProcessing/FogFilter.hpp
+        src/Engine/PostProcessing/GammaCorrectionFilter.hpp
         src/Engine/GameObject/SuperGameObject.hpp
     )
 
@@ -220,12 +238,20 @@ set(GAME_SRCS
         src/Game/System/ControllerSystem.cpp
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
+        src/Game/System/LifeTimeSystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
-        src/Game/GameObject/Bullet.cpp
         src/Game/Component/CameraFollow.cpp
+        src/Game/GameScenes/MainScene.cpp
+        src/Game/GameScenes/EmptyScene.cpp
+        src/Game/Component/LifeTime.cpp
+        src/Game/GameObject/Bullet.cpp
+        src/Game/GameObject/Player.cpp
+        src/Game/GameObject/Camera.cpp
+        src/Game/GameObject/Enemy.cpp
+        src/Game/GameObject/Cave.cpp
     )
 
 set(GAME_HEADERS
@@ -238,12 +264,20 @@ set(GAME_HEADERS
         src/Game/System/ControllerSystem.hpp
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
+        src/Game/System/LifeTimeSystem.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
-        src/Game/GameObject/Bullet.hpp
         src/Game/Component/CameraFollow.hpp
+        src/Game/GameScenes/MainScene.hpp
+        src/Game/GameScenes/EmptyScene.hpp
+        src/Game/Component/LifeTime.hpp
+        src/Game/GameObject/Bullet.hpp
+        src/Game/GameObject/Player.hpp
+        src/Game/GameObject/Camera.hpp
+        src/Game/GameObject/Enemy.hpp
+        src/Game/GameObject/Cave.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

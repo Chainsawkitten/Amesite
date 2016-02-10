@@ -23,7 +23,7 @@ void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
         z = Input()->Pressed(controller->playerID, InputHandler::DOWN) - Input()->Pressed(controller->playerID, InputHandler::UP);
     }
 
-    glm::vec3 speedVec = glm::vec3(x * controller->mSpeed * deltaTime, 0, z * controller->mSpeed * deltaTime);
+    glm::vec3 speedVec = glm::vec3(x * controller->speed * deltaTime, 0, z * controller->speed * deltaTime);
 
     Component::Physics* physicsComponent = controller->entity->GetComponent<Component::Physics>();
 
@@ -34,7 +34,7 @@ void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
         else
             physicsComponent->acceleration = glm::vec3(0, 0, 0);
     } else if (glm::abs(x) + glm::abs(z) > 0.3f) {
-        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->mSpeed, 0, z * deltaTime));
+        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->speed, 0, z * deltaTime));
     }
 }
 
@@ -110,7 +110,7 @@ void ControlScheme::ArrowKeysMove(Component::Controller* controller, float delta
     bool right = Input()->Pressed(controller->playerID, InputHandler::RIGHT);
     bool left = Input()->Pressed(controller->playerID, InputHandler::LEFT);
 
-    glm::vec3 speedVec = glm::vec3((right - left) * controller->mSpeed * deltaTime, 0.f, (down - up) * controller->mSpeed * deltaTime);
+    glm::vec3 speedVec = glm::vec3((right - left) * controller->speed * deltaTime, 0.f, (down - up) * controller->speed * deltaTime);
 
     Component::Physics* physicsComponent = entity->GetComponent<Component::Physics>();
 
@@ -167,9 +167,9 @@ void ControlScheme::AutoRotate(Component::Controller* controller, float deltaTim
 
     // If there's a physics component attached we use it to move.
     if (physicsComponent != nullptr)
-        physicsComponent->angularVelocity = glm::vec3(0, controller->mSpeed, 0);
+        physicsComponent->angularVelocity = glm::vec3(0, controller->speed, 0);
     else
-        entity->GetComponent<Component::Transform>()->yaw += controller->mSpeed;
+        entity->GetComponent<Component::Transform>()->yaw += controller->speed;
 
 }
 
@@ -179,7 +179,7 @@ void ControlScheme::RandomMove(Component::Controller* controller, float deltaTim
     float x = 1 - ((rand() % 1000 + 1) / 1000.f) * 2;
     float z = 1 - ((rand() % 1000 + 1) / 1000.f) * 2;
 
-    glm::vec3 speedVec = glm::vec3(x * controller->mSpeed * deltaTime, 0, z * controller->mSpeed * deltaTime);
+    glm::vec3 speedVec = glm::vec3(x * controller->speed * deltaTime, 0, z * controller->speed * deltaTime);
 
     Component::Physics* physicsComponent = controller->entity->GetComponent<Component::Physics>();
 
@@ -191,7 +191,7 @@ void ControlScheme::RandomMove(Component::Controller* controller, float deltaTim
             physicsComponent->acceleration = glm::vec3(0, 0, 0);
     }
     else if (glm::abs(x) + glm::abs(z) > 0.3f) {
-        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->mSpeed, 0, z * deltaTime * controller->mSpeed));
+        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->speed, 0, z * deltaTime * controller->speed));
     }
 
 }

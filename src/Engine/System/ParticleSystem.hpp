@@ -30,6 +30,15 @@ namespace System {
 
                 /// Initial velocity.
                 glm::vec3 velocity;
+
+                /// Start, mid and end of life alpha of particle.
+                float alpha[3];
+
+                /// Color of the particle.
+                glm::vec3 color;
+
+                /// Texture index (for the texture atlas, left to right, top to bottom indexing)
+                float textureIndex;
             };
 
             /// Create a new particle system.
@@ -80,7 +89,7 @@ namespace System {
              void Update(Scene& scene, double time);
              
         private:
-            Scene* mScene;
+            Scene* mScene; 
             static ParticleSystem* mActiveInstance;
             // System properties
             unsigned int mParticleCount;

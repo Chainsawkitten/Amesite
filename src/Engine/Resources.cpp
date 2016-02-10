@@ -152,9 +152,9 @@ void ResourceManager::FreeSquare() {
         delete mSquare;
 }
 
-Texture2D* ResourceManager::CreateTexture2D(const char* data, int dataLength) {
+Texture2D* ResourceManager::CreateTexture2D(const char* data, int dataLength, bool srgb) {
     if (mTextures.find(data) == mTextures.end()) {
-        mTextures[data].texture = new Texture2D(data, dataLength);
+        mTextures[data].texture = new Texture2D(data, dataLength, srgb);
         mTexturesInverse[mTextures[data].texture] = data;
         mTextures[data].count = 1;
     } else {
@@ -175,9 +175,9 @@ void ResourceManager::FreeTexture2D(Texture2D* texture) {
     }
 }
 
-Texture2D* ResourceManager::CreateTexture2DFromFile(std::string filename) {
+Texture2D* ResourceManager::CreateTexture2DFromFile(std::string filename, bool srgb) {
     if (mTexturesFromFile.find(filename) == mTexturesFromFile.end()) {
-        mTexturesFromFile[filename].texture = new Texture2D(filename.c_str());
+        mTexturesFromFile[filename].texture = new Texture2D(filename.c_str(), srgb);
         mTexturesFromFileInverse[mTexturesFromFile[filename].texture] = filename;
         mTexturesFromFile[filename].count = 1;
     } else {

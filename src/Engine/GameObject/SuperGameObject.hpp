@@ -13,7 +13,7 @@ namespace GameObject {
         public:
             /// Create %SuperGameObject
             /**
-             * @param scene Pointer to which Scene %SuperGameObject Enitie's are contained.
+             * @param scene Pointer to which Scene %SuperGameObject Enities' are contained.
              */
             SuperGameObject(Scene* scene);
 

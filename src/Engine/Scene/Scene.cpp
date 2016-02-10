@@ -1,10 +1,12 @@
 #include "Scene.hpp"
 
 #include "../Entity/Entity.hpp"
+#include <Engine/GameObject/SuperGameObject.hpp>
+
 #include <algorithm>
 
 Scene::Scene() {
-    mParticlesVector = new std::vector<System::ParticleSystem::Particle>;
+
 }
 
 Scene::~Scene() {
@@ -36,12 +38,19 @@ void Scene::ClearAll() {
     mCollisionVector.clear();
     mCollisionVector.shrink_to_fit();
 
+    for (GameObject::SuperGameObject* gameObject : mGameObjectVector)
+        delete gameObject;
+    mGameObjectVector.clear();
+    mGameObjectVector.shrink_to_fit();
+
     for (auto& it : mComponents) {
         for (Component::SuperComponent* component : it.second)
             delete component;
     }
     mComponents.clear();
-    delete mParticlesVector;
+
+    mParticlesVector.clear();
+    mParticlesVector.shrink_to_fit();
 }
 
 void Scene::UpdateModelMatrices() {
@@ -52,13 +61,6 @@ void Scene::UpdateModelMatrices() {
 
 void Scene::RemoveEntity(Entity* entity) {
     entity->Clear();
-    /*for (auto& it : mComponents) {
-        if (entity->components[it.first] != nullptr) {
-            it.second.erase(std::remove(it.second.begin(), it.second.end(), entity->components[it.first]), it.second.end());
-            delete entity->components[it.first];
-        }
-    }*/
-
     mEntityVector.erase(std::remove(mEntityVector.begin(), mEntityVector.end(), entity), mEntityVector.end());
     delete entity;
 }

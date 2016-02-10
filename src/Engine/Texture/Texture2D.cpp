@@ -15,7 +15,7 @@
 #include "../Geometry/Square.hpp"
 #include "../MainWindow.hpp"
 
-Texture2D::Texture2D(const char* filename) {
+Texture2D::Texture2D(const char* filename, bool srgb) {
     glGenTextures(1, &mTexID);
     glBindTexture(GL_TEXTURE_2D, mTexID);
     
@@ -27,7 +27,7 @@ Texture2D::Texture2D(const char* filename) {
         Log() << "Couldn't load image " << filename << "\n";
     
     // Give the image to OpenGL.
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, Format(components), GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, srgb ? GL_SRGB_ALPHA : GL_RGBA, mWidth, mHeight, 0, Format(components), GL_UNSIGNED_BYTE, data);
     
     stbi_image_free(data);
     
@@ -52,7 +52,7 @@ Texture2D::Texture2D(const char* filename) {
     mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
 }
 
-Texture2D::Texture2D(const char *source, int sourceLength) {
+Texture2D::Texture2D(const char *source, int sourceLength, bool srgb) {
     glGenTextures(1, &mTexID);
     glBindTexture(GL_TEXTURE_2D, mTexID);
     
@@ -64,7 +64,7 @@ Texture2D::Texture2D(const char *source, int sourceLength) {
         Log() << "Couldn't load headerized image.\n";
     
     // Give the image to OpenGL.
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, Format(components), GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, srgb ? GL_SRGB_ALPHA : GL_RGBA, mWidth, mHeight, 0, Format(components), GL_UNSIGNED_BYTE, data);
     
     stbi_image_free(data);
     

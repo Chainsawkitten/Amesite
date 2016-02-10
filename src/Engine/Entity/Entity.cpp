@@ -13,8 +13,8 @@ void Entity::AddComponent(Component::SuperComponent* component, const std::type_
 
 void Entity::Clear() {
     for (auto& it : components) {
-        delete it.second;
         mScene->RemoveComponentFromList(it.second, it.first);
+        delete it.second;
     }
     components.clear();
 }
