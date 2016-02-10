@@ -139,7 +139,7 @@ void MainScene::Update(float deltaTime) {
         postProcessing->ApplyFilter(fxaaFilter);
     }
     
-    gammaCorrectionFilter->SetBrightness(GameSettings::GetInstance().GetDouble("Gamma"));
+    gammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
     postProcessing->ApplyFilter(gammaCorrectionFilter);
     
     postProcessing->Render();
