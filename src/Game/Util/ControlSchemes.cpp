@@ -19,7 +19,7 @@ void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
     double z = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_Z);
     glm::vec2 direction = glm::vec2(x, z);
     
-    if (glm::length(direction)<Input()->MoveThreshold()) {
+    if (glm::length(direction)<Input()->MoveDeadzone()) {
         x = Input()->ButtonValue(controller->playerID, InputHandler::RIGHT) - Input()->ButtonValue(controller->playerID, InputHandler::LEFT);
         z = Input()->ButtonValue(controller->playerID, InputHandler::DOWN) - Input()->ButtonValue(controller->playerID, InputHandler::UP);
         direction = glm::vec2(x, z);
@@ -31,11 +31,11 @@ void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
 
     // If there's a physics component attached we use it to move.
     if (physicsComponent != nullptr) {
-        if (glm::length(direction)>Input()->MoveThreshold())
+        if (glm::length(direction)>Input()->MoveDeadzone())
             physicsComponent->acceleration = speedVec;
         else
             physicsComponent->acceleration = glm::vec3(0, 0, 0);
-    } else if (glm::length(direction)>Input()->MoveThreshold()) {
+    } else if (glm::length(direction)>Input()->MoveDeadzone()) {
         controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->speed, 0, z * deltaTime));
     }
 }
@@ -47,7 +47,7 @@ void ControlScheme::StickRotate(Component::Controller* controller, float deltaTi
     double b = Input()->ButtonValue(controller->playerID, InputHandler::AIM_X);
     glm::vec2 direction = glm::vec2(a, b);
 
-    if (glm::length(direction) > Input()->AimThreshold()) {
+    if (glm::length(direction) > Input()->AimDeadzone()) {
         Input()->SetLastValidAimDirection(controller->playerID, glm::vec2(b, a));
         if(a >= 0)
             entity->GetComponent<Component::Transform>()->yaw = (float)glm::degrees(glm::atan(b / a));
@@ -135,7 +135,7 @@ void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTi
         if (Input()->Pressed(controller->playerID, InputHandler::SHOOT) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
             glm::vec2 direction = glm::vec2(Input()->ButtonValue(controller->playerID, InputHandler::AIM_X), Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z));
             float directionLength = glm::length(direction);
-            if (directionLength < Input()->AimThreshold()) {
+            if (directionLength < Input()->AimDeadzone()) {
                 direction = Input()->LastValidAimDirection(controller->playerID);
             } else {
                 direction = direction / directionLength;

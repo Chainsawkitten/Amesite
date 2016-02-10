@@ -219,22 +219,22 @@ void InputHandler::SetLastValidAimDirection(Player player, glm::vec2 direction)
     mLastValidAimDirection[player] = direction;
 }
 
-double InputHandler::MoveThreshold() const
+double InputHandler::MoveDeadzone() const
 {
     return mMoveDeadzone;
 }
 
-void InputHandler::SetAimThreshold(double aimThreshold)
+void InputHandler::SetAimDeadzone(double aimThreshold)
 {
     mAimDeadzone = aimThreshold;
 }
 
-void InputHandler::SetMoveThreshold(double moveThreshold)
+void InputHandler::SetMoveDeadzone(double moveThreshold)
 {
     mMoveDeadzone = moveThreshold;
 }
 
-double InputHandler::AimThreshold() const
+double InputHandler::AimDeadzone() const
 {
     return mAimDeadzone;
 }

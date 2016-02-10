@@ -205,17 +205,17 @@ class InputHandler {
         */
         void SetLastValidAimDirection(Player player, glm::vec2 direction);
 
-        /// Get the threshold for axis on the controller
-        double AimThreshold() const;
+        /// Get the deadzone for axis on the controller
+        double AimDeadzone() const;
 
-        /// Get the threshold for axis on the controller
-        double MoveThreshold() const;
+        /// Get the deadzone for axis on the controller
+        double MoveDeadzone() const;
 
-        /// Set the threshold for axis on the controller
-        void SetAimThreshold(double aimThreshold);
+        /// Set the deadzone for axis on the controller
+        void SetAimDeadzone(double aimDeadzone);
 
-        /// Set the threshold for axis on the controller
-        void SetMoveThreshold(double moveThreshold);
+        /// Set the deadzone for axis on the controller
+        void SetMoveDeadzone(double moveDeadzone);
         
     private:
         static InputHandler* mActiveInstance;
