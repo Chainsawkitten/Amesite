@@ -53,13 +53,29 @@ endfunction()
 
 # Copy resources
 set(RESOURCES
-    assets/TestTexture.png
-    assets/DustParticle.png
-    assets/DefaultDiffuse.png
-    assets/DefaultSpecular.png
-)
+        assets/TestTexture.png
+        assets/DustParticle.png
+        assets/DefaultDiffuse.png
+        assets/DefaultSpecular.png
+    )
 
-file(COPY ${RESOURCES} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
+add_custom_target(ResourceTarget ALL)
+
+function(CopyAsset inputfile outdir)
+    get_filename_component(basefile ${inputfile} NAME)
+    set(outputfile ${outdir}/${basefile})
+    
+    add_custom_command(
+        TARGET ResourceTarget
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${inputfile} ${outputfile}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Copying ${inputfile}"
+    )
+endfunction()
+
+foreach(item ${RESOURCES})
+    CopyAsset(${item} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
+endforeach()
 
 # Setup embedded source
 set(EMBEDDED_INPUT
