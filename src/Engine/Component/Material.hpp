@@ -24,6 +24,12 @@ namespace Component {
              */
             void SetDiffuse(const char* filename);
             
+            /// Set normal texture from file.
+            /**
+             * @param filename Path to the image file.
+             */
+            void SetNormal(const char* filename);
+            
             /// Set specular texture from file.
             /**
              * @param filename Path to the image file.
@@ -32,6 +38,9 @@ namespace Component {
             
             /// Diffuse texture.
             Texture2D* diffuse;
+            
+            /// Normal texture.
+            Texture2D* normal;
             
             /// Specular texture.
             Texture2D* specular;

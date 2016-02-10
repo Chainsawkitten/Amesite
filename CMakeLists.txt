@@ -56,6 +56,7 @@ set(RESOURCES
         assets/TestTexture.png
         assets/DustParticle.png
         assets/DefaultDiffuse.png
+        assets/DefaultNormal.png
         assets/DefaultSpecular.png
     )
 
