@@ -2,6 +2,7 @@
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <Util/Input.hpp>
 #include "Game/Util/CameraUpdate.hpp"
@@ -30,6 +31,9 @@
 #include <PostProcessing/GammaCorrectionFilter.hpp>
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
+#include <Util/Picking.hpp>
+#include <Util/Input.hpp>
+#include <Util/Log.hpp>
 
 using namespace GameObject;
 
@@ -52,6 +56,8 @@ DanielScene::DanielScene() {
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_X, InputHandler::MOUSE, InputHandler::RIGHT_STICK_X, true);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::MOUSE, InputHandler::RIGHT_STICK_Y, true);
     
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
@@ -107,7 +113,13 @@ void DanielScene::Update(float deltaTime) {
             player->GetComponent<Component::Health>()->health = player->GetComponent<Component::Health>()->maxHealth;
         }
     }
-    
+
+    glm::mat4 viewMatrix = mMainCamera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -mMainCamera->GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 projectionMatrix = mMainCamera->GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
+    glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
+    glm::vec4 rayDirection = createWorldRay(mouseCoordinates, MainWindow::GetInstance()->GetSize(), viewMatrix, projectionMatrix);
+    glm::vec4 aimDirection = createPlayerAimDirection(rayDirection, glm::vec4(mPlayers[0]->GetComponent<Component::Transform>()->position, 1.f), glm::vec4(mMainCamera->GetComponent<Component::Transform>()->position, 1.f) );
+
     // ParticleSystem
     mParticleSystem.Update(*this, deltaTime);
     

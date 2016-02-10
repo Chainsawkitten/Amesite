@@ -14,6 +14,7 @@
 
 #include "GameScenes/MainScene.hpp"
 #include "GameScenes/EmptyScene.hpp"
+#include "GameScenes/DanielScene.hpp"
 
 //#include <crtdbg.h>
 
