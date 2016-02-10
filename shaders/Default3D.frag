@@ -9,12 +9,15 @@ in VertexData {
 	vec2 texCoords;
 } vertexIn;
 
+uniform sampler2D baseImage;
+uniform sampler2D specularMap;
+
 layout(location = 0) out vec3 diffuseOut;
 layout(location = 1) out vec3 normalsOut;
 layout(location = 2) out vec3 specularOut;
 
 void main() {
-	diffuseOut = vec3(1.0, 0.0, 0.0);
+	diffuseOut = texture(baseImage, vertexIn.texCoords).rgb;
 	normalsOut = vertexIn.normal;
-	specularOut = vec3(1.0, 1.0, 1.0);
+	specularOut = texture(specularMap, vertexIn.texCoords).rgb;
 }

@@ -67,9 +67,16 @@ class Texture2D : public Texture {
          */
         void Render(const glm::vec2& position, const glm::vec2& size) const;
         
+        /// Get whether the texture was created from file.
+        /**
+         * @return true if the texture was loaded from a file, false otherwise.
+         */
+        bool IsFromFile() const;
+        
     private:
         GLuint mTexID;
         int mWidth, mHeight;
+        bool mIsFromFile;
         
         Geometry::Square* mSquare;
         

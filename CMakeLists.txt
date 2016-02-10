@@ -53,11 +53,29 @@ endfunction()
 
 # Copy resources
 set(RESOURCES
-    assets/TestTexture.png
-    assets/DustParticle.png
-)
+        assets/TestTexture.png
+        assets/DustParticle.png
+        assets/DefaultDiffuse.png
+        assets/DefaultSpecular.png
+    )
 
-file(COPY ${RESOURCES} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
+add_custom_target(ResourceTarget ALL)
+
+function(CopyAsset inputfile outdir)
+    get_filename_component(basefile ${inputfile} NAME)
+    set(outputfile ${outdir}/${basefile})
+    
+    add_custom_command(
+        TARGET ResourceTarget
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${inputfile} ${outputfile}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Copying ${inputfile}"
+    )
+endfunction()
+
+foreach(item ${RESOURCES})
+    CopyAsset(${item} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
+endforeach()
 
 # Setup embedded source
 set(EMBEDDED_INPUT
@@ -144,6 +162,7 @@ set(ENGINE_SRCS
         src/Engine/Component/Lens.cpp
         src/Engine/Component/Transform.cpp
         src/Engine/Component/Mesh.cpp
+        src/Engine/Component/Material.cpp
         src/Engine/Component/RelativeTransform.cpp
         src/Engine/Component/Physics.cpp
         src/Engine/Component/Collider2DRectangle.cpp
@@ -195,6 +214,7 @@ set(ENGINE_HEADERS
         src/Engine/Component/Lens.hpp
         src/Engine/Component/Transform.hpp
         src/Engine/Component/Mesh.hpp
+        src/Engine/Component/Material.hpp
         src/Engine/Component/RelativeTransform.hpp
         src/Engine/Component/Physics.hpp
         src/Engine/Component/Collider2DRectangle.hpp

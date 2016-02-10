@@ -15,6 +15,8 @@
 #include "../Component/Lens.hpp"
 #include "../Component/Transform.hpp"
 #include "../Component/Mesh.hpp"
+#include "../Component/Material.hpp"
+#include "../Texture/Texture2D.hpp"
 #include <string>
 
 #include "../Lighting/DeferredLighting.hpp"
@@ -66,17 +68,29 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
         // Finds models in scene.
         std::vector<Component::Mesh*> meshes = scene.GetAll<Component::Mesh>();
         for (unsigned int i = 0; i < meshes.size(); i++) {
-            if (meshes[i]->entity->GetComponent<Component::Transform>() != nullptr) {
-                Entity* model = meshes[i]->entity;
-                glBindVertexArray(model->GetComponent<Component::Mesh>()->geometry->GetVertexArray());
-
+            Entity* model = meshes[i]->entity;
+            Component::Transform* transform = model->GetComponent<Component::Transform>();
+            Component::Material* material = model->GetComponent<Component::Material>();
+            if (transform != nullptr && material != nullptr) {
+                glBindVertexArray(meshes[i]->geometry->GetVertexArray());
+                
+                //Set texture locations
+                glUniform1i(mShaderProgram->GetUniformLocation("baseImage"), 0);
+                glUniform1i(mShaderProgram->GetUniformLocation("specularMap"), 1);
+                
+                //Textures
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, material->diffuse->GetTextureID());
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, material->specular->GetTextureID());
+                
                 // Render model.
                 glm::mat4 modelMat = model->GetComponent<Component::Transform>()->modelMatrix;
                 glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
                 glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
                 glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
 
-                glDrawElements(GL_TRIANGLES, model->GetComponent<Component::Mesh>()->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+                glDrawElements(GL_TRIANGLES, meshes[i]->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
             }
         }
         
