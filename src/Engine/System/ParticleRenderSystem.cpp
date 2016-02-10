@@ -72,7 +72,7 @@ ParticleRenderSystem::~ParticleRenderSystem() {
 
     glDeleteBuffers(1, &mVertexBuffer);
 
-    Resources().FreeTexture2DFromFile(mParticleTexture);
+    Resources().FreeTexture2D(mParticleTexture);
 }
 
 void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2& screenSize) {

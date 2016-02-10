@@ -1,7 +1,8 @@
-#include "MainScene.hpp"
+#include "DanielScene.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <Util/Input.hpp>
 #include "Game/Util/CameraUpdate.hpp"
@@ -30,10 +31,13 @@
 #include <PostProcessing/GammaCorrectionFilter.hpp>
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
+#include <Util/Picking.hpp>
+#include <Util/Input.hpp>
+#include <Util/Log.hpp>
 
 using namespace GameObject;
 
-MainScene::MainScene() {
+DanielScene::DanielScene() {
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
@@ -64,11 +68,7 @@ MainScene::MainScene() {
     
     // Create players
     Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
-    Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
-    
-    GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
-    GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), Component::ParticleEmitter::DUST);
-    GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
+    Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(1.f, 0.f, 1.f), InputHandler::PLAYER_TWO);
     
     mPlayers.push_back(player1->GetEntity("body"));
     mPlayers.push_back(player2->GetEntity("body"));
@@ -88,13 +88,13 @@ MainScene::MainScene() {
     gammaCorrectionFilter = new GammaCorrectionFilter();
 }
 
-MainScene::~MainScene() {
+DanielScene::~DanielScene() {
     delete fxaaFilter;
     delete gammaCorrectionFilter;
     delete postProcessing;
 }
 
-void MainScene::Update(float deltaTime) {
+void DanielScene::Update(float deltaTime) {
     // ControllerSystem
     mControllerSystem.Update(*this, deltaTime);
     
@@ -111,7 +111,13 @@ void MainScene::Update(float deltaTime) {
             player->GetComponent<Component::Health>()->health = player->GetComponent<Component::Health>()->maxHealth;
         }
     }
-    
+
+    glm::mat4 viewMatrix = mMainCamera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -mMainCamera->GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 projectionMatrix = mMainCamera->GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
+    glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
+    glm::vec4 rayDirection = Picking::createWorldRay(mouseCoordinates, MainWindow::GetInstance()->GetSize(), viewMatrix, projectionMatrix);
+    glm::vec4 aimDirection = Picking::createPlayerAimDirection(rayDirection, glm::vec4(mPlayers[0]->GetComponent<Component::Transform>()->position, 1.f), glm::vec4(mMainCamera->GetComponent<Component::Transform>()->position, 1.f) );
+
     // ParticleSystem
     mParticleSystem.Update(*this, deltaTime);
     
@@ -139,13 +145,13 @@ void MainScene::Update(float deltaTime) {
         postProcessing->ApplyFilter(fxaaFilter);
     }
     
-    gammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
+    gammaCorrectionFilter->SetBrightness(GameSettings::GetInstance().GetDouble("Gamma"));
     postProcessing->ApplyFilter(gammaCorrectionFilter);
     
     postProcessing->Render();
 }
 
-bool MainScene::GridCollide(Entity* entity, float deltaTime) {
+bool DanielScene::GridCollide(Entity* entity, float deltaTime) {
     
     Component::Transform* transform = entity->GetComponent<Component::Transform>();
     Component::Physics* physics = entity->GetComponent<Component::Physics>();

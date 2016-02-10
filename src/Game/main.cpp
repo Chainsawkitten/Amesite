@@ -15,6 +15,7 @@
 #include "GameScenes/MainScene.hpp"
 #include "GameScenes/PontusScene.hpp"
 #include "GameScenes/EmptyScene.hpp"
+#include "GameScenes/DanielScene.hpp"
 
 //#include <crtdbg.h>
 
@@ -39,6 +40,8 @@ int main() {
     glewInit();
     window->Init();
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
+    Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
+    Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
     
     // Scene and Entites. 
     //Scene scene;

@@ -108,13 +108,6 @@ class ResourceManager {
 		 */
         Texture2D* CreateTexture2DFromFile(std::string filename, bool srgb = false);
         
-        /// Free the reference to the 2D texture.
-        /**
-         * Deletes the instance if no more references exist.
-         * @param texture %Texture to dereference.
-         */
-        void FreeTexture2DFromFile(Texture2D* texture);
-        
     private:
         ResourceManager();
         ResourceManager(ResourceManager const&);
