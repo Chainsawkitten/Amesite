@@ -15,6 +15,9 @@ namespace Component {
              */
             Material(Entity* entity);
             
+            /// Destructor.
+            ~Material();
+            
             /// Diffuse texture.
             Texture2D* diffuse;
             

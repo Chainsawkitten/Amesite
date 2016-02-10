@@ -55,6 +55,8 @@ endfunction()
 set(RESOURCES
     assets/TestTexture.png
     assets/DustParticle.png
+    assets/DefaultDiffuse.png
+    assets/DefaultSpecular.png
 )
 
 file(COPY ${RESOURCES} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
