@@ -18,8 +18,9 @@
  * VSync               | Whether to enable vsync.            | bool   | false
  * FXAA                | Whether to enable fxaa.             | bool   | false
  * Gamma               | Gamma brightness.                   | double | 2.2
- * Aim Threshold       | Deadzone on controller aim vector   | double | 0.5
- * Move Threshold      | Deadzone on controller move vector  | double | 0.5
+ * Aim Deadzone        | Deadzone on controller aim vector   | double | 0.5
+ * Move Deadzone       | Deadzone on controller move vector  | double | 0.5
+
  */
 class GameSettings : public Settings {
     public:
