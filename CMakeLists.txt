@@ -121,8 +121,9 @@ endforeach()
 include_directories(src)
 
 # Doxygen documentation
+option(ModershipBuildDocs "Build the doxygen documentation" ON)
 find_package(Doxygen)
-if(DOXYGEN_FOUND)
+if(DOXYGEN_FOUND AND ModershipBuildDocs)
     add_custom_target(EngineDoc ALL
         ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/EngineDoxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -133,7 +134,7 @@ if(DOXYGEN_FOUND)
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Generating API documentation with Doxygen" VERBATIM
     )
-endif(DOXYGEN_FOUND)
+endif()
 
 ## TARGETS ##
 
