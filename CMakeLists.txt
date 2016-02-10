@@ -159,6 +159,7 @@ set(ENGINE_SRCS
         src/Engine/Util/Log.cpp
         src/Engine/Util/Settings.cpp
         src/Engine/Util/Input.cpp
+        src/Engine/Util/Picking.cpp
         src/Engine/Component/SuperComponent.cpp
         src/Engine/Component/Lens.cpp
         src/Engine/Component/Transform.cpp
@@ -211,6 +212,7 @@ set(ENGINE_HEADERS
         src/Engine/Util/Log.hpp
         src/Engine/Util/Settings.hpp
         src/Engine/Util/Input.hpp
+        src/Engine/Util/Picking.hpp
         src/Engine/Component/SuperComponent.hpp
         src/Engine/Component/Lens.hpp
         src/Engine/Component/Transform.hpp
@@ -266,6 +268,7 @@ set(GAME_SRCS
         src/Game/Component/Damage.cpp
         src/Game/Component/CameraFollow.cpp
         src/Game/GameScenes/MainScene.cpp
+        src/Game/GameScenes/DanielScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
         src/Game/Component/LifeTime.cpp
         src/Game/GameObject/Bullet.cpp
@@ -292,6 +295,7 @@ set(GAME_HEADERS
         src/Game/Component/Damage.hpp
         src/Game/Component/CameraFollow.hpp
         src/Game/GameScenes/MainScene.hpp
+        src/Game/GameScenes/DanielScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
         src/Game/Component/LifeTime.hpp
         src/Game/GameObject/Bullet.hpp
