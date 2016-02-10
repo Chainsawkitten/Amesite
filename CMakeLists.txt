@@ -144,6 +144,7 @@ set(ENGINE_SRCS
         src/Engine/Component/Lens.cpp
         src/Engine/Component/Transform.cpp
         src/Engine/Component/Mesh.cpp
+        src/Engine/Component/Material.cpp
         src/Engine/Component/RelativeTransform.cpp
         src/Engine/Component/Physics.cpp
         src/Engine/Component/Collider2DRectangle.cpp
@@ -195,6 +196,7 @@ set(ENGINE_HEADERS
         src/Engine/Component/Lens.hpp
         src/Engine/Component/Transform.hpp
         src/Engine/Component/Mesh.hpp
+        src/Engine/Component/Material.hpp
         src/Engine/Component/RelativeTransform.hpp
         src/Engine/Component/Physics.hpp
         src/Engine/Component/Collider2DRectangle.hpp
