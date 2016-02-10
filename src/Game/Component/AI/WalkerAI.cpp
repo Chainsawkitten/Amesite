@@ -15,9 +15,9 @@ WalkerAI::~WalkerAI() {
 
 }
 
-void WalkerAI::Update(float timeDelta) {
+void WalkerAI::Update(float deltaTime) {
 
         glm::vec3 dir = normalize(target - entity->GetComponent<Component::Transform>()->position);
-        entity->GetComponent<Component::Transform>()->position += dir * timeDelta;
+        entity->GetComponent<Component::Transform>()->position += dir * deltaTime;
 
 }

@@ -239,6 +239,7 @@ set(GAME_SRCS
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
         src/Game/System/LifeTimeSystem.cpp
+        src/Game/System/AISystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
@@ -267,6 +268,7 @@ set(GAME_HEADERS
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/System/LifeTimeSystem.hpp
+	src/Game/System/AISystem.cpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
