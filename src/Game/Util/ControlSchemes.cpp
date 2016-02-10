@@ -15,12 +15,14 @@ void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
 void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
 
     // Move the player
-    float x = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_X);
-    float z = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_Z);
+    double x = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_X);
+    double z = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_Z);
+    glm::vec2 direction = glm::vec2(x, z);
     
-    if (fabs(x) < 0.001f && fabs(z) < 0.001f) {
-        x = Input()->Pressed(controller->playerID, InputHandler::RIGHT) - Input()->Pressed(controller->playerID, InputHandler::LEFT);
-        z = Input()->Pressed(controller->playerID, InputHandler::DOWN) - Input()->Pressed(controller->playerID, InputHandler::UP);
+    if (glm::length(direction)<Input()->MoveDeadzone()) {
+        x = Input()->ButtonValue(controller->playerID, InputHandler::RIGHT) - Input()->ButtonValue(controller->playerID, InputHandler::LEFT);
+        z = Input()->ButtonValue(controller->playerID, InputHandler::DOWN) - Input()->ButtonValue(controller->playerID, InputHandler::UP);
+        direction = glm::vec2(x, z);
     }
 
     glm::vec3 speedVec = glm::vec3(x * controller->speed * deltaTime, 0, z * controller->speed * deltaTime);
@@ -29,11 +31,11 @@ void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
 
     // If there's a physics component attached we use it to move.
     if (physicsComponent != nullptr) {
-        if (glm::abs(x) + glm::abs(z) > 0.3f)
+        if (glm::length(direction)>Input()->MoveDeadzone())
             physicsComponent->acceleration = speedVec;
         else
             physicsComponent->acceleration = glm::vec3(0, 0, 0);
-    } else if (glm::abs(x) + glm::abs(z) > 0.3f) {
+    } else if (glm::length(direction)>Input()->MoveDeadzone()) {
         controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->speed, 0, z * deltaTime));
     }
 }
@@ -41,14 +43,16 @@ void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
 void ControlScheme::StickRotate(Component::Controller* controller, float deltaTime) {
     Entity* entity = controller->entity;
 
-    float a = Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z);
-    float b = Input()->ButtonValue(controller->playerID, InputHandler::AIM_X);
+    double a = Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z);
+    double b = Input()->ButtonValue(controller->playerID, InputHandler::AIM_X);
+    glm::vec2 direction = glm::vec2(a, b);
 
-    if (glm::abs(a) + glm::abs(b) > 0.3f && glm::abs(a) > 0) {
+    if (glm::length(direction) > Input()->AimDeadzone()) {
+        Input()->SetLastValidAimDirection(controller->playerID, glm::vec2(b, a));
         if(a >= 0)
-            entity->GetComponent<Component::Transform>()->yaw = glm::degrees(glm::atan(b / a));
+            entity->GetComponent<Component::Transform>()->yaw = (float)glm::degrees(glm::atan(b / a));
         else
-            entity->GetComponent<Component::Transform>()->yaw = 180 + glm::degrees(glm::atan(b / a));
+            entity->GetComponent<Component::Transform>()->yaw = 180.f + (float)glm::degrees(glm::atan(b / a));
     }
 }
 
@@ -129,13 +133,13 @@ void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTi
     if (spawnerComponent != nullptr) {
         spawnerComponent->timeSinceSpawn += deltaTime;
         if (Input()->Pressed(controller->playerID, InputHandler::SHOOT) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
-            glm::vec2 direction = glm::vec2(Input()->ButtonValue(controller->playerID, Input()->AIM_X), Input()->ButtonValue(controller->playerID, Input()->AIM_Z));
+            glm::vec2 direction = glm::vec2(Input()->ButtonValue(controller->playerID, InputHandler::AIM_X), Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z));
             float directionLength = glm::length(direction);
-            if (directionLength < 0.001f) 
-                direction = glm::vec2(1.f, 0.f);
-            else
+            if (directionLength < Input()->AimDeadzone()) {
+                direction = Input()->LastValidAimDirection(controller->playerID);
+            } else {
                 direction = direction / directionLength;
-            
+            }
             float bulletSpeed = 40.f;
             GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y), 0);
             spawnerComponent->timeSinceSpawn = 0.0f;

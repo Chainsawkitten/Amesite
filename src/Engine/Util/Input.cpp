@@ -22,13 +22,18 @@ InputHandler::InputHandler(GLFWwindow* window) {
     glfwSetScrollCallback(window, scrollCallback);
     mLastScroll = 0.0;
     mScroll = 0.0;
+
+    // Init controller deadzones.
+    mAimDeadzone = 0.3;
+    mMoveDeadzone = 0.3;
     
     // Init button states.
     for (int player = 0; player < PLAYERS; player++) {
         for (int button = 0; button < BUTTONS; button++) {
-            mButtonReleased[player][button] = true;
-            mButtonTriggered[player][button] = false;
-            mButtonValue[player][button] = 0.0;
+            mButtonData[player][button].released = true;
+            mButtonData[player][button].triggered = false;
+            mButtonData[player][button].value = 0.0;
+            mLastValidAimDirection[player] = glm::vec2(1.0f, 0.0f);
         }
     }
     
@@ -103,7 +108,7 @@ void InputHandler::Update() {
         case JOYSTICK:
             if (mJoystickActive[binding.player]) {
                 if (binding.axis) {
-                    value = (abs(joystickAxisData[binding.player][binding.index]) > mThreshold) ? value = joystickAxisData[binding.player][binding.index] : value = 0.0;
+                    value = joystickAxisData[binding.player][binding.index];
                 } else if (joystickButtonPressed[binding.player][binding.index] == GLFW_PRESS) {
                     value = 1.0;
                 }
@@ -118,19 +123,16 @@ void InputHandler::Update() {
     // Update triggered and released.
     for (int player=0; player<PLAYERS-1; player++) {
         for (int button=0; button<BUTTONS; button++) {
-            mButtonTriggered[player][button] = (mButtonValue[player][button] == 1.0) && (values[player][button] == 1.0);
-            mButtonReleased[player][button] = (mButtonValue[player][button] == 0.0) && (values[player][button] == 0.0);
-            mButtonValue[player][button] = values[player][button];
+            mButtonData[player][button].triggered = (mButtonData[player][button].value == 1.0) && (values[player][button] == 1.0);
+            mButtonData[player][button].released = (mButtonData[player][button].value == 0.0) && (values[player][button] == 0.0);
+            mButtonData[player][button].value = values[player][button];
             
             // Update anyone buttons.
-            if (mButtonTriggered[player][button])
-                mButtonTriggered[ANYONE][button] = true;
+            if (mButtonData[player][button].triggered)
+                mButtonData[ANYONE][button].triggered = true;
             
-            if (mButtonTriggered[player][button])
-                mButtonTriggered[ANYONE][button] = true;
-            
-            if (mButtonValue[player][button] != 0.0)
-                mButtonValue[ANYONE][button] = mButtonValue[player][button];
+            if (mButtonData[player][button].value != 0.0)
+                mButtonData[ANYONE][button].value = mButtonData[player][button].value;
         }
     }
     
@@ -176,19 +178,19 @@ void InputHandler::AssignButton(Player player, Button button, Device device, int
 }
 
 double InputHandler::ButtonValue(Player player, Button button) const {
-    return mButtonValue[player][button];
+    return mButtonData[player][button].value;
 }
 
 bool InputHandler::Pressed(Player player, Button button) {
-    return mButtonValue[player][button] == 1.0;
+    return mButtonData[player][button].value == 1.0;
 }
 
 bool InputHandler::Triggered(Player player, Button button) {
-    return mButtonTriggered[player][button];
+    return mButtonData[player][button].triggered;
 }
 
 bool InputHandler::Released(Player player, Button button) {
-    return mButtonReleased[player][button];
+    return mButtonData[player][button].released;
 }
 
 const std::string& InputHandler::Text() const {
@@ -205,6 +207,36 @@ void InputHandler::ScrollCallback(double yoffset) {
 
 bool InputHandler::JoystickActive(Player player) {
     return mJoystickActive[player];
+}
+
+glm::vec2 InputHandler::LastValidAimDirection(Player player) const
+{
+    return mLastValidAimDirection[player];
+}
+
+void InputHandler::SetLastValidAimDirection(Player player, glm::vec2 direction)
+{
+    mLastValidAimDirection[player] = direction;
+}
+
+double InputHandler::MoveDeadzone() const
+{
+    return mMoveDeadzone;
+}
+
+void InputHandler::SetAimDeadzone(double aimThreshold)
+{
+    mAimDeadzone = aimThreshold;
+}
+
+void InputHandler::SetMoveDeadzone(double moveThreshold)
+{
+    mMoveDeadzone = moveThreshold;
+}
+
+double InputHandler::AimDeadzone() const
+{
+    return mAimDeadzone;
 }
 
 InputHandler* Input() {

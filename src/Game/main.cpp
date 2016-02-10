@@ -38,6 +38,8 @@ int main() {
     glewInit();
     window->Init();
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
+    Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
+    Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
     
     // Scene and Entites. 
     //Scene scene;
