@@ -76,12 +76,15 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
                 
                 //Set texture locations
                 glUniform1i(mShaderProgram->GetUniformLocation("baseImage"), 0);
-                glUniform1i(mShaderProgram->GetUniformLocation("specularMap"), 1);
+                glUniform1i(mShaderProgram->GetUniformLocation("normalMap"), 1);
+                glUniform1i(mShaderProgram->GetUniformLocation("specularMap"), 2);
                 
                 //Textures
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, material->diffuse->GetTextureID());
                 glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, material->normal->GetTextureID());
+                glActiveTexture(GL_TEXTURE2);
                 glBindTexture(GL_TEXTURE_2D, material->specular->GetTextureID());
                 
                 // Render model.
