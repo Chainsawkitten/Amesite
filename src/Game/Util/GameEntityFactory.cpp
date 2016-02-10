@@ -134,7 +134,7 @@ void GameEntityFactory::CreatePointParticle(Entity * object, int particleTexture
     emitter->particleType.minSize = glm::vec2(.5f, .5f);
     emitter->particleType.maxSize = glm::vec2(1.f, 1.f);
     emitter->particleType.uniformScaling = true;
-    emitter->particleType.color = glm::vec3(1.f, 0.5f, 0.5f);
+    emitter->particleType.color = glm::vec3(1.f, 1.f, 1.f);
 }
 
 Cave* GameEntityFactory::CreateMap() {

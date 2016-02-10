@@ -29,9 +29,9 @@ ParticleRenderSystem::ParticleRenderSystem() {
     mParticleShaderProgram = Resources().CreateShaderProgram({ mParticleVertShader, mParticleGeomShader, mParticleFragShader });
 
     // When textures are added to the Atlas the numRows needs to be updated.
-    mTextureAtlasNumRows = 1.f;
+    mTextureAtlasNumRows = 2.f;
 
-    mParticleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
+    mParticleTexture = Resources().CreateTexture2DFromFile("Resources/ParticleAtlas.png");
     mTextureAtlas = mParticleTexture;
 
     // Vertex buffer
