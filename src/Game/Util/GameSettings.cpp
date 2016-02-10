@@ -20,8 +20,8 @@ GameSettings::GameSettings() {
     AddBoolSetting("FXAA", "Graphics", "FXAA", false);
     AddDoubleSetting("Gamma", "Graphics", "Brightness", 2.2);
        
-    AddDoubleSetting("Aim Deadzone", "Controller", "Aim Deadzone", 0.5);
-    AddDoubleSetting("Move Deadzone", "Controller", "Move Deadzone", 0.5);
+    AddDoubleSetting("Aim Deadzone", "Controller", "Aim Deadzone", 0.3);
+    AddDoubleSetting("Move Deadzone", "Controller", "Move Deadzone", 0.3);
 }
 
 GameSettings& GameSettings::GetInstance() {

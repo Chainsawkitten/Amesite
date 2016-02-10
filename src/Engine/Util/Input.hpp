@@ -231,11 +231,16 @@ class InputHandler {
             bool axis;
         };
         std::vector<Binding> mBindings;
+
+        // Data
+        struct ButtonData {
+            double value;
+            bool released;
+            bool triggered;
+        };
         
-        // Button values.
-        double mButtonValue[PLAYERS][BUTTONS];
-        bool mButtonReleased[PLAYERS][BUTTONS];
-        bool mButtonTriggered[PLAYERS][BUTTONS];
+        // Button data.
+        ButtonData mButtonData[PLAYERS][BUTTONS];
         
         // Mouse states.
         double mCursorX, mCursorY;
@@ -252,8 +257,8 @@ class InputHandler {
         bool mJoystickActive[PLAYERS - 1];
         
         // Joystick thresholds
-        double mMoveThreshold;
-        double mAimThreshold;
+        double mMoveDeadzone;
+        double mAimDeadzone;
 };
 
 /// Get currently active input handler.
