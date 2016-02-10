@@ -56,8 +56,6 @@ DanielScene::DanielScene() {
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_X, InputHandler::MOUSE, InputHandler::RIGHT_STICK_X, true);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::MOUSE, InputHandler::RIGHT_STICK_Y, true);
     
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
