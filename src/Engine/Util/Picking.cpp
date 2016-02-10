@@ -25,6 +25,5 @@ glm::vec4 createWorldRay(const glm::vec2& mouseCoordinates, const glm::vec2& scr
 glm::vec4 createPlayerAimDirection(const glm::vec4& worldRay, const glm::vec4& playerPosition, const glm::vec4& cameraPosition) {
     glm::vec4 cameraToPlane = (glm::vec4(0.f, playerPosition.y - cameraPosition.y, 0.f, 0.f));
     glm::vec4 pointInPlane = (cameraPosition + worldRay* (glm::length(cameraToPlane*cameraToPlane) / glm::length(worldRay*cameraToPlane) ) );
-    //Log() << pointInPlane << "\n";
     return glm::normalize(glm::vec4(pointInPlane.x - playerPosition.x, 0.f, pointInPlane.z - playerPosition.z, 0.f));
 }

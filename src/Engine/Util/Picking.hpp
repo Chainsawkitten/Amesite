@@ -19,5 +19,4 @@ glm::vec4 createWorldRay(const glm::vec2& mouseCoordinates, const glm::vec2& scr
  *@param cameraPosition Camera position in world space.
  *@return Vector from player to mouse aimpoint in world space.
  */
-
 glm::vec4 createPlayerAimDirection(const glm::vec4& worldRay, const glm::vec4& playerPosition, const glm::vec4& cameraPosition);
