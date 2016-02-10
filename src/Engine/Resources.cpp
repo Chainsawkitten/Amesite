@@ -152,9 +152,9 @@ void ResourceManager::FreeSquare() {
         delete mSquare;
 }
 
-Texture2D* ResourceManager::CreateTexture2D(const char* data, int dataLength) {
+Texture2D* ResourceManager::CreateTexture2D(const char* data, int dataLength, bool srgb) {
     if (mTextures.find(data) == mTextures.end()) {
-        mTextures[data].texture = new Texture2D(data, dataLength);
+        mTextures[data].texture = new Texture2D(data, dataLength, srgb);
         mTexturesInverse[mTextures[data].texture] = data;
         mTextures[data].count = 1;
     } else {
@@ -165,19 +165,30 @@ Texture2D* ResourceManager::CreateTexture2D(const char* data, int dataLength) {
 }
 
 void ResourceManager::FreeTexture2D(Texture2D* texture) {
-    const char* data = mTexturesInverse[texture];
-    
-    mTextures[data].count--;
-    if (mTextures[data].count <= 0) {
-        mTexturesInverse.erase(texture);
-        delete texture;
-        mTextures.erase(data);
+    if (texture->IsFromFile()) {
+        string filename = mTexturesFromFileInverse[texture];
+        
+        mTexturesFromFile[filename].count--;
+        if (mTexturesFromFile[filename].count <= 0) {
+            mTexturesFromFileInverse.erase(texture);
+            delete texture;
+            mTexturesFromFile.erase(filename);
+        }
+    } else {
+        const char* data = mTexturesInverse[texture];
+        
+        mTextures[data].count--;
+        if (mTextures[data].count <= 0) {
+            mTexturesInverse.erase(texture);
+            delete texture;
+            mTextures.erase(data);
+        }
     }
 }
 
-Texture2D* ResourceManager::CreateTexture2DFromFile(std::string filename) {
+Texture2D* ResourceManager::CreateTexture2DFromFile(std::string filename, bool srgb) {
     if (mTexturesFromFile.find(filename) == mTexturesFromFile.end()) {
-        mTexturesFromFile[filename].texture = new Texture2D(filename.c_str());
+        mTexturesFromFile[filename].texture = new Texture2D(filename.c_str(), srgb);
         mTexturesFromFileInverse[mTexturesFromFile[filename].texture] = filename;
         mTexturesFromFile[filename].count = 1;
     } else {
@@ -185,17 +196,6 @@ Texture2D* ResourceManager::CreateTexture2DFromFile(std::string filename) {
     }
     
     return mTexturesFromFile[filename].texture;
-}
-
-void ResourceManager::FreeTexture2DFromFile(Texture2D* texture) {
-    string filename = mTexturesFromFileInverse[texture];
-    
-    mTexturesFromFile[filename].count--;
-    if (mTexturesFromFile[filename].count <= 0) {
-        mTexturesFromFileInverse.erase(texture);
-        delete texture;
-        mTexturesFromFile.erase(filename);
-    }
 }
 
 ResourceManager& Resources() {

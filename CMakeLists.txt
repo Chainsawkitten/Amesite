@@ -53,11 +53,30 @@ endfunction()
 
 # Copy resources
 set(RESOURCES
-    assets/TestTexture.png
-    assets/DustParticle.png
-)
+        assets/TestTexture.png
+        assets/DustParticle.png
+        assets/DefaultDiffuse.png
+        assets/DefaultNormal.png
+        assets/DefaultSpecular.png
+    )
 
-file(COPY ${RESOURCES} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
+add_custom_target(ResourceTarget ALL)
+
+function(CopyAsset inputfile outdir)
+    get_filename_component(basefile ${inputfile} NAME)
+    set(outputfile ${outdir}/${basefile})
+    
+    add_custom_command(
+        TARGET ResourceTarget
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${inputfile} ${outputfile}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Copying ${inputfile}"
+    )
+endfunction()
+
+foreach(item ${RESOURCES})
+    CopyAsset(${item} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
+endforeach()
 
 # Setup embedded source
 set(EMBEDDED_INPUT
@@ -67,6 +86,11 @@ set(EMBEDDED_INPUT
         shaders/SingleColor2D.frag
         shaders/Texture2D.frag
         shaders/Post.vert
+        shaders/PostCopy.frag
+        shaders/PostColor.frag
+        shaders/PostFXAA.frag
+        shaders/PostFog.frag
+        shaders/PostGamma.frag
         shaders/Deferred.frag
         shaders/Particle.vert
         shaders/Particle.geom
@@ -116,6 +140,7 @@ endif(DOXYGEN_FOUND)
 ## Engine ##
 set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
+        src/Engine/RenderTarget.cpp
         src/Engine/Resources.cpp
         src/Engine/Audio/Listener.cpp
         src/Engine/Audio/SoundBuffer.cpp
@@ -134,10 +159,12 @@ set(ENGINE_SRCS
         src/Engine/Util/Log.cpp
         src/Engine/Util/Settings.cpp
         src/Engine/Util/Input.cpp
+        src/Engine/Util/Picking.cpp
         src/Engine/Component/SuperComponent.cpp
         src/Engine/Component/Lens.cpp
         src/Engine/Component/Transform.cpp
         src/Engine/Component/Mesh.cpp
+        src/Engine/Component/Material.cpp
         src/Engine/Component/RelativeTransform.cpp
         src/Engine/Component/Physics.cpp
         src/Engine/Component/Collider2DRectangle.cpp
@@ -157,11 +184,17 @@ set(ENGINE_SRCS
         src/Engine/System/AnimationSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
+        src/Engine/PostProcessing/PostProcessing.cpp
+        src/Engine/PostProcessing/ColorFilter.cpp
+        src/Engine/PostProcessing/FXAAFilter.cpp
+        src/Engine/PostProcessing/FogFilter.cpp
+        src/Engine/PostProcessing/GammaCorrectionFilter.cpp
         src/Engine/GameObject/SuperGameObject.cpp
     )
 
 set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
+        src/Engine/RenderTarget.hpp
         src/Engine/Resources.hpp
         src/Engine/Audio/Listener.hpp
         src/Engine/Audio/SoundBuffer.hpp
@@ -181,10 +214,12 @@ set(ENGINE_HEADERS
         src/Engine/Util/Log.hpp
         src/Engine/Util/Settings.hpp
         src/Engine/Util/Input.hpp
+        src/Engine/Util/Picking.hpp
         src/Engine/Component/SuperComponent.hpp
         src/Engine/Component/Lens.hpp
         src/Engine/Component/Transform.hpp
         src/Engine/Component/Mesh.hpp
+        src/Engine/Component/Material.hpp
         src/Engine/Component/RelativeTransform.hpp
         src/Engine/Component/Physics.hpp
         src/Engine/Component/Collider2DRectangle.hpp
@@ -204,6 +239,12 @@ set(ENGINE_HEADERS
         src/Engine/System/AnimationSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
+        src/Engine/PostProcessing/PostProcessing.hpp
+        src/Engine/PostProcessing/Filter.hpp
+        src/Engine/PostProcessing/ColorFilter.hpp
+        src/Engine/PostProcessing/FXAAFilter.hpp
+        src/Engine/PostProcessing/FogFilter.hpp
+        src/Engine/PostProcessing/GammaCorrectionFilter.hpp
         src/Engine/GameObject/SuperGameObject.hpp
     )
 
@@ -230,6 +271,9 @@ set(GAME_SRCS
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
         src/Game/Component/CameraFollow.cpp
+        src/Game/GameScenes/MainScene.cpp
+        src/Game/GameScenes/DanielScene.cpp
+        src/Game/GameScenes/EmptyScene.cpp
         src/Game/Component/LifeTime.cpp
         src/Game/GameObject/Bullet.cpp
         src/Game/GameObject/Player.cpp
@@ -254,6 +298,9 @@ set(GAME_HEADERS
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
         src/Game/Component/CameraFollow.hpp
+        src/Game/GameScenes/MainScene.hpp
+        src/Game/GameScenes/DanielScene.hpp
+        src/Game/GameScenes/EmptyScene.hpp
         src/Game/Component/LifeTime.hpp
         src/Game/GameObject/Bullet.hpp
         src/Game/GameObject/Player.hpp

@@ -15,7 +15,7 @@
 #include "../Geometry/Square.hpp"
 #include "../MainWindow.hpp"
 
-Texture2D::Texture2D(const char* filename) {
+Texture2D::Texture2D(const char* filename, bool srgb) {
     glGenTextures(1, &mTexID);
     glBindTexture(GL_TEXTURE_2D, mTexID);
     
@@ -27,7 +27,7 @@ Texture2D::Texture2D(const char* filename) {
         Log() << "Couldn't load image " << filename << "\n";
     
     // Give the image to OpenGL.
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, Format(components), GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, srgb ? GL_SRGB_ALPHA : GL_RGBA, mWidth, mHeight, 0, Format(components), GL_UNSIGNED_BYTE, data);
     
     stbi_image_free(data);
     
@@ -50,9 +50,11 @@ Texture2D::Texture2D(const char* filename) {
     mVertexShader = Resources().CreateShader(DEFAULT2D_VERT, DEFAULT2D_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragmentShader = Resources().CreateShader(TEXTURE2D_FRAG, TEXTURE2D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
+    
+    mIsFromFile = true;
 }
 
-Texture2D::Texture2D(const char *source, int sourceLength) {
+Texture2D::Texture2D(const char *source, int sourceLength, bool srgb) {
     glGenTextures(1, &mTexID);
     glBindTexture(GL_TEXTURE_2D, mTexID);
     
@@ -64,7 +66,7 @@ Texture2D::Texture2D(const char *source, int sourceLength) {
         Log() << "Couldn't load headerized image.\n";
     
     // Give the image to OpenGL.
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, Format(components), GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, srgb ? GL_SRGB_ALPHA : GL_RGBA, mWidth, mHeight, 0, Format(components), GL_UNSIGNED_BYTE, data);
     
     stbi_image_free(data);
     
@@ -87,6 +89,8 @@ Texture2D::Texture2D(const char *source, int sourceLength) {
     mVertexShader = Resources().CreateShader(DEFAULT2D_VERT, DEFAULT2D_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragmentShader = Resources().CreateShader(TEXTURE2D_FRAG, TEXTURE2D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
+    
+    mIsFromFile = false;
 }
 
 Texture2D::~Texture2D() {
@@ -151,4 +155,8 @@ void Texture2D::Render(const glm::vec2 &position, const glm::vec2 &size) const {
         glEnable(GL_DEPTH_TEST);
     if (!blend)
         glDisable(GL_BLEND);
+}
+
+bool Texture2D::IsFromFile() const {
+    return mIsFromFile;
 }

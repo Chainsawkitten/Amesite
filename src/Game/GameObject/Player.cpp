@@ -12,6 +12,7 @@
 #include "../Component/Spawner.hpp"
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
 #include <Engine/Component/Physics.hpp>
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/SpotLight.hpp>
@@ -32,6 +33,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ButtonShoot);
     body->AddComponent<Component::Transform>();
     body->AddComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    body->AddComponent<Component::Material>();
     body->AddComponent<Component::Collider2DCircle>()->radius = 0.5;
     body->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     body->AddComponent<Component::Health>()->removeOnLowHealth = false;
@@ -50,6 +52,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     spotLight->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     spotLight->GetComponent<Component::RelativeTransform>()->scale = glm::vec3(0.3f, 0.3f, 0.3f);
     spotLight->AddComponent<Component::Mesh>()->geometry = body->GetComponent<Component::Mesh>()->geometry;
+    spotLight->AddComponent<Component::Material>();
     spotLight->AddComponent<Component::SpotLight>()->coneAngle = 90;
     spotLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
     spotLight->AddComponent<Component::Physics>();
@@ -60,7 +63,8 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     mEntityMap["radar"] = radar;
     radar->AddComponent<Component::RelativeTransform>()->parentEntity = body;
     radar->GetComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-    radar->AddComponent<Component::Mesh>()->geometry = body->GetComponent<Component::Mesh>()->geometry;
+    radar->AddComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    radar->AddComponent<Component::Material>();
     radar->AddComponent<Component::PointLight>()->attenuation = 0.5f;
     Component::Animation::AnimationClip* idleRadar = radar->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleRadar->CreateKeyFrame(glm::vec3(3, 0, 0), 0, 0, 0, 1, true, false);
@@ -72,5 +76,6 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
 }
 
 Player::~Player() {
+    Resources().FreeCube();
     Resources().FreeCube();
 }

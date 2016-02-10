@@ -16,6 +16,12 @@ GameSettings::GameSettings() {
     AddBoolSetting("Borderless", "Graphics", "Borderless Window", false);
     AddLongSetting("Target FPS", "Graphics", "Target FPS", 60);
     AddBoolSetting("VSync", "Graphics", "VSync", false);
+
+    AddBoolSetting("FXAA", "Graphics", "FXAA", false);
+    AddDoubleSetting("Gamma", "Graphics", "Brightness", 2.2);
+       
+    AddDoubleSetting("Aim Deadzone", "Controller", "Aim Deadzone", 0.3);
+    AddDoubleSetting("Move Deadzone", "Controller", "Move Deadzone", 0.3);
 }
 
 GameSettings& GameSettings::GetInstance() {
