@@ -12,6 +12,7 @@
 #include "../Component/Spawner.hpp"
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
 #include <Engine/Component/Physics.hpp>
 #include <Engine/Component/Collider2DCircle.hpp>
 
@@ -23,6 +24,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     Entity* body = mScene->CreateEntity();
     mEntityMap["body"] = body;
     body->AddComponent<Component::Mesh>();
+    body->AddComponent<Component::Material>();
     body->AddComponent<Component::Transform>();
     
     body->AddComponent<Component::Collider2DCircle>();
