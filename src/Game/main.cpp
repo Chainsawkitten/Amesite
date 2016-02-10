@@ -13,6 +13,7 @@
 #include "System/ParticleSystem.hpp"
 
 #include "GameScenes/MainScene.hpp"
+#include "GameScenes/PontusScene.hpp"
 #include "GameScenes/EmptyScene.hpp"
 
 //#include <crtdbg.h>
@@ -44,7 +45,7 @@ int main() {
     System::ParticleSystem mParticleSystem;
     // Make particle system active
     mParticleSystem.SetActive();
-    Scene* scene = new MainScene();
+    Scene* scene = new PontusScene();
 
     // Main game loop.
     double lastTime = glfwGetTime();
