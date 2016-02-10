@@ -268,6 +268,7 @@ set(GAME_SRCS
         src/Game/Component/Damage.cpp
         src/Game/Component/CameraFollow.cpp
         src/Game/GameScenes/MainScene.cpp
+        src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
         src/Game/Component/LifeTime.cpp
@@ -295,6 +296,7 @@ set(GAME_HEADERS
         src/Game/Component/Damage.hpp
         src/Game/Component/CameraFollow.hpp
         src/Game/GameScenes/MainScene.hpp
+        src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
         src/Game/Component/LifeTime.hpp
