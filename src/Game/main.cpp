@@ -47,7 +47,7 @@ int main() {
     System::ParticleSystem mParticleSystem;
     // Make particle system active
     mParticleSystem.SetActive();
-    Scene* scene = new MainScene();
+    Scene* scene = new DanielScene();
     
     // Main game loop.
     double lastTime = glfwGetTime();

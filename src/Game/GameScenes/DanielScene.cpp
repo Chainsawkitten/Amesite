@@ -117,8 +117,8 @@ void DanielScene::Update(float deltaTime) {
     glm::mat4 viewMatrix = mMainCamera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -mMainCamera->GetComponent<Component::Transform>()->GetWorldPosition());
     glm::mat4 projectionMatrix = mMainCamera->GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
     glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
-    glm::vec4 rayDirection = createWorldRay(mouseCoordinates, MainWindow::GetInstance()->GetSize(), viewMatrix, projectionMatrix);
-    glm::vec4 aimDirection = createPlayerAimDirection(rayDirection, glm::vec4(mPlayers[0]->GetComponent<Component::Transform>()->position, 1.f), glm::vec4(mMainCamera->GetComponent<Component::Transform>()->position, 1.f) );
+    glm::vec4 rayDirection = Picking::createWorldRay(mouseCoordinates, MainWindow::GetInstance()->GetSize(), viewMatrix, projectionMatrix);
+    glm::vec4 aimDirection = Picking::createPlayerAimDirection(rayDirection, glm::vec4(mPlayers[0]->GetComponent<Component::Transform>()->position, 1.f), glm::vec4(mMainCamera->GetComponent<Component::Transform>()->position, 1.f) );
 
     // ParticleSystem
     mParticleSystem.Update(*this, deltaTime);
