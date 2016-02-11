@@ -4,12 +4,7 @@
 #include <vector>
 #include "Geometry3D.hpp"
 
-/** @ingroup Core
- * @{
- */
-
 namespace Geometry {
-	class Model;
 
 	/// A model loaded from our own binary model format.
 	class Model : public Geometry::Geometry3D {
@@ -63,5 +58,3 @@ namespace Geometry {
 		unsigned int indexNr = 0;
 	};
 }
-
-/** @} */

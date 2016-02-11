@@ -2,10 +2,6 @@
 
 #include "Model.hpp"
 
-/** @ingroup Core
-* @{
-*/
-
 namespace Geometry {
     /// A model loaded from an OBJ file.
     class OBJModel : public Model {
@@ -34,5 +30,3 @@ namespace Geometry {
         static void CalculateTangents(std::vector<Face>& faces, std::vector<glm::vec3>& positions, std::vector<glm::vec2>& textureCoordinates, std::vector<glm::vec3>& tangents);
     };
 }
-
-/** @} */
