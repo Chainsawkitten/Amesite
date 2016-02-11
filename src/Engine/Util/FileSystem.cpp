@@ -29,6 +29,18 @@ namespace FileSystem {
         return result == 0;
     }
     
+    std::string GetFileExtension(const std::string& filename) {
+        for (std::string::size_type i=filename.length()-1; i>=0; i--) {
+            if (filename[i] == '.')
+                return filename.substr(i+1);
+            
+            if (filename[i] == '/' || filename[i] == DELIMITER)
+                return "";
+        }
+        
+        return "";
+    }
+    
     void CreateDirectory(const char* filename) {
 #if defined(_WIN32) || defined(WIN32)
         // Windows
