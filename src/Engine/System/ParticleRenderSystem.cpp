@@ -78,7 +78,6 @@ ParticleRenderSystem::~ParticleRenderSystem() {
 }
 
 void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2& screenSize) {
-    Log() << (int)Particle().ParticleCount() << "\n";
     if (Particle().ParticleCount() > 0) {
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         std::vector<ParticleSystem::Particle>* particles = scene.GetVectorContents<ParticleSystem::Particle>();

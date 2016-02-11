@@ -91,5 +91,4 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
 }
 
 Bullet::~Bullet() {
-    Resources().FreeCube();
 }
