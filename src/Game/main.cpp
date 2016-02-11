@@ -57,8 +57,8 @@ int main() {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
         
-        scene->Update(static_cast<float>(deltaTime));
         window->Update();
+        scene->Update(static_cast<float>(deltaTime));
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
