@@ -92,8 +92,8 @@ class GameEntityFactory {
         Scene* mScene;
 };
 
-/// Get the collision manager.
+/// Get the game entity creator.
 /**
- * @return The %CollisionManager instance
+ * @return The %GameEntityCreator instance
  */
 GameEntityFactory& GameEntityCreator();
