@@ -19,7 +19,7 @@ Sound::Sound(SoundBuffer* buffer) {
     alSource3f(mSource, AL_VELOCITY, 0.f, 0.f, 0.f);
     alSourcei(mSource, AL_LOOPING, mLoop);
     
-    alSourcei(mSource, AL_BUFFER, mBuffer->Buffer());
+    alSourcei(mSource, AL_BUFFER, buffer->Buffer());
     SoundSystem::CheckError("Couldn't set sound source buffer.");
 }
 
