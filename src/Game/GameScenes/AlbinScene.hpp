@@ -1,12 +1,12 @@
 #pragma once
 
 #include <Scene/Scene.hpp>
+#include <System/PhysicsSystem.hpp>
 #include <System/SoundSystem.hpp>
 
 namespace Audio {
     class VorbisFile;
     class SoundBuffer;
-    class Sound;
 }
 
 /// Albin's testing scene.
@@ -25,9 +25,12 @@ class AlbinScene : public Scene {
         void Update(float deltaTime);
         
     private:
+        // PhysicsSystem.
+        System::PhysicsSystem mPhysicsSystem;
+        
         System::SoundSystem mSoundSystem;
         
         Audio::SoundBuffer* mTestSoundBuffer;
-        Audio::Sound* mTestSoundSource1;
-        Audio::Sound* mTestSoundSource2;
+        
+        Entity* s1;
 };
