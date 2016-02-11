@@ -2,16 +2,15 @@
 
 #include <glm/glm.hpp>
 
-namespace Picking{
+namespace Picking {
     ///Creates a ray in world space.
     /**
      * @param mouseCoordinates The x/y position of the cursor.
-     * @param screenSize The screens width/height.
      * @param viewMatrix The view matrix.
      * @param projectionMatrix The projection matrix.
      * @return Ray direction in world space.
      */
-    glm::vec4 createWorldRay(const glm::vec2& mouseCoordinates, const glm::vec2& screenSize, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+    glm::vec4 createWorldRay(const glm::vec2& mouseCoordinates, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
 
     ///Creates a vector representing the players aim direction
     /**

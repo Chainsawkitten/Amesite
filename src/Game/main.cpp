@@ -13,6 +13,7 @@
 #include "System/ParticleSystem.hpp"
 
 #include "GameScenes/MainScene.hpp"
+#include "GameScenes/AlbinScene.hpp"
 #include "GameScenes/EmptyScene.hpp"
 #include "GameScenes/DanielScene.hpp"
 
@@ -48,13 +49,12 @@ int main() {
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
-    Log() << std::to_string(lastTimeRender) << "\n";
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
         
-        scene->Update(static_cast<float>(deltaTime));
         window->Update();
+        scene->Update(static_cast<float>(deltaTime));
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
@@ -74,6 +74,7 @@ int main() {
         glfwPollEvents();
     }
     
+    delete scene;
     delete window;
     
     glfwTerminate();
