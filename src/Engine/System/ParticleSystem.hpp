@@ -45,7 +45,7 @@ namespace System {
 
             /// Get currently active ParticleSystem.
             /**
-            * @return The currently active input handler or nullptr.
+            * @return The currently active input handler or creates one.
             */
             static ParticleSystem& GetActiveInstance();
 
