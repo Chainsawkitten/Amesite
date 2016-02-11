@@ -101,5 +101,11 @@ namespace Component {
              * Default: Identity matrix
              */
             glm::mat4 modelMatrix;
+
+            /// Orientation Matrix
+            /**
+             * Default: Identity matrix
+             */
+            glm::mat4 orientationMatrix;
         };
 }

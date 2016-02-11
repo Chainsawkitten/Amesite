@@ -51,14 +51,15 @@ Enemy* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
 
 Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::Player player) {
     Player* gameObject = new Player(mScene);
-    gameObject->GetEntity("body")->GetComponent<Component::Transform>()->position = origin;
+    gameObject->GetEntity("node")->GetComponent<Component::Transform>()->position = origin;
+    gameObject->GetEntity("node")->GetComponent<Component::Controller>()->playerID = player;
     gameObject->GetEntity("body")->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->GetEntity("spotLight")->GetComponent<Component::Controller>()->playerID = player;
-    if (player == InputHandler::PLAYER_ONE) {
-        gameObject->GetEntity("spotLight")->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::StickRotate);
-    } else {
-        gameObject->GetEntity("spotLight")->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ArrowKeyRotate);
-    }
+    //gameObject->GetEntity("spotLight")->GetComponent<Component::Controller>()->playerID = player;
+    //if (player == InputHandler::PLAYER_ONE) {
+    //    gameObject->GetEntity("spotLight")->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::StickRotate);
+    //} else {
+    //    gameObject->GetEntity("spotLight")->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ArrowKeyRotate);
+    //}
 
     return gameObject;
 }

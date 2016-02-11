@@ -19,7 +19,8 @@ Transform::~Transform() {
 }
 
 void Transform::UpdateModelMatrix() {
-    modelMatrix = glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
+    orientationMatrix = GetOrientation();
+    modelMatrix = glm::translate(glm::mat4(), position) * orientationMatrix * glm::scale(glm::mat4(), scale);
 }
 
 glm::vec3 Transform::GetWorldPosition() const {

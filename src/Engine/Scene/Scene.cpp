@@ -64,12 +64,14 @@ void Scene::UpdateModelMatrices() {
 void Scene::UpdateAnimationMatrices() {
     std::vector<Component::Animation*> animationVector = GetAll<Component::Animation>();
     for (auto animationComponent : animationVector) {
-        if (animationComponent->GetActiveAnimationClip() == nullptr)
+        if (animationComponent->GetActiveAnimationClip() == nullptr) {
+            animationComponent->orientationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix;
             animationComponent->animationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix;
-        else
+        } else {
+            animationComponent->orientationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix * animationComponent->orientationMatrix;
             animationComponent->animationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix * animationComponent->animationMatrix;
+        }
     }
-        
 }
 
 void Scene::RemoveEntity(Entity* entity) {

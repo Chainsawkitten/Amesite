@@ -181,10 +181,10 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             Component::Animation* animationComponent = lightEntity->GetComponent<Component::Animation>();
             if (animationComponent != nullptr) {
                 modelMat = animationComponent->animationMatrix;
-                origentationMat = animationComponent->orientation;
+                origentationMat = animationComponent->orientationMatrix;
             } else {
                 modelMat = transform->modelMatrix;
-                origentationMat = transform->GetOrientation();
+                origentationMat = transform->orientationMatrix;
             }
             glm::vec4 direction = viewMat * (origentationMat * glm::vec4(0.f, 0.f, 1.f, 0.f));
             glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(modelMat[3][0], modelMat[3][1], modelMat[3][2]), 1.0)))[0]);
@@ -209,11 +209,11 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             Component::Animation* animationComponent = lightEntity->GetComponent<Component::Animation>();
             if (animationComponent != nullptr) {
                 modelMat = animationComponent->animationMatrix;
-                origentationMat = animationComponent->orientation;
+                origentationMat = animationComponent->orientationMatrix;
             }
             else {
                 modelMat = transform->modelMatrix;
-                origentationMat = transform->GetOrientation();
+                origentationMat = transform->orientationMatrix;
             }
             glm::vec4 direction = viewMat * (origentationMat * glm::vec4(0.f, 0.f, 1.f, 0.f));
             glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(modelMat[3][0], modelMat[3][1], modelMat[3][2]), 1.0)))[0]);

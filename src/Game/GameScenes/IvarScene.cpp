@@ -1,4 +1,4 @@
-#include "MainScene.hpp"
+#include "IvarScene.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -33,7 +33,7 @@
 
 using namespace GameObject;
 
-MainScene::MainScene() {
+IvarScene::IvarScene() {
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
@@ -57,15 +57,17 @@ MainScene::MainScene() {
     mMainCamera = mainCamera->GetEntity("body");
     
     // Create players
-    Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
-    Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+    Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+    //Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+    //player1->GetEntity("body")->GetComponent<Component::Transform>()->yaw = 90.f;
+    //player1->GetEntity("leftLight")->GetComponent<Component::Transform>()->yaw = 90.f;
 
-    GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
-    GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), Component::ParticleEmitter::DUST);
-    GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
+    //GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
+    //GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), Component::ParticleEmitter::DUST);
+    //GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
     
-    mPlayers.push_back(player1->GetEntity("body"));
-    mPlayers.push_back(player2->GetEntity("body"));
+    mPlayers.push_back(player1->GetEntity("node"));
+    //mPlayers.push_back(player2->GetEntity("node"));
     
     // Create scene
     cave = GameEntityCreator().CreateMap();
@@ -81,22 +83,22 @@ MainScene::MainScene() {
     fxaaFilter = new FXAAFilter();
     gammaCorrectionFilter = new GammaCorrectionFilter();
 
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
 }
 
-MainScene::~MainScene() {
+IvarScene::~IvarScene() {
     delete fxaaFilter;
     delete gammaCorrectionFilter;
     delete postProcessing;
 }
 
-void MainScene::Update(float deltaTime) {
+void IvarScene::Update(float deltaTime) {
     // ControllerSystem
     mControllerSystem.Update(*this, deltaTime);
     
@@ -129,13 +131,13 @@ void MainScene::Update(float deltaTime) {
 
     // Update game logic
     // UpdateCamera
-    UpdateCamera(mMainCamera, mPlayers);
+    //UpdateCamera(mMainCamera, mPlayers);
     for (auto player : mPlayers) {
         GridCollide(player, deltaTime);
-        if (player->GetComponent<Component::Health>()->health < 0.01f) {
-            player->GetComponent<Component::Physics>()->velocity.x = -10.f;
-            player->GetComponent<Component::Health>()->health = player->GetComponent<Component::Health>()->maxHealth;
-        }
+        //if (player->GetComponent<Component::Health>()->health < 0.01f) {
+        //    player->GetComponent<Component::Physics>()->velocity.x = -10.f;
+        //    player->GetComponent<Component::Health>()->health = player->GetComponent<Component::Health>()->maxHealth;
+        //}
     }
 
     // Render.
@@ -153,7 +155,7 @@ void MainScene::Update(float deltaTime) {
     postProcessing->Render();
 }
 
-bool MainScene::GridCollide(Entity* entity, float deltaTime) {
+bool IvarScene::GridCollide(Entity* entity, float deltaTime) {
     
     Component::Transform* transform = entity->GetComponent<Component::Transform>();
     Component::Physics* physics = entity->GetComponent<Component::Physics>();

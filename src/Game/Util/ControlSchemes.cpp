@@ -144,9 +144,7 @@ void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTi
                 direction = direction / directionLength;
             }
             float bulletSpeed = 40.f;
-            //GameObject::Bullet* bullet = 
             GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y), 0);
-            //bullet->GetEntity("body")->GetComponent<Component::Damage>()->faction = controller->entity->GetComponent<Component::Health>()->faction;
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }

@@ -89,7 +89,7 @@ namespace Component {
             /**
              * Default: Identity matrix
              */
-            glm::mat4 orientation;
+            glm::mat4 orientationMatrix;
 
         private:
             // Map containing animation clips.

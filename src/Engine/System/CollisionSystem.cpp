@@ -58,6 +58,9 @@ void CollisionSystem::Update(Scene& scene) {
 
     std::sort(nodes.begin(), nodes.end(), myfunction);
 
+    if (nodes.size() == 0)
+        return;
+
     for (unsigned int x = 0; x < nodes.size() - 1; x++) {
         Scene::Collision* collisionX = nullptr;
         for (unsigned int i = x + 1; i < nodes.size() && nodes[x].max.x > nodes[i].min.x; i++) {

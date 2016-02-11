@@ -271,10 +271,11 @@ set(GAME_SRCS
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
         src/Game/Component/CameraFollow.cpp
+		src/Game/Component/LifeTime.cpp
         src/Game/GameScenes/MainScene.cpp
         src/Game/GameScenes/DanielScene.cpp
+        src/Game/GameScenes/IvarScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
-        src/Game/Component/LifeTime.cpp
         src/Game/GameObject/Bullet.cpp
         src/Game/GameObject/Player.cpp
         src/Game/GameObject/Camera.cpp
@@ -298,10 +299,11 @@ set(GAME_HEADERS
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
         src/Game/Component/CameraFollow.hpp
+        src/Game/Component/LifeTime.hpp
         src/Game/GameScenes/MainScene.hpp
         src/Game/GameScenes/DanielScene.hpp
+        src/Game/GameScenes/IvarScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
-        src/Game/Component/LifeTime.hpp
         src/Game/GameObject/Bullet.hpp
         src/Game/GameObject/Player.hpp
         src/Game/GameObject/Camera.hpp

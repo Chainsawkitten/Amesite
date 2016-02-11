@@ -75,8 +75,8 @@ void AnimationSystem::Update(Scene& scene, float deltaTime) {
                 float pitch = newKeyFrame->pitch * interpolation + oldKeyFrame->pitch * invInterpolation;
                 float roll = newKeyFrame->roll * interpolation + oldKeyFrame->roll * invInterpolation;
 
-                animationComponent->orientation = GetOrientation(yaw, pitch, roll);
-                animationComponent->animationMatrix = glm::translate(glm::mat4(), position) * animationComponent->orientation * glm::scale(glm::mat4(), transformComponent->scale);
+                animationComponent->orientationMatrix = GetOrientation(yaw, pitch, roll);
+                animationComponent->animationMatrix = glm::translate(glm::mat4(), position) * animationComponent->orientationMatrix;// *glm::scale(glm::mat4(), transformComponent->scale);
 
                 if (interpolation > 0.99f) {
                     animationClip->activeKeyFrame = (animationClip->activeKeyFrame + 1) % keyFrameVector->size();
