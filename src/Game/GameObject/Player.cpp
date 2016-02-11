@@ -16,6 +16,7 @@
 #include <Engine/Component/Physics.hpp>
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/SpotLight.hpp>
+#include <Geometry/OBJModel.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 
@@ -28,7 +29,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ButtonShoot);
     body->AddComponent<Component::Transform>();
-    body->AddComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    body->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/GolfBall.obj");
     body->AddComponent<Component::Material>();
     body->AddComponent<Component::Collider2DCircle>()->radius = 0.5;
     body->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;

@@ -4,6 +4,8 @@
 #include "Shader/Shader.hpp"
 #include "Geometry/Cube.hpp"
 #include "Geometry/Square.hpp"
+#include "Geometry/OBJModel.hpp"
+#include "Geometry/Model.hpp"
 #include "Texture/Texture2D.hpp"
 #include "Audio/SoundBuffer.hpp"
 #include "Audio/WaveFile.hpp"
@@ -134,6 +136,30 @@ Geometry::Cube* ResourceManager::CreateCube() {
     
     mCubeCount++;
     return mCube;
+}
+
+Geometry::OBJModel* ResourceManager::CreateOBJModel(std::string filename) {
+    if (objModels.find(filename) == objModels.end()) {
+        objModels[filename].model = new Geometry::OBJModel(filename.c_str());
+        objModelsInverse[objModels[filename].model] = filename;
+        objModels[filename].count = 1;
+    }
+    else {
+        objModels[filename].count++;
+    }
+
+    return objModels[filename].model;
+}
+
+void ResourceManager::FreeOBJModel(Geometry::OBJModel* model) {
+    string filename = objModelsInverse[model];
+
+    objModels[filename].count--;
+    if (objModels[filename].count <= 0) {
+        objModelsInverse.erase(model);
+        delete model;
+        objModels.erase(filename);
+    }
 }
 
 void ResourceManager::FreeCube() {
