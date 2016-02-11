@@ -36,8 +36,7 @@ namespace System {
             float mTextureAtlasNumRows;
 
             // Texture atlas where the particle textures are found.
-            Texture* mTextureAtlas;
-            Texture2D* mParticleTexture;
+            Texture2D* mTextureAtlas;
 
             // Vertex buffer.
             GLuint mVertexBuffer = 0;

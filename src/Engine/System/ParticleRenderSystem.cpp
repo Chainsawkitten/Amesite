@@ -3,6 +3,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <vector>
+
+#include "../Util/Log.hpp"
 #include "../Resources.hpp"
 #include "../Texture/Texture.hpp"
 #include "../Texture/Texture2D.hpp"
@@ -31,8 +33,7 @@ ParticleRenderSystem::ParticleRenderSystem() {
     // When textures are added to the Atlas the numRows needs to be updated.
     mTextureAtlasNumRows = 2.f;
 
-    mParticleTexture = Resources().CreateTexture2DFromFile("Resources/ParticleAtlas.png");
-    mTextureAtlas = mParticleTexture;
+    mTextureAtlas = Resources().CreateTexture2DFromFile("Resources/ParticleAtlas.png");
 
     // Vertex buffer
     glGenBuffers(1, &mVertexBuffer);
@@ -69,13 +70,15 @@ ParticleRenderSystem::~ParticleRenderSystem() {
     Resources().FreeShader(mParticleVertShader);
     Resources().FreeShader(mParticleGeomShader);
     Resources().FreeShader(mParticleFragShader);
+    Resources().FreeTexture2D(mTextureAtlas);
 
     glDeleteBuffers(1, &mVertexBuffer);
 
-    Resources().FreeTexture2D(mParticleTexture);
+    
 }
 
 void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2& screenSize) {
+    Log() << (int)Particle()->ParticleCount() << "\n";
     if (Particle()->ParticleCount() > 0) {
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         std::vector<ParticleSystem::Particle>* particles = scene.GetVectorContents<ParticleSystem::Particle>();
@@ -94,15 +97,12 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
 
         mParticleShaderProgram->Use();
 
-        glUniform1i(mParticleShaderProgram->GetUniformLocation("baseImage"), 0);
-
-        glActiveTexture(GL_TEXTURE0 + 0);
-        glBindTexture(GL_TEXTURE_2D, mTextureAtlas->GetTextureID());
-
         glBindVertexArray(mVertexAttribute);
 
+        glUniform1i(mParticleShaderProgram->GetUniformLocation("baseImage"), 0);
+
         // Base image texture
-        glActiveTexture(GL_TEXTURE0 + 0);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mTextureAtlas->GetTextureID());
 
         // Send the matrices to the shader.

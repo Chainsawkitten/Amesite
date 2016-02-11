@@ -74,7 +74,6 @@ function(CopyAsset inputfile outdir)
         COMMENT "Copying ${inputfile}"
     )
 endfunction()
->>>>>>> 2864026d99dbce70138662d5e8476c3d6d900d38
 
 foreach(item ${RESOURCES})
     CopyAsset(${item} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
@@ -278,6 +277,7 @@ set(GAME_SRCS
         src/Game/GameObject/Camera.cpp
         src/Game/GameObject/Enemy.cpp
         src/Game/GameObject/Cave.cpp
+        src/Game/GameObject/Dust.cpp
     )
 
 set(GAME_HEADERS
@@ -305,6 +305,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Camera.hpp
         src/Game/GameObject/Enemy.hpp
         src/Game/GameObject/Cave.hpp
+        src/Game/GameObject/Dust.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
