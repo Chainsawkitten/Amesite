@@ -25,12 +25,12 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     entity->AddComponent<Component::Physics>();
     entity->AddComponent<Component::LifeTime>()->lifeTime = 2.f;
 
+
+    // First emitter - fire
     Entity* emitterEntity = mScene->CreateEntity();
-    mEntityMap["emitter"] = emitterEntity;
+    mEntityMap["fire"] = emitterEntity;
     emitterEntity->AddComponent<Component::LifeTime>()->lifeTime = 1.8f;
     emitterEntity->AddComponent<Component::ParticleEmitter>();
-
-    // Particle emitter.
 
     Component::ParticleEmitter* emitter = emitterEntity->GetComponent<Component::ParticleEmitter>();
 
@@ -42,27 +42,25 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     emitter->relative = true;
     emitter->follow = entity;
     emitter->origin = glm::vec3(0.f, 0.f, 0.f);
-
-    //Particle type.
     emitter->particleType.textureIndex = Component::ParticleEmitter::FIRE;
     emitter->particleType.minLifetime = .01f;
     emitter->particleType.maxLifetime = .02f;
     emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -.2f);
     emitter->particleType.maxVelocity = glm::vec3(.3f, 0.f, .2f);
-    emitter->particleType.minSize = glm::vec2(.4f, .4f);
+    emitter->particleType.minSize = glm::vec2(.5f, .5f);
     emitter->particleType.maxSize = glm::vec2(.7f, .7f);
     emitter->particleType.uniformScaling = true;
-    emitter->particleType.color = glm::vec3(1.f, 1.f, 1.f);
+    emitter->particleType.color = glm::vec3(.8f, .8f, .8f);
     emitter->particleType.startAlpha = 1.f;
     emitter->particleType.midAlpha = 1.f;
     emitter->particleType.endAlpha = 0.f;
 
+
+    // Second emitter - blue
     Entity* emitterEntityOne = mScene->CreateEntity();
-    mEntityMap["emitter"] = emitterEntity;
+    mEntityMap["blue"] = emitterEntity;
     emitterEntityOne->AddComponent<Component::LifeTime>()->lifeTime = 1.8f;
     emitterEntityOne->AddComponent<Component::ParticleEmitter>();
-
-    // Particle emitter.
 
     Component::ParticleEmitter* emitterOne = emitterEntityOne->GetComponent<Component::ParticleEmitter>();
 
@@ -74,11 +72,9 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     emitterOne->relative = true;
     emitterOne->follow = entity;
     emitterOne->origin = glm::vec3(0.f, 0.f, 0.f);
-
-    //Particle type.
     emitterOne->particleType.textureIndex = Component::ParticleEmitter::BLUE;
-    emitterOne->particleType.minLifetime = .013f;
-    emitterOne->particleType.maxLifetime = .023f;
+    emitterOne->particleType.minLifetime = .026f;
+    emitterOne->particleType.maxLifetime = .029f;
     emitterOne->particleType.minVelocity = glm::vec3(-.3f, 0.f, -.2f);
     emitterOne->particleType.maxVelocity = glm::vec3(.3f, 0.f, .2f);
     emitterOne->particleType.minSize = glm::vec2(.5f, .5f);
