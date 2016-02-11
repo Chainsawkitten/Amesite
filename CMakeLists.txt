@@ -257,6 +257,7 @@ set(GAME_SRCS
         src/Game/Util/GameEntityFactory.cpp
         src/Game/Util/CameraUpdate.cpp
         src/Game/Util/ControlSchemes.cpp
+        src/Game/Util/MainCamera.cpp
         src/Game/CaveSystem/CaveSystem.cpp
         src/Game/System/ControllerSystem.cpp
         src/Game/System/HealthSystem.cpp
@@ -284,6 +285,7 @@ set(GAME_HEADERS
         src/Game/Util/GameEntityFactory.hpp
         src/Game/Util/CameraUpdate.hpp
         src/Game/Util/ControlSchemes.hpp
+        src/Game/Util/MainCamera.hpp
         src/Game/CaveSystem/CaveSystem.hpp
         src/Game/System/ControllerSystem.hpp
         src/Game/System/HealthSystem.hpp
