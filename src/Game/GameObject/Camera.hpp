@@ -9,7 +9,7 @@ namespace GameObject {
     /// A Camera
     class Camera : public SuperGameObject {
         public:
-            /// Create %Bullet
+            /// Create %Camera
             /**
              * @param scene Pointer to which Scene %Camera Enities' are contained.
              */
