@@ -42,11 +42,7 @@ int main() {
     Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
     
-    // Scene and Entites. 
-    //Scene scene;
-    System::ParticleSystem mParticleSystem;
-    // Make particle system active
-    mParticleSystem.SetActive();
+    // Scene
     Scene* scene = new MainScene();
     
     // Main game loop.

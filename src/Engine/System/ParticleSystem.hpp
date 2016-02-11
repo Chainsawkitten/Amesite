@@ -40,10 +40,6 @@ namespace System {
                 /// Texture index (for the texture atlas, left to right, top to bottom indexing)
                 float textureIndex;
             };
-
-            /// Create a new particle system.
-            ParticleSystem();
-
             /// Destructor.
             ~ParticleSystem();
 
@@ -51,10 +47,7 @@ namespace System {
             /**
             * @return The currently active input handler or nullptr.
             */
-            static ParticleSystem* GetActiveInstance();
-
-            /// Set as currently active ParticleSystem.
-            void SetActive();
+            static ParticleSystem& GetActiveInstance();
 
             /// Get the amount of particles.
             /**
@@ -89,6 +82,9 @@ namespace System {
              void Update(Scene& scene, double time);
              
         private:
+            /// Create a new particle system.
+            ParticleSystem();
+
             Scene* mScene; 
             static ParticleSystem* mActiveInstance;
             // System properties
@@ -100,7 +96,7 @@ namespace System {
     /**
     * @return The currently active ParticleSystem or nullptr.
     */
-    ParticleSystem* Particle();
+    ParticleSystem& Particle();
 }
 
 
