@@ -5,7 +5,6 @@
 
 class Scene;
 class Entity;
-class Texture2D;
 
 namespace GameObject{
     class Bullet;
@@ -13,6 +12,7 @@ namespace GameObject{
     class Camera;
     class Enemy;
     class Cave;
+    class Dust;
 }
 
 /// Factory responsible for creating prefab entities.
@@ -62,18 +62,18 @@ class GameEntityFactory {
          */
         GameObject::Camera* CreateCamera(const glm::vec3& origin, const glm::vec3& rotation);
 
+        /// Creates a cuboid dust particle emitter and bind it to an Entity.
+        /**
+        * @param object Entity to which the system is relative.
+        * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
+        */
+        GameObject::Dust* CreateDust(Entity* object, int particleTextureIndex);
+
         /// Sets scene that the factory is coupled to.
         /**
          * @param scene Scene that the factory will be coupled to.
          */
         void SetScene(Scene* scene);
-
-        /// Creates a cuboid dust particle emitter and bind it to an Entity.
-        /**
-         * @param object Entity to which the system is relative.
-         * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
-         */
-        void CreateCuboidDust(Entity* object, int particleTextureIndex);
 
         /// Create a map.
         /**

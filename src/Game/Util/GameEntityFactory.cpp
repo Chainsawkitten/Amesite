@@ -79,15 +79,16 @@ Camera* GameEntityFactory::CreateCamera(const glm::vec3& origin, const glm::vec3
     return gameObject;
 }
 
-void GameEntityFactory::SetScene(Scene* scene) {
-    mScene = scene;
-}
-
-void GameEntityFactory::CreateCuboidDust(Entity * object, int particleTextureIndex) {  
+Dust* GameEntityFactory::CreateDust(Entity * object, int particleTextureIndex) {
     Dust* gameObject = new Dust(mScene);
 
     gameObject->GetEntity("body")->GetComponent<Component::ParticleEmitter>()->follow = object;
     gameObject->GetEntity("body")->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
+    return gameObject;
+}
+
+void GameEntityFactory::SetScene(Scene* scene) {
+    mScene = scene;
 }
 
 Cave* GameEntityFactory::CreateMap() {
