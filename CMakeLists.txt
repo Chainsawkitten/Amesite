@@ -58,6 +58,7 @@ set(RESOURCES
         assets/DefaultDiffuse.png
         assets/DefaultNormal.png
         assets/DefaultSpecular.png
+        assets/Laser.ogg
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -121,8 +122,9 @@ endforeach()
 include_directories(src)
 
 # Doxygen documentation
+option(ModershipBuildDocs "Build the doxygen documentation" ON)
 find_package(Doxygen)
-if(DOXYGEN_FOUND)
+if(DOXYGEN_FOUND AND ModershipBuildDocs)
     add_custom_target(EngineDoc ALL
         ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/EngineDoxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -133,7 +135,7 @@ if(DOXYGEN_FOUND)
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Generating API documentation with Doxygen" VERBATIM
     )
-endif(DOXYGEN_FOUND)
+endif()
 
 ## TARGETS ##
 
@@ -268,6 +270,7 @@ set(GAME_SRCS
         src/Game/Component/Damage.cpp
         src/Game/Component/CameraFollow.cpp
         src/Game/GameScenes/MainScene.cpp
+        src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
         src/Game/Component/LifeTime.cpp
@@ -295,6 +298,7 @@ set(GAME_HEADERS
         src/Game/Component/Damage.hpp
         src/Game/Component/CameraFollow.hpp
         src/Game/GameScenes/MainScene.hpp
+        src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
         src/Game/Component/LifeTime.hpp
@@ -310,6 +314,6 @@ create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
 add_executable(Modership ${GAME_SRCS} ${GAME_HEADERS})
 target_link_libraries(Modership Engine)
 target_include_directories(Modership PUBLIC src/Engine)
-target_link_libraries(Modership glew glfw ${GLFW_LIBRARIES})
+target_link_libraries(Modership glew glfw ${GLFW_LIBRARIES} ${OPENAL_LIB})
 set_property(TARGET Modership PROPERTY CXX_STANDARD 11)
 set_property(TARGET Modership PROPERTY CXX_STANDARD_REQUIRED ON)
