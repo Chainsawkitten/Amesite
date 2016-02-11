@@ -78,6 +78,7 @@ int main() {
         glfwPollEvents();
     }
     
+    delete scene;
     delete window;
     
     glfwTerminate();
