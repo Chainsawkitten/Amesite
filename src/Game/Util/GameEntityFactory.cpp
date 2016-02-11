@@ -30,6 +30,7 @@
 #include "../GameObject/Camera.hpp"
 #include "../GameObject/Enemy.hpp"
 #include "../GameObject/Cave.hpp"
+#include "../GameObject/Dust.hpp"
 
 using namespace GameObject;
 
@@ -82,59 +83,11 @@ void GameEntityFactory::SetScene(Scene* scene) {
     mScene = scene;
 }
 
-void GameEntityFactory::CreateCuboidParticle(Entity * object, int particleTextureIndex) {
-    object->AddComponent<Component::ParticleEmitter>();
-    
-    // Particle emitter.
-    Component::ParticleEmitter* emitter = object->GetComponent<Component::ParticleEmitter>();
-    
-    emitter->emitterType = Component::ParticleEmitter::CUBOID;
-    emitter->follow = object;
-    emitter->maxEmitTime = 0.015;
-    emitter->minEmitTime = 0.01;
-    emitter->lifetime = 0.0;
-    emitter->origin = glm::vec3(0.f, 5.f, 0.f);
-    emitter->size = glm::vec3(40.f, 20.f, 40.f);
-    emitter->relative = true;
-    emitter->timeToNext = 5.0;
-    
-    //Particle type.
-    emitter->particleType.textureIndex = particleTextureIndex;
-    emitter->particleType.minLifetime = 2.f;
-    emitter->particleType.maxLifetime = 4.f;
-    emitter->particleType.minVelocity = glm::vec3(-0.025f, -0.01f, -0.025f);
-    emitter->particleType.maxVelocity = glm::vec3(0.025f, -0.1f, 0.025f);
-    emitter->particleType.minSize = glm::vec2(0.025f, 0.025f);
-    emitter->particleType.maxSize = glm::vec2(0.05f, 0.05f);
-    emitter->particleType.uniformScaling = true;
-    emitter->particleType.color = glm::vec3(1.f, 0.5f, 0.5f);
-}
+void GameEntityFactory::CreateCuboidDust(Entity * object, int particleTextureIndex) {  
+    Dust* gameObject = new Dust(mScene);
 
-void GameEntityFactory::CreatePointParticle(Entity * object, int particleTextureIndex) {
-    object->AddComponent<Component::ParticleEmitter>();
-
-    // Particle emitter.
-    Component::ParticleEmitter* emitter = object->GetComponent<Component::ParticleEmitter>();
-
-    emitter->emitterType = Component::ParticleEmitter::POINT;
-    emitter->maxEmitTime = 0.05;
-    emitter->minEmitTime = 0.03;
-    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
-    emitter->lifetime = 0.0;
-    emitter->relative = true;
-    emitter->follow = object;
-    emitter->origin = glm::vec3(0.f, 0.f, 0.f);
-
-    //Particle type.
-    emitter->particleType.textureIndex = particleTextureIndex;
-    emitter->particleType.minLifetime = .1f;
-    emitter->particleType.maxLifetime = .2f;
-    emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -.2f);
-    emitter->particleType.maxVelocity = glm::vec3(.3f, 0.f, .2f);
-    emitter->particleType.minSize = glm::vec2(.5f, .5f);
-    emitter->particleType.maxSize = glm::vec2(1.f, 1.f);
-    emitter->particleType.uniformScaling = true;
-    emitter->particleType.color = glm::vec3(1.f, 1.f, 1.f);
+    gameObject->GetEntity("body")->GetComponent<Component::ParticleEmitter>()->follow = object;
+    gameObject->GetEntity("body")->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
 }
 
 Cave* GameEntityFactory::CreateMap() {

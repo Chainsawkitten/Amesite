@@ -73,14 +73,7 @@ class GameEntityFactory {
          * @param object Entity to which the system is relative.
          * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
          */
-        void CreateCuboidParticle(Entity* object, int particleTextureIndex);
-
-        /// Creates a point particle emitter and bind it to an Entity.
-        /**
-         * @param object Entity to which the system is relative.
-         * @param particleTextureIndex %Texture the particles should sample from,  these are documented in Component::ParticleEmitter::ParticleTextureIndex.
-         */
-        void CreatePointParticle(Entity* object, int particleTextureIndex);
+        void CreateCuboidDust(Entity* object, int particleTextureIndex);
 
         /// Create a map.
         /**
