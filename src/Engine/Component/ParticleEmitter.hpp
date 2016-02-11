@@ -17,10 +17,10 @@ namespace Component {
 
             /// Texture corresponding to index in particle atlas texture.
             enum ParticleTextureIndex {
-                FIRE = 0, ///< Dust particle
-                PRIDE,
-                DUST,
-                BLUE,
+                FIRE = 0, ///< Fire particle
+                PRIDE, ///< Pride particle
+                DUST, ///< Dust particle
+                BLUE, ///< Blue particle
             };
 
             /// Defines a kind of particle.
