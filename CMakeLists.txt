@@ -58,6 +58,7 @@ set(RESOURCES
         assets/DefaultDiffuse.png
         assets/DefaultNormal.png
         assets/DefaultSpecular.png
+        assets/ParticleAtlas.png
         assets/Laser.ogg
     )
 
@@ -280,6 +281,7 @@ set(GAME_SRCS
         src/Game/GameObject/Camera.cpp
         src/Game/GameObject/Enemy.cpp
         src/Game/GameObject/Cave.cpp
+        src/Game/GameObject/Dust.cpp
     )
 
 set(GAME_HEADERS
@@ -309,6 +311,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Camera.hpp
         src/Game/GameObject/Enemy.hpp
         src/Game/GameObject/Cave.hpp
+        src/Game/GameObject/Dust.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

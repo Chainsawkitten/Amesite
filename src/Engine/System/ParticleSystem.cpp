@@ -19,11 +19,12 @@ using namespace System;
 ParticleSystem* ParticleSystem::mActiveInstance = nullptr;
 
 ParticleSystem::ParticleSystem() { 
-    this->mMaxParticleCount = 1000;
+    mMaxParticleCount = 1000;
     mParticleCount = 0;
 }
 
 ParticleSystem::~ParticleSystem() {
+    delete mActiveInstance;
 }
 
 unsigned int ParticleSystem::ParticleCount() const {
@@ -105,14 +106,15 @@ void ParticleSystem::EmitParticle(Component::ParticleEmitter* emitter) {
     EmitParticle(position, emitter);
 }
 
-ParticleSystem* ParticleSystem::GetActiveInstance() {
-    return mActiveInstance;
+ParticleSystem& ParticleSystem::GetActiveInstance() {
+    if (mActiveInstance != nullptr) {
+        return *mActiveInstance;
+    } else {
+        mActiveInstance = new ParticleSystem();
+        return *mActiveInstance;
+    }
 }
 
-void ParticleSystem::SetActive() {
-    mActiveInstance = this;
-}
-
-ParticleSystem* System::Particle() {
+ParticleSystem& System::Particle() {
     return ParticleSystem::GetActiveInstance();
 }
