@@ -61,8 +61,6 @@ DanielScene::DanielScene() {
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
     
-    mParticleSystem.SetActive();
-    
     // Create main camera
     Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     mMainCamera = mainCamera->GetEntity("body");
@@ -115,7 +113,7 @@ void DanielScene::Update(float deltaTime) {
     }
 
     // ParticleSystem
-    mParticleSystem.Update(*this, deltaTime);
+    System::Particle().Update(*this, deltaTime);
     
     // Updates model matrices for this frame.
     UpdateModelMatrices();

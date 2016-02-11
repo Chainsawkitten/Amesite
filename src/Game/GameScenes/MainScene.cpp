@@ -57,8 +57,6 @@ MainScene::MainScene() {
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
     
-    mParticleSystem.SetActive();
-    
     // Create main camera
     Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     mMainCamera = mainCamera->GetEntity("body");
@@ -68,15 +66,14 @@ MainScene::MainScene() {
     Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
     
-    GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
-    GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), Component::ParticleEmitter::DUST);
-    GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
-    
     mPlayers.push_back(player1->GetEntity("body"));
     mPlayers.push_back(player2->GetEntity("body"));
     
     // Create scene
     cave = GameEntityCreator().CreateMap();
+
+    // Create dust
+    GameEntityCreator().CreateDust(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
     
     // Directional light.
     Entity* dirLight = CreateEntity();
@@ -115,7 +112,7 @@ void MainScene::Update(float deltaTime) {
     }
     
     // ParticleSystem
-    mParticleSystem.Update(*this, deltaTime);
+    System::Particle().Update(*this, deltaTime);
     
     // Updates model matrices for this frame.
     UpdateModelMatrices();

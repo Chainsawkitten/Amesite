@@ -34,7 +34,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::Collider2DCircle>()->radius = 0.5;
     body->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     body->AddComponent<Component::Health>()->removeOnLowHealth = false;
-    body->AddComponent<Component::Spawner>()->delay = 0.05f;
+    body->AddComponent<Component::Spawner>()->delay = 0.1f;
     mEntityVector.push_back(body);
 
     Entity* spotLight = mScene->CreateEntity();
