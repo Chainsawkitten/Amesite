@@ -13,6 +13,7 @@
 #include "System/ParticleSystem.hpp"
 
 #include "GameScenes/MainScene.hpp"
+#include "GameScenes/AlbinScene.hpp"
 #include "GameScenes/EmptyScene.hpp"
 #include "GameScenes/DanielScene.hpp"
 
@@ -47,12 +48,11 @@ int main() {
     System::ParticleSystem mParticleSystem;
     // Make particle system active
     mParticleSystem.SetActive();
-    Scene* scene = new MainScene();
+    Scene* scene = new AlbinScene();
     
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
-    Log() << std::to_string(lastTimeRender) << "\n";
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();

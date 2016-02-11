@@ -58,6 +58,7 @@ set(RESOURCES
         assets/DefaultDiffuse.png
         assets/DefaultNormal.png
         assets/DefaultSpecular.png
+        assets/Laser.ogg
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -313,6 +314,6 @@ create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
 add_executable(Modership ${GAME_SRCS} ${GAME_HEADERS})
 target_link_libraries(Modership Engine)
 target_include_directories(Modership PUBLIC src/Engine)
-target_link_libraries(Modership glew glfw ${GLFW_LIBRARIES})
+target_link_libraries(Modership glew glfw ${GLFW_LIBRARIES} ${OPENAL_LIB})
 set_property(TARGET Modership PROPERTY CXX_STANDARD 11)
 set_property(TARGET Modership PROPERTY CXX_STANDARD_REQUIRED ON)
