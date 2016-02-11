@@ -53,12 +53,32 @@ endfunction()
 
 # Copy resources
 set(RESOURCES
-    assets/TestTexture.png
-    assets/DustParticle.png
-    assets/ParticleAtlas.png
-)
+        assets/TestTexture.png
+        assets/DustParticle.png
+        assets/DefaultDiffuse.png
+        assets/DefaultNormal.png
+        assets/DefaultSpecular.png
+        assets/ParticleAtlas.png
+    )
 
-file(COPY ${RESOURCES} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
+add_custom_target(ResourceTarget ALL)
+
+function(CopyAsset inputfile outdir)
+    get_filename_component(basefile ${inputfile} NAME)
+    set(outputfile ${outdir}/${basefile})
+    
+    add_custom_command(
+        TARGET ResourceTarget
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${inputfile} ${outputfile}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Copying ${inputfile}"
+    )
+endfunction()
+>>>>>>> 2864026d99dbce70138662d5e8476c3d6d900d38
+
+foreach(item ${RESOURCES})
+    CopyAsset(${item} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)
+endforeach()
 
 # Setup embedded source
 set(EMBEDDED_INPUT
@@ -141,10 +161,12 @@ set(ENGINE_SRCS
         src/Engine/Util/Log.cpp
         src/Engine/Util/Settings.cpp
         src/Engine/Util/Input.cpp
+        src/Engine/Util/Picking.cpp
         src/Engine/Component/SuperComponent.cpp
         src/Engine/Component/Lens.cpp
         src/Engine/Component/Transform.cpp
         src/Engine/Component/Mesh.cpp
+        src/Engine/Component/Material.cpp
         src/Engine/Component/RelativeTransform.cpp
         src/Engine/Component/Physics.cpp
         src/Engine/Component/Collider2DRectangle.cpp
@@ -192,10 +214,12 @@ set(ENGINE_HEADERS
         src/Engine/Util/Log.hpp
         src/Engine/Util/Settings.hpp
         src/Engine/Util/Input.hpp
+        src/Engine/Util/Picking.hpp
         src/Engine/Component/SuperComponent.hpp
         src/Engine/Component/Lens.hpp
         src/Engine/Component/Transform.hpp
         src/Engine/Component/Mesh.hpp
+        src/Engine/Component/Material.hpp
         src/Engine/Component/RelativeTransform.hpp
         src/Engine/Component/Physics.hpp
         src/Engine/Component/Collider2DRectangle.hpp
@@ -246,6 +270,7 @@ set(GAME_SRCS
         src/Game/Component/Damage.cpp
         src/Game/Component/CameraFollow.cpp
         src/Game/GameScenes/MainScene.cpp
+        src/Game/GameScenes/DanielScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
         src/Game/Component/LifeTime.cpp
         src/Game/GameObject/Bullet.cpp
@@ -272,6 +297,7 @@ set(GAME_HEADERS
         src/Game/Component/Damage.hpp
         src/Game/Component/CameraFollow.hpp
         src/Game/GameScenes/MainScene.hpp
+        src/Game/GameScenes/DanielScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
         src/Game/Component/LifeTime.hpp
         src/Game/GameObject/Bullet.hpp

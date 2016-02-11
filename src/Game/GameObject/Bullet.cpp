@@ -10,7 +10,6 @@
 #include "../Component/LifeTime.hpp"
 #include <Engine/Component/ParticleEmitter.hpp>
 #include <Engine/Component/Transform.hpp>
-#include <Engine/Component/Mesh.hpp>
 #include <Engine/Component/Physics.hpp>
 #include <Engine/Component/Collider2DCircle.hpp>
 
@@ -21,7 +20,7 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     mEntityMap["body"] = entity;
     entity->AddComponent<Component::Damage>()->damageAmount = 10.f;
     entity->AddComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-    //entity->AddComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+
     entity->AddComponent<Component::Collider2DCircle>()->radius = 0.25f;
     entity->AddComponent<Component::Physics>();
     entity->AddComponent<Component::LifeTime>()->lifeTime = 2.f;
