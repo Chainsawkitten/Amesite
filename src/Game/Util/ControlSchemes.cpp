@@ -69,7 +69,7 @@ void ControlScheme::MouseRotate(Component::Controller* controller, float deltaTi
     glm::vec4 playerPosition = transformComponent->modelMatrix*glm::vec4(0.f, 0.f, 0.f, 1.f);
 
     glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
-    Entity& mainCamera = MainCameraInstance().getMainCamera();
+    Entity& mainCamera = MainCameraInstance().GetMainCamera();
     glm::mat4 projectionMatrix = mainCamera.GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
     glm::mat4 viewMatrix = mainCamera.GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -mainCamera.GetComponent<Component::Transform>()->GetWorldPosition());
 

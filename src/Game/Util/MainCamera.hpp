@@ -4,12 +4,6 @@ class Entity;
 
 class MainCamera {
     public:
-        ///Constructor
-        MainCamera();
-
-        ///Destructor
-        ~MainCamera();
-
         ///Gets main camera instance.
         /**
         * @return The MainCamera instance.
@@ -20,13 +14,13 @@ class MainCamera {
         /**
         * @param camera Pointer to the camera that is the main camera for the scene.
         */
-        void setMainCamera(Entity* camera);
+        void SetMainCamera(Entity* camera);
 
         ///Gets the main camera entity.
         /**
         * @return The main camera entity.
         */
-        Entity& getMainCamera();
+        Entity& GetMainCamera();
 
     private:
         ///Main camera entity.

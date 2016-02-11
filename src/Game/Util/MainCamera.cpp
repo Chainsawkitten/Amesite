@@ -6,22 +6,14 @@ MainCamera& MainCamera::GetInstance() {
     return instance;
 }
 
-MainCamera::MainCamera() {
-
-}
-
-MainCamera::~MainCamera() {
-
-}
-
 MainCamera& MainCameraInstance() {
     return MainCamera::GetInstance();
 }
 
-void MainCamera::setMainCamera(Entity* camera) {
+void MainCamera::SetMainCamera(Entity* camera) {
     mCamera = camera;
 }
 
-Entity& MainCamera::getMainCamera() {
+Entity& MainCamera::GetMainCamera() {
     return *mCamera;
 }
