@@ -15,7 +15,7 @@ namespace FileSystem {
      */
     bool FileExists(const char* filename);
     
-    /// Get the file extension from a filename.
+    /// Get the lower case file extension from a filename.
     /**
      * @param filename The filename.
      * @return The extension part of the filename, or empty string if none.

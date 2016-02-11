@@ -1,6 +1,7 @@
 #include "FileSystem.hpp"
 
 #include <cstdlib>
+#include <locale>
 #include <sys/types.h>
 #include <sys/stat.h>
 #if defined(_WIN32) || defined(WIN32)
@@ -31,8 +32,16 @@ namespace FileSystem {
     
     std::string GetFileExtension(const std::string& filename) {
         for (std::string::size_type i=filename.length()-1; i>=0; i--) {
-            if (filename[i] == '.')
-                return filename.substr(i+1);
+            if (filename[i] == '.') {
+                std::string extension = filename.substr(i+1);
+                
+                // Convert to lower case.
+                std::locale loc;
+                for (std::string::size_type e=0; e<extension.length(); e++)
+                    extension[e] = std::tolower(extension[e], loc);
+                
+                return extension;
+            }
             
             if (filename[i] == '/' || filename[i] == DELIMITER)
                 return "";
