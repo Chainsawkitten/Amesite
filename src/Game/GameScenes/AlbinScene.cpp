@@ -3,10 +3,14 @@
 #include <Resources.hpp>
 #include <Audio/SoundSource.hpp>
 #include <Audio/SoundBuffer.hpp>
+#include <Audio/Listener.hpp>
 #include <Util/Input.hpp>
 #include <Util/Log.hpp>
+#include "../Util/GameSettings.hpp"
 
 AlbinScene::AlbinScene() {
+    mSoundSystem.GetListener()->SetGain(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    
     mTestSoundBuffer = Resources().CreateSound("Resources/Laser.ogg");
     mTestSoundSource1 = new Audio::Sound(mTestSoundBuffer);
     mTestSoundSource2 = new Audio::Sound(mTestSoundBuffer);
