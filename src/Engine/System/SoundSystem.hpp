@@ -4,7 +4,9 @@
 
 namespace Audio {
     class Listener;
-    
+}
+
+namespace System {
     /// Handles OpenAL sound.
     /**
      * There should only be one instance.
@@ -27,7 +29,7 @@ namespace Audio {
             /**
              * @return The listener.
              */
-            Listener* GetListener() const;
+            Audio::Listener* GetListener() const;
     
             /// Get instance of SoundSystem.
             /**
@@ -47,6 +49,6 @@ namespace Audio {
             ALCdevice *mDevice;
             ALCcontext *mContext;
     
-            Listener* mListener;
+            Audio::Listener* mListener;
     };
 }

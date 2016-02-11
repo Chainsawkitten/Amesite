@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Scene/Scene.hpp>
-#include <Audio/SoundSystem.hpp>
+#include <System/SoundSystem.hpp>
 
 namespace Audio {
     class VorbisFile;
@@ -25,7 +25,7 @@ class AlbinScene : public Scene {
         void Update(float deltaTime);
         
     private:
-        Audio::SoundSystem mSoundSystem;
+        System::SoundSystem mSoundSystem;
         
         Audio::SoundBuffer* mTestSoundBuffer;
         Audio::Sound* mTestSoundSource1;

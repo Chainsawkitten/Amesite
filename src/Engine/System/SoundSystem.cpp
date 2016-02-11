@@ -1,10 +1,11 @@
 #include "SoundSystem.hpp"
 
-#include "Listener.hpp"
+#include "../Audio/Listener.hpp"
 #include "../Util/Log.hpp"
 #include <AL/al.h>
 
 using namespace Audio;
+using namespace System;
 
 SoundSystem* SoundSystem::mInstance = nullptr;
 

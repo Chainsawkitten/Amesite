@@ -147,7 +147,6 @@ set(ENGINE_SRCS
         src/Engine/Audio/Listener.cpp
         src/Engine/Audio/SoundBuffer.cpp
         src/Engine/Audio/SoundSource.cpp
-        src/Engine/Audio/SoundSystem.cpp
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
         src/Engine/Geometry/Geometry2D.cpp
@@ -182,6 +181,7 @@ set(ENGINE_SRCS
         src/Engine/System/CollisionSystem.cpp
         src/Engine/System/ParticleSystem.cpp
         src/Engine/System/ParticleRenderSystem.cpp
+        src/Engine/System/SoundSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
         src/Engine/PostProcessing/PostProcessing.cpp
@@ -200,7 +200,6 @@ set(ENGINE_HEADERS
         src/Engine/Audio/SoundBuffer.hpp
         src/Engine/Audio/SoundFile.hpp
         src/Engine/Audio/SoundSource.hpp
-        src/Engine/Audio/SoundSystem.hpp
         src/Engine/Audio/VorbisFile.hpp
         src/Engine/Audio/WaveFile.hpp
         src/Engine/Geometry/Geometry2D.hpp
@@ -235,6 +234,7 @@ set(ENGINE_HEADERS
         src/Engine/System/CollisionSystem.hpp
         src/Engine/System/ParticleSystem.hpp
         src/Engine/System/ParticleRenderSystem.hpp
+        src/Engine/System/SoundSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
         src/Engine/PostProcessing/PostProcessing.hpp

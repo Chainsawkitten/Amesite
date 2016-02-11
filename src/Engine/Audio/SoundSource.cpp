@@ -1,6 +1,6 @@
 #include "SoundSource.hpp"
 #include <AL/alc.h>
-#include "SoundSystem.hpp"
+#include "../System/SoundSystem.hpp"
 #include "SoundBuffer.hpp"
 
 using namespace Audio;
@@ -20,7 +20,7 @@ Sound::Sound(SoundBuffer* buffer) {
     alSourcei(mSource, AL_LOOPING, mLoop);
     
     alSourcei(mSource, AL_BUFFER, buffer->Buffer());
-    SoundSystem::CheckError("Couldn't set sound source buffer.");
+    System::SoundSystem::CheckError("Couldn't set sound source buffer.");
 }
 
 Sound::~Sound() {
@@ -65,17 +65,17 @@ void Sound::SetLooping(ALboolean loop) {
 
 void Sound::Play() {
     alSourcePlay(mSource);
-    SoundSystem::CheckError("Couldn't play sound.");
+    System::SoundSystem::CheckError("Couldn't play sound.");
 }
 
 void Sound::Pause() {
     alSourcePause(mSource);
-    SoundSystem::CheckError("Couldn't pause sound.");
+    System::SoundSystem::CheckError("Couldn't pause sound.");
 }
 
 void Sound::Stop() {
     alSourceStop(mSource);
-    SoundSystem::CheckError("Couldn't pause sound.");
+    System::SoundSystem::CheckError("Couldn't pause sound.");
 }
 
 ALint Sound::State() const {
