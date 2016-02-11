@@ -54,6 +54,11 @@ namespace ControlScheme {
      */
     void AlwaysShoot(Component::Controller* controller, float deltaTime);
 
-    void MouseShoot(Component::Controller* controller, float deltaTime);
+    /// Mouse rotation.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void MouseRotate(Component::Controller* controller, float deltaTime);
 
 }
