@@ -60,6 +60,7 @@ set(RESOURCES
         assets/DefaultSpecular.png
         assets/ParticleAtlas.png
         assets/Laser.ogg
+        assets/GolfBall.obj
     )
 
 add_custom_target(ResourceTarget ALL)
