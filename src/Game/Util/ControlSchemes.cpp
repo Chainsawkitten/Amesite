@@ -10,6 +10,8 @@
 #include "../Component/Spawner.hpp"
 #include "../Util/GameEntityFactory.hpp"
 
+#include <Util\Log.hpp>
+
 void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
 
 void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
@@ -197,5 +199,38 @@ void ControlScheme::RandomMove(Component::Controller* controller, float deltaTim
     else if (glm::abs(x) + glm::abs(z) > 0.3f) {
         controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->speed, 0, z * deltaTime * controller->speed));
     }
+
+}
+
+void ControlScheme::Aim(Component::Controller* controller, float deltaTime) {
+
+    Entity* entity = controller->entity;
+
+    // Move the player
+    float x = Input()->ButtonValue(controller->playerID, InputHandler::AIM_X);
+    float z = Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z);
+    
+    glm::vec3 movement = glm::vec3(x, 0, z) * 2.f;
+
+    Component::Transform* transform = entity->GetComponent<Component::Transform>();
+    float oldAngle = glm::radians(transform->yaw);
+
+    glm::vec3 oldPoint = transform->position + glm::normalize(glm::vec3(glm::sin(oldAngle), 0, glm::cos(oldAngle))) * 5.f;
+    glm::vec3 newPoint = oldPoint - movement;
+    glm::vec3 oldDirection = glm::normalize(oldPoint - transform->position);
+    glm::vec3 newDirection = glm::normalize(newPoint - transform->position);
+    float dot = glm::dot(glm::vec2(oldDirection.x, oldDirection.z), glm::vec2(newDirection.x, newDirection.z));
+
+    if (dot > 1.f)
+        dot = 1.f;
+    else if (dot < -1.f)
+        dot = -1.f;
+
+    float angle = glm::acos(dot);
+    
+    if (glm::cross(oldDirection, newDirection).y > 0)
+        angle *= -1;
+    
+    transform->yaw = glm::degrees(oldAngle + angle);
 
 }

@@ -35,8 +35,6 @@
 
 using namespace GameObject;
 
-Player* player2;
-
 PontusScene::PontusScene() {
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -68,7 +66,7 @@ PontusScene::PontusScene() {
     
     // Create players
     Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
-    player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+    Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
 
     GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
     GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), Component::ParticleEmitter::DUST);

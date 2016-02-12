@@ -6,7 +6,7 @@ using namespace Component;
 
 WalkerAI::WalkerAI(Entity* entity) : SuperComponent(entity) {
 
-    target = glm::vec3(10, 0, 0);
+    target = glm::vec3(0, 0, 0);
 
 }
 
@@ -16,8 +16,6 @@ WalkerAI::~WalkerAI() {
 }
 
 void WalkerAI::Update(float deltaTime) {
-
         glm::vec3 dir = normalize(target - entity->GetComponent<Component::Transform>()->position);
         entity->GetComponent<Component::Transform>()->position += dir * deltaTime;
-
 }
