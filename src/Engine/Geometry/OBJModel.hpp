@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Model.hpp"
+#include "Geometry3D.hpp"
+#include <vector>
 
 namespace Geometry {
     /// A model loaded from an OBJ file.
-    class OBJModel : public Model {
+    class OBJModel : public Geometry3D {
     public:
         /// Create new model from OBJ file.
         /**
@@ -12,6 +13,30 @@ namespace Geometry {
         */
         OBJModel(const char* filename);
 
+        /// Get all the vertices.
+        /**
+        * @return Array of vertices
+        */
+        Vertex* GetVertices() const;
+
+        /// Get the number of vertices.
+        /**
+        * @return The number of vertices
+        */
+        unsigned int GetVertexCount() const;
+
+        /// Get all the vertex indices.
+        /**
+        * @return Array of vertex indices
+        */
+        unsigned int* GetIndices() const;
+
+        /// Get the number of indicies.
+        /**
+        * @return The number of vertex indices.
+        */
+        unsigned int GetIndexCount() const;
+    
     private:
         struct Face {
             struct Vertex {
@@ -22,6 +47,12 @@ namespace Geometry {
 
             Vertex vertices[3];
         };
+
+        Vertex *vertexData = nullptr;
+        unsigned int vertexNr = 0;
+
+        unsigned int* indexData = nullptr;
+        unsigned int indexNr = 0;
 
         static glm::vec3 ReadVec3(std::ifstream& modelFile);
         static glm::vec2 ReadVec2(std::ifstream& modelFile);

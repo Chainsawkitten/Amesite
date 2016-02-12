@@ -1,4 +1,5 @@
 #include "OBJModel.hpp"
+#include <fstream>
 #include "../Util/Log.hpp"
 
 namespace Geometry {
@@ -143,5 +144,23 @@ namespace Geometry {
         for (glm::vec3& tangent : tangents) {
             tangent = glm::normalize(tangent);
         }
+    }
+
+
+
+    Geometry3D::Vertex* OBJModel::GetVertices() const {
+        return vertexData;
+    }
+
+    unsigned int OBJModel::GetVertexCount() const {
+        return vertexNr;
+    }
+
+    unsigned int* OBJModel::GetIndices() const {
+        return indexData;
+    }
+
+    unsigned int OBJModel::GetIndexCount() const {
+        return indexNr;
     }
 }
