@@ -29,8 +29,12 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ButtonShoot);
     body->AddComponent<Component::Transform>();
-    body->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/GolfBall.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mModel = Resources().CreateOBJModel("Resources/ship.obj");
+    body->GetComponent<Component::Transform>()->scale = glm::vec3(0.1f, 0.1f, 0.1f);
     body->AddComponent<Component::Material>();
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/Albedo.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/Specular.png");
+    body->GetComponent<Component::Material>()->SetNormal("Resources/Normal.png");
     body->AddComponent<Component::Collider2DCircle>()->radius = 0.5;
     body->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     body->AddComponent<Component::Health>()->removeOnLowHealth = false;
@@ -52,5 +56,5 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
 }
 
 Player::~Player() {
-    Resources().FreeCube();
+    Resources().FreeOBJModel(mModel);
 }
