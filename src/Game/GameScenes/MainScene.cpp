@@ -23,7 +23,13 @@
 #include <Component/ParticleEmitter.hpp>
 #include "Game/Component/Health.hpp"
 #include <Component/ParticleEmitter.hpp>
+#include <Component/SoundSource.hpp>
+#include <Component/Listener.hpp>
 
+#include <Audio/SoundBuffer.hpp>
+#include <Audio/Listener.hpp>
+
+#include <Resources.hpp>
 #include <Texture/Texture2D.hpp>
 
 #include <PostProcessing/PostProcessing.hpp>
@@ -36,6 +42,8 @@
 using namespace GameObject;
 
 MainScene::MainScene() {
+    mSoundSystem.GetListener()->SetGain(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
@@ -54,6 +62,13 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
+    
+    // Music
+    mMusicSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
+    alGenSources(1, &mSource);
+    alSourcei(mSource, AL_BUFFER, mMusicSoundBuffer->Buffer());
+    alSourcei(mSource, AL_LOOPING, AL_TRUE);
+    alSourcePlay(mSource);
     
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
@@ -93,6 +108,9 @@ MainScene::~MainScene() {
     delete fxaaFilter;
     delete gammaCorrectionFilter;
     delete postProcessing;
+    
+    alDeleteSources(1, &mSource);
+    Resources().FreeSound(mMusicSoundBuffer);
 }
 
 void MainScene::Update(float deltaTime) {
