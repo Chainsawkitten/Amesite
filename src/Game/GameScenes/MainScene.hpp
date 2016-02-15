@@ -5,10 +5,13 @@
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
 #include <System/ParticleSystem.hpp>
+#include <System/SoundSystem.hpp>
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
 #include "Game/System/ControllerSystem.hpp"
 #include "Game/System/LifeTimeSystem.hpp"
+
+#include <AL/al.h>
 
 #include <vector>
 
@@ -18,6 +21,9 @@ class GammaCorrectionFilter;
 class Entity;
 namespace GameObject {
     class Cave;
+}
+namespace Audio {
+    class SoundBuffer;
 }
 
 /// The main scene for the game.
@@ -54,6 +60,9 @@ class MainScene : public Scene {
         // CollisionSystem.
         System::CollisionSystem mCollisionSystem;
         
+        // SoundSystem.
+        System::SoundSystem mSoundSystem;
+        
         // The life time system
         System::LifeTimeSystem mLifeTimeSystem;
         
@@ -73,4 +82,8 @@ class MainScene : public Scene {
         
         // Grid collision
         bool GridCollide(Entity* entity, float deltaTime);
+        
+        // Music.
+        Audio::SoundBuffer* mMusicSoundBuffer;
+        ALuint mSource;
 };
