@@ -6,7 +6,7 @@ using namespace Component;
 
 Lens::Lens(Entity* entity) : SuperComponent(entity) {
     fieldOfView = 45.f;
-    zFar = 100.f;
+    zFar = 200.f;
     zNear = 0.05f;
 }
 
