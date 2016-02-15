@@ -77,10 +77,11 @@ void SoundSystem::Update(Scene& scene) {
         Component::Physics* physics = entity->GetComponent<Component::Physics>();
         if (physics != nullptr)
             alSource3f(sound->mSource, AL_VELOCITY, physics->velocity.x, physics->velocity.y, physics->velocity.z);
+        else
+            alSource3f(sound->mSource, AL_VELOCITY, 0.f, 0.f, 0.f);
         
         alSourcef(sound->mSource, AL_PITCH, sound->pitch);
         alSourcef(sound->mSource, AL_GAIN, sound->gain);
-        alSource3f(sound->mSource, AL_VELOCITY, 0.f, 0.f, 0.f);
         alSourcei(sound->mSource, AL_LOOPING, sound->loop);
         if (sound->soundBuffer != nullptr)
             alSourcei(sound->mSource, AL_BUFFER, sound->soundBuffer->Buffer());
