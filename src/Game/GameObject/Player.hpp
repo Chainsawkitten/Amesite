@@ -4,6 +4,9 @@
 
 class Scene;
 class Entity;
+namespace Geometry {
+    class OBJModel;
+}
 
 namespace GameObject {
     /// A Player
@@ -16,5 +19,7 @@ namespace GameObject {
             Player(Scene* scene);
            
             ~Player();
+        private:
+            Geometry::OBJModel* mModel;
     };
 }

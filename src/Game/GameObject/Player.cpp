@@ -16,6 +16,7 @@
 #include <Engine/Component/Physics.hpp>
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/SpotLight.hpp>
+#include <Geometry/OBJModel.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 
@@ -29,8 +30,12 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
     body->AddComponent<Component::Transform>();
-    body->AddComponent<Component::Mesh>()->geometry = Resources().CreateCube();
+    body->AddComponent<Component::Mesh>()->geometry = mModel = Resources().CreateOBJModel("Resources/ship.obj");
+    body->GetComponent<Component::Transform>()->scale = glm::vec3(0.1f, 0.1f, 0.1f);
     body->AddComponent<Component::Material>();
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/Albedo.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/Specular.png");
+    body->GetComponent<Component::Material>()->SetNormal("Resources/Normal.png");
     body->AddComponent<Component::Collider2DCircle>()->radius = 0.5;
     body->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     body->AddComponent<Component::Health>()->removeOnLowHealth = false;
@@ -44,7 +49,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     spotLight->GetComponent<Component::RelativeTransform>()->scale = glm::vec3(0.3f, 0.3f, 0.3f);
     spotLight->AddComponent<Component::Mesh>()->geometry = body->GetComponent<Component::Mesh>()->geometry;
     spotLight->AddComponent<Component::Material>();
-    spotLight->AddComponent<Component::SpotLight>()->coneAngle = 90;
+    spotLight->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
     spotLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
     spotLight->AddComponent<Component::Physics>();
     spotLight->AddComponent<Component::Controller>();
@@ -52,5 +57,5 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
 }
 
 Player::~Player() {
-    Resources().FreeCube();
+    Resources().FreeOBJModel(mModel);
 }

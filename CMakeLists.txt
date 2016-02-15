@@ -60,6 +60,13 @@ set(RESOURCES
         assets/DefaultSpecular.png
         assets/ParticleAtlas.png
         assets/Laser.ogg
+        assets/GolfBall.obj
+        assets/ship.obj
+        assets/Normal.png
+        assets/Height.png
+        assets/Glow.png
+        assets/Albedo.png
+        assets/Specular.png
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -147,14 +154,13 @@ set(ENGINE_SRCS
         src/Engine/Resources.cpp
         src/Engine/Audio/Listener.cpp
         src/Engine/Audio/SoundBuffer.cpp
-        src/Engine/Audio/SoundSource.cpp
-        src/Engine/Audio/SoundSystem.cpp
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
         src/Engine/Geometry/Geometry2D.cpp
         src/Engine/Geometry/Square.cpp
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Geometry/Cube.cpp
+        src/Engine/Geometry/OBJModel.cpp
         src/Engine/Lighting/DeferredLighting.cpp
         src/Engine/Shader/Shader.cpp
         src/Engine/Shader/ShaderProgram.cpp
@@ -176,6 +182,8 @@ set(ENGINE_SRCS
         src/Engine/Component/DirectionalLight.cpp
         src/Engine/Component/PointLight.cpp
         src/Engine/Component/SpotLight.cpp
+        src/Engine/Component/SoundSource.cpp
+        src/Engine/Component/Listener.cpp
         src/Engine/Entity/Entity.cpp
         src/Engine/Scene/Scene.cpp
         src/Engine/System/RenderSystem.cpp
@@ -183,6 +191,7 @@ set(ENGINE_SRCS
         src/Engine/System/CollisionSystem.cpp
         src/Engine/System/ParticleSystem.cpp
         src/Engine/System/ParticleRenderSystem.cpp
+        src/Engine/System/SoundSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
         src/Engine/PostProcessing/PostProcessing.cpp
@@ -200,14 +209,13 @@ set(ENGINE_HEADERS
         src/Engine/Audio/Listener.hpp
         src/Engine/Audio/SoundBuffer.hpp
         src/Engine/Audio/SoundFile.hpp
-        src/Engine/Audio/SoundSource.hpp
-        src/Engine/Audio/SoundSystem.hpp
         src/Engine/Audio/VorbisFile.hpp
         src/Engine/Audio/WaveFile.hpp
         src/Engine/Geometry/Geometry2D.hpp
         src/Engine/Geometry/Square.hpp
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Geometry/Cube.hpp
+        src/Engine/Geometry/OBJModel.hpp
         src/Engine/Lighting/DeferredLighting.hpp
         src/Engine/Shader/Shader.hpp
         src/Engine/Shader/ShaderProgram.hpp
@@ -229,6 +237,8 @@ set(ENGINE_HEADERS
         src/Engine/Component/DirectionalLight.hpp
         src/Engine/Component/PointLight.hpp
         src/Engine/Component/SpotLight.hpp
+        src/Engine/Component/SoundSource.hpp
+        src/Engine/Component/Listener.hpp
         src/Engine/Entity/Entity.hpp
         src/Engine/Scene/Scene.hpp
         src/Engine/System/RenderSystem.hpp
@@ -236,6 +246,7 @@ set(ENGINE_HEADERS
         src/Engine/System/CollisionSystem.hpp
         src/Engine/System/ParticleSystem.hpp
         src/Engine/System/ParticleRenderSystem.hpp
+        src/Engine/System/SoundSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
         src/Engine/PostProcessing/PostProcessing.hpp
