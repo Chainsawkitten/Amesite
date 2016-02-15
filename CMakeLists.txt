@@ -175,6 +175,7 @@ set(ENGINE_SRCS
         src/Engine/Component/PointLight.cpp
         src/Engine/Component/SpotLight.cpp
         src/Engine/Component/SoundSource.cpp
+        src/Engine/Component/Listener.cpp
         src/Engine/Entity/Entity.cpp
         src/Engine/Scene/Scene.cpp
         src/Engine/System/RenderSystem.cpp
@@ -228,6 +229,7 @@ set(ENGINE_HEADERS
         src/Engine/Component/PointLight.hpp
         src/Engine/Component/SpotLight.hpp
         src/Engine/Component/SoundSource.hpp
+        src/Engine/Component/Listener.hpp
         src/Engine/Entity/Entity.hpp
         src/Engine/Scene/Scene.hpp
         src/Engine/System/RenderSystem.hpp
