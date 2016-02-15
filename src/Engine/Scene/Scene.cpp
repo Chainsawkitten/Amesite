@@ -59,17 +59,20 @@ void Scene::UpdateModelMatrices() {
     for (unsigned int i = 0; i < transforms.size(); i++) {
         transforms[i]->UpdateModelMatrix();
     }
-}
-
-void Scene::UpdateAnimationMatrices() {
     std::vector<Component::Animation*> animationVector = GetAll<Component::Animation>();
     for (auto animationComponent : animationVector) {
-        if (animationComponent->GetActiveAnimationClip() == nullptr) {
-            animationComponent->orientationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix;
-            animationComponent->animationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix;
+        Component::RelativeTransform* relativeTranform = animationComponent->entity->GetComponent<Component::RelativeTransform>();
+        if (relativeTranform != nullptr && relativeTranform->parentEntity->GetComponent<Component::Animation>() != nullptr) {
+            Component::Animation* relativeAnitmaion = relativeTranform->parentEntity->GetComponent<Component::Animation>();
+            animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix =  animationComponent->orientationMatrix * relativeAnitmaion->orientationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix;
+            animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix = animationComponent->animationMatrix * relativeAnitmaion->animationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix;
+            animationComponent->orientationMatrix = relativeTranform->parentEntity->GetComponent<Component::Animation>()->orientationMatrix;
+            animationComponent->animationMatrix = relativeTranform->parentEntity->GetComponent<Component::Animation>()->animationMatrix;
         } else {
-            animationComponent->orientationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix * animationComponent->orientationMatrix;
-            animationComponent->animationMatrix = animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix * animationComponent->animationMatrix;
+            if (animationComponent->GetActiveAnimationClip() != nullptr) {
+                animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix = animationComponent->orientationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix;
+                animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix = animationComponent->animationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix;
+            }
         }
     }
 }

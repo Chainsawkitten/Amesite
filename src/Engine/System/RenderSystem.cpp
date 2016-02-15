@@ -90,11 +90,11 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
                 
                 // Render model.
                 glm::mat4 modelMat;
-                Component::Animation* animationComponent = model->GetComponent<Component::Animation>();
-                Component::Transform* transform = model->GetComponent<Component::Transform>();
-                if (animationComponent != nullptr)
-                    modelMat = animationComponent->animationMatrix;
-                else
+                //Component::Animation* animationComponent = model->GetComponent<Component::Animation>();
+                //Component::Transform* transform = model->GetComponent<Component::Transform>();
+                //if (animationComponent != nullptr)
+                //    modelMat = model->GetComponent<Component::Transform>()->modelMatrix; //;animationComponent->animationMatrix;
+                //else
                     modelMat = model->GetComponent<Component::Transform>()->modelMatrix;
                 glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
                 glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));

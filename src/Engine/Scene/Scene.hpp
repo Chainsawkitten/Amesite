@@ -39,9 +39,6 @@ class Scene {
         /// Updates all model matrices in %Scene.
         void UpdateModelMatrices();
 
-        /// Updates all animation matrices in %Scene
-        void UpdateAnimationMatrices();
-
         /// Gets all components of a specific type.
         /**
          * @return A vector of pointers to all components of the specified scene.
