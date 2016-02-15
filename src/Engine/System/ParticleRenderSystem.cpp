@@ -3,6 +3,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <vector>
+
+#include "../Util/Log.hpp"
 #include "../Resources.hpp"
 #include "../Texture/Texture.hpp"
 #include "../Texture/Texture2D.hpp"
@@ -29,15 +31,14 @@ ParticleRenderSystem::ParticleRenderSystem() {
     mParticleShaderProgram = Resources().CreateShaderProgram({ mParticleVertShader, mParticleGeomShader, mParticleFragShader });
 
     // When textures are added to the Atlas the numRows needs to be updated.
-    mTextureAtlasNumRows = 1.f;
+    mTextureAtlasNumRows = 2.f;
 
-    mParticleTexture = Resources().CreateTexture2DFromFile("Resources/DustParticle.png");
-    mTextureAtlas = mParticleTexture;
+    mTextureAtlas = Resources().CreateTexture2DFromFile("Resources/ParticleAtlas.png");
 
     // Vertex buffer
     glGenBuffers(1, &mVertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, Particle()->MaxParticleCount() *sizeof(ParticleSystem::Particle), NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, Particle().MaxParticleCount() *sizeof(ParticleSystem::Particle), NULL, GL_DYNAMIC_DRAW);
 
     // Define vertex data layout
     glGenVertexArrays(1, &mVertexAttribute);
@@ -69,17 +70,18 @@ ParticleRenderSystem::~ParticleRenderSystem() {
     Resources().FreeShader(mParticleVertShader);
     Resources().FreeShader(mParticleGeomShader);
     Resources().FreeShader(mParticleFragShader);
+    Resources().FreeTexture2D(mTextureAtlas);
 
     glDeleteBuffers(1, &mVertexBuffer);
 
-    Resources().FreeTexture2D(mParticleTexture);
+    
 }
 
 void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2& screenSize) {
-    if (Particle()->ParticleCount() > 0) {
+    if (Particle().ParticleCount() > 0) {
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         std::vector<ParticleSystem::Particle>* particles = scene.GetVectorContents<ParticleSystem::Particle>();
-        glBufferSubData(GL_ARRAY_BUFFER, 0, Particle()->ParticleCount() *sizeof(ParticleSystem::Particle), particles->data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, Particle().ParticleCount() *sizeof(ParticleSystem::Particle), particles->data());
 
         // Don't write to depth buffer.
         GLboolean depthWriting;
@@ -94,15 +96,12 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
 
         mParticleShaderProgram->Use();
 
-        glUniform1i(mParticleShaderProgram->GetUniformLocation("baseImage"), 0);
-
-        glActiveTexture(GL_TEXTURE0 + 0);
-        glBindTexture(GL_TEXTURE_2D, mTextureAtlas->GetTextureID());
-
         glBindVertexArray(mVertexAttribute);
 
+        glUniform1i(mParticleShaderProgram->GetUniformLocation("baseImage"), 0);
+
         // Base image texture
-        glActiveTexture(GL_TEXTURE0 + 0);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mTextureAtlas->GetTextureID());
 
         // Send the matrices to the shader.
@@ -117,7 +116,7 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
         glUniform1fv(mParticleShaderProgram->GetUniformLocation("textureAtlasRows"), 1, &mTextureAtlasNumRows);
 
         // Draw the triangles
-        glDrawArrays(GL_POINTS, 0, Particle()->ParticleCount());
+        glDrawArrays(GL_POINTS, 0, Particle().ParticleCount());
 
         // Reset state values we've changed.
         glDepthMask(depthWriting);
