@@ -16,8 +16,6 @@
 #include <MainWindow.hpp>
 #include <Util/Log.hpp>
 
-#include <Util\Log.hpp>
-
 void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
 
 void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
