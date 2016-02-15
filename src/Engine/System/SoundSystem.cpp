@@ -84,13 +84,19 @@ void SoundSystem::Update(Scene& scene) {
             alSourcei(sound->mSource, AL_BUFFER, sound->soundBuffer->Buffer());
         
         // Play it / pause it / stop it.
-        if (sound->mShouldPlay)
+        if (sound->mShouldPlay) {
             alSourcePlay(sound->mSource);
+            sound->mShouldPlay = false;
+        }
         
-        if (sound->mShouldPause)
+        if (sound->mShouldPause) {
             alSourcePause(sound->mSource);
+            sound->mShouldPause = false;
+        }
         
-        if (sound->mShouldStop)
+        if (sound->mShouldStop) {
             alSourceStop(sound->mSource);
+            sound->mShouldStop = false;
+        }
     }
 }
