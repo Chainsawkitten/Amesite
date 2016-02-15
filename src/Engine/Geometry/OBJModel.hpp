@@ -2,6 +2,7 @@
 
 #include "Geometry3D.hpp"
 #include <vector>
+#include <fstream>
 
 namespace Geometry {
     /// A model loaded from an OBJ file.
