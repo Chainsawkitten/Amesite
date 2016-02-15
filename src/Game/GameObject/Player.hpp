@@ -6,6 +6,9 @@
 
 class Scene;
 class Entity;
+namespace Geometry {
+    class OBJModel;
+}
 
 namespace GameObject {
     /// A Player
@@ -38,5 +41,6 @@ namespace GameObject {
             Entity* mNode;
             Entity* mBody;
             Entity* mHead;
+            Geometry::OBJModel* mModel;
     };
 }

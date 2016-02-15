@@ -14,6 +14,7 @@
 #include <Component/RelativeTransform.hpp>
 #include <Component/DirectionalLight.hpp>
 #include <Component/SpotLight.hpp>
+#include <Component/Listener.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include "../GameObject/Player.hpp"
@@ -22,7 +23,13 @@
 #include <Component/ParticleEmitter.hpp>
 #include "Game/Component/Health.hpp"
 #include <Component/ParticleEmitter.hpp>
+#include <Component/SoundSource.hpp>
+#include <Component/Listener.hpp>
 
+#include <Audio/SoundBuffer.hpp>
+#include <Audio/Listener.hpp>
+
+#include <Resources.hpp>
 #include <Texture/Texture2D.hpp>
 
 #include <PostProcessing/PostProcessing.hpp>
@@ -30,10 +37,13 @@
 #include <PostProcessing/GammaCorrectionFilter.hpp>
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
+#include "../Util/MainCamera.hpp"
 
 using namespace GameObject;
 
 MainScene::MainScene() {
+    mSoundSystem.GetListener()->SetGain(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
@@ -47,28 +57,41 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
     
+    // Music
+    mMusicSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
+    alGenSources(1, &mSource);
+    alSourcei(mSource, AL_BUFFER, mMusicSoundBuffer->Buffer());
+    alSourcei(mSource, AL_LOOPING, AL_TRUE);
+    alSourcePlay(mSource);
+    
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
-    
-    mParticleSystem.SetActive();
     
     // Create main camera
     Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     mMainCamera = mainCamera->GetEntity("body");
+    mMainCamera->AddComponent<Component::Listener>();
+    MainCameraInstance().SetMainCamera(mMainCamera);
     
     // Create players
     Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
-
-    GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
-    GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), Component::ParticleEmitter::DUST);
-    GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
+//<<<<<<< HEAD
+//
+//    GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
+//    GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), Component::ParticleEmitter::DUST);
+//    GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
+//=======
+//>>>>>>> 5ba7aa37f7307c3042100ae121c50345ecebd93f
     
     mPlayers.push_back(player1->GetEntity("body"));
     mPlayers.push_back(player2->GetEntity("body"));
     
     // Create scene
     cave = GameEntityCreator().CreateMap();
+
+    // Create dust
+    GameEntityCreator().CreateDust(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
     
     // Directional light.
     Entity* dirLight = CreateEntity();
@@ -94,6 +117,9 @@ MainScene::~MainScene() {
     delete fxaaFilter;
     delete gammaCorrectionFilter;
     delete postProcessing;
+    
+    alDeleteSources(1, &mSource);
+    Resources().FreeSound(mMusicSoundBuffer);
 }
 
 void MainScene::Update(float deltaTime) {
@@ -105,6 +131,9 @@ void MainScene::Update(float deltaTime) {
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
+    
+    // ParticleSystem
+    System::Particle().Update(*this, deltaTime);
     
     // Updates model matrices for this frame.
     UpdateModelMatrices();
@@ -120,9 +149,6 @@ void MainScene::Update(float deltaTime) {
     
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
-    
-    // ParticleSystem
-    mParticleSystem.Update(*this, deltaTime);
 
     // Update game logic
     // UpdateCamera
@@ -135,6 +161,10 @@ void MainScene::Update(float deltaTime) {
         }
     }
 
+
+    // Update sounds.
+    mSoundSystem.Update(*this);
+    
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
     

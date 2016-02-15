@@ -7,11 +7,17 @@
 
 #include <../Game/Component/Controller.hpp>
 #include <Component/Transform.hpp>
+#include <Component/Lens.hpp>
 #include "../Component/Spawner.hpp"
 #include "../Component/Damage.hpp"
 #include "../Component/Health.hpp"
 #include "../GameObject/Bullet.hpp"
 #include "../Util/GameEntityFactory.hpp"
+#include <Util/Picking.hpp>
+#include "../Util/MainCamera.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include <MainWindow.hpp>
+#include <Util/Log.hpp>
 
 void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
 
@@ -57,6 +63,28 @@ void ControlScheme::StickRotate(Component::Controller* controller, float deltaTi
         else
             entity->GetComponent<Component::Transform>()->yaw = 180.f + (float)glm::degrees(glm::atan(b / a));
     }
+}
+
+void ControlScheme::MouseRotate(Component::Controller* controller, float deltaTime) {
+    Entity* entity = controller->entity;
+    Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
+
+    glm::vec4 playerPosition = transformComponent->modelMatrix*glm::vec4(0.f, 0.f, 0.f, 1.f);
+
+    glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
+    Entity& mainCamera = MainCameraInstance().GetMainCamera();
+    glm::mat4 projectionMatrix = mainCamera.GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
+    glm::mat4 viewMatrix = mainCamera.GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -mainCamera.GetComponent<Component::Transform>()->GetWorldPosition());
+
+    glm::vec4 worldRay = Picking::createWorldRay(mouseCoordinates, viewMatrix, projectionMatrix);
+
+    glm::vec4 directionInPlane = Picking::createPlayerAimDirection(worldRay, playerPosition, glm::vec4(mainCamera.GetComponent<Component::Transform>()->position, 1.f));
+    glm::vec2 direction(directionInPlane.x, directionInPlane.z);
+
+    if (direction.y >= 0)
+        entity->GetComponent<Component::Transform>()->yaw = +(float)glm::degrees(glm::atan(direction.x / direction.y));
+    else
+        entity->GetComponent<Component::Transform>()->yaw = 180.f + (float)glm::degrees(glm::atan(direction.x / direction.y));
 }
 
 void ControlScheme::ArrowKeyRotate(Component::Controller* controller, float deltaTime) {
@@ -199,6 +227,102 @@ void ControlScheme::RandomMove(Component::Controller* controller, float deltaTim
     }
     else if (glm::abs(x) + glm::abs(z) > 0.3f) {
         controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->speed, 0, z * deltaTime * controller->speed));
+    }
+}
+
+void ControlScheme::Aim(Component::Controller* controller, float deltaTime) {
+
+    Entity* entity = controller->entity;
+
+    // Move the player
+    float x = Input()->ButtonValue(controller->playerID, InputHandler::AIM_X);
+    float z = Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z);
+
+    glm::vec3 movement = glm::vec3(x, 0, z);
+
+    if (glm::length(movement) > Input()->AimDeadzone()) {
+
+        Component::Transform* transform = entity->GetComponent<Component::Transform>();
+        float oldAngle = glm::radians(transform->yaw);
+
+        glm::vec3 oldPoint = transform->position + glm::normalize(glm::vec3(glm::sin(oldAngle), 0, glm::cos(oldAngle))) * 5.f;
+        glm::vec3 newPoint = oldPoint - movement;
+        glm::vec3 oldDirection = glm::normalize(oldPoint - transform->position);
+        glm::vec3 newDirection = glm::normalize(newPoint - transform->position);
+        float dot = glm::dot(glm::vec2(oldDirection.x, oldDirection.z), glm::vec2(newDirection.x, newDirection.z));
+
+        if (dot > 1.f)
+            dot = 1.f;
+        else if (dot < -1.f)
+            dot = -1.f;
+
+        float angle = glm::acos(dot);
+
+        if (glm::cross(oldDirection, newDirection).y > 0)
+            angle *= -1;
+
+        transform->yaw = glm::degrees(oldAngle + angle);
+
+    }
+
+}
+
+void ControlScheme::MouseAim(Component::Controller* controller, float deltaTime) {
+
+    Entity* entity = controller->entity;
+
+    // Move the player
+    float x = Input()->DeltaCursorX();
+    float z = Input()->DeltaCursorY();
+
+    if (x != 0 || z != 0) {
+
+        glm::vec3 movement = glm::normalize(glm::vec3(x, 0, z)) * 2.f;
+
+        Component::Transform* transform = entity->GetComponent<Component::Transform>();
+        float oldAngle = glm::radians(transform->yaw);
+
+        glm::vec3 oldPoint = transform->position + glm::normalize(glm::vec3(glm::sin(oldAngle), 0, glm::cos(oldAngle))) * 5.f;
+        glm::vec3 newPoint = oldPoint - movement;
+        glm::vec3 oldDirection = glm::normalize(oldPoint - transform->position);
+        glm::vec3 newDirection = glm::normalize(newPoint - transform->position);
+        float dot = glm::dot(glm::vec2(oldDirection.x, oldDirection.z), glm::vec2(newDirection.x, newDirection.z));
+
+        if (dot > 1.f)
+            dot = 1.f;
+        else if (dot < -1.f)
+            dot = -1.f;
+
+        float angle = glm::acos(dot);
+
+        if (glm::cross(oldDirection, newDirection).y > 0)
+            angle *= -1;
+
+        transform->yaw = glm::degrees(oldAngle + angle);
+
+    }
+
+}
+
+void ControlScheme::AimedFire(Component::Controller* controller, float deltaTime) {
+    
+    Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
+
+    if (spawnerComponent != nullptr) {
+        spawnerComponent->timeSinceSpawn += deltaTime;
+        if (Input()->Pressed(controller->playerID, InputHandler::SHOOT) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
+
+            //Entity* entity = controller->entity;
+
+            //Component::Transform* transform = entity->GetComponent<Component::Transform>();
+            //float angle = glm::radians(transform->yaw);
+
+            //glm::vec3 direction = glm::normalize(glm::vec3(glm::sin(angle), 0, glm::cos(angle)));
+
+            //float bulletSpeed = 10.f;
+            //GameEntityCreator().CreateBullet(transform->position, bulletSpeed *  direction, 1);
+
+        }
     }
 
 }

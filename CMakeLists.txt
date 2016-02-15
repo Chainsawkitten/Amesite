@@ -58,6 +58,17 @@ set(RESOURCES
         assets/DefaultDiffuse.png
         assets/DefaultNormal.png
         assets/DefaultSpecular.png
+        assets/ParticleAtlas.png
+        assets/Laser.ogg
+        assets/GolfBall.obj
+        assets/ship.obj
+        assets/Normal.png
+        assets/Height.png
+        assets/Glow.png
+        assets/Albedo.png
+        assets/Specular.png
+        assets/MusicAction.ogg
+        assets/MusicCalm.ogg
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -121,8 +132,9 @@ endforeach()
 include_directories(src)
 
 # Doxygen documentation
+option(ModershipBuildDocs "Build the doxygen documentation" ON)
 find_package(Doxygen)
-if(DOXYGEN_FOUND)
+if(DOXYGEN_FOUND AND ModershipBuildDocs)
     add_custom_target(EngineDoc ALL
         ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/EngineDoxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -133,7 +145,7 @@ if(DOXYGEN_FOUND)
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Generating API documentation with Doxygen" VERBATIM
     )
-endif(DOXYGEN_FOUND)
+endif()
 
 ## TARGETS ##
 
@@ -144,14 +156,13 @@ set(ENGINE_SRCS
         src/Engine/Resources.cpp
         src/Engine/Audio/Listener.cpp
         src/Engine/Audio/SoundBuffer.cpp
-        src/Engine/Audio/SoundSource.cpp
-        src/Engine/Audio/SoundSystem.cpp
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
         src/Engine/Geometry/Geometry2D.cpp
         src/Engine/Geometry/Square.cpp
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Geometry/Cube.cpp
+        src/Engine/Geometry/OBJModel.cpp
         src/Engine/Lighting/DeferredLighting.cpp
         src/Engine/Shader/Shader.cpp
         src/Engine/Shader/ShaderProgram.cpp
@@ -174,6 +185,8 @@ set(ENGINE_SRCS
         src/Engine/Component/PointLight.cpp
         src/Engine/Component/SpotLight.cpp
         src/Engine/Component/Animation.cpp
+        src/Engine/Component/SoundSource.cpp
+        src/Engine/Component/Listener.cpp
         src/Engine/Entity/Entity.cpp
         src/Engine/Scene/Scene.cpp
         src/Engine/System/RenderSystem.cpp
@@ -182,6 +195,7 @@ set(ENGINE_SRCS
         src/Engine/System/ParticleSystem.cpp
         src/Engine/System/ParticleRenderSystem.cpp
         src/Engine/System/AnimationSystem.cpp
+        src/Engine/System/SoundSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
         src/Engine/PostProcessing/PostProcessing.cpp
@@ -199,14 +213,13 @@ set(ENGINE_HEADERS
         src/Engine/Audio/Listener.hpp
         src/Engine/Audio/SoundBuffer.hpp
         src/Engine/Audio/SoundFile.hpp
-        src/Engine/Audio/SoundSource.hpp
-        src/Engine/Audio/SoundSystem.hpp
         src/Engine/Audio/VorbisFile.hpp
         src/Engine/Audio/WaveFile.hpp
         src/Engine/Geometry/Geometry2D.hpp
         src/Engine/Geometry/Square.hpp
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Geometry/Cube.hpp
+        src/Engine/Geometry/OBJModel.hpp
         src/Engine/Lighting/DeferredLighting.hpp
         src/Engine/Shader/Shader.hpp
         src/Engine/Shader/ShaderProgram.hpp
@@ -229,6 +242,8 @@ set(ENGINE_HEADERS
         src/Engine/Component/PointLight.hpp
         src/Engine/Component/SpotLight.hpp
         src/Engine/Component/Animation.hpp
+        src/Engine/Component/SoundSource.hpp
+        src/Engine/Component/Listener.hpp
         src/Engine/Entity/Entity.hpp
         src/Engine/Scene/Scene.hpp
         src/Engine/System/RenderSystem.hpp
@@ -237,6 +252,7 @@ set(ENGINE_HEADERS
         src/Engine/System/ParticleSystem.hpp
         src/Engine/System/ParticleRenderSystem.hpp
         src/Engine/System/AnimationSystem.hpp
+        src/Engine/System/SoundSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
         src/Engine/PostProcessing/PostProcessing.hpp
@@ -261,18 +277,23 @@ set(GAME_SRCS
         src/Game/Util/GameEntityFactory.cpp
         src/Game/Util/CameraUpdate.cpp
         src/Game/Util/ControlSchemes.cpp
+        src/Game/Util/MainCamera.cpp
         src/Game/CaveSystem/CaveSystem.cpp
         src/Game/System/ControllerSystem.cpp
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
         src/Game/System/LifeTimeSystem.cpp
+        src/Game/System/AISystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
         src/Game/Component/CameraFollow.cpp
-		src/Game/Component/LifeTime.cpp
+        src/Game/Component/LifeTime.cpp
+        src/Game/Component/AI/WalkerAI.cpp
         src/Game/GameScenes/MainScene.cpp
+        src/Game/GameScenes/PontusScene.cpp
+        src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
         src/Game/GameScenes/IvarScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
@@ -281,6 +302,7 @@ set(GAME_SRCS
         src/Game/GameObject/Camera.cpp
         src/Game/GameObject/Enemy.cpp
         src/Game/GameObject/Cave.cpp
+        src/Game/GameObject/Dust.cpp
     )
 
 set(GAME_HEADERS
@@ -289,18 +311,23 @@ set(GAME_HEADERS
         src/Game/Util/GameEntityFactory.hpp
         src/Game/Util/CameraUpdate.hpp
         src/Game/Util/ControlSchemes.hpp
+        src/Game/Util/MainCamera.hpp
         src/Game/CaveSystem/CaveSystem.hpp
         src/Game/System/ControllerSystem.hpp
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/System/LifeTimeSystem.hpp
+        src/Game/System/AISystem.cpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
         src/Game/Component/CameraFollow.hpp
         src/Game/Component/LifeTime.hpp
+        src/Game/Component/AI/WalkerAI.hpp
         src/Game/GameScenes/MainScene.hpp
+        src/Game/GameScenes/PontusScene.hpp
+        src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp
         src/Game/GameScenes/IvarScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
@@ -309,6 +336,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Camera.hpp
         src/Game/GameObject/Enemy.hpp
         src/Game/GameObject/Cave.hpp
+        src/Game/GameObject/Dust.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
@@ -316,6 +344,6 @@ create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
 add_executable(Modership ${GAME_SRCS} ${GAME_HEADERS})
 target_link_libraries(Modership Engine)
 target_include_directories(Modership PUBLIC src/Engine)
-target_link_libraries(Modership glew glfw ${GLFW_LIBRARIES})
+target_link_libraries(Modership glew glfw ${GLFW_LIBRARIES} ${OPENAL_LIB})
 set_property(TARGET Modership PROPERTY CXX_STANDARD 11)
 set_property(TARGET Modership PROPERTY CXX_STANDARD_REQUIRED ON)

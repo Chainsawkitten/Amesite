@@ -4,7 +4,14 @@
 #include "Shader/Shader.hpp"
 #include "Geometry/Cube.hpp"
 #include "Geometry/Square.hpp"
+#include "Geometry/OBJModel.hpp"
 #include "Texture/Texture2D.hpp"
+#include "Audio/SoundBuffer.hpp"
+#include "Audio/WaveFile.hpp"
+#include "Audio/VorbisFile.hpp"
+#include "Util/FileSystem.hpp"
+
+#include "Util/Log.hpp"
 
 using namespace std;
 
@@ -130,6 +137,30 @@ Geometry::Cube* ResourceManager::CreateCube() {
     return mCube;
 }
 
+Geometry::OBJModel* ResourceManager::CreateOBJModel(std::string filename) {
+    if (objModels.find(filename) == objModels.end()) {
+        objModels[filename].model = new Geometry::OBJModel(filename.c_str());
+        objModelsInverse[objModels[filename].model] = filename;
+        objModels[filename].count = 1;
+    }
+    else {
+        objModels[filename].count++;
+    }
+
+    return objModels[filename].model;
+}
+
+void ResourceManager::FreeOBJModel(Geometry::OBJModel* model) {
+    string filename = objModelsInverse[model];
+
+    objModels[filename].count--;
+    if (objModels[filename].count <= 0) {
+        objModelsInverse.erase(model);
+        delete model;
+        objModels.erase(filename);
+    }
+}
+
 void ResourceManager::FreeCube() {
     mCubeCount--;
     
@@ -164,6 +195,18 @@ Texture2D* ResourceManager::CreateTexture2D(const char* data, int dataLength, bo
     return mTextures[data].texture;
 }
 
+Texture2D* ResourceManager::CreateTexture2DFromFile(std::string filename, bool srgb) {
+    if (mTexturesFromFile.find(filename) == mTexturesFromFile.end()) {
+        mTexturesFromFile[filename].texture = new Texture2D(filename.c_str(), srgb);
+        mTexturesFromFileInverse[mTexturesFromFile[filename].texture] = filename;
+        mTexturesFromFile[filename].count = 1;
+    } else {
+        mTexturesFromFile[filename].count++;
+    }
+    
+    return mTexturesFromFile[filename].texture;
+}
+
 void ResourceManager::FreeTexture2D(Texture2D* texture) {
     if (texture->IsFromFile()) {
         string filename = mTexturesFromFileInverse[texture];
@@ -186,16 +229,33 @@ void ResourceManager::FreeTexture2D(Texture2D* texture) {
     }
 }
 
-Texture2D* ResourceManager::CreateTexture2DFromFile(std::string filename, bool srgb) {
-    if (mTexturesFromFile.find(filename) == mTexturesFromFile.end()) {
-        mTexturesFromFile[filename].texture = new Texture2D(filename.c_str(), srgb);
-        mTexturesFromFileInverse[mTexturesFromFile[filename].texture] = filename;
-        mTexturesFromFile[filename].count = 1;
+Audio::SoundBuffer* ResourceManager::CreateSound(string filename) {
+    if (mSounds.find(filename) == mSounds.end()) {
+        Audio::SoundFile* soundFile;
+        if (FileSystem::GetFileExtension(filename) == "ogg")
+            soundFile = new Audio::VorbisFile(filename.c_str());
+        else
+            soundFile = new Audio::WaveFile(filename.c_str());
+        mSounds[filename].soundBuffer = new Audio::SoundBuffer(soundFile);
+        delete soundFile;
+        mSoundsInverse[mSounds[filename].soundBuffer] = filename;
+        mSounds[filename].count = 1;
     } else {
-        mTexturesFromFile[filename].count++;
+        mSounds[filename].count++;
     }
     
-    return mTexturesFromFile[filename].texture;
+    return mSounds[filename].soundBuffer;
+}
+
+void ResourceManager::FreeSound(Audio::SoundBuffer* soundBuffer) {
+    string filename = mSoundsInverse[soundBuffer];
+    
+    mSounds[filename].count--;
+    if (mSounds[filename].count <= 0) {
+        mSoundsInverse.erase(soundBuffer);
+        delete soundBuffer;
+        mSounds.erase(filename);
+    }
 }
 
 ResourceManager& Resources() {

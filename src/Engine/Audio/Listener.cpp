@@ -1,7 +1,7 @@
 #include "Listener.hpp"
 
 #include <AL/al.h>
-#include "SoundSystem.hpp"
+#include "../System/SoundSystem.hpp"
 
 using namespace Audio;
 
@@ -20,7 +20,7 @@ const glm::vec3& Listener::GetPosition() const {
 void Listener::SetPosition(const glm::vec3& position) {
     mPosition = position;
     alListener3f(AL_POSITION, position.x, position.y, position.z);
-    SoundSystem::CheckError("Couldn't set listener position.");
+    System::SoundSystem::CheckError("Couldn't set listener position.");
 }
 
 const glm::vec3& Listener::GetForward() const {
@@ -37,7 +37,7 @@ void Listener::SetOrientation(const glm::vec3& forward, const glm::vec3& up) {
     
     ALfloat listenerOri[] = { forward.x, forward.y, forward.z, up.x, up.y, up.z };
     alListenerfv(AL_ORIENTATION, listenerOri);
-    SoundSystem::CheckError("Couldn't set listener orientation.");
+    System::SoundSystem::CheckError("Couldn't set listener orientation.");
 }
 
 float Listener::GetGain() const {

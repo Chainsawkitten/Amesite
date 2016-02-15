@@ -27,8 +27,8 @@ void PhysicsSystem::Update(Scene& scene, float deltaTime) {
             physicsComp->velocity += (physicsComp->acceleration + mGravity * physicsComp->gravityFactor) * deltaTime;
 
             // Add retardation.
-            if (glm::length(physicsComp->velocity) > 0.5f) {
-                physicsComp->velocity -= physicsComp->velocity * physicsComp->velocityDragFactor * deltaTime;
+            physicsComp->velocity -= physicsComp->velocity * physicsComp->velocityDragFactor * deltaTime;
+            if (glm::length(physicsComp->velocity) > 0.01f) {
                 // Cap velocity.
                 if (glm::length(physicsComp->velocity) > physicsComp->maxVelocity)
                     physicsComp->velocity = glm::length(physicsComp->maxVelocity) / glm::length(physicsComp->velocity) * physicsComp->velocity;
@@ -43,8 +43,8 @@ void PhysicsSystem::Update(Scene& scene, float deltaTime) {
             physicsComp->angularVelocity += physicsComp->angularAcceleration * physicsComp->momentOfInertia * deltaTime;
             
             // Add drag.
+            physicsComp->angularVelocity -= physicsComp->angularVelocity * physicsComp->angularDragFactor * deltaTime;
             if (glm::length(physicsComp->angularVelocity) > 0.01f) {
-                physicsComp->angularVelocity -= physicsComp->angularVelocity * physicsComp->angularDragFactor * deltaTime;
                 // Cap angular velocity.
                 if (glm::length(physicsComp->angularAcceleration) > physicsComp->maxAngularVelocity)
                     physicsComp->angularAcceleration = glm::length(physicsComp->maxAngularVelocity) / glm::length(physicsComp->angularAcceleration) * physicsComp->angularAcceleration;
