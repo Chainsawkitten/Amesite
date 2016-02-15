@@ -78,6 +78,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
                 glUniform1i(mShaderProgram->GetUniformLocation("baseImage"), 0);
                 glUniform1i(mShaderProgram->GetUniformLocation("normalMap"), 1);
                 glUniform1i(mShaderProgram->GetUniformLocation("specularMap"), 2);
+                glUniform1i(mShaderProgram->GetUniformLocation("glowMap"), 3);
                 
                 //Textures
                 glActiveTexture(GL_TEXTURE0);
@@ -86,6 +87,8 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
                 glBindTexture(GL_TEXTURE_2D, material->normal->GetTextureID());
                 glActiveTexture(GL_TEXTURE2);
                 glBindTexture(GL_TEXTURE_2D, material->specular->GetTextureID());
+                glActiveTexture(GL_TEXTURE3);
+                glBindTexture(GL_TEXTURE_2D, material->glow->GetTextureID());
                 
                 // Render model.
                 glm::mat4 modelMat = model->GetComponent<Component::Transform>()->modelMatrix;
