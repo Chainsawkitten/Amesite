@@ -97,11 +97,11 @@ void AlbinScene::Update(float deltaTime) {
     // Update physics.
     mPhysicsSystem.Update(*this, deltaTime);
     
-    // Updates model matrices for this frame.
-    UpdateModelMatrices();
-    
     // Update camera.
     UpdateCamera(mMainCamera, mPlayers);
+    
+    // Updates model matrices for this frame.
+    UpdateModelMatrices();
     
     // Update sounds.
     mSoundSystem.Update(*this);
