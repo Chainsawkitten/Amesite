@@ -58,6 +58,7 @@ set(RESOURCES
         assets/DefaultDiffuse.png
         assets/DefaultNormal.png
         assets/DefaultSpecular.png
+        assets/DefaultGlow.png
         assets/ParticleAtlas.png
         assets/Laser.ogg
         assets/GolfBall.obj
