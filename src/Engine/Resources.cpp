@@ -5,7 +5,6 @@
 #include "Geometry/Cube.hpp"
 #include "Geometry/Square.hpp"
 #include "Geometry/OBJModel.hpp"
-#include "Geometry/Model.hpp"
 #include "Texture/Texture2D.hpp"
 #include "Audio/SoundBuffer.hpp"
 #include "Audio/WaveFile.hpp"
