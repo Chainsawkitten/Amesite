@@ -28,7 +28,7 @@ class Scene {
         Scene();
 
         /// Destructor.
-        ~Scene();
+        virtual ~Scene();
 
         /// Create new Entity in the scene.
         Entity* CreateEntity();

@@ -11,6 +11,9 @@ VorbisFile::VorbisFile(const char *filename) {
     if (mDataSize == -1)
         Log() << "Couldn't load OGG Vorbis file: " << filename << "\n";
     
+    // We get size in samples, but we need it in bytes.
+    mDataSize *= channels * sizeof(short);
+    
     if (channels > 1)
         mFormat = AL_FORMAT_STEREO16;
     else

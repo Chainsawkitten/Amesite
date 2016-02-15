@@ -31,6 +31,7 @@
 #include <PostProcessing/GammaCorrectionFilter.hpp>
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
+#include "../Util/MainCamera.hpp"
 #include <Util/Picking.hpp>
 #include <Util/Input.hpp>
 #include <Util/Log.hpp>
@@ -60,11 +61,10 @@ DanielScene::DanielScene() {
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
     
-    mParticleSystem.SetActive();
-    
     // Create main camera
     Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     mMainCamera = mainCamera->GetEntity("body");
+    MainCameraInstance().SetMainCamera(mMainCamera);
     
     // Create players
     Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
@@ -112,14 +112,8 @@ void DanielScene::Update(float deltaTime) {
         }
     }
 
-    glm::mat4 viewMatrix = mMainCamera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -mMainCamera->GetComponent<Component::Transform>()->GetWorldPosition());
-    glm::mat4 projectionMatrix = mMainCamera->GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
-    glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
-    glm::vec4 rayDirection = Picking::createWorldRay(mouseCoordinates, MainWindow::GetInstance()->GetSize(), viewMatrix, projectionMatrix);
-    glm::vec4 aimDirection = Picking::createPlayerAimDirection(rayDirection, glm::vec4(mPlayers[0]->GetComponent<Component::Transform>()->position, 1.f), glm::vec4(mMainCamera->GetComponent<Component::Transform>()->position, 1.f) );
-
     // ParticleSystem
-    mParticleSystem.Update(*this, deltaTime);
+    System::Particle().Update(*this, deltaTime);
     
     // Updates model matrices for this frame.
     UpdateModelMatrices();

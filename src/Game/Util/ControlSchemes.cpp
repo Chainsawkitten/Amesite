@@ -7,8 +7,14 @@
 
 #include <../Game/Component/Controller.hpp>
 #include <Component/Transform.hpp>
+#include <Component/Lens.hpp>
 #include "../Component/Spawner.hpp"
 #include "../Util/GameEntityFactory.hpp"
+#include <Util/Picking.hpp>
+#include "../Util/MainCamera.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include <MainWindow.hpp>
+#include <Util/Log.hpp>
 
 #include <Util\Log.hpp>
 
@@ -56,6 +62,28 @@ void ControlScheme::StickRotate(Component::Controller* controller, float deltaTi
         else
             entity->GetComponent<Component::Transform>()->yaw = 180.f + (float)glm::degrees(glm::atan(b / a));
     }
+}
+
+void ControlScheme::MouseRotate(Component::Controller* controller, float deltaTime) {
+    Entity* entity = controller->entity;
+    Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
+
+    glm::vec4 playerPosition = transformComponent->modelMatrix*glm::vec4(0.f, 0.f, 0.f, 1.f);
+
+    glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
+    Entity& mainCamera = MainCameraInstance().GetMainCamera();
+    glm::mat4 projectionMatrix = mainCamera.GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
+    glm::mat4 viewMatrix = mainCamera.GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -mainCamera.GetComponent<Component::Transform>()->GetWorldPosition());
+
+    glm::vec4 worldRay = Picking::createWorldRay(mouseCoordinates, viewMatrix, projectionMatrix);
+
+    glm::vec4 directionInPlane = Picking::createPlayerAimDirection(worldRay, playerPosition, glm::vec4(mainCamera.GetComponent<Component::Transform>()->position, 1.f));
+    glm::vec2 direction(directionInPlane.x, directionInPlane.z);
+    //Log() << direction << "\n";
+    if (direction.y >= 0)
+        entity->GetComponent<Component::Transform>()->yaw = +(float)glm::degrees(glm::atan(direction.x / direction.y));
+    else
+        entity->GetComponent<Component::Transform>()->yaw = 180.f + (float)glm::degrees(glm::atan(direction.x / direction.y));
 }
 
 void ControlScheme::ArrowKeyRotate(Component::Controller* controller, float deltaTime) {
@@ -199,7 +227,6 @@ void ControlScheme::RandomMove(Component::Controller* controller, float deltaTim
     else if (glm::abs(x) + glm::abs(z) > 0.3f) {
         controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->speed, 0, z * deltaTime * controller->speed));
     }
-
 }
 
 void ControlScheme::Aim(Component::Controller* controller, float deltaTime) {

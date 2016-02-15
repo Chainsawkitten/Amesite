@@ -61,4 +61,11 @@ namespace ControlScheme {
     */
     void Aim(Component::Controller* controller, float deltaTime);
 
+    /// Mouse rotation.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void MouseRotate(Component::Controller* controller, float deltaTime);
+
 }

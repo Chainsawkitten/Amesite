@@ -88,7 +88,6 @@ namespace Audio {
             ALint State() const;
             
         private:
-            SoundBuffer* mBuffer;
             ALuint mSource;
             
             glm::vec3 mPosition;

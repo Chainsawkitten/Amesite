@@ -15,6 +15,13 @@ namespace FileSystem {
      */
     bool FileExists(const char* filename);
     
+    /// Get the lower case file extension from a filename.
+    /**
+     * @param filename The filename.
+     * @return The extension part of the filename, or empty string if none.
+     */
+    std::string GetFileExtension(const std::string& filename);
+    
     /// Create a directory if it does not already exist.
     /**
      * Permission for new directory is 0777 on Unix.
