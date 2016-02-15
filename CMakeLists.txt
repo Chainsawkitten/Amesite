@@ -61,6 +61,12 @@ set(RESOURCES
         assets/ParticleAtlas.png
         assets/Laser.ogg
         assets/GolfBall.obj
+        assets/ship.obj
+        assets/Normal.png
+        assets/Height.png
+        assets/Glow.png
+        assets/Albedo.png
+        assets/Specular.png
     )
 
 add_custom_target(ResourceTarget ALL)
