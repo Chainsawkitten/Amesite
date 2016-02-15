@@ -1,13 +1,18 @@
 #pragma once
 
 #include <Scene/Scene.hpp>
-#include <Audio/SoundSystem.hpp>
+#include <System/RenderSystem.hpp>
+#include <System/PhysicsSystem.hpp>
+#include <System/SoundSystem.hpp>
+#include "../System/ControllerSystem.hpp"
 
 namespace Audio {
     class VorbisFile;
     class SoundBuffer;
-    class Sound;
 }
+class PostProcessing;
+class FXAAFilter;
+class GammaCorrectionFilter;
 
 /// Albin's testing scene.
 class AlbinScene : public Scene {
@@ -25,9 +30,30 @@ class AlbinScene : public Scene {
         void Update(float deltaTime);
         
     private:
-        Audio::SoundSystem mSoundSystem;
+        // RenderSystem.
+        System::RenderSystem mRenderSystem;
+        
+        // PhysicsSystem.
+        System::PhysicsSystem mPhysicsSystem;
+        
+        // ControllerSystem.
+        System::ControllerSystem mControllerSystem;
+        
+        // SoundSystem.
+        System::SoundSystem mSoundSystem;
         
         Audio::SoundBuffer* mTestSoundBuffer;
-        Audio::Sound* mTestSoundSource1;
-        Audio::Sound* mTestSoundSource2;
+        
+        Entity* s1;
+        
+        // Post processing.
+        PostProcessing* postProcessing;
+        FXAAFilter* fxaaFilter;
+        GammaCorrectionFilter* gammaCorrectionFilter;
+        
+        // The main camera
+        Entity* mMainCamera;
+        
+        // Vector containing players
+        std::vector<Entity*> mPlayers;
 };

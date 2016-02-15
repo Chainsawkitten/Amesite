@@ -67,6 +67,8 @@ set(RESOURCES
         assets/Glow.png
         assets/Albedo.png
         assets/Specular.png
+        assets/MusicAction.ogg
+        assets/MusicCalm.ogg
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -154,8 +156,6 @@ set(ENGINE_SRCS
         src/Engine/Resources.cpp
         src/Engine/Audio/Listener.cpp
         src/Engine/Audio/SoundBuffer.cpp
-        src/Engine/Audio/SoundSource.cpp
-        src/Engine/Audio/SoundSystem.cpp
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
         src/Engine/Geometry/Geometry2D.cpp
@@ -184,6 +184,8 @@ set(ENGINE_SRCS
         src/Engine/Component/DirectionalLight.cpp
         src/Engine/Component/PointLight.cpp
         src/Engine/Component/SpotLight.cpp
+        src/Engine/Component/SoundSource.cpp
+        src/Engine/Component/Listener.cpp
         src/Engine/Entity/Entity.cpp
         src/Engine/Scene/Scene.cpp
         src/Engine/System/RenderSystem.cpp
@@ -191,6 +193,7 @@ set(ENGINE_SRCS
         src/Engine/System/CollisionSystem.cpp
         src/Engine/System/ParticleSystem.cpp
         src/Engine/System/ParticleRenderSystem.cpp
+        src/Engine/System/SoundSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
         src/Engine/PostProcessing/PostProcessing.cpp
@@ -208,8 +211,6 @@ set(ENGINE_HEADERS
         src/Engine/Audio/Listener.hpp
         src/Engine/Audio/SoundBuffer.hpp
         src/Engine/Audio/SoundFile.hpp
-        src/Engine/Audio/SoundSource.hpp
-        src/Engine/Audio/SoundSystem.hpp
         src/Engine/Audio/VorbisFile.hpp
         src/Engine/Audio/WaveFile.hpp
         src/Engine/Geometry/Geometry2D.hpp
@@ -238,6 +239,8 @@ set(ENGINE_HEADERS
         src/Engine/Component/DirectionalLight.hpp
         src/Engine/Component/PointLight.hpp
         src/Engine/Component/SpotLight.hpp
+        src/Engine/Component/SoundSource.hpp
+        src/Engine/Component/Listener.hpp
         src/Engine/Entity/Entity.hpp
         src/Engine/Scene/Scene.hpp
         src/Engine/System/RenderSystem.hpp
@@ -245,6 +248,7 @@ set(ENGINE_HEADERS
         src/Engine/System/CollisionSystem.hpp
         src/Engine/System/ParticleSystem.hpp
         src/Engine/System/ParticleRenderSystem.hpp
+        src/Engine/System/SoundSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
         src/Engine/PostProcessing/PostProcessing.hpp

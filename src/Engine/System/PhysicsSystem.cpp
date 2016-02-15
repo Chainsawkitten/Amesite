@@ -27,8 +27,7 @@ void PhysicsSystem::Update(Scene& scene, float deltaTime) {
             physicsComp->velocity += (physicsComp->acceleration + mGravity * physicsComp->gravityFactor) * deltaTime;
 
             // Add retardation.
-            if (glm::length(physicsComp->velocity) > 0.5f)
-                physicsComp->velocity -=  physicsComp->velocity * physicsComp->velocityDragFactor * deltaTime;
+            physicsComp->velocity -=  physicsComp->velocity * physicsComp->velocityDragFactor * deltaTime;
 
             // Cap velocity.
             if (glm::length(physicsComp->velocity) > physicsComp->maxVelocity)
