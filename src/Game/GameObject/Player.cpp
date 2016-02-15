@@ -48,7 +48,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     spotLight->GetComponent<Component::RelativeTransform>()->scale = glm::vec3(0.3f, 0.3f, 0.3f);
     spotLight->AddComponent<Component::Mesh>()->geometry = body->GetComponent<Component::Mesh>()->geometry;
     spotLight->AddComponent<Component::Material>();
-    spotLight->AddComponent<Component::SpotLight>()->coneAngle = 90;
+    spotLight->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
     spotLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
     spotLight->AddComponent<Component::Physics>();
     spotLight->AddComponent<Component::Controller>();
