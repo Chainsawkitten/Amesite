@@ -28,7 +28,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::Controller>()->speed = 3000.f;
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
-    body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
+    body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::MouseRotate);
     body->AddComponent<Component::Transform>();
     body->AddComponent<Component::Mesh>()->geometry = mModel = Resources().CreateOBJModel("Resources/ship.obj");
     body->GetComponent<Component::Transform>()->scale = glm::vec3(0.1f, 0.1f, 0.1f);

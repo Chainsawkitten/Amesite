@@ -77,7 +77,7 @@ void ControlScheme::MouseRotate(Component::Controller* controller, float deltaTi
 
     glm::vec4 directionInPlane = Picking::createPlayerAimDirection(worldRay, playerPosition, glm::vec4(mainCamera.GetComponent<Component::Transform>()->position, 1.f));
     glm::vec2 direction(directionInPlane.x, directionInPlane.z);
-    //Log() << direction << "\n";
+
     if (direction.y >= 0)
         entity->GetComponent<Component::Transform>()->yaw = +(float)glm::degrees(glm::atan(direction.x / direction.y));
     else
