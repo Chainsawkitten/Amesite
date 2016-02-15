@@ -4,6 +4,7 @@
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/SoundSystem.hpp>
+#include "../System/ControllerSystem.hpp"
 
 namespace Audio {
     class VorbisFile;
@@ -35,6 +36,9 @@ class AlbinScene : public Scene {
         // PhysicsSystem.
         System::PhysicsSystem mPhysicsSystem;
         
+        // ControllerSystem.
+        System::ControllerSystem mControllerSystem;
+        
         // SoundSystem.
         System::SoundSystem mSoundSystem;
         
@@ -46,4 +50,10 @@ class AlbinScene : public Scene {
         PostProcessing* postProcessing;
         FXAAFilter* fxaaFilter;
         GammaCorrectionFilter* gammaCorrectionFilter;
+        
+        // The main camera
+        Entity* mMainCamera;
+        
+        // Vector containing players
+        std::vector<Entity*> mPlayers;
 };
