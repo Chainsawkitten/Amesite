@@ -17,6 +17,9 @@ using namespace System;
 
 SoundSystem* SoundSystem::mInstance = nullptr;
 
+// Scaling constant. Used to convert from our units to sound system units.
+const float soundScale = 0.4f;
+
 SoundSystem::SoundSystem() {
     // Open default audio device.
     mDevice = alcOpenDevice(nullptr);
@@ -69,14 +72,14 @@ void SoundSystem::Update(Scene& scene) {
         // Set position based on transform.
         Component::Transform* transform = entity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
-            glm::vec3 position = glm::vec3(transform->modelMatrix * glm::vec4(0.f, 0.f, 0.f, 1.f));
+            glm::vec3 position = soundScale * glm::vec3(transform->modelMatrix * glm::vec4(0.f, 0.f, 0.f, 1.f));
             alSource3f(sound->mSource, AL_POSITION, position.x, position.y, position.z);
         }
         
         // Set velocity based on physics.
         Component::Physics* physics = entity->GetComponent<Component::Physics>();
         if (physics != nullptr) {
-            glm::vec3 velocity = physics->velocity;
+            glm::vec3 velocity = soundScale * physics->velocity;
             alSource3f(sound->mSource, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
         } else {
             alSource3f(sound->mSource, AL_VELOCITY, 0.f, 0.f, 0.f);
@@ -116,7 +119,7 @@ void SoundSystem::Update(Scene& scene) {
         Component::Transform* transform = entity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
             // Set position
-            glm::vec3 position = transform->position;
+            glm::vec3 position = soundScale * transform->position;
             alListener3f(AL_POSITION, position.x, position.y, position.z);
             CheckError("Couldn't set listener position.");
             
