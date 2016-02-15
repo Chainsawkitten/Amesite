@@ -67,6 +67,8 @@ set(RESOURCES
         assets/Glow.png
         assets/Albedo.png
         assets/Specular.png
+        assets/MusicAction.ogg
+        assets/MusicCalm.ogg
     )
 
 add_custom_target(ResourceTarget ALL)
