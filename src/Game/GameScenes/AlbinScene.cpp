@@ -10,11 +10,13 @@
 #include <Component/Transform.hpp>
 #include <Component/Physics.hpp>
 #include <Component/SoundSource.hpp>
+#include <Component/Listener.hpp>
 
 #include "../Util/GameEntityFactory.hpp"
 #include "../GameObject/Camera.hpp"
 #include "../GameObject/Player.hpp"
 #include "../Util/MainCamera.hpp"
+#include "../Util/CameraUpdate.hpp"
 #include <Util/Input.hpp>
 
 #include <MainWindow.hpp>
@@ -63,6 +65,7 @@ AlbinScene::AlbinScene() {
     // Create main camera
     Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     mMainCamera = mainCamera->GetEntity("body");
+    mMainCamera->AddComponent<Component::Listener>();
     MainCameraInstance().SetMainCamera(mMainCamera);
     
     // Create players
@@ -97,6 +100,10 @@ void AlbinScene::Update(float deltaTime) {
     // Updates model matrices for this frame.
     UpdateModelMatrices();
     
+    // Update camera.
+    UpdateCamera(mMainCamera, mPlayers);
+    
+    // Update sounds.
     mSoundSystem.Update(*this);
     
     // Render.
