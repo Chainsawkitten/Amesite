@@ -27,7 +27,7 @@
 using namespace GameObject;
 
 AlbinScene::AlbinScene() {
-    mSoundSystem.GetListener()->SetGain(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    mSoundSystem.SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
     
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);

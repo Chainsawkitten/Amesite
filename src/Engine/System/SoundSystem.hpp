@@ -35,6 +35,18 @@ namespace System {
              */
             Audio::Listener* GetListener() const;
             
+            /// Set main volume.
+            /**
+             * @param volume New volume.
+             */
+            void SetVolume(float volume);
+            
+            /// Get main volume.
+            /**
+             * @return The main volume.
+             */
+            float GetVolume() const;
+            
             /// Get instance of SoundSystem.
             /**
              * @return The SoundSystem instance.
@@ -60,5 +72,6 @@ namespace System {
             ALCcontext *mContext;
             
             Audio::Listener* mListener;
+            float mVolume;
     };
 }

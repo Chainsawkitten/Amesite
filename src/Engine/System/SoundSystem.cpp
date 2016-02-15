@@ -47,6 +47,15 @@ Listener* SoundSystem::GetListener() const {
     return mListener;
 }
 
+void SoundSystem::SetVolume(float volume) {
+    alListenerf(AL_GAIN, volume);
+    mVolume = volume;
+}
+
+float SoundSystem::GetVolume() const {
+    return mVolume;
+}
+
 SoundSystem* SoundSystem::GetInstance() {
     return mInstance;
 }
