@@ -91,19 +91,19 @@ class ResourceManager {
         
         /// Create a 2D texture if it doesn't already exist.
         /**
-		 * @param data Image file data.
-		 * @param dataLength Length of the image file data.
-		 * @param srgb Whether the image is in SRGB space and should be converted to linear space.
-		 * @return The %Texture2D instance.
-		 */
+         * @param data Image file data.
+         * @param dataLength Length of the image file data.
+         * @param srgb Whether the image is in SRGB space and should be converted to linear space.
+         * @return The %Texture2D instance.
+         */
         Texture2D* CreateTexture2D(const char* data, int dataLength, bool srgb = false);
         
         /// Create a 2D texture if it doesn't already exist.
         /**
-		 * @param filename Filename of image file.
-		 * @param srgb Whether the image is in SRGB space and should be converted to linear space.
-		 * @return The %Texture2D instance.
-		 */
+         * @param filename Filename of image file.
+         * @param srgb Whether the image is in SRGB space and should be converted to linear space.
+         * @return The %Texture2D instance.
+         */
         Texture2D* CreateTexture2DFromFile(std::string filename, bool srgb = false);
 
         /// Create an OBJ model for rendering if it doesn't already exist.
