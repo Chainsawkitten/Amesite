@@ -14,6 +14,7 @@
 #include <Component/RelativeTransform.hpp>
 #include <Component/DirectionalLight.hpp>
 #include <Component/SpotLight.hpp>
+#include <Component/Listener.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
 #include "../GameObject/Player.hpp"
@@ -60,6 +61,7 @@ MainScene::MainScene() {
     // Create main camera
     Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     mMainCamera = mainCamera->GetEntity("body");
+    mMainCamera->AddComponent<Component::Listener>();
     MainCameraInstance().SetMainCamera(mMainCamera);
     
     // Create players
@@ -128,6 +130,9 @@ void MainScene::Update(float deltaTime) {
     
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
+    
+    // Update sounds.
+    mSoundSystem.Update(*this);
     
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());

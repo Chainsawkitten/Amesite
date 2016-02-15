@@ -5,6 +5,7 @@
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
 #include <System/ParticleSystem.hpp>
+#include <System/SoundSystem.hpp>
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
 #include "Game/System/ControllerSystem.hpp"
@@ -53,6 +54,9 @@ class MainScene : public Scene {
         
         // CollisionSystem.
         System::CollisionSystem mCollisionSystem;
+        
+        // SoundSystem.
+        System::SoundSystem mSoundSystem;
         
         // The life time system
         System::LifeTimeSystem mLifeTimeSystem;
