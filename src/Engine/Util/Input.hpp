@@ -118,7 +118,19 @@ class InputHandler {
         
         /// Centers the cursor to the middle of the window.
         void CenterCursor();
-        
+
+        /// Get how far the cursor has traveled this frame.
+        /**
+        * @return distance traveled in X by cursor
+        */
+        double DeltaCursorX() const;
+
+        /// Get how far the cursor has traveled this frame.
+        /**
+        * @return distance traveled in Y by cursor
+        */
+        double DeltaCursorY() const;
+
         /// Assign a button binding.
         /**
          * See <a href="http://www.glfw.org/docs/latest/group__keys.html">GLFW keyboard documentation</a> for indices for keys.
@@ -244,6 +256,7 @@ class InputHandler {
         
         // Mouse states.
         double mCursorX, mCursorY;
+        double mDeltaCursorX, mDeltaCursorY;
         double mLastScroll;
         double mScroll;
 

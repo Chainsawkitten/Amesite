@@ -26,7 +26,8 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     mEntityMap["body"] = body;
     body->AddComponent<Component::Controller>()->speed = 3000.f;
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
-    body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ButtonShoot);
+    body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
+    body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::MouseAim);
     body->AddComponent<Component::Transform>();
     body->AddComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     body->AddComponent<Component::Material>();
