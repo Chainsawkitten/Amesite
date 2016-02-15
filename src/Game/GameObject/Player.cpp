@@ -27,7 +27,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::Controller>()->speed = 3000.f;
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
-    body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::MouseAim);
+    body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
     body->AddComponent<Component::Transform>();
     body->AddComponent<Component::Mesh>()->geometry = Resources().CreateCube();
     body->AddComponent<Component::Material>();
