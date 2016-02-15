@@ -27,7 +27,6 @@
 #include <Component/Listener.hpp>
 
 #include <Audio/SoundBuffer.hpp>
-#include <Audio/Listener.hpp>
 
 #include <Resources.hpp>
 #include <Texture/Texture2D.hpp>

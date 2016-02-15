@@ -1,6 +1,5 @@
 #include "SoundSystem.hpp"
 
-#include "../Audio/Listener.hpp"
 #include "../Util/Log.hpp"
 #include <AL/al.h>
 
@@ -31,20 +30,13 @@ SoundSystem::SoundSystem() {
     if (!alcMakeContextCurrent(mContext))
         Log() << "Couldn't create audio context.\n";
     
-    mListener = new Listener();
     mInstance = this;
 }
 
 SoundSystem::~SoundSystem() {
-    delete mListener;
-    
     alcMakeContextCurrent(nullptr);
     alcDestroyContext(mContext);
     alcCloseDevice(mDevice);
-}
-
-Listener* SoundSystem::GetListener() const {
-    return mListener;
 }
 
 void SoundSystem::SetVolume(float volume) {

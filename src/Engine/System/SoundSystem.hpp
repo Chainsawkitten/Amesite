@@ -3,9 +3,6 @@
 #include <AL/alc.h>
 
 class Scene;
-namespace Audio {
-    class Listener;
-}
 namespace Component {
     class SoundSource;
 }
@@ -28,12 +25,6 @@ namespace System {
              * Closes the audio device and destroys the audio context.
              */
             ~SoundSystem();
-            
-            /// Get listener.
-            /**
-             * @return The listener.
-             */
-            Audio::Listener* GetListener() const;
             
             /// Set main volume.
             /**
@@ -71,7 +62,6 @@ namespace System {
             ALCdevice *mDevice;
             ALCcontext *mContext;
             
-            Audio::Listener* mListener;
             float mVolume;
     };
 }

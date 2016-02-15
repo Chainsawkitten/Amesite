@@ -2,7 +2,6 @@
 
 #include <Resources.hpp>
 #include <Audio/SoundBuffer.hpp>
-#include <Audio/Listener.hpp>
 
 #include "../Util/GameSettings.hpp"
 
