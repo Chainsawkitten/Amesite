@@ -83,8 +83,10 @@ void SoundSystem::Update(Scene& scene) {
         alSourcef(sound->mSource, AL_PITCH, sound->pitch);
         alSourcef(sound->mSource, AL_GAIN, sound->gain);
         alSourcei(sound->mSource, AL_LOOPING, sound->loop);
-        if (sound->soundBuffer != nullptr)
+        if (sound->soundBuffer != nullptr && !sound->mSoundBufferSet) {
             alSourcei(sound->mSource, AL_BUFFER, sound->soundBuffer->Buffer());
+            sound->mSoundBufferSet = true;
+        }
         
         // Play it / pause it / stop it.
         if (sound->mShouldPlay) {
@@ -113,7 +115,7 @@ void SoundSystem::Update(Scene& scene) {
         if (transform != nullptr) {
             // Set position
             Log() << transform->position << "\n";
-            //alListener3f(AL_POSITION, transform->position.x, transform->position.y, transform->position.z);
+            alListener3f(AL_POSITION, transform->position.x, transform->position.y, transform->position.z);
             System::SoundSystem::CheckError("Couldn't set listener position.");
             
             /// @todo Set forward.

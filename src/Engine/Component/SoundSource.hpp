@@ -53,5 +53,7 @@ namespace Component {
             bool mShouldPlay;
             bool mShouldPause;
             bool mShouldStop;
+            
+            bool mSoundBufferSet;
     };
 }

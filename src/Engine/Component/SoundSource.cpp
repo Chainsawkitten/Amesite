@@ -15,6 +15,8 @@ SoundSource::SoundSource(Entity* entity) : SuperComponent(entity) {
     mShouldPlay = false;
     mShouldPause = false;
     mShouldStop = false;
+    
+    mSoundBufferSet = false;
 }
 
 SoundSource::~SoundSource() {
