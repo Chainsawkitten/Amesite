@@ -75,10 +75,12 @@ void SoundSystem::Update(Scene& scene) {
         
         // Set velocity based on physics.
         Component::Physics* physics = entity->GetComponent<Component::Physics>();
-        if (physics != nullptr)
-            alSource3f(sound->mSource, AL_VELOCITY, physics->velocity.x, physics->velocity.y, physics->velocity.z);
-        else
+        if (physics != nullptr) {
+            glm::vec3 velocity = physics->velocity;
+            alSource3f(sound->mSource, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
+        } else {
             alSource3f(sound->mSource, AL_VELOCITY, 0.f, 0.f, 0.f);
+        }
         
         alSourcef(sound->mSource, AL_PITCH, sound->pitch);
         alSourcef(sound->mSource, AL_GAIN, sound->gain);
@@ -104,7 +106,7 @@ void SoundSystem::Update(Scene& scene) {
             sound->mShouldStop = false;
         }
         
-        System::SoundSystem::CheckError("Something went wrong updating a sound source.");
+        CheckError("Something went wrong updating a sound source.");
     }
     
     // Update listener.
@@ -114,12 +116,16 @@ void SoundSystem::Update(Scene& scene) {
         Component::Transform* transform = entity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
             // Set position
-            Log() << transform->position << "\n";
-            alListener3f(AL_POSITION, transform->position.x, transform->position.y, transform->position.z);
-            System::SoundSystem::CheckError("Couldn't set listener position.");
+            glm::vec3 position = transform->position;
+            alListener3f(AL_POSITION, position.x, position.y, position.z);
+            CheckError("Couldn't set listener position.");
             
-            /// @todo Set forward.
-            /// @todo Set up
+            // Set orientation.
+            glm::vec4 forward = glm::inverse(transform->GetOrientation()) * glm::vec4(0.f, 0.f, -1.f, 1.f);
+            glm::vec4 up = glm::inverse(transform->GetOrientation()) * glm::vec4(0.f, 1.f, 0.f, 1.f);
+            ALfloat listenerOri[] = { forward.x, forward.y, forward.z, up.x, up.y, up.z };
+            alListenerfv(AL_ORIENTATION, listenerOri);
+            CheckError("Couldn't set listener orientation.");
             
             break;
         }
