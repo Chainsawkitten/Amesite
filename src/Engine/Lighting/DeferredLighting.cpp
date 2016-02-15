@@ -38,6 +38,7 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
     AttachTexture(mTextures[DIFFUSE], width, height, GL_COLOR_ATTACHMENT0 + DIFFUSE, GL_RGB16F);
     AttachTexture(mTextures[NORMAL], width, height, GL_COLOR_ATTACHMENT0 + NORMAL, GL_RGB16F);
     AttachTexture(mTextures[SPECULAR], width, height, GL_COLOR_ATTACHMENT0 + SPECULAR, GL_RGB);
+    AttachTexture(mTextures[GLOW], width, height, GL_COLOR_ATTACHMENT0 + GLOW, GL_RGB);
     
     // Bind depthHandle
     glBindTexture(GL_TEXTURE_2D, mDepthHandle);
@@ -112,6 +113,9 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
     
     SetReadBuffer(DeferredLighting::SPECULAR);
     glBlitFramebuffer(0, 0, width, height, halfWidth, halfHeight, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    
+    SetReadBuffer(DeferredLighting::GLOW);
+    glBlitFramebuffer(0, 0, width, height, halfWidth, 0, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
     
     if (depthTest)
         glEnable(GL_DEPTH_TEST);

@@ -19,6 +19,7 @@ class DeferredLighting {
 			DIFFUSE, ///< Diffuse texture
 			NORMAL, ///< Normals
 			SPECULAR, ///< Specular
+            GLOW, ///< Glow
 			NUM_TEXTURES ///< Total number of textures (excluding depth buffer)
 		};
         
