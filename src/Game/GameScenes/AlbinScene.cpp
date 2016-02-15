@@ -11,6 +11,11 @@
 #include <Component/Physics.hpp>
 #include <Component/SoundSource.hpp>
 
+#include <MainWindow.hpp>
+#include <PostProcessing/PostProcessing.hpp>
+#include <PostProcessing/FXAAFilter.hpp>
+#include <PostProcessing/GammaCorrectionFilter.hpp>
+
 AlbinScene::AlbinScene() {
     mSoundSystem.GetListener()->SetGain(GameSettings::GetInstance().GetDouble("Audio Volume"));
     
@@ -24,12 +29,20 @@ AlbinScene::AlbinScene() {
     ss1->soundBuffer = mTestSoundBuffer;
     ss1->loop = AL_TRUE;
     ss1->Play();
+    
+    postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
+    fxaaFilter = new FXAAFilter();
+    gammaCorrectionFilter = new GammaCorrectionFilter();
 }
 
 AlbinScene::~AlbinScene() {
     RemoveEntity(s1);
     
     Resources().FreeSound(mTestSoundBuffer);
+    
+    delete fxaaFilter;
+    delete gammaCorrectionFilter;
+    delete postProcessing;
 }
 
 void AlbinScene::Update(float deltaTime) {
@@ -39,4 +52,18 @@ void AlbinScene::Update(float deltaTime) {
     UpdateModelMatrices();
     
     mSoundSystem.Update(*this);
+    
+    // Render.
+    mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
+    
+    // Apply post-processing effects.
+    if (GameSettings::GetInstance().GetBool("FXAA")) {
+        fxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+        postProcessing->ApplyFilter(fxaaFilter);
+    }
+    
+    gammaCorrectionFilter->SetBrightness(GameSettings::GetInstance().GetDouble("Gamma"));
+    postProcessing->ApplyFilter(gammaCorrectionFilter);
+    
+    postProcessing->Render();
 }
