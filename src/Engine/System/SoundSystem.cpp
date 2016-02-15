@@ -9,6 +9,7 @@
 #include "../Component/Transform.hpp"
 #include "../Component/Physics.hpp"
 #include "../Component/SoundSource.hpp"
+#include "../Component/Listener.hpp"
 #include "../Audio/SoundBuffer.hpp"
 
 using namespace Audio;
@@ -60,6 +61,7 @@ void SoundSystem::CheckError(const char* message) {
 }
 
 void SoundSystem::Update(Scene& scene) {
+    // Update sound sources.
     std::vector<Component::SoundSource*> soundComponents = scene.GetAll<Component::SoundSource>();
     for (Component::SoundSource* sound : soundComponents) {
         Entity* entity = sound->entity;
@@ -97,6 +99,26 @@ void SoundSystem::Update(Scene& scene) {
         if (sound->mShouldStop) {
             alSourceStop(sound->mSource);
             sound->mShouldStop = false;
+        }
+        
+        System::SoundSystem::CheckError("Something went wrong updating a sound source.");
+    }
+    
+    // Update listener.
+    std::vector<Component::Listener*> listeners = scene.GetAll<Component::Listener>();
+    for (Component::Listener* listener : listeners) {
+        Entity* entity = listener->entity;
+        Component::Transform* transform = entity->GetComponent<Component::Transform>();
+        if (transform != nullptr) {
+            // Set position
+            Log() << transform->position << "\n";
+            //alListener3f(AL_POSITION, transform->position.x, transform->position.y, transform->position.z);
+            System::SoundSystem::CheckError("Couldn't set listener position.");
+            
+            /// @todo Set forward.
+            /// @todo Set up
+            
+            break;
         }
     }
 }
