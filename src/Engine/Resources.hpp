@@ -8,6 +8,8 @@ class ShaderProgram;
 namespace Geometry {
     class Cube;
     class Square;
+    class Model;
+    class OBJModel;
 }
 class Texture2D;
 namespace Audio {
@@ -89,20 +91,33 @@ class ResourceManager {
         
         /// Create a 2D texture if it doesn't already exist.
         /**
-		 * @param data Image file data.
-		 * @param dataLength Length of the image file data.
-		 * @param srgb Whether the image is in SRGB space and should be converted to linear space.
-		 * @return The %Texture2D instance.
-		 */
+         * @param data Image file data.
+         * @param dataLength Length of the image file data.
+         * @param srgb Whether the image is in SRGB space and should be converted to linear space.
+         * @return The %Texture2D instance.
+         */
         Texture2D* CreateTexture2D(const char* data, int dataLength, bool srgb = false);
         
         /// Create a 2D texture if it doesn't already exist.
         /**
-		 * @param filename Filename of image file.
-		 * @param srgb Whether the image is in SRGB space and should be converted to linear space.
-		 * @return The %Texture2D instance.
-		 */
+         * @param filename Filename of image file.
+         * @param srgb Whether the image is in SRGB space and should be converted to linear space.
+         * @return The %Texture2D instance.
+         */
         Texture2D* CreateTexture2DFromFile(std::string filename, bool srgb = false);
+
+        /// Create an OBJ model for rendering if it doesn't already exist.
+        /**
+        * @param filename Filename of model file.
+        * @return The model instance
+        */
+        Geometry::OBJModel* CreateOBJModel(std::string filename);
+
+        /// Free the reference to the model.
+        /**
+        * @param model %Model to dereference.
+        */
+        void FreeOBJModel(Geometry::OBJModel* model);
         
         /// Free the reference to the 2D texture.
         /**
@@ -174,6 +189,14 @@ class ResourceManager {
         };
         std::map<const char*, Texture2DInstance> mTextures;
         std::map<Texture2D*, const char*> mTexturesInverse;
+
+        // OBJ Model
+        struct OBJModelInstance {
+            Geometry::OBJModel* model;
+            int count;
+        };
+        std::map<std::string, OBJModelInstance> objModels;
+        std::map<Geometry::OBJModel*, std::string> objModelsInverse;
         
         // Texture2D from file
         std::map<std::string, Texture2DInstance> mTexturesFromFile;

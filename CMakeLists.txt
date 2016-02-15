@@ -60,6 +60,7 @@ set(RESOURCES
         assets/DefaultSpecular.png
         assets/ParticleAtlas.png
         assets/Laser.ogg
+        assets/GolfBall.obj
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -155,6 +156,7 @@ set(ENGINE_SRCS
         src/Engine/Geometry/Square.cpp
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Geometry/Cube.cpp
+        src/Engine/Geometry/OBJModel.cpp
         src/Engine/Lighting/DeferredLighting.cpp
         src/Engine/Shader/Shader.cpp
         src/Engine/Shader/ShaderProgram.cpp
@@ -208,6 +210,7 @@ set(ENGINE_HEADERS
         src/Engine/Geometry/Square.hpp
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Geometry/Cube.hpp
+        src/Engine/Geometry/OBJModel.hpp
         src/Engine/Lighting/DeferredLighting.hpp
         src/Engine/Shader/Shader.hpp
         src/Engine/Shader/ShaderProgram.hpp
