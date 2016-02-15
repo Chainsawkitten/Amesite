@@ -49,30 +49,30 @@ namespace ControlScheme {
 
     /// Constantly fires bullets.
     /**
-    * @param controller Component to control.
-    * @param deltaTime Time since last frame (in seconds).
-    */
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
     void AlwaysShoot(Component::Controller* controller, float deltaTime);
     
     /// Rotates the enitity with the AIM input.
     /**
-    * @param controller Component to control.
-    * @param deltaTime Time since last frame (in seconds).
-    */
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
     void Aim(Component::Controller* controller, float deltaTime);
     
     /// Rotates the enitity with the mouse input.
     /**
-    * @param controller Component to control.
-    * @param deltaTime Time since last frame (in seconds).
-    */
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
     void MouseAim(Component::Controller* controller, float deltaTime);
 
     /// Shoots in the direction the object is facing.
     /**
-    * @param controller Component to control.
-    * @param deltaTime Time since last frame (in seconds).
-    */
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
     void AimedFire(Component::Controller* controller, float deltaTime);
 
     /// Mouse rotation.

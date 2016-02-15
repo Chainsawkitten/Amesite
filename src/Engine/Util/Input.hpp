@@ -121,14 +121,14 @@ class InputHandler {
 
         /// Get how far the cursor has traveled this frame.
         /**
-        * @return distance traveled in X by cursor
-        */
+         * @return distance traveled in X by cursor
+         */
         double DeltaCursorX() const;
 
         /// Get how far the cursor has traveled this frame.
         /**
-        * @return distance traveled in Y by cursor
-        */
+         * @return distance traveled in Y by cursor
+         */
         double DeltaCursorY() const;
 
         /// Assign a button binding.
@@ -198,9 +198,9 @@ class InputHandler {
         
         /// Check if the joystick is active/connected.
         /**
-        * @param player Player for whom to check joystick.
-        * @return Whether joystick is active or not.
-        */
+         * @param player Player for whom to check joystick.
+         * @return Whether joystick is active or not.
+         */
         bool JoystickActive(Player player);
 
         /// Get the last valid aim 
@@ -212,9 +212,9 @@ class InputHandler {
 
         /// Get the last valid aim 
         /**
-        * @param player for whom to set last valid direction.
-        * @param direction to store.
-        */
+         * @param player for whom to set last valid direction.
+         * @param direction to store.
+         */
         void SetLastValidAimDirection(Player player, glm::vec2 direction);
 
         /// Get the deadzone for axis on the controller

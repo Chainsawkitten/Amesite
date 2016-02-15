@@ -21,6 +21,10 @@ namespace Component {
             ///Where to go.
             glm::vec3 target;
 
+            /// Updates the walker AI
+            /**
+            * @param The delta time
+            */
             void Update(float timeDelta);
 
     };

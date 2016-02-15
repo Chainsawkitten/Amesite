@@ -1,6 +1,6 @@
 #include "WalkerAI.hpp"
 
-#include <Entity\Entity.hpp>
+#include <Entity/Entity.hpp>
 
 using namespace Component;
 
@@ -16,6 +16,6 @@ WalkerAI::~WalkerAI() {
 }
 
 void WalkerAI::Update(float deltaTime) {
-        glm::vec3 dir = normalize(target - entity->GetComponent<Component::Transform>()->position);
+        glm::vec3 dir = glm::normalize(target - entity->GetComponent<Component::Transform>()->position);
         entity->GetComponent<Component::Transform>()->position += dir * deltaTime;
 }

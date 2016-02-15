@@ -46,7 +46,7 @@ int main() {
     
     // Scene and Entites. 
     //Scene scene;
-    Scene* scene = new DanielScene();
+    Scene* scene = new MainScene();
 
     // Main game loop.
     double lastTime = glfwGetTime();

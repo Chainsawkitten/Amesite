@@ -272,8 +272,6 @@ void ControlScheme::MouseAim(Component::Controller* controller, float deltaTime)
     float x = Input()->DeltaCursorX();
     float z = Input()->DeltaCursorY();
 
-    Log() << x << " : " << z << "\n";
-
     if (x != 0 || z != 0) {
 
         glm::vec3 movement = glm::normalize(glm::vec3(x, 0, z)) * 2.f;
