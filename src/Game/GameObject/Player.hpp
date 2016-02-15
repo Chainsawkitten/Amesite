@@ -2,6 +2,8 @@
 
 #include <Engine/GameObject/SuperGameObject.hpp>
 
+#include <glm/glm.hpp>
+
 class Scene;
 class Entity;
 
@@ -16,5 +18,25 @@ namespace GameObject {
             Player(Scene* scene);
            
             ~Player();
+
+            /// Gets position of player
+            /**
+             * @return Position of the player.
+             */
+            glm::vec3 GetPosition();
+
+            /// Gets health of the player.
+            /**
+             * @return health of the player.
+             */
+            float GetHealth();
+
+            /// Shoot a bullet.
+            void Shoot();
+
+        private:
+            Entity* mNode;
+            Entity* mBody;
+            Entity* mHead;
     };
 }
