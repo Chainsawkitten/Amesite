@@ -144,7 +144,7 @@ void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTi
                 direction = direction / directionLength;
             }
             float bulletSpeed = 40.f;
-            GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y), 0);
+            GameEntityCreator().CreateBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), 0);
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }

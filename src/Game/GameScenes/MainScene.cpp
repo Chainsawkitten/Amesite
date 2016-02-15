@@ -108,9 +108,6 @@ void MainScene::Update(float deltaTime) {
     
     // Updates model matrices for this frame.
     UpdateModelMatrices();
-
-    // Updates Animation matrices for this frame.
-    UpdateAnimationMatrices();
     
     // Check collisions.
     mCollisionSystem.Update(*this);

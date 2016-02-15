@@ -35,42 +35,47 @@ using namespace GameObject;
 
 IvarScene::IvarScene() {
     // Assign input
+
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
-    
+
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
+
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
-    
+
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
     
     mParticleSystem.SetActive();
     
     // Create main camera
-    Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    mMainCamera = mainCamera->GetEntity("body");
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    //mMainCamera = mainCamera->GetEntity("body");
     
     // Create players
-    Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
+    //Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     //Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
-    //player1->GetEntity("body")->GetComponent<Component::Transform>()->yaw = 90.f;
-    //player1->GetEntity("leftLight")->GetComponent<Component::Transform>()->yaw = 90.f;
 
     //GameEntityCreator().CreatePointParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
     //GameEntityCreator().CreatePointParticle(player2->GetEntity("body"), Component::ParticleEmitter::DUST);
     //GameEntityCreator().CreateCuboidParticle(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
     
-    mPlayers.push_back(player1->GetEntity("node"));
-    //mPlayers.push_back(player2->GetEntity("node"));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO));
     
     // Create scene
-    cave = GameEntityCreator().CreateMap();
+    mCave = GameEntityCreator().CreateMap();
     
     // Directional light.
     Entity* dirLight = CreateEntity();
@@ -111,9 +116,6 @@ void IvarScene::Update(float deltaTime) {
     // Updates model matrices for this frame.
     UpdateModelMatrices();
 
-    // Updates Animation matrices for this frame.
-    UpdateAnimationMatrices();
-    
     // Check collisions.
     mCollisionSystem.Update(*this);
     
@@ -132,8 +134,9 @@ void IvarScene::Update(float deltaTime) {
     // Update game logic
     // UpdateCamera
     //UpdateCamera(mMainCamera, mPlayers);
+    mMainCamera->UpdateRelativePosition(mPlayers);
     for (auto player : mPlayers) {
-        GridCollide(player, deltaTime);
+        GridCollide(player->GetEntity("node"), deltaTime);
         //if (player->GetComponent<Component::Health>()->health < 0.01f) {
         //    player->GetComponent<Component::Physics>()->velocity.x = -10.f;
         //    player->GetComponent<Component::Health>()->health = player->GetComponent<Component::Health>()->maxHealth;

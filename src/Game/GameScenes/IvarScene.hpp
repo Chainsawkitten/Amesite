@@ -18,8 +18,11 @@ class PostProcessing;
 class FXAAFilter;
 class GammaCorrectionFilter;
 class Entity;
+
 namespace GameObject {
     class Cave;
+    class Player;
+    class Camera;
 }
 
 /// The main scene for the game.
@@ -66,13 +69,13 @@ class IvarScene : public Scene {
         System::AnimationSystem mAnimationSystem;
         
         // Vector containing players
-        std::vector<Entity*> mPlayers;
+        std::vector<GameObject::Player*> mPlayers;
         
         // The main camera
-        Entity* mMainCamera;
+        GameObject::Camera* mMainCamera;
         
         // The cave
-        GameObject::Cave* cave;
+        GameObject::Cave* mCave;
         
         // Post processing.
         PostProcessing* postProcessing;
