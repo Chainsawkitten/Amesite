@@ -53,7 +53,7 @@ namespace Component {
                 float startAlpha;
 
                 /// Alpha in the middle of the particle's life.
-                float midAlpha;
+                float midAlpha = 1.f;
 
                 /// Alpha at the end of the particle's life.
                 float endAlpha;
