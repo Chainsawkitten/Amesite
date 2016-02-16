@@ -42,11 +42,11 @@ IvarScene::IvarScene() {
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
 
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
+    //Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
+    //Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
+    //Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
+    //Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
+    //Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
 
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
@@ -57,7 +57,7 @@ IvarScene::IvarScene() {
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
     
-    mParticleSystem.SetActive();
+    //mParticleSystem.SetActive();
     
     // Create main camera
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
@@ -129,14 +129,12 @@ void IvarScene::Update(float deltaTime) {
     mLifeTimeSystem.Update(*this, deltaTime);
     
     // ParticleSystem
-    mParticleSystem.Update(*this, deltaTime);
+    System::Particle().Update(*this, deltaTime);
 
     // Update game logic
-    // UpdateCamera
-    //UpdateCamera(mMainCamera, mPlayers);
     mMainCamera->UpdateRelativePosition(mPlayers);
     for (auto player : mPlayers) {
-        GridCollide(player->GetEntity("node"), deltaTime);
+        GridCollide(player->node, deltaTime);
         //if (player->GetComponent<Component::Health>()->health < 0.01f) {
         //    player->GetComponent<Component::Physics>()->velocity.x = -10.f;
         //    player->GetComponent<Component::Health>()->health = player->GetComponent<Component::Health>()->maxHealth;

@@ -24,5 +24,8 @@ namespace GameObject {
             ~Camera();
 
             void UpdateRelativePosition(const std::vector<GameObject::Player*>& players);
+
+            /// Body of camera
+            Entity* body;
     };
 }

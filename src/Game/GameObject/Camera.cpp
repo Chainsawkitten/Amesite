@@ -13,12 +13,10 @@
 using namespace GameObject;
 
 Camera::Camera(Scene* scene) : SuperGameObject(scene) {
-    Entity* entity = mScene->CreateEntity();
-    mEntityMap["body"] = entity;
-    entity->AddComponent<Component::Transform>();
-    entity->AddComponent<Component::Physics>();
-    entity->AddComponent<Component::Lens>();
-    mEntityVector.push_back(entity);
+    body = CreateEntity(scene);
+    body->AddComponent<Component::Transform>();
+    body->AddComponent<Component::Physics>();
+    body->AddComponent<Component::Lens>();
 }
 
 Camera::~Camera() {
@@ -59,13 +57,5 @@ void Camera::UpdateRelativePosition(const std::vector<GameObject::Player*>& play
     distance = glm::clamp(distance, 30.f, 60.f);
     cameraPos.y = distance;
 
-    GetEntity("body")->GetComponent<Component::Transform>()->position = cameraPos;
+    body->GetComponent<Component::Transform>()->position = cameraPos;
 }
-
-//glm::vec3 Camera::GetPosition() {
-//    return GetEntity("body")->GetComponent<Component::Transform>()->GetWorldPosition();
-//}
-//
-//void Camera::GetPosition(glm::vec3 position) {
-//    GetEntity("body")->GetComponent<Component::Transform>()->position = position;
-//}

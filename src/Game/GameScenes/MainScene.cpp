@@ -69,7 +69,7 @@ MainScene::MainScene() {
     
     // Create main camera
     Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    mMainCamera = mainCamera->GetEntity("body");
+    mMainCamera = mainCamera->body;
     mMainCamera->AddComponent<Component::Listener>();
     MainCameraInstance().SetMainCamera(mMainCamera);
     
@@ -84,14 +84,14 @@ MainScene::MainScene() {
 //=======
 //>>>>>>> 5ba7aa37f7307c3042100ae121c50345ecebd93f
     
-    mPlayers.push_back(player1->GetEntity("body"));
-    mPlayers.push_back(player2->GetEntity("body"));
+    mPlayers.push_back(player1->body);
+    mPlayers.push_back(player2->body);
     
     // Create scene
     cave = GameEntityCreator().CreateMap();
 
     // Create dust
-    GameEntityCreator().CreateDust(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
+    GameEntityCreator().CreateDust(player1->body, Component::ParticleEmitter::DUST);
     
     // Directional light.
     Entity* dirLight = CreateEntity();

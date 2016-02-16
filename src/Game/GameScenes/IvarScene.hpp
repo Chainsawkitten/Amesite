@@ -59,9 +59,6 @@ class IvarScene : public Scene {
         // CollisionSystem.
         System::CollisionSystem mCollisionSystem;
         
-        // ParticleSystem
-        System::ParticleSystem mParticleSystem;
-        
         // The life time system
         System::LifeTimeSystem mLifeTimeSystem;
 

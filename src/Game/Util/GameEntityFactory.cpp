@@ -46,44 +46,44 @@ GameEntityFactory::GameEntityFactory(){
 
 Enemy* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
     Enemy* gameObject = new Enemy(mScene);
-    gameObject->GetEntity("body")->GetComponent<Component::Transform>()->position = origin;
+    gameObject->body->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }
 
 Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::Player player) {
     Player* gameObject = new Player(mScene);
-    gameObject->GetEntity("node")->GetComponent<Component::Transform>()->position = origin;
-    gameObject->GetEntity("node")->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->GetEntity("body")->GetComponent<Component::Controller>()->playerID = player;
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    gameObject->node->GetComponent<Component::Controller>()->playerID = player;
+    gameObject->body->GetComponent<Component::Controller>()->playerID = player;
     //gameObject->GetEntity("head")->GetComponent<Component::Controller>()->playerID = player;
     if (player == InputHandler::PLAYER_ONE) {
-        gameObject->GetEntity("body")->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
+        gameObject->body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
     } else {
-        gameObject->GetEntity("body")->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ArrowKeyRotate);
+        gameObject->body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ArrowKeyRotate);
     }
     return gameObject;
 }
 
 Bullet* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::vec3& direction, int faction) {
     Bullet* gameObject = new Bullet(mScene);
-    gameObject->GetEntity("body")->GetComponent<Component::Transform>()->position = position;
-    gameObject->GetEntity("body")->GetComponent<Component::Physics>()->velocity = direction;
-    gameObject->GetEntity("body")->GetComponent<Component::Damage>()->faction = faction;
+    gameObject->body->GetComponent<Component::Transform>()->position = position;
+    gameObject->body->GetComponent<Component::Physics>()->velocity = direction;
+    gameObject->body->GetComponent<Component::Damage>()->faction = faction;
     return gameObject;
 }
 
 Camera* GameEntityFactory::CreateCamera(const glm::vec3& origin, const glm::vec3& rotation) {
     Camera* gameObject = new Camera(mScene);
-    gameObject->GetEntity("body")->GetComponent<Component::Transform>()->position = origin;
-    gameObject->GetEntity("body")->GetComponent<Component::Transform>()->Rotate(rotation.x, rotation.y, rotation.z);
+    gameObject->body->GetComponent<Component::Transform>()->position = origin;
+    gameObject->body->GetComponent<Component::Transform>()->Rotate(rotation.x, rotation.y, rotation.z);
     return gameObject;
 }
 
 Dust* GameEntityFactory::CreateDust(Entity * object, int particleTextureIndex) {
     Dust* gameObject = new Dust(mScene);
 
-    gameObject->GetEntity("body")->GetComponent<Component::ParticleEmitter>()->follow = object;
-    gameObject->GetEntity("body")->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->follow = object;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
     return gameObject;
 }
 

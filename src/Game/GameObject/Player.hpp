@@ -37,10 +37,27 @@ namespace GameObject {
             /// Shoot a bullet.
             void Shoot();
 
+            /// Position of the %Player.
+            Entity* node;
+
+            /// Body relative to node.
+            Entity* body;
+
+            /// Engine relative to body.
+            Entity* leftFrontEngine;
+
+            /// Engine relative to body.
+            Entity* rightFrontEngine;
+
+            /// Engine relative to body.
+            Entity* leftBackEngine;
+
+            /// Engine relative to body.
+            Entity* rightBackEngine;
+
         private:
-            Entity* mNode;
-            Entity* mBody;
-            Entity* mHead;
-            Geometry::OBJModel* mModel;
+            Geometry::OBJModel* mShipBody;
+            Geometry::OBJModel* mShipFrontEngine;
+            Geometry::OBJModel* mShipBackEngine;
     };
 }

@@ -25,33 +25,29 @@
 using namespace GameObject;
 
 Player::Player(Scene* scene) : SuperGameObject(scene) {
-    mNode = mScene->CreateEntity();
-    mEntityMap["node"] = mNode;
-    mEntityVector.push_back(mNode);
-    mNode->AddComponent<Component::Transform>()->scale = glm::vec3(0.1f, 0.1f, 0.1f);;
-    mNode->AddComponent<Component::Controller>()->speed = 3000.f;
-    mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
-    mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
-    mNode->AddComponent<Component::Health>();
-    mNode->AddComponent<Component::Animation>();
-    Component::Animation::AnimationClip* idleNode = mNode->GetComponent<Component::Animation>()->CreateAnimationClip("idle");
+    node = CreateEntity(scene);
+    node->AddComponent<Component::Transform>()->scale = glm::vec3(0.1f, 0.1f, 0.1f);;
+    node->AddComponent<Component::Controller>()->speed = 3000.f;
+    node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
+    node->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
+    node->AddComponent<Component::Health>();
+    node->AddComponent<Component::Animation>();
+    Component::Animation::AnimationClip* idleNode = node->GetComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleNode->CreateKeyFrame(glm::vec3(0.1f, 0.f, 0.f), 2.f, 1.f, 0, 1.5f, false, true);
     idleNode->CreateKeyFrame(glm::vec3(0.f, 0.1f, 0.1f), -1.f, -2.f, 1.f, 1.5f, false, true);
     idleNode->CreateKeyFrame(glm::vec3(0.1f, 0.1f, -0.1f), -2.f, 1.f, 2.f, 1.5f, false, true);
     idleNode->CreateKeyFrame(glm::vec3(-0.1f, 0.1f, 0.1f), 2.f, 2.f, 1.f, 1.5f, false, true);
-    mNode->GetComponent<Component::Animation>()->Start("idle");
+    node->GetComponent<Component::Animation>()->Start("idle");
 
-    mBody = mScene->CreateEntity();
-    mEntityMap["body"] = mBody;
-    mEntityVector.push_back(mBody);
-    mBody->AddComponent<Component::RelativeTransform>()->parentEntity = mNode;
-    mBody->AddComponent<Component::Mesh>()->geometry = mModel = Resources().CreateOBJModel("Resources/ship.obj");
-    mBody->AddComponent<Component::Material>();
-    mBody->GetComponent<Component::Material>()->SetDiffuse("Resources/Albedo.png");
-    mBody->GetComponent<Component::Material>()->SetSpecular("Resources/Specular.png");
-    mBody->GetComponent<Component::Material>()->SetNormal("Resources/Normal.png");
-    mBody->AddComponent<Component::Controller>();
-    mBody->AddComponent<Component::Animation>();
+    body = CreateEntity(scene);
+    body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
+    body->AddComponent<Component::Mesh>()->geometry = mShipBody = Resources().CreateOBJModel("Resources/ship.obj");
+    body->AddComponent<Component::Material>();
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/Albedo.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/Specular.png");
+    body->GetComponent<Component::Material>()->SetNormal("Resources/Normal.png");
+    body->AddComponent<Component::Controller>();
+    body->AddComponent<Component::Animation>();
 
 //    mHead = mScene->CreateEntity();
 //    mEntityMap["head"] = mHead;
@@ -110,15 +106,15 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
 }
 
 Player::~Player() {
-    Resources().FreeOBJModel(mModel);
+    Resources().FreeOBJModel(mShipBody);
 }
 
 glm::vec3 Player::GetPosition() {
-    return mNode->GetComponent<Component::Transform>()->GetWorldPosition();
+    return node->GetComponent<Component::Transform>()->GetWorldPosition();
 }
 
 float Player::GetHealth() {
-    return mNode->GetComponent<Component::Health>()->health;
+    return node->GetComponent<Component::Health>()->health;
 }
 
 void Player::Shoot() {

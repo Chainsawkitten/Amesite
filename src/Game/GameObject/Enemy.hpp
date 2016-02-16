@@ -16,5 +16,8 @@ namespace GameObject {
             Enemy(Scene* scene);
            
             ~Enemy();
+
+            /// Body of %Enemy
+            Entity* body;
     };
 }

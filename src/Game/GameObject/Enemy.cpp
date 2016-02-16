@@ -21,8 +21,7 @@
 using namespace GameObject;
 
 Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
-    Entity* body = mScene->CreateEntity();
-    mEntityMap["body"] = body;
+    body = CreateEntity(scene);
     body->AddComponent<Component::Mesh>();
     body->AddComponent<Component::Material>();
     body->AddComponent<Component::Transform>();
@@ -38,7 +37,6 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     body->GetComponent<Component::Spawner>()->delay = 0.1f;
     body->GetComponent<Component::Health>()->faction = 1;
     body->GetComponent<Component::Health>()->health = 1;
-    mEntityVector.push_back(body);
 }
 
 Enemy::~Enemy() {
