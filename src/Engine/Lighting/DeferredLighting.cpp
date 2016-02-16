@@ -147,9 +147,10 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     
-    glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::DIFFUSE);
+    glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::GLOW);
     glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), DeferredLighting::NORMAL);
     glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
+    glUniform1i(mShaderProgram->GetUniformLocation("tGlow"), DeferredLighting::GLOW);
     glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
     
     glUniform1f(mShaderProgram->GetUniformLocation("scale"), scale);

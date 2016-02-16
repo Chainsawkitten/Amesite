@@ -8,6 +8,7 @@ uniform sampler2D tShadowMap;
 uniform sampler2D tDiffuse;
 uniform sampler2D tNormals;
 uniform sampler2D tSpecular;
+uniform sampler2D tGlow;
 uniform sampler2D tDepth;
 
 uniform mat4 inverseProjectionMatrix;
@@ -25,7 +26,8 @@ uniform float scale;
 
 in vec2 texCoords;
 
-out vec4 fragmentColor;
+layout(location = 0) out vec4 fragmentColor;
+layout(location = 1) out vec3 extraOut;
 
 // Apply ambient, diffuse and specular lighting.
 vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecular) {
@@ -83,5 +85,6 @@ void main () {
 	vec3 specular = texture(tSpecular, texCoords * scale).xyz;
 	
 	fragmentColor = vec4(ApplyLight(diffuse, normalize(normal), position, specular), 1.0);
+	extraOut = texture(tGlow, texCoords * scale).rgb;
 	gl_FragDepth = depth;
 }
