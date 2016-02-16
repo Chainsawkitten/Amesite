@@ -32,7 +32,7 @@ void DamageSystem::Update(Scene& scene) {
                         (*collisionVector)[i]->entity->GetComponent<Component::Health>()->health -= (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->damageAmount;   //Reduce health by damage.
                         if ((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->removeOnImpact) {// Remove damage entity if it should be removed on impact
                             // NEVER REMOVE AN ENITY THAT GOT RELATIVE TRANSFROM, WILL LEAD TO EMPTY POINTERS
-                            (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->entity->Clear();
+                            //(*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->entity->Clear();
                         }
                     }
                 }
