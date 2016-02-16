@@ -33,6 +33,7 @@
 
 #include <PostProcessing/PostProcessing.hpp>
 #include <PostProcessing/FXAAFilter.hpp>
+#include <PostProcessing/GlowFirstPassFilter.hpp>
 #include <PostProcessing/GammaCorrectionFilter.hpp>
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
@@ -101,11 +102,13 @@ MainScene::MainScene() {
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
     gammaCorrectionFilter = new GammaCorrectionFilter();
+    glowFirstPassFilter = new GlowFirstPassFilter();
 }
 
 MainScene::~MainScene() {
     delete fxaaFilter;
     delete gammaCorrectionFilter;
+    delete glowFirstPassFilter;
     delete postProcessing;
     
     alDeleteSources(1, &mSource);
@@ -154,15 +157,20 @@ void MainScene::Update(float deltaTime) {
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
     
-    // Apply post-processing effects.
+    // Glow.
+    postProcessing->ApplyFilter(glowFirstPassFilter);
+    
+    // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
         fxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
         postProcessing->ApplyFilter(fxaaFilter);
     }
     
+    // Gamma correction.
     gammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
     postProcessing->ApplyFilter(gammaCorrectionFilter);
     
+    // Render to back buffer.
     postProcessing->Render();
 }
 
