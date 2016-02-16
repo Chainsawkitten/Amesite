@@ -7,9 +7,13 @@ in VertexData {
 
 uniform sampler2D baseImage;
 
-out vec4 fragment_color;
+layout(location = 0) out vec4 fragmentColor;
+layout(location = 1) out vec4 extraOut;
+
 void main () {
-	fragment_color = texture(baseImage, vertexIn.texCoords);
-	fragment_color.rgb *= vertexIn.color;
-	fragment_color.a *= vertexIn.alpha;
+	fragmentColor = texture(baseImage, vertexIn.texCoords);
+	fragmentColor.rgb *= vertexIn.color;
+	fragmentColor.a *= vertexIn.alpha;
+	
+	extraOut = fragmentColor;
 }
