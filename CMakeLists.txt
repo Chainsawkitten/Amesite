@@ -284,12 +284,15 @@ set(GAME_SRCS
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
         src/Game/System/LifeTimeSystem.cpp
+        src/Game/System/AISystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
         src/Game/Component/CameraFollow.cpp
+        src/Game/Component/AI/WalkerAI.cpp
         src/Game/GameScenes/MainScene.cpp
+        src/Game/GameScenes/PontusScene.cpp
         src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
@@ -314,12 +317,15 @@ set(GAME_HEADERS
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/System/LifeTimeSystem.hpp
+	src/Game/System/AISystem.cpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
         src/Game/Component/CameraFollow.hpp
+        src/Game/Component/AI/WalkerAI.hpp
         src/Game/GameScenes/MainScene.hpp
+        src/Game/GameScenes/PontusScene.hpp
         src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp
         src/Game/GameScenes/EmptyScene.hpp

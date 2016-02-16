@@ -78,8 +78,12 @@ void InputHandler::Update() {
     mLastScroll = mScroll;
     mScroll = 0.0;
     
+    double oldX = mCursorX;
+    double oldY = mCursorY;
     glfwGetCursorPos(mWindow, &mCursorX, &mCursorY);
-    
+    mDeltaCursorX = mCursorX - oldX;
+    mDeltaCursorY = mCursorY - oldY;
+
     // Joystick counters.
     int axisCount = 0;
     int buttonCount = 0;
@@ -153,8 +157,16 @@ double InputHandler::CursorX() const {
     return mCursorX;
 }
 
+double InputHandler::DeltaCursorX() const {
+    return mDeltaCursorX;
+}
+
 double InputHandler::CursorY() const {
     return mCursorY;
+}
+
+double InputHandler::DeltaCursorY() const {
+    return mDeltaCursorY;
 }
 
 void InputHandler::CenterCursor() {

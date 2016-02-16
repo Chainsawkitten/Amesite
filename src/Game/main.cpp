@@ -13,6 +13,7 @@
 #include "System/ParticleSystem.hpp"
 
 #include "GameScenes/MainScene.hpp"
+#include "GameScenes/PontusScene.hpp"
 #include "GameScenes/AlbinScene.hpp"
 #include "GameScenes/EmptyScene.hpp"
 #include "GameScenes/DanielScene.hpp"
@@ -43,9 +44,10 @@ int main() {
     Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
     
-    // Scene
+    // Scene and Entites. 
+    //Scene scene;
     Scene* scene = new MainScene();
-    
+
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
