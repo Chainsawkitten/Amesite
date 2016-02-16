@@ -286,6 +286,7 @@ set(GAME_SRCS
         src/Game/Component/Damage.cpp
         src/Game/Component/CameraFollow.cpp
         src/Game/Component/AI/WalkerAI.cpp
+        src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
         src/Game/GameScenes/PontusScene.cpp
         src/Game/GameScenes/AlbinScene.cpp
@@ -319,6 +320,7 @@ set(GAME_HEADERS
         src/Game/Component/Damage.hpp
         src/Game/Component/CameraFollow.hpp
         src/Game/Component/AI/WalkerAI.hpp
+        src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
         src/Game/GameScenes/PontusScene.hpp
         src/Game/GameScenes/AlbinScene.hpp

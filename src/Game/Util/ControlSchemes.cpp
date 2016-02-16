@@ -16,6 +16,8 @@
 #include <MainWindow.hpp>
 #include <Util/Log.hpp>
 
+#include <Game\GameObject\Bullet.hpp>
+
 void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
 
 void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
@@ -331,7 +333,6 @@ void ControlScheme::AutoAimedFire(Component::Controller* controller, float delta
     if (spawnerComponent != nullptr) {
         spawnerComponent->timeSinceSpawn += deltaTime;
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
-
             Entity* entity = controller->entity;
 
             Component::Transform* transform = entity->GetComponent<Component::Transform>();
@@ -340,9 +341,8 @@ void ControlScheme::AutoAimedFire(Component::Controller* controller, float delta
             glm::vec3 direction = glm::normalize(glm::vec3(glm::sin(angle), 0, glm::cos(angle)));
 
             float bulletSpeed = 10.f;
-            GameEntityCreator().CreateBullet(transform->position, bulletSpeed *  direction, 1);
+            GameObject::Bullet* bullet = GameEntityCreator().CreateBullet(transform->position, bulletSpeed *  direction, 1);
             spawnerComponent->timeSinceSpawn = 0.0f;
-
         }
     }
 }
