@@ -131,10 +131,10 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glDepthFunc(GL_ALWAYS);
     
     // Blending enabled for handling multiple light sources
-    GLboolean blend = glIsEnabled(GL_BLEND);
-    glEnable(GL_BLEND);
-    glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_ONE, GL_ONE);
+    GLboolean blend = glIsEnabledi(GL_BLEND, 0);
+    glEnablei(GL_BLEND, 0);
+    glBlendEquationi(0, GL_FUNC_ADD);
+    glBlendFunci(0, GL_ONE, GL_ONE);
     
     mShaderProgram->Use();
     
@@ -147,7 +147,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     
-    glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::GLOW);
+    glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::DIFFUSE);
     glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), DeferredLighting::NORMAL);
     glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
     glUniform1i(mShaderProgram->GetUniformLocation("tGlow"), DeferredLighting::GLOW);
@@ -213,7 +213,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     if (!depthTest)
         glDisable(GL_DEPTH_TEST);
     if (!blend)
-        glDisable(GL_BLEND);
+        glDisablei(GL_BLEND, 0);
     
     glDepthFunc(oldDepthFunctionMode);
 }

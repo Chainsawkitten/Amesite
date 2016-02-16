@@ -27,7 +27,7 @@ uniform float scale;
 in vec2 texCoords;
 
 layout(location = 0) out vec4 fragmentColor;
-layout(location = 1) out vec3 extraOut;
+layout(location = 1) out vec4 extraOut;
 
 // Apply ambient, diffuse and specular lighting.
 vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecular) {
@@ -85,6 +85,6 @@ void main () {
 	vec3 specular = texture(tSpecular, texCoords * scale).xyz;
 	
 	fragmentColor = vec4(ApplyLight(diffuse, normalize(normal), position, specular), 1.0);
-	extraOut = texture(tGlow, texCoords * scale).rgb;
+	extraOut = vec4(texture(tGlow, texCoords * scale).rgb, 1.0);
 	gl_FragDepth = depth;
 }

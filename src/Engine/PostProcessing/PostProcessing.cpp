@@ -47,8 +47,12 @@ void PostProcessing::ApplyFilter(Filter* filter) {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mBuffers[mWhich]->GetColorTexture());
     
-    glUniform1i(filter->GetShaderProgram()->GetUniformLocation("tDepth"), 1);
+    glUniform1i(filter->GetShaderProgram()->GetUniformLocation("tExtra"), 1);
     glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mBuffers[mWhich]->GetExtraTexture());
+    
+    glUniform1i(filter->GetShaderProgram()->GetUniformLocation("tDepth"), 2);
+    glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, mBuffers[mWhich]->GetDepthTexture());
     
     glBindVertexArray(mSquare->GetVertexArray());

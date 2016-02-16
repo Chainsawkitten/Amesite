@@ -4,6 +4,7 @@ Adjust color fragment shader.
 #version 400
 
 uniform sampler2D tDiffuse;
+uniform sampler2D tExtra;
 uniform sampler2D tDepth;
 
 uniform vec3 color;
