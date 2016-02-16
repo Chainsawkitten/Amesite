@@ -9,7 +9,7 @@ Material::Material(Entity* entity) : SuperComponent(entity) {
     diffuse = Resources().CreateTexture2DFromFile("Resources/DefaultDiffuse.png", true);
     normal = Resources().CreateTexture2DFromFile("Resources/DefaultNormal.png");
     specular = Resources().CreateTexture2DFromFile("Resources/DefaultSpecular.png");
-    glow = Resources().CreateTexture2DFromFile("Resources/DefaultGlow.png");
+    glow = Resources().CreateTexture2DFromFile("Resources/Glow.png");
 }
 
 Material::~Material() {
