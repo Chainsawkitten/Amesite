@@ -54,6 +54,5 @@ void main () {
 		fragmentColor = vec4(result2, 1.0);
 
 	float depth = texture(tDepth, texCoords).r;
-	fragmentColor = vec4(texture(tExtra, texCoords).rgb, 1.0);
 	gl_FragDepth = depth;
 }

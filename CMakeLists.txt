@@ -103,6 +103,7 @@ set(EMBEDDED_INPUT
         shaders/PostFXAA.frag
         shaders/PostFog.frag
         shaders/PostGamma.frag
+        shaders/PostGlow.frag
         shaders/PostGlowBlur.frag
         shaders/Deferred.frag
         shaders/Particle.vert
@@ -202,6 +203,7 @@ set(ENGINE_SRCS
         src/Engine/PostProcessing/FXAAFilter.cpp
         src/Engine/PostProcessing/FogFilter.cpp
         src/Engine/PostProcessing/GammaCorrectionFilter.cpp
+        src/Engine/PostProcessing/GlowFilter.cpp
         src/Engine/PostProcessing/GlowBlurFilter.cpp
         src/Engine/GameObject/SuperGameObject.cpp
     )
@@ -258,6 +260,7 @@ set(ENGINE_HEADERS
         src/Engine/PostProcessing/FXAAFilter.hpp
         src/Engine/PostProcessing/FogFilter.hpp
         src/Engine/PostProcessing/GammaCorrectionFilter.hpp
+        src/Engine/PostProcessing/GlowFilter.hpp
         src/Engine/PostProcessing/GlowBlurFilter.hpp
         src/Engine/GameObject/SuperGameObject.hpp
     )

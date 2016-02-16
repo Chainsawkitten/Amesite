@@ -33,6 +33,7 @@
 
 #include <PostProcessing/PostProcessing.hpp>
 #include <PostProcessing/FXAAFilter.hpp>
+#include <PostProcessing/GlowFilter.hpp>
 #include <PostProcessing/GlowBlurFilter.hpp>
 #include <PostProcessing/GammaCorrectionFilter.hpp>
 #include <MainWindow.hpp>
@@ -102,12 +103,14 @@ MainScene::MainScene() {
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
     gammaCorrectionFilter = new GammaCorrectionFilter();
+    glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
 }
 
 MainScene::~MainScene() {
     delete fxaaFilter;
     delete gammaCorrectionFilter;
+    delete glowFilter;
     delete glowBlurFilter;
     delete postProcessing;
     
@@ -166,6 +169,7 @@ void MainScene::Update(float deltaTime) {
         glowBlurFilter->SetHorizontal(false);
         postProcessing->ApplyFilter(glowBlurFilter);
     }
+    postProcessing->ApplyFilter(glowFilter);
     
     // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
@@ -175,7 +179,7 @@ void MainScene::Update(float deltaTime) {
     
     // Gamma correction.
     gammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
-    //postProcessing->ApplyFilter(gammaCorrectionFilter);
+    postProcessing->ApplyFilter(gammaCorrectionFilter);
     
     // Render to back buffer.
     postProcessing->Render();
