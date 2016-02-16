@@ -171,6 +171,7 @@ set(ENGINE_SRCS
         src/Engine/Util/Settings.cpp
         src/Engine/Util/Input.cpp
         src/Engine/Util/Picking.cpp
+        src/Engine/Util/MarchingSquares.cpp
         src/Engine/Component/SuperComponent.cpp
         src/Engine/Component/Lens.cpp
         src/Engine/Component/Transform.cpp
@@ -226,6 +227,7 @@ set(ENGINE_HEADERS
         src/Engine/Util/Settings.hpp
         src/Engine/Util/Input.hpp
         src/Engine/Util/Picking.hpp
+        src/Engine/Util/MarchingSquares.hpp
         src/Engine/Component/SuperComponent.hpp
         src/Engine/Component/Lens.hpp
         src/Engine/Component/Transform.hpp
