@@ -6,6 +6,7 @@
 class Shader;
 class ShaderProgram;
 namespace Geometry {
+    class Map;
     class Cube;
     class Square;
     class Model;
@@ -64,6 +65,18 @@ class ResourceManager {
          * @param shaderProgram %Shader program to dereference.
          */
         void FreeShaderProgram(ShaderProgram* shaderProgram);
+
+        /// Create a map for rendering if it doesn't already exist.
+        /**
+        * @return The map instance.
+        */
+        Geometry::Map* CreateMap(const bool **data, const float squareSize);
+
+        /// Free the reference to the map.
+        /**
+        * Deletes the instance if no more references exist.
+        */
+        void FreeMap();
         
         /// Create a cube for rendering if it doesn't already exist.
         /**
@@ -173,6 +186,10 @@ class ResourceManager {
         };
         std::map<ShaderProgramKey, ShaderProgramInstance> mShaderPrograms;
         std::map<ShaderProgram*, ShaderProgramKey> mShaderProgramsInverse;
+
+        // Map
+        Geometry::Map* mMap;
+        int mMapCount;
         
         // Cube
         Geometry::Cube* mCube;
