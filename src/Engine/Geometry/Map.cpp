@@ -64,6 +64,12 @@ void Map::marchingSquares(const bool ** data, const float squareSize)
     }
     mIndexData = &mTempIndexData[0];
     mVertexData = &mTempVertexData[0];
+
+    for (int m = 0; m < columns-1; m++) {
+        delete[] controlNodes[m];
+        delete[] mSquares[m];
+    }
+    delete[] controlNodes[columns];
 }
 
 Map::MSquare Map::createMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft)
