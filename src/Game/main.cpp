@@ -44,7 +44,7 @@ int main() {
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
     
     // Scene
-    Scene* scene = new MainScene();
+    Scene* scene = new DanielScene();
     
     // Main game loop.
     double lastTime = glfwGetTime();

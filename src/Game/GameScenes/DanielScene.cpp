@@ -32,6 +32,7 @@
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
 #include "../Util/MainCamera.hpp"
+#include "../Util/CaveGenerator.hpp"
 #include <Util/Picking.hpp>
 #include <Util/Input.hpp>
 #include <Util/Log.hpp>
@@ -86,6 +87,7 @@ DanielScene::DanielScene() {
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
     gammaCorrectionFilter = new GammaCorrectionFilter();
+    bool** caveMap = GenerateCaveMap(60, 60, 5);
 }
 
 DanielScene::~DanielScene() {
