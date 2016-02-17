@@ -165,6 +165,7 @@ set(ENGINE_SRCS
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Geometry/Cube.cpp
         src/Engine/Geometry/OBJModel.cpp
+        src/Engine/Geometry/Map.cpp
         src/Engine/Lighting/DeferredLighting.cpp
         src/Engine/Shader/Shader.cpp
         src/Engine/Shader/ShaderProgram.cpp
@@ -173,7 +174,6 @@ set(ENGINE_SRCS
         src/Engine/Util/Settings.cpp
         src/Engine/Util/Input.cpp
         src/Engine/Util/Picking.cpp
-        src/Engine/Util/MarchingSquares.cpp
         src/Engine/Component/SuperComponent.cpp
         src/Engine/Component/Lens.cpp
         src/Engine/Component/Transform.cpp
@@ -222,6 +222,7 @@ set(ENGINE_HEADERS
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Geometry/Cube.hpp
         src/Engine/Geometry/OBJModel.hpp
+        src/Engine/Geometry/Map.hpp
         src/Engine/Lighting/DeferredLighting.hpp
         src/Engine/Shader/Shader.hpp
         src/Engine/Shader/ShaderProgram.hpp
@@ -230,7 +231,6 @@ set(ENGINE_HEADERS
         src/Engine/Util/Settings.hpp
         src/Engine/Util/Input.hpp
         src/Engine/Util/Picking.hpp
-        src/Engine/Util/MarchingSquares.hpp
         src/Engine/Component/SuperComponent.hpp
         src/Engine/Component/Lens.hpp
         src/Engine/Component/Transform.hpp
