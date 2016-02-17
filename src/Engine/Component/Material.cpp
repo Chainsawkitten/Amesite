@@ -9,12 +9,14 @@ Material::Material(Entity* entity) : SuperComponent(entity) {
     diffuse = Resources().CreateTexture2DFromFile("Resources/DefaultDiffuse.png", true);
     normal = Resources().CreateTexture2DFromFile("Resources/DefaultNormal.png");
     specular = Resources().CreateTexture2DFromFile("Resources/DefaultSpecular.png");
+    glow = Resources().CreateTexture2DFromFile("Resources/DefaultGlow.png");
 }
 
 Material::~Material() {
     Resources().FreeTexture2D(diffuse);
     Resources().FreeTexture2D(normal);
     Resources().FreeTexture2D(specular);
+    Resources().FreeTexture2D(glow);
 }
 
 void Material::SetDiffuse(const char* filename) {
@@ -36,4 +38,11 @@ void Material::SetSpecular(const char* filename) {
         Resources().FreeTexture2D(specular);
     
     specular = Resources().CreateTexture2DFromFile(filename);
+}
+
+void Material::SetGlow(const char* filename) {
+    if (glow != nullptr)
+        Resources().FreeTexture2D(glow);
+    
+    glow = Resources().CreateTexture2DFromFile(filename);
 }

@@ -38,6 +38,7 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
     AttachTexture(mTextures[DIFFUSE], width, height, GL_COLOR_ATTACHMENT0 + DIFFUSE, GL_RGB16F);
     AttachTexture(mTextures[NORMAL], width, height, GL_COLOR_ATTACHMENT0 + NORMAL, GL_RGB16F);
     AttachTexture(mTextures[SPECULAR], width, height, GL_COLOR_ATTACHMENT0 + SPECULAR, GL_RGB);
+    AttachTexture(mTextures[GLOW], width, height, GL_COLOR_ATTACHMENT0 + GLOW, GL_RGB);
     
     // Bind depthHandle
     glBindTexture(GL_TEXTURE_2D, mDepthHandle);
@@ -113,6 +114,9 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
     SetReadBuffer(DeferredLighting::SPECULAR);
     glBlitFramebuffer(0, 0, width, height, halfWidth, halfHeight, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
     
+    SetReadBuffer(DeferredLighting::GLOW);
+    glBlitFramebuffer(0, 0, width, height, halfWidth, 0, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    
     if (depthTest)
         glEnable(GL_DEPTH_TEST);
 }
@@ -127,10 +131,10 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glDepthFunc(GL_ALWAYS);
     
     // Blending enabled for handling multiple light sources
-    GLboolean blend = glIsEnabled(GL_BLEND);
-    glEnable(GL_BLEND);
-    glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_ONE, GL_ONE);
+    GLboolean blend = glIsEnabledi(GL_BLEND, 0);
+    glEnablei(GL_BLEND, 0);
+    glBlendEquationi(0, GL_FUNC_ADD);
+    glBlendFunci(0, GL_ONE, GL_ONE);
     
     mShaderProgram->Use();
     
@@ -146,6 +150,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::DIFFUSE);
     glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), DeferredLighting::NORMAL);
     glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
+    glUniform1i(mShaderProgram->GetUniformLocation("tGlow"), DeferredLighting::GLOW);
     glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
     
     glUniform1f(mShaderProgram->GetUniformLocation("scale"), scale);
@@ -208,7 +213,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     if (!depthTest)
         glDisable(GL_DEPTH_TEST);
     if (!blend)
-        glDisable(GL_BLEND);
+        glDisablei(GL_BLEND, 0);
     
     glDepthFunc(oldDepthFunctionMode);
 }
