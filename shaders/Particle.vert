@@ -7,7 +7,7 @@ layout(location = 1) in vec2 particleSize;
 layout(location = 2) in float particleLife;
 layout(location = 3) in float particleLifetime;
 layout(location = 4) in vec3 particleVelocity;
-layout(location = 5) in float alpha[3];
+layout(location = 5) in vec3 alpha;
 layout(location = 6) in vec3 color;
 layout(location = 7) in float textureIndex;
 
