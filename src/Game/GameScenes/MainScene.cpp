@@ -195,7 +195,7 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime) {
     z = (250 - z) / 10 + 0.4f;
     x = x / 10 + 0.4f;
     
-    if (GameObject::Cave::mMap[(int)x][(int)z]) {
+    if (GameObject::Cave::theMap[(int)x][(int)z]) {
         float oldX = x - physics->velocity.x * deltaTime;
         float oldZ = z + physics->velocity.z * deltaTime;
         if (glm::abs(physics->velocity.x) < glm::abs(physics->velocity.z)) {

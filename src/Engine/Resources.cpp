@@ -130,7 +130,7 @@ bool ResourceManager::ShaderProgramKey::operator<(const ShaderProgramKey& other)
     return false;
 }
 
-Geometry::Map* ResourceManager::CreateMap(const bool **data, const float squareSize) {
+Geometry::Map* ResourceManager::CreateMap(bool **data, const float squareSize) {
     if (mMapCount == 0)
         mMap = new Geometry::Map(data, squareSize);
 

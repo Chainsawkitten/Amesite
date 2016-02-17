@@ -3,7 +3,7 @@
 
 using namespace Geometry;
 
-Map::Map(const bool **data, const float squareSize) {
+Map::Map(bool **data, const float squareSize) {
     marchingSquares(data, squareSize);
 
     GenerateBuffers();
@@ -31,7 +31,7 @@ unsigned int Map::GetIndexCount() const {
     return mIndexNr;
 }
 
-void Map::marchingSquares(const bool ** data, const float squareSize)
+void Map::marchingSquares(bool ** data, const float squareSize)
 {
     int rows = sizeof(data) / sizeof(data[0]);
     int columns = sizeof(data[0]) / sizeof(data[0][0]);
@@ -145,11 +145,10 @@ void Map::createMesh(MeshNode* node)
 
 void Map::triangulateSquare(MSquare* square)
 {
-    MeshNode* node;
+    MeshNode* node = nullptr;
     switch (square->mType) {
     case 0:
         break;
-
         // 1 points:
     case 1:
         createMesh(node = new MeshNode[3]{ square->mCenterBottom, square->mBottomLeft, square->mCenterLeft });
@@ -203,7 +202,8 @@ void Map::triangulateSquare(MSquare* square)
         createMesh(node = new MeshNode[4]{ square->mTopLeft, square->mTopRight, square->mBottomRight, square->mBottomLeft });
         break;
     }
-    delete node;
+    if (node != nullptr)
+        delete node;
 }
 
 void Geometry::Map::storeTriangle(MeshNode a, MeshNode b, MeshNode c)

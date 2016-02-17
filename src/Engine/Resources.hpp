@@ -70,7 +70,7 @@ class ResourceManager {
         /**
         * @return The map instance.
         */
-        Geometry::Map* CreateMap(const bool **data, const float squareSize);
+        Geometry::Map* CreateMap(bool **data, const float squareSize);
 
         /// Free the reference to the map.
         /**

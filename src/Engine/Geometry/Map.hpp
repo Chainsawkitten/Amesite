@@ -14,7 +14,7 @@ namespace Geometry {
         * @param squareSize
         * @return vector contraining the isolines.
         */
-        Map(const bool **data, const float squareSize);
+        Map(bool **data, const float squareSize);
 
         /// Destructor
         ~Map();
@@ -72,7 +72,7 @@ namespace Geometry {
 
         MSquare createMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft);
 
-        void marchingSquares(const bool **data, const float squareSize);
+        void marchingSquares(bool **data, const float squareSize);
 
         void createMesh(MeshNode* position);
 
