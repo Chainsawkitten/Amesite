@@ -4,6 +4,7 @@ FXAA fragment shader.
 #version 400
 
 uniform sampler2D tDiffuse;
+uniform sampler2D tExtra;
 uniform sampler2D tDepth;
 uniform vec2 screenSize;
 
@@ -18,7 +19,7 @@ out vec4 fragmentColor;
 void main () {
 	vec2 invScreenSize = 1.0 / screenSize;
 	
-	vec3 luma = vec3(0.299, 0.587, 0.114);	
+	vec3 luma = vec3(0.299, 0.587, 0.114);
 	float lumaTL = dot(luma, texture(tDiffuse, texCoords + (vec2(-1.0, -1.0) * invScreenSize)).xyz);
 	float lumaTR = dot(luma, texture(tDiffuse, texCoords + (vec2(1.0, -1.0) * invScreenSize)).xyz);
 	float lumaBL = dot(luma, texture(tDiffuse, texCoords + (vec2(-1.0, 1.0) * invScreenSize)).xyz);
