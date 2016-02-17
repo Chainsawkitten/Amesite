@@ -46,7 +46,15 @@ bool** CaveGenerator::GenerateCaveMap(const int& rowCount, const int& columnCoun
 
     PrintMapToLog(map, rowCount, columnCount);
 
-    DetectRooms(map, rowCount, columnCount);
+    std::vector<std::vector<Coordinate>> rooms = DetectRooms(map, rowCount, columnCount);
+
+    RemoveSmallRooms(map, rooms, 40);
+
+    Log() << "\n";
+
+    PrintMapToLog(map, rowCount, columnCount);
+
+    Log() << int(rooms.size());
 
     return map;
 }
@@ -61,9 +69,8 @@ void CaveGenerator::PrintMapToLog(bool** map, const int& rowCount, const int& co
                 Log() << ".";
             else
                 Log() << "o";
-            if (j == (columnCount - 1))
-                Log() << "\n";
         }
+        Log() << "\n";
     }
 }
 
@@ -169,24 +176,33 @@ void CaveGenerator::ProcessCaveMap(bool ** map, const int& rowCount, const int& 
 
 std::vector<std::vector<Coordinate>> CaveGenerator::DetectRooms(bool ** map, const int & rowCount, const int & columnCount){
     std::vector<std::vector<Coordinate>> rooms;
-    for (int i = 0; i < columnCount; i++) {
-        for (int j = 0; j < rowCount; j++) {
-            if (map[i][j] == false) {
-                if(rooms.empty())
-                    rooms.push_back(FloodFill(map, i, j, rowCount, columnCount));
-                for(auto& room : rooms) {
-                    std::vector<Coordinate>::iterator found;
-                    if (std::find(room.begin(), room.end(), Coordinate(i, j)) != room.end()){
-                        Log() << "DO NOTHING!\n";
-                    } else {
-                        rooms.push_back(FloodFill(map, i, j, rowCount, columnCount));
-                    }
-                }
 
+    //Create array to keep track of which tiles we have looked at.
+    bool** flagMap = new bool*[rowCount];
+    for (int i = 0; i < rowCount; ++i)
+        flagMap[i] = new bool[columnCount];
+
+    //Initialize array.
+    for (int i = 0; i < rowCount; ++i) {
+        for (int j = 0; j < columnCount; j++)
+            flagMap[i][j] = false;
+    }
+
+    for (int i = 0; i < rowCount; i++) {
+        for (int j = 0; j < columnCount; j++) {
+            if (flagMap[i][j] == false && map[i][j] == false) {
+                std::vector<Coordinate> room = FloodFill(map, i, j, rowCount, columnCount);
+                for (auto& coordinate : room)
+                    flagMap[coordinate.x][coordinate.y] = true;
+                rooms.push_back(room);
             }
         }
     }
-    rooms.size();
+
+    for (int j = 0; j < rowCount; ++j)
+        delete[] flagMap[j];
+    delete[] flagMap;
+
     return rooms;
 }
 
@@ -194,6 +210,21 @@ void CaveGenerator::FillCoordinates(bool ** map, const std::vector<Coordinate>& 
     for (auto &i : coordinates)
         map[i.x][i.y] = true;
 }
+
+void CaveGenerator::RemoveSmallRooms(bool ** map, std::vector<std::vector<Coordinate>>& rooms, int threshold) {
+    rooms.erase(std::remove_if(rooms.begin(), rooms.end(), 
+        [&threshold, map](std::vector<Coordinate> i) {
+        if (static_cast<int>(i.size()) < threshold) {
+            FillCoordinates(map, i);
+            return true;
+        } else {
+            return false;
+        }
+    }), rooms.end());
+
+    return;
+}
+
 
 std::vector<Coordinate> CaveGenerator::FloodFill(bool** map, const int& startX, const int& startY, const int& rowCount, const int& columnCount) {
     //Create array to keep track of which tiles we have looked at.
@@ -241,6 +272,11 @@ std::vector<Coordinate> CaveGenerator::FloodFill(bool** map, const int& startX, 
             }
         }
     }
+
+    for (int j = 0; j < rowCount; ++j)
+        delete[] flagMap[j];
+    delete[] flagMap;
+
     return coordinates;
 }
 

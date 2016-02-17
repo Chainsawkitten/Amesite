@@ -25,6 +25,8 @@ namespace CaveGenerator {
 
     void FillCoordinates(bool** map, const std::vector<Coordinate>& coordinates);
 
+    void RemoveSmallRooms(bool** map, std::vector<std::vector<Coordinate>>& rooms, int threshold);
+
     std::vector<Coordinate> FloodFill(bool** map, const int& startX, const int& startY, const int& rowCount, const int& columnCount );
 
     bool IsWithinMapRange(bool** map, const Coordinate & coordinate, const int& rowCount, const int& columnCount);
