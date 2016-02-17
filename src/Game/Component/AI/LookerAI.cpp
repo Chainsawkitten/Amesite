@@ -8,10 +8,7 @@
 using namespace Component;
 
 LookerAI::LookerAI(Entity* entity) : SuperComponent(entity) {
-
-
     mTarget = -1;
-
 }
 
 /// Destructor.
