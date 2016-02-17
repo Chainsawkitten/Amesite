@@ -70,5 +70,5 @@ Enemy::~Enemy() {
 }
 
 float Enemy::GetHealth() {
-    return 0.f;// node->GetComponent<Component::Health>()->health;
+    return node->GetComponent<Component::Health>()->health;
 }
