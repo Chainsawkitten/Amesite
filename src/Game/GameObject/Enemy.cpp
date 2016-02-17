@@ -37,7 +37,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     head->AddComponent<Component::Material>();
     head->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_head_crystal_diff.png");
     head->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_head_crystal_spec.png");
-    //head->GetComponent<Component::Material>()->SetGlow("Resources/enemy_head_crystal_glow.png");
+    head->GetComponent<Component::Material>()->SetGlow("Resources/enemy_head_crystal_glow.png");
     Component::Animation::AnimationClip* idleHead = head->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleHead->CreateKeyFrame(glm::vec3(-0.15f, 0.f, 0.f), 0.f, 0.f, 0, 3.f, false, true);
     idleHead->CreateKeyFrame(glm::vec3(0.15f, 0.f, 0.f), 0.f, 0.f, 0.f, 3.f, false, true);
@@ -50,7 +50,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     tail->AddComponent<Component::Material>();
     tail->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_tail_crystal_diff.png");
     tail->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_tail_crystal_spec.png");
-    //tail->GetComponent<Component::Material>()->SetGlow("Resources/enemy_tail_crystal_glow.png");
+    tail->GetComponent<Component::Material>()->SetGlow("Resources/enemy_tail_crystal_glow.png");
     Component::Animation::AnimationClip* idleTail = tail->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleTail->CreateKeyFrame(glm::vec3(-0.1f, 0.f, 0.f), 0.f, 0.f, 0, 2.f, false, true);
     idleTail->CreateKeyFrame(glm::vec3(0.1f, 0.f, 0.f), 0.f, 0.f, 0.f, 2.f, false, true);
