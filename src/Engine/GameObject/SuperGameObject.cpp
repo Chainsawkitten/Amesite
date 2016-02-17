@@ -20,6 +20,7 @@ void SuperGameObject::Clear() {
 
 Entity* SuperGameObject::CreateEntity(Scene* scene) {
     Entity* entity = scene->CreateEntity();
+    entity->gameObject = this;
     mEntityVector.push_back(entity);
     return entity;
 }

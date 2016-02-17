@@ -5,7 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <Util/Input.hpp>
-#include "Game/Util/CameraUpdate.hpp"
 #include "Game/Util/GameEntityFactory.hpp"
 #include "Game/Util/ControlSchemes.hpp"
 
@@ -102,7 +101,7 @@ void DanielScene::Update(float deltaTime) {
     mPhysicsSystem.Update(*this, deltaTime);
     
     // UpdateCamera
-    UpdateCamera(mMainCamera, mPlayers);
+    //UpdateCamera(mMainCamera, mPlayers);
     
     for (auto player : mPlayers) {
         GridCollide(player, deltaTime);

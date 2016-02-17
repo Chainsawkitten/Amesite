@@ -17,7 +17,6 @@
 
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
-#include "../CaveSystem/CaveSystem.hpp"
 
 #include <Texture/Texture2D.hpp>
 
@@ -46,7 +45,7 @@ GameEntityFactory::GameEntityFactory(){
 
 Enemy* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
     Enemy* gameObject = new Enemy(mScene);
-    gameObject->body->GetComponent<Component::Transform>()->position = origin;
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }
 
@@ -54,12 +53,12 @@ Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     Player* gameObject = new Player(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     gameObject->node->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->body->GetComponent<Component::Controller>()->playerID = player;
-    //gameObject->GetEntity("head")->GetComponent<Component::Controller>()->playerID = player;
+    gameObject->leftTurrent->GetComponent<Component::Controller>()->playerID = player;
+    gameObject->rightTurrent->GetComponent<Component::Controller>()->playerID = player;
     if (player == InputHandler::PLAYER_ONE) {
-        gameObject->body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
+        gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
     } else {
-        gameObject->body->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ArrowKeyRotate);
+        gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ArrowKeyRotate);
     }
     return gameObject;
 }
@@ -68,6 +67,7 @@ Bullet* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::ve
     Bullet* gameObject = new Bullet(mScene);
     gameObject->body->GetComponent<Component::Transform>()->position = position;
     gameObject->body->GetComponent<Component::Physics>()->velocity = direction;
+    gameObject->body->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
     gameObject->body->GetComponent<Component::Damage>()->faction = faction;
     return gameObject;
 }

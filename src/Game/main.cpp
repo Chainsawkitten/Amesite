@@ -2,32 +2,19 @@
 #include <GLFW/glfw3.h>
 #include <MainWindow.hpp>
 
-#include <Texture/Texture2D.hpp>
-#include <Geometry/Cube.hpp>
-#include <Resources.hpp>
-
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
 #include <Util/FileSystem.hpp>
 
-#include <System/RenderSystem.hpp>
-#include <System/PhysicsSystem.hpp>
-#include <System/CollisionSystem.hpp>
-#include <System/ParticleSystem.hpp>
-#include <System/AnimationSystem.hpp>
-#include "System/HealthSystem.hpp"
-#include "System/DamageSystem.hpp"
-#include "System/ControllerSystem.hpp"
-#include "System/LifeTimeSystem.hpp"
-#include "System/ParticleSystem.hpp"
-
 #include "GameScenes/MainScene.hpp"
-#include "GameScenes/PontusScene.hpp"
-#include "GameScenes/AlbinScene.hpp"
-#include "GameScenes/EmptyScene.hpp"
-#include "GameScenes/DanielScene.hpp"
-#include "GameScenes/IvarScene.hpp"
+//#include "GameScenes/PontusScene.hpp"
+//#include "GameScenes/AlbinScene.hpp"
+//#include "GameScenes/EmptyScene.hpp"
+//#include "GameScenes/DanielScene.hpp"
+//#include "GameScenes/IvarScene.hpp"
 
+//#define _CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
 //#include <crtdbg.h>
 
 #include <thread>
@@ -39,7 +26,7 @@ using namespace std;
 int main() {
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     
-    // Enable logging if requested.
+    //Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
         freopen(FileSystem::SavePath("Modership", "GameLog.txt").c_str(), "a", stderr);
     
@@ -55,8 +42,10 @@ int main() {
     Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
 
-    Scene* scene = new IvarScene();
-    //Scene* scene = new MainScene();
+    //AlbinScene scene;
+    //DanielScene scene;
+    //IvarScene scene;
+    MainScene scene;
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -66,7 +55,7 @@ int main() {
         lastTime = glfwGetTime();
 
         window->Update();
-        scene->Update(static_cast<float>(deltaTime));
+        scene.Update(static_cast<float>(deltaTime));
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
@@ -86,7 +75,6 @@ int main() {
         glfwPollEvents();
     }
     
-    delete scene;
     delete window;
     
     glfwTerminate();
@@ -94,5 +82,7 @@ int main() {
     GameSettings::GetInstance().Save();
     
     Log() << "Game ended - " << time(nullptr) << "\n";
+
+    //_CrtDumpMemoryLeaks();
     return 0;
 }

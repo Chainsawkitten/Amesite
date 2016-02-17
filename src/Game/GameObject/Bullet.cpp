@@ -12,6 +12,9 @@
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Physics.hpp>
 #include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+
 
 using namespace GameObject;
 
@@ -24,10 +27,8 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::Physics>();
     body->AddComponent<Component::LifeTime>()->lifeTime = 2.f;
 
-
     // First emitter - fire
     fireEmitter = CreateEntity(scene);
-    fireEmitter->AddComponent<Component::LifeTime>()->lifeTime = 1.8f;
     fireEmitter->AddComponent<Component::ParticleEmitter>();
 
     Component::ParticleEmitter* emitter = fireEmitter->GetComponent<Component::ParticleEmitter>();
@@ -56,7 +57,6 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
 
     // Second emitter - blue
     blueEmitter = CreateEntity(scene);
-    blueEmitter->AddComponent<Component::LifeTime>()->lifeTime = 1.8f;
     blueEmitter->AddComponent<Component::ParticleEmitter>();
 
     Component::ParticleEmitter* emitterOne = blueEmitter->GetComponent<Component::ParticleEmitter>();

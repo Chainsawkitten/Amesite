@@ -275,10 +275,8 @@ set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Util/GameSettings.cpp
         src/Game/Util/GameEntityFactory.cpp
-        src/Game/Util/CameraUpdate.cpp
         src/Game/Util/ControlSchemes.cpp
         src/Game/Util/MainCamera.cpp
-        src/Game/CaveSystem/CaveSystem.cpp
         src/Game/System/ControllerSystem.cpp
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
@@ -288,7 +286,6 @@ set(GAME_SRCS
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
-        src/Game/Component/CameraFollow.cpp
         src/Game/Component/LifeTime.cpp
         src/Game/Component/AI/WalkerAI.cpp
         src/Game/GameScenes/MainScene.cpp
@@ -309,10 +306,8 @@ set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameEntityFactory.hpp
-        src/Game/Util/CameraUpdate.hpp
         src/Game/Util/ControlSchemes.hpp
         src/Game/Util/MainCamera.hpp
-        src/Game/CaveSystem/CaveSystem.hpp
         src/Game/System/ControllerSystem.hpp
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
@@ -322,7 +317,6 @@ set(GAME_HEADERS
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
-        src/Game/Component/CameraFollow.hpp
         src/Game/Component/LifeTime.hpp
         src/Game/Component/AI/WalkerAI.hpp
         src/Game/GameScenes/MainScene.hpp

@@ -63,9 +63,9 @@ void Scene::UpdateModelMatrices() {
     for (auto animationComponent : animationVector) {
         Component::RelativeTransform* relativeTranform = animationComponent->entity->GetComponent<Component::RelativeTransform>();
         if (relativeTranform != nullptr && relativeTranform->parentEntity->GetComponent<Component::Animation>() != nullptr) {
-            Component::Animation* relativeAnitmaion = relativeTranform->parentEntity->GetComponent<Component::Animation>();
-            animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix =  animationComponent->orientationMatrix * relativeAnitmaion->orientationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix;
-            animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix = animationComponent->animationMatrix * relativeAnitmaion->animationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix;
+            Component::Animation* relativeAnimation = relativeTranform->parentEntity->GetComponent<Component::Animation>();
+            animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix = animationComponent->orientationMatrix * relativeAnimation->orientationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix;
+            animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix = animationComponent->animationMatrix * relativeAnimation->animationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix;
             animationComponent->orientationMatrix = relativeTranform->parentEntity->GetComponent<Component::Animation>()->orientationMatrix;
             animationComponent->animationMatrix = relativeTranform->parentEntity->GetComponent<Component::Animation>()->animationMatrix;
         } else {

@@ -34,6 +34,12 @@ namespace Component {
              */
             virtual glm::vec3 GetWorldScale() const;
 
+            /// Get roation of the entity.
+            /**
+             * @return The entity's rotation (yaw, pitch and roll in degrees).
+             */
+            virtual glm::vec3 GetWorldRotation() const;
+
 
             /// Get orientation matrix.
             /**

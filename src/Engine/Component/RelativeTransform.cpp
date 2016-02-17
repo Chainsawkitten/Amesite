@@ -28,3 +28,10 @@ glm::vec3 RelativeTransform::GetWorldScale() const {
     else
         return scale;
 }
+
+glm::vec3 RelativeTransform::GetWorldRotation() const {
+    if (parentEntity != nullptr)
+        return parentEntity->GetComponent<Component::Transform>()->GetWorldRotation() + glm::vec3(yaw, pitch, roll);
+    else
+        return glm::vec3(yaw, pitch, roll);
+}

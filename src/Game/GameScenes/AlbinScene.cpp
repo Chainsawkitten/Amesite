@@ -16,7 +16,6 @@
 #include "../GameObject/Camera.hpp"
 #include "../GameObject/Player.hpp"
 #include "../Util/MainCamera.hpp"
-#include "../Util/CameraUpdate.hpp"
 #include <Util/Input.hpp>
 
 #include <MainWindow.hpp>
@@ -98,7 +97,7 @@ void AlbinScene::Update(float deltaTime) {
     mPhysicsSystem.Update(*this, deltaTime);
     
     // Update camera.
-    UpdateCamera(mMainCamera, mPlayers);
+    //UpdateCamera(mMainCamera, mPlayers);
     
     // Updates model matrices for this frame.
     UpdateModelMatrices();

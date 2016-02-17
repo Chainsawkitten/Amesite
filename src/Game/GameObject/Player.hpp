@@ -44,20 +44,33 @@ namespace GameObject {
             Entity* body;
 
             /// Engine relative to body.
-            Entity* leftFrontEngine;
+            Entity* frontEngineLeft;
 
             /// Engine relative to body.
-            Entity* rightFrontEngine;
+            Entity* frontEngineRight;
 
             /// Engine relative to body.
-            Entity* leftBackEngine;
+            Entity* backEngineLeft;
 
             /// Engine relative to body.
-            Entity* rightBackEngine;
+            Entity* backEngineRight;
+
+            /// Light relative to body.
+            Entity* light;
+
+            /// Turrent relative to body.
+            Entity* leftTurrent;
+
+            /// Turrent relative to body.
+            Entity* rightTurrent;
 
         private:
             Geometry::OBJModel* mShipBody;
-            Geometry::OBJModel* mShipFrontEngine;
-            Geometry::OBJModel* mShipBackEngine;
+            Geometry::OBJModel* mShipFrontEngineRight;
+            Geometry::OBJModel* mShipFrontEngineLeft;
+            Geometry::OBJModel* mShipBackEngineRight;
+            Geometry::OBJModel* mShipBackEngineLeft;
+
+            void AddEnginePartilces(Entity* entity);
     };
 }

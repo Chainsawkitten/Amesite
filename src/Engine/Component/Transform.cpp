@@ -31,6 +31,10 @@ glm::vec3 Transform::GetWorldScale() const {
     return scale;
 }
 
+glm::vec3 Transform::GetWorldRotation() const {
+    return glm::vec3(yaw, pitch, roll);
+}
+
 glm::mat4 Transform::GetOrientation() const {
     glm::mat4 orientation;
     orientation = glm::rotate(orientation, glm::radians(yaw), glm::vec3(0, 1, 0));
