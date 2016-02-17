@@ -13,28 +13,49 @@ namespace CaveGenerator {
                 x = X;
                 y = Y;
             };
-            inline bool operator==(const Coordinate& rhs) {
+			
+			Coordinate();
+
+			friend bool operator==(const Coordinate& rhs, const Coordinate& lhs);
+
+			inline bool operator==(const Coordinate& rhs) {
                 return (this->x == rhs.x && this->y == rhs.x);
             };
     };
 
     class Room {
         public:
+			Room(bool** map, std::vector<Coordinate> coordinates);
+			Room();
+
+			friend bool operator==(const Room& rhs, const Room& lhs);
+
+			inline bool operator==(const Room& rhs) {
+				return (this->coordinates == rhs.coordinates);
+			};
+
+			bool IsConnected(Room& otherRoom);
+
+			bool isAccessibleFromMainRoom;
+			bool isMainRoom;
             std::vector<Coordinate> coordinates;
-            std::vector<int> connected;
+			std::vector<Room> connectedRooms;
+			std::vector<Coordinate> edgeCoordinates;
     };
 
     class CaveMap{
         public:
             CaveMap::CaveMap(int rowCount, int columnCount, int seed);
+			CaveMap::~CaveMap();
+            void GenerateCaveMap(int& percent);
 
-            void GenerateCaveMap(int& percent, int& iterations);
+			void ProcessCaveMap(const int& iterations);
 
             void PrintMapToLog();
 
             void FillCoordinates(const std::vector<Coordinate>& coordinates);
 
-            void RemoveSmallRooms(std::vector<std::vector<Coordinate>>& rooms, int threshold);
+            void RemoveSmallRooms(int threshold);
 
             std::vector<Coordinate> FloodFill(const int& startX, const int& startY);
 
@@ -42,16 +63,20 @@ namespace CaveGenerator {
 
             bool** GetMap();
 
+			void ConnectClosestRooms(bool forceAccessibilityFromMainRoom = false);
         private:
             
             void DetectRooms();
-            void ProcessCaveMap(const int& iterations);
+			
+			void CreatePassage(Room& firstBestRoom, Room& secondBestRoom, Coordinate firstBestCoordinate, Coordinate secondBestCoordinate);
+
+			void ConnectRooms(Room& first, Room& second);
 
             bool** mMap;
             int mRowCount; 
             int mColumnCount;
             std::mt19937 mRNG;
-            std::vector<std::vector<Coordinate>> mRooms;
+			std::vector<Room> mRoomList;
     };
 
 }

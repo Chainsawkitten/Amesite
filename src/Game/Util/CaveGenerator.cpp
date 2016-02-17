@@ -4,6 +4,7 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
+#include <glm/glm.hpp>
 
 namespace CaveGenerator {
 
@@ -28,6 +29,11 @@ namespace CaveGenerator {
         mRNG.seed(static_cast<uint32_t>(seed));
     }
 
+	CaveMap::~CaveMap() {
+		for (int j = 0; j < mRowCount; ++j)
+			delete[] mMap[j];
+		delete[] mMap;
+	}
 
     void CaveMap::PrintMapToLog() {
         for (int i = 0; i < mRowCount; ++i) {
@@ -140,6 +146,9 @@ namespace CaveGenerator {
                 delete[] tempMap[j];
             delete[] tempMap;
         }
+
+		//Find which rooms we have left after processing.
+		DetectRooms();
     }
 
     void CaveMap::DetectRooms(){
@@ -156,6 +165,7 @@ namespace CaveGenerator {
                 flagMap[i][j] = false;
         }
 
+		//Floodfill in order to find rooms.
         for (int i = 0; i < mRowCount; i++) {
             for (int j = 0; j < mColumnCount; j++) {
                 if (flagMap[i][j] == false && mMap[i][j] == false) {
@@ -170,28 +180,43 @@ namespace CaveGenerator {
         for (int j = 0; j < mRowCount; ++j)
             delete[] flagMap[j];
         delete[] flagMap;
-        mRooms = rooms;
+
+		for (auto& room : rooms) {
+			mRoomList.push_back(Room(mMap,room) );
+		}
+
+		int largestRoomSize = 0;
+		Room *largestRoom;
+		for (auto& room : mRoomList) {
+			if (room.coordinates.size() > largestRoomSize) {
+				largestRoomSize = int(room.coordinates.size());
+				largestRoom = &room;
+			}
+		}
+		Log() << int(largestRoom->coordinates.size()) << "\n";
+		largestRoom->isMainRoom = true;
+		largestRoom->isAccessibleFromMainRoom = true;
     }
 
-    void CaveMap::FillCoordinates(const std::vector<Coordinate>& coordinates) {
-        for (auto &i : coordinates)
-            mMap[i.x][i.y] = true;
-    }
+	void CaveMap::FillCoordinates(const std::vector<Coordinate>& coordinates) {
+		for (auto &i : coordinates)
+			mMap[i.x][i.y] = true;
+	}
 
-    void CaveMap::RemoveSmallRooms(std::vector<std::vector<Coordinate>>& rooms, int threshold) {
-        bool** map = mMap;
+    void CaveMap::RemoveSmallRooms( int threshold) {
+		bool** map = mMap;
 
-        for (auto& room : rooms) {
-            if(room.size() < threshold)
-            FillCoordinates(room);
-        }
+		for (auto& room : mRoomList) {
+			if (static_cast<int>(room.coordinates.size()) < threshold)
+				FillCoordinates(room.coordinates);
+		}
 
-        rooms.erase(std::remove_if(rooms.begin(), rooms.end(), 
-            [&threshold, map](std::vector<Coordinate> i) {
-                return (static_cast<int>(i.size()) < threshold);
-            }), rooms.end());
+		mRoomList.erase(std::remove_if(mRoomList.begin(), mRoomList.end(),
+		    [&threshold, map](Room i) {
+		        return (static_cast<int>(i.coordinates.size()) < threshold);
+		}), mRoomList.end());
 
-        return;
+		return;
     }
 
 
@@ -257,7 +282,7 @@ namespace CaveGenerator {
         return mMap;
     }
 
-    void CaveMap::GenerateCaveMap(int& percent, int& iterations)
+    void CaveMap::GenerateCaveMap(int& percent)
     {
         std::uniform_int_distribution<uint32_t> hundredDistribution(1, 100);
 
@@ -272,8 +297,6 @@ namespace CaveGenerator {
                 mMap[i][j] = false;
         }
 
-        PrintMapToLog();
-
         //Seed walls with percent% probability.
         for (int i = 0; i < mRowCount; ++i) {
             for (int j = 0; j < mColumnCount; ++j) {
@@ -287,14 +310,116 @@ namespace CaveGenerator {
             }
         }
 
-        PrintMapToLog();
-
-        ProcessCaveMap(iterations);
-
-        PrintMapToLog();
-
-        DetectRooms();
-
         return;
     }
+
+	void CaveMap::ConnectClosestRooms(bool forceAccessibilityFromMainRoom) {
+		int bestDistance = 0;
+		bool possibleConnection = false;
+
+		Coordinate* firstBestCoordinate;
+		Coordinate* secondBestCoordinate;
+		Room* firstBestRoom;
+		Room* secondBestRoom;
+		
+		for (auto& firstRoom : mRoomList) {
+			possibleConnection = false;
+
+			for (auto& secondRoom : mRoomList) {
+				//Abort early if possible
+				if (firstRoom == secondRoom) {
+					continue;
+				}
+
+				//If already connected, why try to connect the rooms?
+				if (firstRoom.IsConnected(secondRoom)) {
+					possibleConnection = false;
+					break;
+				}
+
+				//Do magic stuff, watch rooms connect!
+				//Look at both rooms edge-tiles and connect the two closest tiles.
+				for (auto& coordinateA : firstRoom.edgeCoordinates) {
+					for (auto& coordinateB : secondRoom.edgeCoordinates) {
+						int xDifference = (coordinateA.x - coordinateB.x);
+						int yDifference = (coordinateA.y - coordinateB.y);
+						int distance = glm::pow<int>(xDifference, 2.f) + glm::pow<int>(xDifference, 2.f);
+						if ((distance < bestDistance) || !possibleConnection) {
+							possibleConnection = true;
+							firstBestCoordinate = &coordinateA;
+							secondBestCoordinate = &coordinateB;
+							firstBestRoom = &firstRoom;
+							secondBestRoom = &secondRoom;
+						}
+					}
+				}
+			}
+			if (possibleConnection)
+				CreatePassage(*firstBestRoom, *secondBestRoom, *firstBestCoordinate, *secondBestCoordinate);
+		}
+		for (auto& room : mRoomList)
+			Log() << int(room.connectedRooms.size()) << "\n";
+
+		return;
+	}
+
+	void CaveMap::CreatePassage(Room& firstBestRoom, Room& secondBestRoom, Coordinate firstBestCoordinate, Coordinate secondBestCoordinate) {
+		ConnectRooms(firstBestRoom, secondBestRoom);
+	}
+
+	void CaveMap::ConnectRooms(Room& first, Room& second) {
+		
+		if (first.isAccessibleFromMainRoom) {
+			second.isAccessibleFromMainRoom = true;
+		}
+
+		if (second.isAccessibleFromMainRoom) {
+			first.isAccessibleFromMainRoom = true;
+		}
+
+		first.connectedRooms.push_back(second);
+		second.connectedRooms.push_back(first);
+	}
+
+	bool Room::IsConnected(Room& otherRoom) {
+		for (auto& room : connectedRooms) {
+			if (otherRoom == room)
+				return true;
+		}
+		return false;
+	}
+
+	Room::Room(bool** map, std::vector<Coordinate> coordinates) {
+		this->isAccessibleFromMainRoom = false;
+		this->isMainRoom = false;
+		this->coordinates = coordinates;
+
+		for (auto& coordinate : coordinates){
+			for (int i = (coordinate.x - 1); i <= (coordinate.x + 1); i++) {
+				for (int j = (coordinate.y - 1); j <= (coordinate.y + 1); j++) {
+					//If the coordinate has a wall in any adjacent space, then it is an edge coordinate.
+					if (i == coordinate.x || j == coordinate.y) {
+						if (map[i][j] == true)
+							edgeCoordinates.push_back(coordinate);
+					}
+				}
+			}
+		}
+	}
+
+	Room::Room() {
+
+	}
+
+	Coordinate::Coordinate() {
+
+	}
+
+	bool operator==(const Coordinate& lhs, const Coordinate& rhs) {
+		return (lhs.x == rhs.x && lhs.y == rhs.y);
+	}
+
+	bool operator==(const Room& lhs, const Room& rhs) {
+		return(lhs == rhs);
+	}
 }
