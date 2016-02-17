@@ -2,8 +2,12 @@
 #include <random>
 #include <Util/Log.hpp>
 #include <vector>
+#include <queue>
+#include <algorithm>
 
-bool** GenerateCaveMap(const int& rowCount, const int& columnCount, const int& iterations) {
+using namespace CaveGenerator;
+
+bool** CaveGenerator::GenerateCaveMap(const int& rowCount, const int& columnCount, const int& iterations) {
     //Initialize Mersenne Twister RNG
     std::mt19937 RNG;
 
@@ -12,9 +16,8 @@ bool** GenerateCaveMap(const int& rowCount, const int& columnCount, const int& i
     RNG.seed(seed);
     std::uniform_int_distribution<uint32_t> hundredDistribution(1,100);
 
-    bool** map = new bool*[rowCount];
-    
     //Create array.
+    bool** map = new bool*[rowCount];
     for (int i = 0; i < rowCount; ++i)
         map[i] = new bool[columnCount];
 
@@ -23,6 +26,7 @@ bool** GenerateCaveMap(const int& rowCount, const int& columnCount, const int& i
         for (int j = 0; j < columnCount; j++)
             map[i][j] = false;
     }
+
     //PrintMapToLog(map, rowCount, columnCount);
 
     //Seed walls with 45% probability.
@@ -42,11 +46,13 @@ bool** GenerateCaveMap(const int& rowCount, const int& columnCount, const int& i
 
     PrintMapToLog(map, rowCount, columnCount);
 
+    DetectRooms(map, rowCount, columnCount);
+
     return map;
 }
 
 
-void PrintMapToLog(bool** map, const int& rowCount, const int& columnCount) {
+void CaveGenerator::PrintMapToLog(bool** map, const int& rowCount, const int& columnCount) {
     for (int i = 0; i < rowCount; ++i) {
         for (int j = 0; j < columnCount; ++j) {
             if (map[i][j] == true)
@@ -61,7 +67,7 @@ void PrintMapToLog(bool** map, const int& rowCount, const int& columnCount) {
     }
 }
 
-void ProcessCaveMap(bool ** map, const int& rowCount, const int& columnCount, const int& iterations) {
+void CaveGenerator::ProcessCaveMap(bool ** map, const int& rowCount, const int& columnCount, const int& iterations) {
     //Iterate over n times over map.
     //Rule: if a cell was a wall and has 4 or more wall neighbours, then it stays a wall.
     //Otherwise, if the cell wasn't a wall and there are 5 or more wall neighbours, then it becomes a wall.
@@ -159,4 +165,85 @@ void ProcessCaveMap(bool ** map, const int& rowCount, const int& columnCount, co
             delete[] tempMap[j];
         delete[] tempMap;
     }
+}
+
+std::vector<std::vector<Coordinate>> CaveGenerator::DetectRooms(bool ** map, const int & rowCount, const int & columnCount){
+    std::vector<std::vector<Coordinate>> rooms;
+    for (int i = 0; i < columnCount; i++) {
+        for (int j = 0; j < rowCount; j++) {
+            if (map[i][j] == false) {
+                if(rooms.empty())
+                    rooms.push_back(FloodFill(map, i, j, rowCount, columnCount));
+                for(auto& room : rooms) {
+                    std::vector<Coordinate>::iterator found;
+                    if (std::find(room.begin(), room.end(), Coordinate(i, j)) != room.end()){
+                        Log() << "DO NOTHING!\n";
+                    } else {
+                        rooms.push_back(FloodFill(map, i, j, rowCount, columnCount));
+                    }
+                }
+
+            }
+        }
+    }
+    rooms.size();
+    return rooms;
+}
+
+void CaveGenerator::FillCoordinates(bool ** map, const std::vector<Coordinate>& coordinates) {
+    for (auto &i : coordinates)
+        map[i.x][i.y] = true;
+}
+
+std::vector<Coordinate> CaveGenerator::FloodFill(bool** map, const int& startX, const int& startY, const int& rowCount, const int& columnCount) {
+    //Create array to keep track of which tiles we have looked at.
+    bool** flagMap = new bool*[rowCount];
+    for (int i = 0; i < rowCount; ++i)
+        flagMap[i] = new bool[columnCount];
+
+    //Initialize array.
+    for (int i = 0; i < rowCount; ++i) {
+        for (int j = 0; j < columnCount; j++)
+            flagMap[i][j] = false;
+    }
+
+    //Stores wheter we are looking for floors or walls
+    bool tileType = map[startX][startY];
+
+    //Stores the coordinates that make out the region.
+    std::vector<Coordinate> coordinates;
+
+    //Stores the tiles we will be looking at.
+    std::queue<Coordinate> tileQueue;
+
+    //Add the first coordinate to the queue to start the process.
+    Coordinate currentCoordinate(startX, startY);
+    tileQueue.push(currentCoordinate);
+
+    while (!tileQueue.empty()) {
+        //Set currentCoordinate to the first element
+        currentCoordinate = tileQueue.front();
+        //Remove the coordinate from the queue
+        tileQueue.pop();
+        //Add the coordinate to our vector
+        coordinates.push_back(currentCoordinate);
+        //Add surrounding four non-diagonal tiles to the tileQueue
+        for (int i = (currentCoordinate.x - 1); i <= (currentCoordinate.x + 1); i++) {
+            for (int j = (currentCoordinate.y - 1); j <= (currentCoordinate.y + 1); j++) {
+                //Check if the neighbour coordinate is within the map, and check if it is neighbouring LR/UD
+                if (IsWithinMapRange(map, Coordinate(i,j), rowCount, rowCount) && (i == currentCoordinate.x || j == currentCoordinate.y)) {
+                    //If the neighboring tile is of the type we are looking for and we haven't looked at it, look at it.
+                    if (flagMap[i][j] == false && map[i][j] == tileType) {
+                        flagMap[i][j] = true;
+                        tileQueue.push(Coordinate(i,j));
+                    }
+                }
+            }
+        }
+    }
+    return coordinates;
+}
+
+bool CaveGenerator::IsWithinMapRange(bool ** map, const Coordinate & coordinate, const int& rowCount, const int& columnCount) {
+    return ((coordinate.x > 0) && (coordinate.x < columnCount) && (coordinate.y > 0) && (coordinate.y < rowCount));
 }

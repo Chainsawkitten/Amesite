@@ -87,7 +87,7 @@ DanielScene::DanielScene() {
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
     gammaCorrectionFilter = new GammaCorrectionFilter();
-    bool** caveMap = GenerateCaveMap(60, 60, 5);
+    bool** caveMap = CaveGenerator::GenerateCaveMap(60, 60, 5);
 }
 
 DanielScene::~DanielScene() {
