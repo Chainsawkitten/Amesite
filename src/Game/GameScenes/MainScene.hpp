@@ -19,6 +19,8 @@
 class PostProcessing;
 class FXAAFilter;
 class GammaCorrectionFilter;
+class GlowFilter;
+class GlowBlurFilter;
 class Entity;
 namespace GameObject {
     class Cave;
@@ -85,7 +87,9 @@ class MainScene : public Scene {
         PostProcessing* postProcessing;
         FXAAFilter* fxaaFilter;
         GammaCorrectionFilter* gammaCorrectionFilter;
-
+        GlowFilter* glowFilter;
+        GlowBlurFilter* glowBlurFilter;
+        
         // Grid collision
         bool GridCollide(Entity* entity, float deltaTime);
         

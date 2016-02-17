@@ -36,6 +36,12 @@ namespace Component {
              */
             void SetSpecular(const char* filename);
             
+            /// Set glow texture from file.
+            /**
+             * @param filename Path to the image file.
+             */
+            void SetGlow(const char* filename);
+            
             /// Diffuse texture.
             Texture2D* diffuse;
             
@@ -44,5 +50,8 @@ namespace Component {
             
             /// Specular texture.
             Texture2D* specular;
+            
+            /// Glow texture.
+            Texture2D* glow;
     };
 }

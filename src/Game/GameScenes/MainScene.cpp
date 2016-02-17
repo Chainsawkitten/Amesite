@@ -26,13 +26,14 @@
 #include <Component/Listener.hpp>
 
 #include <Audio/SoundBuffer.hpp>
-#include <Audio/Listener.hpp>
 
 #include <Resources.hpp>
 #include <Texture/Texture2D.hpp>
 
 #include <PostProcessing/PostProcessing.hpp>
 #include <PostProcessing/FXAAFilter.hpp>
+#include <PostProcessing/GlowFilter.hpp>
+#include <PostProcessing/GlowBlurFilter.hpp>
 #include <PostProcessing/GammaCorrectionFilter.hpp>
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
@@ -45,7 +46,7 @@
 using namespace GameObject;
 
 MainScene::MainScene() {
-    mSoundSystem.GetListener()->SetGain(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    mSoundSystem.SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
     
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -74,18 +75,12 @@ MainScene::MainScene() {
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
-    // Create players
-    //Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
-    //Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
-    
+    // Create players 
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO));
     
     // Create scene
     mCave = GameEntityCreator().CreateMap();
-
-    // Create dust
-    GameEntityCreator().CreateDust(mPlayers[0]->node, Component::ParticleEmitter::DUST);
     
     // Directional light.
     Entity* dirLight = CreateEntity();
@@ -97,6 +92,8 @@ MainScene::MainScene() {
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
     gammaCorrectionFilter = new GammaCorrectionFilter();
+    glowFilter = new GlowFilter();
+    glowBlurFilter = new GlowBlurFilter();
 
     GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
@@ -110,6 +107,8 @@ MainScene::MainScene() {
 MainScene::~MainScene() {
     delete fxaaFilter;
     delete gammaCorrectionFilter;
+    delete glowFilter;
+    delete glowBlurFilter;
     delete postProcessing;
     
     alDeleteSources(1, &mSource);
@@ -161,15 +160,28 @@ void MainScene::Update(float deltaTime) {
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
     
-    // Apply post-processing effects.
+    // Glow.
+    glowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+    int blurAmount = 5;
+    for (int i=0; i<blurAmount; ++i) {
+        glowBlurFilter->SetHorizontal(true);
+        postProcessing->ApplyFilter(glowBlurFilter);
+        glowBlurFilter->SetHorizontal(false);
+        postProcessing->ApplyFilter(glowBlurFilter);
+    }
+    postProcessing->ApplyFilter(glowFilter);
+    
+    // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
         fxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
         postProcessing->ApplyFilter(fxaaFilter);
     }
     
+    // Gamma correction.
     gammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
     postProcessing->ApplyFilter(gammaCorrectionFilter);
     
+    // Render to back buffer.
     postProcessing->Render();
 }
 

@@ -40,6 +40,13 @@ class RenderTarget {
          */
         GLuint GetColorTexture() const;
         
+        /// Get extra texture.
+        /**
+         * Used for extra information, e.g. for bloom.
+         * @return The extra buffer's texture.
+         */
+        GLuint GetExtraTexture() const;
+        
         /// Get depth texture.
         /**
          * @return The depth buffer's texture.
@@ -55,6 +62,7 @@ class RenderTarget {
         
         GLuint mFrameBuffer;
 		GLuint mColorBuffer;
+        GLuint mExtraBuffer;
 		GLuint mDepthBuffer;
         
         Geometry::Square* mSquare;

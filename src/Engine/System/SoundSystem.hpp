@@ -3,9 +3,6 @@
 #include <AL/alc.h>
 
 class Scene;
-namespace Audio {
-    class Listener;
-}
 namespace Component {
     class SoundSource;
 }
@@ -29,11 +26,17 @@ namespace System {
              */
             ~SoundSystem();
             
-            /// Get listener.
+            /// Set main volume.
             /**
-             * @return The listener.
+             * @param volume New volume.
              */
-            Audio::Listener* GetListener() const;
+            void SetVolume(float volume);
+            
+            /// Get main volume.
+            /**
+             * @return The main volume.
+             */
+            float GetVolume() const;
             
             /// Get instance of SoundSystem.
             /**
@@ -59,6 +62,6 @@ namespace System {
             ALCdevice *mDevice;
             ALCcontext *mContext;
             
-            Audio::Listener* mListener;
+            float mVolume;
     };
 }

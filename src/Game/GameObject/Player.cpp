@@ -47,6 +47,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::Material>();
     body->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_body_diff.png");
     body->GetComponent<Component::Material>()->SetSpecular("Resources/ship_body_spec.png");
+    //body->GetComponent<Component::Material>()->SetGlow("Resources/ship_body_glow.png");
     body->AddComponent<Component::Animation>();
 
     light = CreateEntity(scene);
