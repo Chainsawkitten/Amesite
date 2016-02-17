@@ -58,6 +58,7 @@ set(RESOURCES
         assets/DefaultDiffuse.png
         assets/DefaultNormal.png
         assets/DefaultSpecular.png
+        assets/DefaultGlow.png
         assets/ParticleAtlas.png
         assets/Laser.ogg
         assets/GolfBall.obj
@@ -102,6 +103,8 @@ set(EMBEDDED_INPUT
         shaders/PostFXAA.frag
         shaders/PostFog.frag
         shaders/PostGamma.frag
+        shaders/PostGlow.frag
+        shaders/PostGlowBlur.frag
         shaders/Deferred.frag
         shaders/Particle.vert
         shaders/Particle.geom
@@ -154,7 +157,6 @@ set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
         src/Engine/RenderTarget.cpp
         src/Engine/Resources.cpp
-        src/Engine/Audio/Listener.cpp
         src/Engine/Audio/SoundBuffer.cpp
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
@@ -202,6 +204,8 @@ set(ENGINE_SRCS
         src/Engine/PostProcessing/FXAAFilter.cpp
         src/Engine/PostProcessing/FogFilter.cpp
         src/Engine/PostProcessing/GammaCorrectionFilter.cpp
+        src/Engine/PostProcessing/GlowFilter.cpp
+        src/Engine/PostProcessing/GlowBlurFilter.cpp
         src/Engine/GameObject/SuperGameObject.cpp
     )
 
@@ -209,7 +213,6 @@ set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
         src/Engine/RenderTarget.hpp
         src/Engine/Resources.hpp
-        src/Engine/Audio/Listener.hpp
         src/Engine/Audio/SoundBuffer.hpp
         src/Engine/Audio/SoundFile.hpp
         src/Engine/Audio/VorbisFile.hpp
@@ -259,6 +262,8 @@ set(ENGINE_HEADERS
         src/Engine/PostProcessing/FXAAFilter.hpp
         src/Engine/PostProcessing/FogFilter.hpp
         src/Engine/PostProcessing/GammaCorrectionFilter.hpp
+        src/Engine/PostProcessing/GlowFilter.hpp
+        src/Engine/PostProcessing/GlowBlurFilter.hpp
         src/Engine/GameObject/SuperGameObject.hpp
     )
 

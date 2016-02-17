@@ -20,7 +20,8 @@ out VertexData {
 
 void main () {
 	float a = 2.0 * particleLife / particleLifetime;
-	vertexOut.alpha = (1.0 - fract(a)) * alpha[int(a)] + fract(a) * alpha[int(a)+1];
+	float alphArr[3] = float[](alpha.x, alpha.y, alpha.z);
+	vertexOut.alpha = (1.0 - fract(a)) * alphArr[int(a)] + fract(a) * alphArr[int(a)+1];
 	vertexOut.size = particleSize;
 	vertexOut.color = color;
 	vertexOut.textureIndex = textureIndex;
