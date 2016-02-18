@@ -34,7 +34,6 @@ void DamageSystem::Update(Scene& scene) {
                     if ((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->faction != (*collisionVector)[i]->entity->GetComponent<Component::Health>()->faction) { //Does the damaging if entity doesn't belong to the same faction as the health entity.
                         (*collisionVector)[i]->entity->GetComponent<Component::Health>()->health -= (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->damageAmount;   //Reduce health by damage.
                         if ((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->removeOnImpact) {// Remove damage entity if it should be removed on impact
-                            //NEVER REMOVE AN ENITY THAT GOT RELATIVE TRANSFROM, WILL LEAD TO EMPTY POINTERS
                             if ((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->entity->gameObject != nullptr)
                                 (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->entity->gameObject->Clear();
                             else

@@ -21,7 +21,6 @@ void LifeTimeSystem::Update(Scene& scene, float deltaTime) {
     for (auto& lifeTimeComponent : lifeTimeVector) {
         lifeTimeComponent->lifeTime -= deltaTime;
         if (lifeTimeComponent->lifeTime < 0.f) {
-            //NEVER REMOVE AN ENITY THAT GOT RELATIVE TRANSFROM, WILL LEAD TO EMPTY POINTERS
             if (lifeTimeComponent->entity->gameObject != nullptr)
                 lifeTimeComponent->entity->gameObject->Clear();
             else

@@ -26,7 +26,6 @@ void HealthSystem::Update(Scene& scene, float deltaTime) {
             healthComponent->health += std::fminf(healthComponent->regenAmount * deltaTime, healthComponent->maxHealth);
         if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth) {
             if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth) {
-                //NEVER REMOVE AN ENITY THAT GOT RELATIVE TRANSFROM, WILL LEAD TO EMPTY POINTERS
                 if (healthComponent->entity->gameObject != nullptr)
                     healthComponent->entity->gameObject->Clear();
                 else
