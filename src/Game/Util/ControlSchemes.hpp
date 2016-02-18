@@ -24,13 +24,6 @@ namespace ControlScheme {
      */
     void StickRotate(Component::Controller* controller, float deltaTime);
 
-    /// Move the entity with the keyboard.
-    /**
-     * @param controller Component to control.
-     * @param deltaTime Time since last frame (in seconds).
-     */
-    void ArrowKeyRotate(Component::Controller* controller, float deltaTime);
-
     /// Rotate the entity with the keyboard.
     void ArrowKeysMove(Component::Controller* controller, float deltaTime);
 

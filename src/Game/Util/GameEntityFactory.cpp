@@ -58,7 +58,7 @@ Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     if (player == InputHandler::PLAYER_ONE) {
         gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
     } else {
-        gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::ArrowKeyRotate);
+        gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::MouseRotate);
     }
     return gameObject;
 }

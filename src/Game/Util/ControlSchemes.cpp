@@ -87,55 +87,6 @@ void ControlScheme::MouseRotate(Component::Controller* controller, float deltaTi
         entity->GetComponent<Component::Transform>()->yaw = 180.f + (float)glm::degrees(glm::atan(direction.x / direction.y));
 }
 
-void ControlScheme::ArrowKeyRotate(Component::Controller* controller, float deltaTime) {
-    Entity* entity = controller->entity;
-
-    bool up = Input()->Pressed(controller->playerID, InputHandler::UP);
-    bool down = Input()->Pressed(controller->playerID, InputHandler::DOWN);
-    bool right = Input()->Pressed(controller->playerID, InputHandler::RIGHT);
-    bool left = Input()->Pressed(controller->playerID, InputHandler::LEFT);
-
-    if (up) {
-        if (up && right) {
-            entity->GetComponent<Component::Transform>()->yaw = 180 - 45.f;
-        } else if (up && left) {
-            entity->GetComponent<Component::Transform>()->yaw = 180 + 45.f;
-        } else {
-            entity->GetComponent<Component::Transform>()->yaw = 180;
-        }
-    }
-    
-    if (down) {
-        if (down && right) {
-            entity->GetComponent<Component::Transform>()->yaw = 45.f;
-        } else if (down && left) {
-            entity->GetComponent<Component::Transform>()->yaw = -45.f;
-        } else {
-            entity->GetComponent<Component::Transform>()->yaw = 0;
-        }
-    }
-    
-    if (right) {
-        if (right && up) {
-            entity->GetComponent<Component::Transform>()->yaw = 90 + 45.f;
-        } else if (right && down) {
-            entity->GetComponent<Component::Transform>()->yaw = 90 - 45.f;
-        } else {
-            entity->GetComponent<Component::Transform>()->yaw = 90.f;
-        }
-    }
-    
-    if (left) {
-        if (left && up) {
-            entity->GetComponent<Component::Transform>()->yaw = 270 - 45.f;
-        } else if (left && down) {
-            entity->GetComponent<Component::Transform>()->yaw = 270 + 45.f;
-        } else {
-            entity->GetComponent<Component::Transform>()->yaw = 270.f;
-        }
-    }
-}
-
 void ControlScheme::ArrowKeysMove(Component::Controller* controller, float deltaTime) {
     Entity* entity = controller->entity;
 
