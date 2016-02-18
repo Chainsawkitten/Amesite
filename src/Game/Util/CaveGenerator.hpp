@@ -28,14 +28,14 @@ namespace CaveGenerator {
              *@param lhs left-hand-side value.
              *@return True if they are the same coordinate.
              */
-            friend bool operator==(const Coordinate& rhs, const Coordinate& lhs);
+            /*friend bool operator==(const Coordinate& rhs, const Coordinate& lhs);*/
 
             ///Operator== (this & rhs)
             /**
              *@param rhs Right-hand-side value.
              *@return True if they are the same coordinate.
              */
-            inline bool operator==(const Coordinate& rhs) {
+            inline bool operator==(const Coordinate& rhs) const {
                 return (this->x == rhs.x && this->y == rhs.x);
             };
     };
@@ -54,10 +54,10 @@ namespace CaveGenerator {
             Room();
 
             ///Operator== (lhs & rhs)
-            friend bool operator==(const Room& rhs, const Room& lhs);
+            //friend bool operator==(const Room& rhs, const Room& lhs);
 
             ///Operator== (this & rhs)
-            inline bool operator==(const Room& rhs) {
+            inline bool operator==(const Room& rhs) const {
                 return (this->coordinates == rhs.coordinates);
             };
 
