@@ -88,23 +88,29 @@ DanielScene::DanielScene() {
     fxaaFilter = new FXAAFilter();
     gammaCorrectionFilter = new GammaCorrectionFilter();
 
-	//Used for cave generation.
-	int percent = 50;
-	int iterations = 5;
+    //Used for cave generation.
+    int percent = 50;
+    int iterations = 5;
 
     CaveGenerator::CaveMap caveMap(60, 60, 0);
-	caveMap.PrintMapToLog();
+    //caveMap.PrintMapToLog();
+    //Log() << "\n";
 
     caveMap.GenerateCaveMap(percent);
-	caveMap.PrintMapToLog();
+    //caveMap.PrintMapToLog();
+    //Log() << "\n";
 
-	caveMap.ProcessCaveMap(5);
-	caveMap.PrintMapToLog();
+    caveMap.ProcessCaveMap(10);
+    //caveMap.PrintMapToLog();
+    //Log() << "\n";
+    
+    caveMap.RemoveSmallRooms(40);
+    //caveMap.PrintMapToLog();
+    //Log() << "\n";
 
-	//caveMap.RemoveSmallRooms(40);
-	caveMap.PrintMapToLog();
-
-	caveMap.ConnectClosestRooms();
+    caveMap.ConnectClosestRooms(true);
+    caveMap.PrintMapToLog();
+    //Log() << "\n";
 }
 
 DanielScene::~DanielScene() {

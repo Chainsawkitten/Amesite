@@ -10,6 +10,8 @@ namespace CaveGenerator {
 
     CaveMap::CaveMap(int rowCount, int columnCount, int seed) {
         
+        Log() << "Map seed: " << seed << "\n";
+
         mRowCount = rowCount;
         mColumnCount = columnCount;
 
@@ -29,11 +31,11 @@ namespace CaveGenerator {
         mRNG.seed(static_cast<uint32_t>(seed));
     }
 
-	CaveMap::~CaveMap() {
-		for (int j = 0; j < mRowCount; ++j)
-			delete[] mMap[j];
-		delete[] mMap;
-	}
+    CaveMap::~CaveMap() {
+        for (int j = 0; j < mRowCount; ++j)
+            delete[] mMap[j];
+        delete[] mMap;
+    }
 
     void CaveMap::PrintMapToLog() {
         for (int i = 0; i < mRowCount; ++i) {
@@ -50,11 +52,7 @@ namespace CaveGenerator {
     }
 
     void CaveMap::ProcessCaveMap(const int& iterations) {
-		std::vector<Coordinate> test = GetLine(Coordinate(0, 0), Coordinate(5, 5));
-
-		for (auto& coordinate : test) {
-			Log() << "X " << coordinate.x << "Y " << coordinate.y << "\n";
-		}
+        std::vector<Coordinate> test = GetLine(Coordinate(0, 0), Coordinate(5, 5));
 
         //Iterate over n times over map.
         //Rule: if a cell was a wall and has 4 or more wall neighbours, then it stays a wall.
@@ -153,8 +151,8 @@ namespace CaveGenerator {
             delete[] tempMap;
         }
 
-		//Find which rooms we have left after processing.
-		DetectRooms();
+        //Find which rooms we have left after processing.
+        DetectRooms();
     }
 
     void CaveMap::DetectRooms(){
@@ -171,11 +169,12 @@ namespace CaveGenerator {
                 flagMap[i][j] = false;
         }
 
-		//Floodfill in order to find rooms.
+        //Floodfill in order to find rooms.
         for (int i = 0; i < mRowCount; i++) {
             for (int j = 0; j < mColumnCount; j++) {
                 if (flagMap[i][j] == false && mMap[i][j] == false) {
-                    std::vector<Coordinate> room = FloodFill(i, j);
+                    Coordinate coordinate = Coordinate(i, j);
+                    std::vector<Coordinate> room = FloodFill(coordinate);
                     for (auto& coordinate : room)
                         flagMap[coordinate.x][coordinate.y] = true;
                     rooms.push_back(room);
@@ -187,45 +186,46 @@ namespace CaveGenerator {
             delete[] flagMap[j];
         delete[] flagMap;
 
-		for (auto& room : rooms) {
-			mRoomList.push_back(Room(mMap,room) );
-		}
+        for (auto& room : rooms) {
+            mRoomList.push_back(Room(mMap,room) );
+        }
 
-		int largestRoomSize = 0;
-		Room *largestRoom;
-		for (auto& room : mRoomList) {
-			if (room.coordinates.size() > largestRoomSize) {
-				largestRoomSize = int(room.coordinates.size());
-				largestRoom = &room;
-			}
-		}
-		largestRoom->isMainRoom = true;
-		largestRoom->isAccessibleFromMainRoom = true;
+        int largestRoomSize = 0;
+        Room *largestRoom;
+        for (auto& room : mRoomList) {
+            if (room.coordinates.size() > largestRoomSize) {
+                largestRoomSize = int(room.coordinates.size());
+                largestRoom = &room;
+            }
+        }
+        largestRoom->isMainRoom = true;
+        largestRoom->isAccessibleFromMainRoom = true;
     }
 
-	void CaveMap::FillCoordinates(const std::vector<Coordinate>& coordinates) {
-		for (auto &i : coordinates)
-			mMap[i.x][i.y] = true;
-	}
+    void CaveMap::FillCoordinates(const std::vector<Coordinate>& coordinates, bool tileType) {
+        for (auto &i : coordinates) {
+            if(IsWithinMapRange(i))
+                mMap[i.x][i.y] = tileType;
+        }
+    }
 
     void CaveMap::RemoveSmallRooms( int threshold) {
-		bool** map = mMap;
+        bool** map = mMap;
 
-		for (auto& room : mRoomList) {
-			if (static_cast<int>(room.coordinates.size()) < threshold)
-				FillCoordinates(room.coordinates);
-		}
+        for (auto& room : mRoomList) {
+            if (static_cast<int>(room.coordinates.size()) < threshold)
+                FillCoordinates(room.coordinates, true);
+        }
 
-		mRoomList.erase(std::remove_if(mRoomList.begin(), mRoomList.end(),
-		    [&threshold, map](Room i) {
-		        return (static_cast<int>(i.coordinates.size()) < threshold);
-		}), mRoomList.end());
+        mRoomList.erase(std::remove_if(mRoomList.begin(), mRoomList.end(),
+            [&threshold, map](Room i) {
+                return (static_cast<int>(i.coordinates.size()) < threshold);
+        }), mRoomList.end());
 
-		return;
+        return;
     }
 
-
-    std::vector<Coordinate> CaveMap::FloodFill(const int& startX, const int& startY) {
+    std::vector<Coordinate> CaveMap::FloodFill(const Coordinate& coordinate) {
         //Create array to keep track of which tiles we have looked at.
         bool** flagMap = new bool*[mRowCount];
         for (int i = 0; i < mRowCount; ++i)
@@ -238,7 +238,7 @@ namespace CaveGenerator {
         }
 
         //Stores wheter we are looking for floors or walls
-        bool tileType = mMap[startX][startY];
+        bool tileType = mMap[coordinate.x][coordinate.y];
 
         //Stores the coordinates that make out the region.
         std::vector<Coordinate> coordinates;
@@ -247,7 +247,7 @@ namespace CaveGenerator {
         std::queue<Coordinate> tileQueue;
 
         //Add the first coordinate to the queue to start the process.
-        Coordinate currentCoordinate(startX, startY);
+        Coordinate currentCoordinate(coordinate.x, coordinate.y);
         tileQueue.push(currentCoordinate);
 
         while (!tileQueue.empty()) {
@@ -292,9 +292,19 @@ namespace CaveGenerator {
         std::uniform_int_distribution<uint32_t> hundredDistribution(1, 100);
 
         //Create array.
-        mMap = new bool*[mRowCount];
-        for (int i = 0; i < mRowCount; ++i)
-            mMap[i] = new bool[mColumnCount];
+        if(mMap == nullptr) {
+            mMap = new bool*[mRowCount];
+            for (int i = 0; i < mRowCount; ++i)
+                mMap[i] = new bool[mColumnCount];
+        } else {
+            for (int j = 0; j < mRowCount; ++j)
+                delete[] mMap[j];
+            delete[] mMap;
+
+            mMap = new bool*[mRowCount];
+            for (int i = 0; i < mRowCount; ++i)
+                mMap[i] = new bool[mColumnCount];
+        }
 
         //Initialize array.
         for (int i = 0; i < mRowCount; ++i) {
@@ -318,219 +328,229 @@ namespace CaveGenerator {
         return;
     }
 
-	void CaveMap::ConnectClosestRooms(bool forceAccessibilityFromMainRoom) {
-		std::vector<Room*> roomListA;
-		std::vector<Room*> roomListB;
+    void CaveMap::ConnectClosestRooms(bool forceAccessibilityFromMainRoom) {
+        std::vector<Room*> roomListA;
+        std::vector<Room*> roomListB;
 
-		for (auto& room : mRoomList)
-			Log() << "Before: " << room.isAccessibleFromMainRoom << "\n";
+        //If we are forcing accessibility from the main room, then we should divide the rooms that are connected to the main room and those which are not into separate lists.
+        if (forceAccessibilityFromMainRoom) {
+            for (auto& room : mRoomList) {
+                if (room.isAccessibleFromMainRoom) {
+                    roomListB.push_back(&room);
+                } else {
+                    roomListA.push_back(&room);
+                }
+            }
+        } else {
+            for (auto& room : mRoomList) {
+                roomListA.push_back(&room);
+                roomListB.push_back(&room);
+            }
+        }
 
-		//If we are forcing accessibility from the main room, then we should divide the rooms that are connected to the main room and those which are not into separate lists.
-		if (forceAccessibilityFromMainRoom) {
-			for (auto& room : mRoomList) {
-				if (room.isAccessibleFromMainRoom) {
-					roomListB.push_back(&room);
-				} else {
-					roomListA.push_back(&room);
-				}
-			}
-		} else {
-			for (auto& room : mRoomList) {
-				roomListA.push_back(&room);
-				roomListB.push_back(&room);
-			}
-		}
+        int bestDistance = 0;
+        bool possibleConnection = false;
 
-		int bestDistance = 0;
-		bool possibleConnection = false;
+        Coordinate* firstBestCoordinate;
+        Coordinate* secondBestCoordinate;
+        Room* firstBestRoom;
+        Room* secondBestRoom;
+        
+        for (auto& firstRoom : roomListA) {
+            if (!forceAccessibilityFromMainRoom) {
+                possibleConnection = false;
+                if (firstRoom->connectedRooms.size() > 0) {
+                    continue;
+                }
+            }
 
-		Coordinate* firstBestCoordinate;
-		Coordinate* secondBestCoordinate;
-		Room* firstBestRoom;
-		Room* secondBestRoom;
-		
-		for (auto& firstRoom : roomListA) {
-			if (!forceAccessibilityFromMainRoom) {
-				possibleConnection = false;
-				if (firstRoom->connectedRooms.size() > 0) {
-					continue;
-				}
-			}
+            for (auto& secondRoom : roomListB) {
+                //Abort early if possible
+                if (*firstRoom == *secondRoom || firstRoom->IsConnected(*secondRoom)) {
+                    continue;
+                }
 
-			for (auto& secondRoom : roomListB) {
-				//Abort early if possible
-				if (firstRoom == secondRoom || firstRoom->IsConnected(*secondRoom)) {
-					continue;
-				}
+                //Do magic stuff, watch rooms connect!
+                //Look at both rooms edge-tiles and connect the two closest tiles.
+                for (auto& coordinateA : firstRoom->edgeCoordinates) {
+                    for (auto& coordinateB : secondRoom->edgeCoordinates) {
+                        int xDifference = (coordinateA.x - coordinateB.x);
+                        int yDifference = (coordinateA.y - coordinateB.y);
+                        int distance = static_cast<float>(glm::pow<float>(static_cast<float>(xDifference), 2.f) + glm::pow<float>(static_cast<float>(yDifference), 2.f));
 
-				//Do magic stuff, watch rooms connect!
-				//Look at both rooms edge-tiles and connect the two closest tiles.
-				for (auto& coordinateA : firstRoom->edgeCoordinates) {
-					for (auto& coordinateB : secondRoom->edgeCoordinates) {
-						int xDifference = (coordinateA.x - coordinateB.x);
-						int yDifference = (coordinateA.y - coordinateB.y);
-						int distance = glm::pow<int>(xDifference, 2.f) + glm::pow<int>(xDifference, 2.f);
+                        if ((distance < bestDistance) || !possibleConnection) {
+                            bestDistance = distance;
+                            possibleConnection = true;
+                            firstBestCoordinate = &coordinateA;
+                            secondBestCoordinate = &coordinateB;
+                            firstBestRoom = firstRoom;
+                            secondBestRoom = secondRoom;
+                        }
+                    }
+                }
 
-						if ((distance < bestDistance) || !possibleConnection) {
-							bestDistance = distance;
-							possibleConnection = true;
-							firstBestCoordinate = &coordinateA;
-							secondBestCoordinate = &coordinateB;
-							firstBestRoom = firstRoom;
-							secondBestRoom = secondRoom;
-						}
-					}
-				}
+            }
+            if (possibleConnection && !forceAccessibilityFromMainRoom) {
+                CreatePassage(*firstBestRoom, *secondBestRoom, *firstBestCoordinate, *secondBestCoordinate);
+            }
+        }
 
-			}
-			if (possibleConnection && !forceAccessibilityFromMainRoom) {
-				CreatePassage(*firstBestRoom, *secondBestRoom, *firstBestCoordinate, *secondBestCoordinate);
-			}
-		}
+        if (possibleConnection && forceAccessibilityFromMainRoom) { 
+            CreatePassage(*firstBestRoom, *secondBestRoom, *firstBestCoordinate, *secondBestCoordinate);
+            ConnectClosestRooms(true);
+        }
 
-		if (possibleConnection && forceAccessibilityFromMainRoom) { 
-			CreatePassage(*firstBestRoom, *secondBestRoom, *firstBestCoordinate, *secondBestCoordinate);
-			ConnectClosestRooms(true);
-		}
+        if (!forceAccessibilityFromMainRoom) {
+            ConnectClosestRooms(true);
+        }
 
-		if (!forceAccessibilityFromMainRoom) {
-			ConnectClosestRooms(true);
-		}
+        return;
+    }
 
-		for (auto& room : mRoomList)
-			Log() << "After: " << room.isAccessibleFromMainRoom << "\n";
+    void CaveMap::CreatePassage(Room& firstBestRoom, Room& secondBestRoom, Coordinate firstBestCoordinate, Coordinate secondBestCoordinate) {
+        ConnectRooms(firstBestRoom, secondBestRoom);
+        CreateTileCircledLine(firstBestCoordinate, secondBestCoordinate, 2, false);
+    }
 
-		return;
-	}
+    std::vector<Coordinate> CaveMap::GetLine(Coordinate start, Coordinate end) {
+        std::vector<Coordinate> LineCoordinates;
+        int x = start.x;
+        int y = start.y;
 
-	void CaveMap::CreatePassage(Room& firstBestRoom, Room& secondBestRoom, Coordinate firstBestCoordinate, Coordinate secondBestCoordinate) {
-		ConnectRooms(firstBestRoom, secondBestRoom);
-	}
+        int dx = end.x - start.x;
+        int dy = end.y - start.y;
 
-	std::vector<Coordinate> CaveMap::GetLine(Coordinate start, Coordinate end) {
-		std::vector<Coordinate> LineCoordinates;
-		int x = start.x;
-		int y = start.y;
+        bool inverted = false;
 
-		int dx = end.x - start.x;
-		int dy = end.y - start.y;
+        int step = glm::sign(dx);
+        int gradientStep = glm::sign(dy);
 
-		bool inverted = false;
+        int longest = abs(dx);
+        int shortest = abs(dy);
 
-		int xStep;
-		int yStep;
+        if (longest < shortest) {
+            inverted = true;
+            longest = abs(dy);
+            shortest = abs(dx);
 
-		//Check signs.
-		if (dx >= 0)
-			xStep = 1;
-		else
-			xStep = -1;
+            step = glm::sign(dy);
+            gradientStep = glm::sign(dx);
+        }
 
-		if (dy >= 0)
-			yStep = 1;
-		else
-			yStep = -1;
+        int gradientAccumulation = longest / 2;
+        for (int i = 0; i < longest; i++) {
+            LineCoordinates.push_back(Coordinate(x,y));
 
-		int longest = abs(dx);
-		int shortest = abs(dy);
-		if (longest < shortest) {
-			inverted = true;
-			longest = abs(dy);
-			shortest = abs(dx);
+            if (inverted)
+                y += step;
+            else
+                x += step;
 
-			if (dy >= 0)
-				xStep = 1;
-			else
-				xStep = -1;
+            gradientAccumulation += shortest;
+            if (gradientAccumulation >= longest) {
+                if (inverted)
+                    x += gradientStep;
+                else
+                    y += gradientStep;
+                gradientAccumulation -= longest;
+            }
+        }
+        return LineCoordinates;
+    }
 
-			if (dx >= 0)
-				yStep = 1;
-			else
-				yStep = -1;
-		}
+    void CaveMap::CreateTileLine(Coordinate start, Coordinate end, bool tileType) {
+        std::vector<Coordinate> lineCoordinates = GetLine(start, end);
+        FillCoordinates(lineCoordinates, tileType);
+    }
 
-		int gradientAccumulation = longest / 2;
-		for (int i = 0; i < longest; i++) {
-			LineCoordinates.push_back(Coordinate(x,y));
+    void CaveMap::CreateTileCircledLine(Coordinate start, Coordinate end, int radius, bool tileType) {
+        std::vector<Coordinate> lineCoordinates = GetLine(start, end);
+        for (auto& coordinate : lineCoordinates) {
+            std::vector<Coordinate> circleCoordinates = GetCircle(coordinate, radius);
+            FillCoordinates(circleCoordinates, false);
+        }
+    }
 
-			if (inverted)
-				y += xStep;
-			else
-				x += xStep;
+    std::vector<Coordinate> CaveMap::GetCircle(Coordinate origin, int radius) {
+        std::vector<Coordinate> circleCoordinates;
 
-			gradientAccumulation += shortest;
-			if (gradientAccumulation >= longest) {
-				if (inverted)
-					x += yStep;
-				else
-					x += yStep;
-				gradientAccumulation -= longest;
-			}
-		}
-		return LineCoordinates;
-	}
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                if (x*x + y*y <= radius*radius) {
+                    Coordinate circlePoint(origin.x + x, origin.y + y);
+                    circleCoordinates.push_back(circlePoint);
+                }
+            }
+        }
+        return circleCoordinates;
+    }
 
-	void CaveMap::ConnectRooms(Room& first, Room& second) {
-		
-		if (first.isAccessibleFromMainRoom) {
-			second.SetAccessibleFromMainRoom();
-		} 
-		else if (second.isAccessibleFromMainRoom) {
-			first.SetAccessibleFromMainRoom();
-		}
+    std::vector<Coordinate> CaveMap::GetRectangle(int origin, int width, int height) {
+        std::vector<Coordinate> rectangleCoordinates;
+        //TODO!
+        return rectangleCoordinates;
+    }
 
-		first.connectedRooms.push_back(second);
-		second.connectedRooms.push_back(first);
-	}
+    void CaveMap::ConnectRooms(Room& first, Room& second) {
+        
+        if (first.isAccessibleFromMainRoom) {
+            second.SetAccessibleFromMainRoom();
+        } else if (second.isAccessibleFromMainRoom) {
+            first.SetAccessibleFromMainRoom();
+        }
 
-	bool Room::IsConnected(Room& otherRoom) {
-		for (auto& room : connectedRooms) {
-			if (otherRoom == room)
-				return true;
-		}
-		return false;
-	}
+        first.connectedRooms.push_back(second);
+        second.connectedRooms.push_back(first);
+    }
 
-	Room::Room(bool** map, std::vector<Coordinate> coordinates) {
-		this->isAccessibleFromMainRoom = false;
-		this->isMainRoom = false;
-		this->coordinates = coordinates;
+    bool Room::IsConnected(Room& otherRoom) {
+        for (auto& room : connectedRooms) {
+            if (otherRoom == room)
+                return true;
+        }
+        return false;
+    }
 
-		for (auto& coordinate : coordinates){
-			for (int i = (coordinate.x - 1); i <= (coordinate.x + 1); i++) {
-				for (int j = (coordinate.y - 1); j <= (coordinate.y + 1); j++) {
-					//If the coordinate has a wall in any adjacent space, then it is an edge coordinate.
-					if (i == coordinate.x || j == coordinate.y) {
-						if (map[i][j] == true)
-							edgeCoordinates.push_back(coordinate);
-					}
-				}
-			}
-		}
-	}
+    Room::Room(bool** map, std::vector<Coordinate> coordinates) {
+        this->isAccessibleFromMainRoom = false;
+        this->isMainRoom = false;
+        this->coordinates = coordinates;
 
-	void Room::SetAccessibleFromMainRoom() {
-		if (!isAccessibleFromMainRoom) {
-			isAccessibleFromMainRoom = true;
-			for (auto& room : connectedRooms) {
-				room.SetAccessibleFromMainRoom();
-			}
-		}
-	}
+        for (auto& coordinate : coordinates){
+            for (int i = (coordinate.x - 1); i <= (coordinate.x + 1); i++) {
+                for (int j = (coordinate.y - 1); j <= (coordinate.y + 1); j++) {
+                    //If the coordinate has a wall in any adjacent space, then it is an edge coordinate.
+                    if (i == coordinate.x || j == coordinate.y) {
+                        if (map[i][j] == true)
+                            edgeCoordinates.push_back(coordinate);
+                    }
+                }
+            }
+        }
+    }
 
-	Room::Room() {
+    void Room::SetAccessibleFromMainRoom() {
+        if (!isAccessibleFromMainRoom) {
+            isAccessibleFromMainRoom = true;
+            for (auto& room : connectedRooms) {
+                room.SetAccessibleFromMainRoom();
+            }
+        }
+    }
 
-	}
+    Room::Room() {
 
-	Coordinate::Coordinate() {
+    }
 
-	}
+    Coordinate::Coordinate() {
 
-	bool operator==(const Coordinate& lhs, const Coordinate& rhs) {
-		return (lhs.x == rhs.x && lhs.y == rhs.y);
-	}
+    }
 
-	bool operator==(const Room& lhs, const Room& rhs) {
-		return(lhs == rhs);
-	}
+    bool operator==(const Coordinate& lhs, const Coordinate& rhs) {
+        return (lhs.x == rhs.x && lhs.y == rhs.y);
+    }
+
+    bool operator==(const Room& lhs, const Room& rhs) {
+        return(lhs == rhs);
+    }
 }
