@@ -13,11 +13,14 @@ RelativeTransform::~RelativeTransform() {
 }
 
 void RelativeTransform::UpdateModelMatrix() {
-    orientationMatrix = GetWorldOrientation();
-    if (parentEntity != nullptr)
+    if (parentEntity != nullptr) {
+        worldOrientationMatrix = worldOrientationMatrix * GetLocalOrientation();
         modelMatrix = parentEntity->GetComponent<Component::Transform>()->modelMatrix * glm::translate(glm::mat4(), position) * GetLocalOrientation() * glm::scale(glm::mat4(), scale);
-    else
-        modelMatrix = glm::translate(glm::mat4(), position) * orientationMatrix * glm::scale(glm::mat4(), scale);
+    }
+    else {
+        worldOrientationMatrix = GetLocalOrientation();
+        modelMatrix = glm::translate(glm::mat4(), position) * worldOrientationMatrix * glm::scale(glm::mat4(), scale);
+    }
 }
 
 glm::vec3 RelativeTransform::GetWorldScale() const {

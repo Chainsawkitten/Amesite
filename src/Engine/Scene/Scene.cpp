@@ -56,21 +56,20 @@ void Scene::ClearAll() {
 
 void Scene::UpdateModelMatrices() {
     std::vector<Component::Transform*> transforms = GetAll<Component::Transform>();
-    for (unsigned int i = 0; i < transforms.size(); i++) {
+    for (unsigned int i = 0; i < transforms.size(); i++)
         transforms[i]->UpdateModelMatrix();
-    }
     std::vector<Component::Animation*> animationVector = GetAll<Component::Animation>();
     for (auto animationComponent : animationVector) {
         Component::RelativeTransform* relativeTranform = animationComponent->entity->GetComponent<Component::RelativeTransform>();
         if (relativeTranform != nullptr && relativeTranform->parentEntity->GetComponent<Component::Animation>() != nullptr) {
             Component::Animation* relativeAnimation = relativeTranform->parentEntity->GetComponent<Component::Animation>();
-            animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix = animationComponent->orientationMatrix * relativeAnimation->orientationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix;
+            animationComponent->entity->GetComponent<Component::Transform>()->worldOrientationMatrix = animationComponent->orientationMatrix * relativeAnimation->orientationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->worldOrientationMatrix;
             animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix = animationComponent->animationMatrix * relativeAnimation->animationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix;
             animationComponent->orientationMatrix = relativeTranform->parentEntity->GetComponent<Component::Animation>()->orientationMatrix;
             animationComponent->animationMatrix = relativeTranform->parentEntity->GetComponent<Component::Animation>()->animationMatrix;
         } else {
             if (animationComponent->GetActiveAnimationClip() != nullptr) {
-                animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix = animationComponent->orientationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->orientationMatrix;
+                animationComponent->entity->GetComponent<Component::Transform>()->worldOrientationMatrix = animationComponent->orientationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->worldOrientationMatrix;
                 animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix = animationComponent->animationMatrix * animationComponent->entity->GetComponent<Component::Transform>()->modelMatrix;
             }
         }

@@ -123,6 +123,6 @@ namespace Component {
             /**
              * Default: Identity matrix
              */
-            glm::mat4 orientationMatrix;
+            glm::mat4 worldOrientationMatrix;
         };
 }
