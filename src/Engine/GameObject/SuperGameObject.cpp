@@ -10,20 +10,17 @@ SuperGameObject::SuperGameObject(Scene* scene) {
 }
 
 SuperGameObject::~SuperGameObject() {
-    //Clear();
 }
 
 void SuperGameObject::Clear() {
     for (auto& entity : mEntityVector)
         entity->Clear();
     mEntityVector.clear();
-
-    mEntityMap.clear();
 }
 
-Entity* SuperGameObject::GetEntity(const std::string key) {
-    std::map<std::string, Entity*>::iterator it = mEntityMap.find(key);
-    if (it != mEntityMap.end())
-        return it->second;
-    return nullptr;
+Entity* SuperGameObject::CreateEntity(Scene* scene) {
+    Entity* entity = scene->CreateEntity();
+    entity->gameObject = this;
+    mEntityVector.push_back(entity);
+    return entity;
 }

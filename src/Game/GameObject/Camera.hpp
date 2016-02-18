@@ -1,6 +1,12 @@
 #pragma once
 
 #include <Engine/GameObject/SuperGameObject.hpp>
+#include <vector>
+
+namespace GameObject {
+    class Player;
+    class Camera;
+}
 
 class Scene;
 class Entity;
@@ -16,5 +22,10 @@ namespace GameObject {
             Camera(Scene* scene);
            
             ~Camera();
+
+            void UpdateRelativePosition(const std::vector<GameObject::Player*>& players);
+
+            /// Body of camera
+            Entity* body;
     };
 }
