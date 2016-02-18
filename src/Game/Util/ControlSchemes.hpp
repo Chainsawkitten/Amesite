@@ -33,13 +33,6 @@ namespace ControlScheme {
     /// Moves the object in a random direction
     void RandomMove(Component::Controller* controller, float deltaTime);
 
-    /// Use a button to shoot.
-    /**
-     * @param controller Component to control.
-     * @param deltaTime Time since last frame (in seconds).
-     */
-    void ButtonShoot(Component::Controller* controller, float deltaTime);
-
     /// Constantly fires bullets.
     /**
      * @param controller Component to control.
