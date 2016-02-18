@@ -186,6 +186,7 @@ set(ENGINE_SRCS
         src/Engine/Component/DirectionalLight.cpp
         src/Engine/Component/PointLight.cpp
         src/Engine/Component/SpotLight.cpp
+        src/Engine/Component/Animation.cpp
         src/Engine/Component/SoundSource.cpp
         src/Engine/Component/Listener.cpp
         src/Engine/Entity/Entity.cpp
@@ -195,6 +196,7 @@ set(ENGINE_SRCS
         src/Engine/System/CollisionSystem.cpp
         src/Engine/System/ParticleSystem.cpp
         src/Engine/System/ParticleRenderSystem.cpp
+        src/Engine/System/AnimationSystem.cpp
         src/Engine/System/SoundSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
@@ -242,6 +244,7 @@ set(ENGINE_HEADERS
         src/Engine/Component/DirectionalLight.hpp
         src/Engine/Component/PointLight.hpp
         src/Engine/Component/SpotLight.hpp
+        src/Engine/Component/Animation.hpp
         src/Engine/Component/SoundSource.hpp
         src/Engine/Component/Listener.hpp
         src/Engine/Entity/Entity.hpp
@@ -251,6 +254,7 @@ set(ENGINE_HEADERS
         src/Engine/System/CollisionSystem.hpp
         src/Engine/System/ParticleSystem.hpp
         src/Engine/System/ParticleRenderSystem.hpp
+        src/Engine/System/AnimationSystem.hpp
         src/Engine/System/SoundSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
@@ -276,10 +280,8 @@ set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Util/GameSettings.cpp
         src/Game/Util/GameEntityFactory.cpp
-        src/Game/Util/CameraUpdate.cpp
         src/Game/Util/ControlSchemes.cpp
         src/Game/Util/MainCamera.cpp
-        src/Game/CaveSystem/CaveSystem.cpp
         src/Game/System/ControllerSystem.cpp
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
@@ -289,15 +291,15 @@ set(GAME_SRCS
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
-        src/Game/Component/CameraFollow.cpp
+        src/Game/Component/LifeTime.cpp
         src/Game/Component/AI/WalkerAI.cpp
         src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
         src/Game/GameScenes/PontusScene.cpp
         src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
+        src/Game/GameScenes/IvarScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
-        src/Game/Component/LifeTime.cpp
         src/Game/GameObject/Bullet.cpp
         src/Game/GameObject/Player.cpp
         src/Game/GameObject/Camera.cpp
@@ -310,28 +312,26 @@ set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameEntityFactory.hpp
-        src/Game/Util/CameraUpdate.hpp
         src/Game/Util/ControlSchemes.hpp
         src/Game/Util/MainCamera.hpp
-        src/Game/CaveSystem/CaveSystem.hpp
         src/Game/System/ControllerSystem.hpp
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/System/LifeTimeSystem.hpp
-	src/Game/System/AISystem.cpp
+        src/Game/System/AISystem.cpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
-        src/Game/Component/CameraFollow.hpp
+        src/Game/Component/LifeTime.hpp
         src/Game/Component/AI/WalkerAI.hpp
         src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
         src/Game/GameScenes/PontusScene.hpp
         src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp
+        src/Game/GameScenes/IvarScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
-        src/Game/Component/LifeTime.hpp
         src/Game/GameObject/Bullet.hpp
         src/Game/GameObject/Player.hpp
         src/Game/GameObject/Camera.hpp

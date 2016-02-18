@@ -2,6 +2,7 @@
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
+#include <Engine/GameObject/SuperGameObject.hpp>
 
 #include "../Component/Health.hpp"
 
@@ -24,8 +25,13 @@ void HealthSystem::Update(Scene& scene, float deltaTime) {
         if (healthComponent->cooldown < 0.01f) 
             healthComponent->health += std::fminf(healthComponent->regenAmount * deltaTime, healthComponent->maxHealth);
         if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth) {
-            // NEVER REMOVE AN ENITY THAT GOT RELATIVE TRANSFROM, WILL LEAD TO EMPTY POINTERS
-            healthComponent->entity->Clear();
+            if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth) {
+                //NEVER REMOVE AN ENITY THAT GOT RELATIVE TRANSFROM, WILL LEAD TO EMPTY POINTERS
+                if (healthComponent->entity->gameObject != nullptr)
+                    healthComponent->entity->gameObject->Clear();
+                else
+                    healthComponent->entity->Clear();
+            }
         }
     }
 }

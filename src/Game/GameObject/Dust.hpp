@@ -11,10 +11,13 @@ namespace GameObject {
         public:
             /// Create %Bullet
             /**
-            * @param scene Pointer to which Scene %Dust Enities' are contained.
-            */
+             * @param scene Pointer to which Scene %Dust Enities' are contained.
+             */
             Dust(Scene* scene);
 
             ~Dust();
+
+            /// Body of the dust
+            Entity* body;
     };
 }

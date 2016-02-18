@@ -19,5 +19,8 @@ namespace GameObject {
 
             /// Map of all walls in the cave system.
             static const float mMap[25][25];
+
+            /// Map of the %Cave
+            Entity* map;
     };
 }

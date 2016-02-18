@@ -5,7 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <Util/Input.hpp>
-#include "Game/Util/CameraUpdate.hpp"
 #include "Game/Util/GameEntityFactory.hpp"
 #include "Game/Util/ControlSchemes.hpp"
 
@@ -63,15 +62,15 @@ DanielScene::DanielScene() {
     
     // Create main camera
     Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    mMainCamera = mainCamera->GetEntity("body");
+    mMainCamera = mainCamera->body;
     MainCameraInstance().SetMainCamera(mMainCamera);
     
     // Create players
     Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(1.f, 0.f, 1.f), InputHandler::PLAYER_TWO);
     
-    mPlayers.push_back(player1->GetEntity("body"));
-    mPlayers.push_back(player2->GetEntity("body"));
+    mPlayers.push_back(player1->body);
+    mPlayers.push_back(player2->body);
     
     // Create scene
     cave = GameEntityCreator().CreateMap();
@@ -102,7 +101,7 @@ void DanielScene::Update(float deltaTime) {
     mPhysicsSystem.Update(*this, deltaTime);
     
     // UpdateCamera
-    UpdateCamera(mMainCamera, mPlayers);
+    //UpdateCamera(mMainCamera, mPlayers);
     
     for (auto player : mPlayers) {
         GridCollide(player, deltaTime);

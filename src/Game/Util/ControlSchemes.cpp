@@ -9,6 +9,9 @@
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
 #include "../Component/Spawner.hpp"
+#include "../Component/Damage.hpp"
+#include "../Component/Health.hpp"
+#include "../GameObject/Bullet.hpp"
 #include "../Util/GameEntityFactory.hpp"
 #include <Util/Picking.hpp>
 #include "../Util/MainCamera.hpp"
@@ -73,7 +76,7 @@ void ControlScheme::MouseRotate(Component::Controller* controller, float deltaTi
     glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
     Entity& mainCamera = MainCameraInstance().GetMainCamera();
     glm::mat4 projectionMatrix = mainCamera.GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
-    glm::mat4 viewMatrix = mainCamera.GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -mainCamera.GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 viewMatrix = mainCamera.GetComponent<Component::Transform>()->GetWorldOrientation()*glm::translate(glm::mat4(), -mainCamera.GetComponent<Component::Transform>()->GetWorldPosition());
 
     glm::vec4 worldRay = Picking::createWorldRay(mouseCoordinates, viewMatrix, projectionMatrix);
 
@@ -158,7 +161,6 @@ void ControlScheme::ArrowKeysMove(Component::Controller* controller, float delta
 
 void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTime) {
     Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
-    
     Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
     if (spawnerComponent != nullptr) {
         spawnerComponent->timeSinceSpawn += deltaTime;
@@ -171,7 +173,7 @@ void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTi
                 direction = direction / directionLength;
             }
             float bulletSpeed = 40.f;
-            GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y), 0);
+            GameEntityCreator().CreateBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), spawnerComponent->faction);
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }
@@ -180,15 +182,14 @@ void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTi
 
 void ControlScheme::AlwaysShoot(Component::Controller* controller, float deltaTime) {
     Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
-    
     Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
     if (spawnerComponent != nullptr) {
         spawnerComponent->timeSinceSpawn += deltaTime;
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
             glm::vec2 direction = glm::vec2(1 - ((rand() % 1000) / 1000.f) * 2, 1 - ((rand() % 1000) / 1000.f) * 2);
             
-            float bulletSpeed = 10.f;
-            GameEntityCreator().CreateBullet(transformComponent->position, bulletSpeed * glm::vec3(direction.x, 0.f, direction.y), 1);
+            float bulletSpeed = 20.f;
+            GameEntityCreator().CreateBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), spawnerComponent->faction);
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }
@@ -314,14 +315,14 @@ void ControlScheme::AimedFire(Component::Controller* controller, float deltaTime
             Entity* entity = controller->entity;
 
             Component::Transform* transform = entity->GetComponent<Component::Transform>();
-            float angle = glm::radians(transform->yaw);
+
+            float angle = glm::radians(transform->GetWorldYawPitchRoll().x);
 
             glm::vec3 direction = glm::normalize(glm::vec3(glm::sin(angle), 0, glm::cos(angle)));
 
-            float bulletSpeed = 10.f;
-            GameEntityCreator().CreateBullet(transform->position, bulletSpeed *  direction, 1);
-            spawnerComponent->timeSinceSpawn = 0.0f;
-
+            float bulletSpeed = 40.f;
+            GameEntityCreator().CreateBullet(transform->GetWorldPosition(), bulletSpeed *  direction, spawnerComponent->faction);
+            spawnerComponent->timeSinceSpawn = 0.f;
         }
     }
 }

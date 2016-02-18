@@ -105,8 +105,8 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
         glBindTexture(GL_TEXTURE_2D, mTextureAtlas->GetTextureID());
 
         // Send the matrices to the shader.
-        glm::mat4 view = camera->GetComponent<Component::Transform>()->GetOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
-        glm::vec3 up(glm::inverse(camera->GetComponent<Component::Transform>()->GetOrientation())* glm::vec4(0, 1, 0, 1));
+        glm::mat4 view = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
+        glm::vec3 up(glm::inverse(camera->GetComponent<Component::Transform>()->worldOrientationMatrix)* glm::vec4(0, 1, 0, 1));
         camera->GetComponent<Component::Transform>()->position;
 
         // Ugly hardcoded resolution.

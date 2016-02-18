@@ -14,6 +14,7 @@
 #include "../Entity/Entity.hpp"
 #include "../Component/Lens.hpp"
 #include "../Component/Transform.hpp"
+#include "../Component/Animation.hpp"
 #include "../Component/Mesh.hpp"
 #include "../Component/Material.hpp"
 #include "../Texture/Texture2D.hpp"
@@ -59,7 +60,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
     
     // Render from camera.
     if (camera != nullptr) {
-        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
+        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
         glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
         
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
@@ -91,7 +92,13 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
                 glBindTexture(GL_TEXTURE_2D, material->glow->GetTextureID());
                 
                 // Render model.
-                glm::mat4 modelMat = model->GetComponent<Component::Transform>()->modelMatrix;
+                glm::mat4 modelMat;
+                //Component::Animation* animationComponent = model->GetComponent<Component::Animation>();
+                //Component::Transform* transform = model->GetComponent<Component::Transform>();
+                //if (animationComponent != nullptr)
+                //    modelMat = model->GetComponent<Component::Transform>()->modelMatrix; //;animationComponent->animationMatrix;
+                //else
+                    modelMat = model->GetComponent<Component::Transform>()->modelMatrix;
                 glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
                 glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
                 glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);

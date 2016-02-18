@@ -4,6 +4,9 @@
 
 class Scene;
 class Entity;
+namespace Geometry {
+    class OBJModel;
+}
 
 namespace GameObject {
     /// A Enemy
@@ -16,5 +19,24 @@ namespace GameObject {
             Enemy(Scene* scene);
            
             ~Enemy();
+
+            /// Node of %Enemy
+            Entity* node;
+            /// Head relative to Node
+            Entity* head;
+            /// Tail relative to Node
+            Entity* tail;
+            /// Turrent relative to Head
+            Entity* turrent;
+
+            /// Gets health of the enemy.
+            /**
+             * @return health of the enemy.
+             */
+            float GetHealth();
+
+        private:
+            Geometry::OBJModel* mEnemyHead;
+            Geometry::OBJModel* mEnemyTail;
     };
 }

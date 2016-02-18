@@ -37,5 +37,5 @@ void main() {
 	diffuseOut = texture(baseImage, vertexIn.texCoords).rgb;
 	normalsOut = calculateNormal(vertexIn.normal, vertexIn.tangent, texture(normalMap, vertexIn.texCoords).rgb);
 	specularOut = texture(specularMap, vertexIn.texCoords).rgb;
-	glowOut = texture(glowMap, vertexIn.texCoords).rgb;
+	glowOut = texture(glowMap, vertexIn.texCoords).rgb * diffuseOut;
 }
