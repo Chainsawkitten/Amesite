@@ -85,8 +85,8 @@ class MainScene : public Scene {
         GlowBlurFilter* glowBlurFilter;
         
         // Grid collision
-        bool GridCollide(Entity* entity, float deltaTime);
-        
+        bool GridCollide(Entity* entity, float deltaTime, float gridScale);
+
         // Music.
         Audio::SoundBuffer* mMusicSoundBuffer;
         ALuint mSource;

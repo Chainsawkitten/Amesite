@@ -56,9 +56,9 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
     map->GetComponent<Component::Physics>()->angularDragFactor = 0;
     map->GetComponent<Component::Physics>()->gravityFactor = 0;
     map->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f, 0.f, 0.f);
-    map->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
+    //map->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
     map->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
-    map->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
+    //map->GetComponent<Component::Transform>()->Move(glm::vec3(-0.5f, 0, -0.5f));
     mEntityVector.push_back(map);
 
     Geometry::Geometry3D* cube = Resources().CreateCube();
@@ -69,7 +69,10 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
                 wall->AddComponent<Component::RelativeTransform>()->parentEntity = map;
                 wall->AddComponent<Component::Mesh>()->geometry = cube;
                 wall->AddComponent<Component::Material>();
-                wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j), 0.f, -float(i)) + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
+                wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j) + 0.5f, 0.f, float(i) + 0.5f);// + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
+                wall->GetComponent<Component::Transform>()->scale = glm::vec3(0.9f, 0.9f, 0.9f);
+                wall->GetComponent<Component::Transform>()->Rotate(0, i, j);
+
                 //wall->AddComponent<Component::Collider2DCircle>()->radius = 1.f;
                 mEntityVector.push_back(wall);
 
