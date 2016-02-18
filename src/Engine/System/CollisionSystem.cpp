@@ -39,6 +39,7 @@ void CollisionSystem::Update(Scene& scene) {
         delete collision;
     }
     collisionVector->clear();
+    //collisionVector->shrink_to_fit();
  
     Node node;
     glm::vec3 pos;
@@ -56,6 +57,9 @@ void CollisionSystem::Update(Scene& scene) {
     }
 
     std::sort(nodes.begin(), nodes.end(), myfunction);
+
+    if (nodes.size() == 0)
+        return;
 
     for (unsigned int x = 0; x < nodes.size() - 1; x++) {
         Scene::Collision* collisionX = nullptr;

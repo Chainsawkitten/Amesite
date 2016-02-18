@@ -10,12 +10,11 @@
 using namespace GameObject;
 
 Dust::Dust(Scene* scene) : SuperGameObject(scene) {
-    Entity* entity = mScene->CreateEntity();
-    mEntityMap["body"] = entity;
-    entity->AddComponent<Component::ParticleEmitter>();
+    body = CreateEntity(scene);
+    body->AddComponent<Component::ParticleEmitter>();
 
     // Particle emitter.
-    Component::ParticleEmitter* emitter = entity->GetComponent<Component::ParticleEmitter>();
+    Component::ParticleEmitter* emitter = body->GetComponent<Component::ParticleEmitter>();
 
     emitter->emitterType = Component::ParticleEmitter::CUBOID;
     emitter->maxEmitTime = 0.15;

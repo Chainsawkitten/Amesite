@@ -101,7 +101,7 @@ void ParticleSystem::EmitParticle(Component::ParticleEmitter* emitter) {
         position = emitter->origin;
     }
     if (emitter->relative) {
-        position += emitter->follow->GetComponent<Component::Transform>()->position;
+        position += emitter->follow->GetComponent<Component::Transform>()->GetWorldPosition();
     }
     EmitParticle(position, emitter);
 }

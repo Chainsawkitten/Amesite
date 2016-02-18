@@ -4,7 +4,6 @@
 #include <Engine/Entity/Entity.hpp>
 
 #include <Util/Input.hpp>
-#include "Game/Util/CameraUpdate.hpp"
 #include "Game/Util/GameEntityFactory.hpp"
 #include "Game/Util/ControlSchemes.hpp"
 
@@ -40,6 +39,10 @@
 #include "../Util/GameSettings.hpp"
 #include "../Util/MainCamera.hpp"
 
+#include "../GameObject/Player.hpp"
+#include "../GameObject/Cave.hpp"
+#include "../GameObject/Camera.hpp"
+
 using namespace GameObject;
 
 MainScene::MainScene() {
@@ -52,17 +55,11 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
     
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
-    
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
     
     // Music
     mMusicSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
@@ -75,23 +72,15 @@ MainScene::MainScene() {
     GameEntityCreator().SetScene(this);
     
     // Create main camera
-    Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(50.f, 50.f, 40.f));
-    mMainCamera = mainCamera->GetEntity("body");
-    mMainCamera->AddComponent<Component::Listener>();
-    MainCameraInstance().SetMainCamera(mMainCamera);
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(50.f, 50.f, 40.f));
+    MainCameraInstance().SetMainCamera(mMainCamera->body);
     
-    // Create players
-    Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
-    Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO);
-    
-    mPlayers.push_back(player1->GetEntity("body"));
-    mPlayers.push_back(player2->GetEntity("body"));
-    
-    // Create scene
-    cave = GameEntityCreator().CreateMap();
+    // Create players 
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO));
 
-    // Create dust
-    GameEntityCreator().CreateDust(player1->GetEntity("body"), Component::ParticleEmitter::DUST);
+    // Create scene
+    mCave = GameEntityCreator().CreateMap();
     
     // Directional light.
     Entity* dirLight = CreateEntity();
@@ -105,6 +94,14 @@ MainScene::MainScene() {
     gammaCorrectionFilter = new GammaCorrectionFilter();
     glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
+
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
 }
 
 MainScene::~MainScene() {
@@ -124,17 +121,9 @@ void MainScene::Update(float deltaTime) {
     
     // PhysicsSystem.
     mPhysicsSystem.Update(*this, deltaTime);
-    
-    // UpdateCamera
-    UpdateCamera(mMainCamera, mPlayers);
-    
-    for (auto player : mPlayers) {
-        GridCollide(player, deltaTime);
-        if (player->GetComponent<Component::Health>()->health < 0.01f) {
-            player->GetComponent<Component::Physics>()->velocity.x = -10.f;
-            player->GetComponent<Component::Health>()->health = player->GetComponent<Component::Health>()->maxHealth;
-        }
-    }
+
+    // AnimationSystem.
+    mAnimationSystem.Update(*this, deltaTime);
     
     // ParticleSystem
     System::Particle().Update(*this, deltaTime);
@@ -153,7 +142,18 @@ void MainScene::Update(float deltaTime) {
     
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
-    
+
+    // Update game logic
+    mMainCamera->UpdateRelativePosition(mPlayers);
+    for (auto player : mPlayers) {
+        GridCollide(player->node, deltaTime);
+        if (player->GetHealth() < 0.01f) {
+            player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
+            player->node->GetComponent<Component::Health>()->health = player->node->GetComponent<Component::Health>()->maxHealth;
+        }
+    }
+
+
     // Update sounds.
     mSoundSystem.Update(*this);
     

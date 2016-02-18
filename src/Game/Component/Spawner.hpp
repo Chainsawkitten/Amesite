@@ -20,5 +20,11 @@ namespace Component {
             
             /// Delay between spawns.
             float delay;
+
+            /// Faction, ID of the faction this spawner belongs to (players, enemies).
+            /**
+             * Default: 0
+             */
+            int faction;
     };
 }

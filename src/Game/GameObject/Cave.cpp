@@ -97,9 +97,7 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
         }
     }
 
-    Entity* map = mScene->CreateEntity();
-    mEntityMap["map"] = map;
-    map->AddComponent<Component::Mesh>();
+    map = CreateEntity(scene);
     map->AddComponent<Component::Transform>();
     map->AddComponent<Component::Physics>();
 
@@ -110,25 +108,25 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
     map->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
     map->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
     map->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
-    mEntityVector.push_back(map);
 
     //Geometry::Geometry3D* cube = Resources().CreateCube();
     //for (int i = 0; i < 25; i++) {
     //    for (int j = 0; j < 25; j++) {
     //        if (mMap[i][j] > 0.f) {
-    //            Entity* wall = scene->CreateEntity();
+    //            Entity* wall = CreateEntity(scene);
     //            wall->AddComponent<Component::RelativeTransform>()->parentEntity = map;
     //            wall->AddComponent<Component::Mesh>()->geometry = cube;
     //            wall->AddComponent<Component::Material>();
+    //            wall->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+    //            wall->GetComponent<Component::Material>()->SetNormal("Resources/wall2_norm.png");
+    //            wall->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
     //            wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j), 0.f, -float(i)) + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
     //            //wall->AddComponent<Component::Collider2DCircle>()->radius = 1.f;
-    //            mEntityVector.push_back(wall);
-
-    //        }
-    //    }
-    //}
+            }
+        }
+    }
 }
 
 Cave::~Cave() {
-    Resources().FreeCube();
+    //Resources().FreeCube();
 }

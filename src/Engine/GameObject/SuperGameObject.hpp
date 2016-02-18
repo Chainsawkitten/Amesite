@@ -23,14 +23,15 @@ namespace GameObject {
             /// Remove %SuperGameObject from scene.
             void Clear();
 
-            /// Get Entity from map.
-            /**
-             * @param key Key to Entity.
-             * @return Return Enitity or nullptr.
-             */
-            Entity* GetEntity(const std::string key);
-
         protected:
+            // Create Entity to %GameObject.
+            /**
+             * @param scene The Scene this %GameObject will be contained.
+             * @return Return Enitity.
+             */
+            Entity* CreateEntity(Scene* scene);
+
+        private:
             // Pointer to which Scene %Entity is contained.
             /**
              * Default: Must point to a Scene
@@ -39,8 +40,5 @@ namespace GameObject {
 
             // List of all entities in this %SuperGameObject.
             std::vector<Entity*> mEntityVector;
-
-            // Map of entities in this %SuperGameObject.
-            std::map<std::string, Entity*> mEntityMap;
     };
 }
