@@ -70,8 +70,7 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
                 wall->AddComponent<Component::Mesh>()->geometry = cube;
                 wall->AddComponent<Component::Material>();
                 wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j) + 0.5f, 0.f, float(i) + 0.5f);// + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
-                wall->GetComponent<Component::Transform>()->scale = glm::vec3(0.9f, 0.9f, 0.9f);
-                wall->GetComponent<Component::Transform>()->Rotate(0, i, j);
+                wall->GetComponent<Component::Transform>()->scale = glm::vec3(0.99f, 0.99f, 0.99f);
 
                 //wall->AddComponent<Component::Collider2DCircle>()->radius = 1.f;
                 mEntityVector.push_back(wall);
