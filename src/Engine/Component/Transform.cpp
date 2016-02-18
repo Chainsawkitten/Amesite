@@ -19,7 +19,7 @@ Transform::~Transform() {
 }
 
 void Transform::UpdateModelMatrix() {
-    orientationMatrix = GetOrientation();
+    orientationMatrix = GetWorldOrientation();
     modelMatrix = glm::translate(glm::mat4(), position) * orientationMatrix * glm::scale(glm::mat4(), scale);
 }
 
@@ -47,7 +47,7 @@ glm::mat4 Transform::GetWorldOrientation() const {
     return orientation;
 }
 
-glm::mat4 Transform::GetOrientation() const {
+glm::mat4 Transform::GetLocalOrientation() const {
     glm::mat4 orientation;
     orientation = glm::rotate(orientation, glm::radians(yaw), glm::vec3(0, 1, 0));
     orientation = glm::rotate(orientation, glm::radians(pitch), glm::vec3(1, 0, 0));

@@ -50,7 +50,7 @@ namespace Component {
             /**
              * @return The entity's orientation matrix.
              */
-            glm::mat4 GetOrientation() const;
+            glm::mat4 GetLocalOrientation() const;
 
             /// Get orientation matrix.
             /**
