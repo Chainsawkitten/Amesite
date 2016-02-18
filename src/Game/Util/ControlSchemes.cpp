@@ -243,7 +243,7 @@ void ControlScheme::Aim(Component::Controller* controller, float deltaTime) {
     if (glm::length(movement) > Input()->AimDeadzone()) {
 
         Component::Transform* transform = entity->GetComponent<Component::Transform>();
-        float oldAngle = glm::radians(transform->yaw);
+        float oldAngle = glm::radians(transform->GetWorldYawPitchRoll().x);
 
         glm::vec3 oldPoint = transform->position + glm::normalize(glm::vec3(glm::sin(oldAngle), 0, glm::cos(oldAngle))) * 5.f;
         glm::vec3 newPoint = oldPoint - movement;
@@ -320,7 +320,7 @@ void ControlScheme::AimedFire(Component::Controller* controller, float deltaTime
 
             glm::vec3 direction = glm::normalize(glm::vec3(glm::sin(angle), 0, glm::cos(angle)));
 
-            float bulletSpeed = 40.f;
+            float bulletSpeed = 60.f;
             GameEntityCreator().CreateBullet(transform->GetWorldPosition(), bulletSpeed *  direction, spawnerComponent->faction);
             spawnerComponent->timeSinceSpawn = 0.f;
         }
@@ -346,4 +346,16 @@ void ControlScheme::AutoAimedFire(Component::Controller* controller, float delta
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }
+}
+
+void ControlScheme::Boost(Component::Controller* controller, float deltaTime) {
+
+    //Entity* entity = controller->entity;
+
+    //Component::Transform* transform = entity->GetComponent<Component::Transform>();
+    //float oldAngle = glm::radians(transform->GetWorldYawPitchRoll().x);
+
+    //if(Input()->Triggered(controller->playerID, InputHandler::BOOST))
+    //    entity->GetComponent<Component::Physics>()->acceleration += glm::normalize(glm::vec3(glm::sin(oldAngle), 0, glm::cos(oldAngle))) * 50000.f;
+
 }

@@ -84,9 +84,16 @@ namespace ControlScheme {
 
     /// Mouse rotation.
     /**
-     * @param controller Component to control.
-     * @param deltaTime Time since last frame (in seconds).
-     */
+    * @param controller Component to control.
+    * @param deltaTime Time since last frame (in seconds).
+    */
     void MouseRotate(Component::Controller* controller, float deltaTime);
+
+    /// Boost.
+    /**
+    * @param controller Component to control.
+    * @param deltaTime Time since last frame (in seconds).
+    */
+    void Boost(Component::Controller* controller, float deltaTime);
 
 }

@@ -55,7 +55,8 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
-    
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::BOOST, InputHandler::JOYSTICK, InputHandler::LEFT_BUMPER);
+
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
@@ -73,12 +74,12 @@ MainScene::MainScene() {
     GameEntityCreator().SetScene(this);
     
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 70.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(50.f, 0.f, 40.f), InputHandler::PLAYER_ONE));
+    //mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO));
 
     // Create scene
     mCave = GameEntityCreator().CreateMap();
@@ -96,13 +97,13 @@ MainScene::MainScene() {
     glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
 
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
 }
 
 MainScene::~MainScene() {
@@ -121,7 +122,7 @@ void MainScene::Update(float deltaTime) {
     mControllerSystem.Update(*this, deltaTime);
     
     for (auto player : mPlayers) {
-        GridCollide(player->node, deltaTime, 10);
+        GridCollide(player->node, deltaTime, 20);
         if (player->GetHealth() < 0.01f) {
             player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
             player->node->GetComponent<Component::Health>()->health = player->node->GetComponent<Component::Health>()->maxHealth;
@@ -242,8 +243,8 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
     velocity += physics->acceleration * deltaTime;
     velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
 
-    glm::vec3 width = glm::vec3(0.5f, 0, 0);
-    glm::vec3 height = glm::vec3(0, 0, 0.5f);
+    glm::vec3 width = glm::vec3(3.5f, 0, 0);
+    glm::vec3 height = glm::vec3(0, 0, 3.5f);
 
     int c0 = PointCollide(transform->GetWorldPosition() - width - height, velocity, deltaTime, gridScale);
     int c1 = PointCollide(transform->GetWorldPosition() + width - height, velocity, deltaTime, gridScale);
