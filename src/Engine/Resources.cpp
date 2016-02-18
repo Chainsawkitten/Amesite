@@ -130,15 +130,19 @@ bool ResourceManager::ShaderProgramKey::operator<(const ShaderProgramKey& other)
     return false;
 }
 
-Geometry::Map* ResourceManager::CreateMap(bool **data, const float squareSize) {
+Geometry::Map* ResourceManager::CreateMap(bool **data, const float squareSize, glm::uvec2 dataDimensions) {
     if (mMapCount == 0)
-        mMap = new Geometry::Map(data, squareSize);
+        mMap = new Geometry::Map(data, squareSize, dataDimensions);
 
     mMapCount++;
     return mMap;
 }
 
 void ResourceManager::FreeMap() {
+    mMapCount--;
+
+    if (mMapCount <= 0)
+        delete mMap;
 }
 
 Geometry::Cube* ResourceManager::CreateCube() {

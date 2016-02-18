@@ -72,7 +72,7 @@ MainScene::MainScene() {
     GameEntityCreator().SetScene(this);
     
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(50.f, 50.f, 40.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
     // Create players 

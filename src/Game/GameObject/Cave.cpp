@@ -98,16 +98,21 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
     }
 
     map = CreateEntity(scene);
+    map->AddComponent<Component::Mesh>();
     map->AddComponent<Component::Transform>();
     map->AddComponent<Component::Physics>();
+    map->AddComponent<Component::Material>();
 
-    map->GetComponent<Component::Mesh>()->geometry = Resources().CreateMap(mMap, 1.f);
+    map->GetComponent<Component::Mesh>()->geometry = Resources().CreateMap(mMap, 1.f, glm::uvec2(60,60));
     map->GetComponent<Component::Physics>()->angularDragFactor = 0;
     map->GetComponent<Component::Physics>()->gravityFactor = 0;
     map->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f, 0.f, 0.f);
-    map->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
-    map->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
-    map->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
+    //map->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
+    //map->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
+    //map->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
+    map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+    map->GetComponent<Component::Material>()->SetNormal("Resources/wall2_norm.png");
+    map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
 
     //Geometry::Geometry3D* cube = Resources().CreateCube();
     //for (int i = 0; i < 25; i++) {
@@ -129,4 +134,5 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
 
 Cave::~Cave() {
     //Resources().FreeCube();
+    Resources().FreeMap();
 }

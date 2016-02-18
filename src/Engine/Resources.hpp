@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 #include <map>
 
 class Shader;
@@ -70,7 +71,7 @@ class ResourceManager {
         /**
         * @return The map instance.
         */
-        Geometry::Map* CreateMap(bool **data, const float squareSize);
+        Geometry::Map* CreateMap(bool **data, const float squareSize, glm::uvec2 dataDimensions);
 
         /// Free the reference to the map.
         /**

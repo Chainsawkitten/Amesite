@@ -11,10 +11,11 @@ namespace Geometry {
         /// Create a map mesh from a set of data.
         /**
         * @param data to analyze.
-        * @param squareSize
+        * @param squareSize of a square in the grid.
+        * @param dataDimensions of array of data.
         * @return vector contraining the isolines.
         */
-        Map(bool **data, const float squareSize);
+        Map(bool **data, const float squareSize, glm::uvec2 dataDimensions);
 
         /// Destructor
         ~Map();
@@ -50,6 +51,8 @@ namespace Geometry {
                 glm::vec3 mPosition;
                 /// Index of node.
                 int mVertexIndex;
+                /// Texture coordinates.
+                glm::vec2 mTexCoords;
         };
 
         /// Node with data from the cellular automata.
@@ -66,9 +69,9 @@ namespace Geometry {
                 MeshNode mCenterTop, mCenterRight, mCenterBottom, mCenterLeft;
                 int mType;
         };
-        MeshNode createMeshNode(const glm::vec3 position);
+        MeshNode createMeshNode(const glm::vec3 position, glm::uvec2 index, bool above, const float squareSize, glm::vec2 texCoords);
 
-        ControlNode createControlNode(const glm::vec3 position, const bool active, const float squareSize);
+        ControlNode createControlNode(const glm::vec3 position, const bool active, const float squareSize, glm::uvec2 index);
 
         MSquare createMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft);
 
@@ -79,6 +82,8 @@ namespace Geometry {
         void triangulateSquare(MSquare* square);
 
         void storeTriangle(MeshNode a, MeshNode b, MeshNode c);
+
+        glm::uvec2 mDataDimensions;
 
         float mMapHeight, mMapWidth;
 
