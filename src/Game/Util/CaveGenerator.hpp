@@ -95,10 +95,10 @@ namespace CaveGenerator {
              *@param columnCount the amount of columns in the map.
              *@param seed Seed for the random generator.
              */
-            CaveMap::CaveMap(int rowCount, int columnCount, int seed);
+            CaveMap(int rowCount, int columnCount, int seed);
 
             ///Destructor
-            CaveMap::~CaveMap();
+            ~CaveMap();
 
             ///Generates a cave map.
             /**
@@ -146,7 +146,7 @@ namespace CaveGenerator {
              * @param end Ending coordinate.
              * @param tileType True for walls, false for floor
              */
-            void CaveMap::CreateTileLine(Coordinate start, Coordinate end, bool tileType);
+            void CreateTileLine(Coordinate start, Coordinate end, bool tileType);
 
             ///Creates a line with a radius from a starting-point to an end-point.
             /**
@@ -155,7 +155,7 @@ namespace CaveGenerator {
              * @param radius The width of the line created.
              * @param tileType True for walls, false for floor
              */
-            void CaveMap::CreateTileCircledLine(Coordinate start, Coordinate end, int radius, bool tileType);
+            void CreateTileCircledLine(Coordinate start, Coordinate end, int radius, bool tileType);
 
         private:
             ///Floodfills a region of the map and returns a vector of coordinates that were contained in that region.
