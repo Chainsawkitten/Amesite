@@ -19,7 +19,8 @@ Transform::~Transform() {
 }
 
 void Transform::UpdateModelMatrix() {
-    modelMatrix = glm::translate(glm::mat4(), position) * GetOrientation() * glm::scale(glm::mat4(), scale);
+    worldOrientationMatrix = GetLocalOrientation();
+    modelMatrix = glm::translate(glm::mat4(), position) * worldOrientationMatrix * glm::scale(glm::mat4(), scale);
 }
 
 glm::vec3 Transform::GetWorldPosition() const {
@@ -30,11 +31,23 @@ glm::vec3 Transform::GetWorldScale() const {
     return scale;
 }
 
-glm::mat4 Transform::GetOrientation() const {
+glm::vec3 Transform::GetWorldYawPitchRoll() const {
+    return glm::vec3(yaw, pitch, roll);
+}
+
+glm::vec3 Transform::GetWorldDirection() const {
+    return glm::normalize(glm::vec3(GetWorldOrientation() * glm::vec4(0.f, 0.f, 1.f, 0.f)));
+}
+
+glm::mat4 Transform::GetWorldOrientation() const {
+    return GetLocalOrientation();
+}
+
+glm::mat4 Transform::GetLocalOrientation() const {
     glm::mat4 orientation;
-    orientation = glm::rotate(orientation, glm::radians(yaw), glm::vec3(0, 1, 0));
-    orientation = glm::rotate(orientation, glm::radians(pitch), glm::vec3(1, 0, 0));
-    orientation = glm::rotate(orientation, glm::radians(roll), glm::vec3(0, 0, 1));
+    orientation = glm::rotate(orientation, glm::radians(yaw), glm::vec3(0.f, 1.f, 0.f));
+    orientation = glm::rotate(orientation, glm::radians(pitch), glm::vec3(1.f, 0.f, 0.f));
+    orientation = glm::rotate(orientation, glm::radians(roll), glm::vec3(0.f, 0.f, 1.f));
     return orientation;
 }
 

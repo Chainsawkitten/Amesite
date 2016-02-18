@@ -58,10 +58,30 @@ set(RESOURCES
         assets/DefaultDiffuse.png
         assets/DefaultNormal.png
         assets/DefaultSpecular.png
+        assets/DefaultGlow.png
         assets/ParticleAtlas.png
         assets/Laser.ogg
         assets/GolfBall.obj
         assets/ship.obj
+        assets/ship_body.obj
+        assets/ship_body_diff.png
+        assets/ship_body_spec.png
+        assets/ship_body_glow.png
+        assets/ship_frontEngine.obj
+        assets/ship_frontEngine_diff.png
+        assets/ship_backEngine.obj
+        assets/ship_backEngine_diff.png
+        assets/wall2_diff.png
+        assets/wall2_norm.png
+        assets/wall2_spec.png
+        assets/enemy_head_crystal.obj
+        assets/enemy_head_crystal_diff.png
+        assets/enemy_head_crystal_spec.png
+        assets/enemy_head_crystal_glow.png
+        assets/enemy_tail_crystal.obj
+        assets/enemy_tail_crystal_diff.png
+        assets/enemy_tail_crystal_spec.png
+        assets/enemy_tail_crystal_glow.png
         assets/Normal.png
         assets/Height.png
         assets/Glow.png
@@ -102,6 +122,8 @@ set(EMBEDDED_INPUT
         shaders/PostFXAA.frag
         shaders/PostFog.frag
         shaders/PostGamma.frag
+        shaders/PostGlow.frag
+        shaders/PostGlowBlur.frag
         shaders/Deferred.frag
         shaders/Particle.vert
         shaders/Particle.geom
@@ -154,7 +176,6 @@ set(ENGINE_SRCS
         src/Engine/MainWindow.cpp
         src/Engine/RenderTarget.cpp
         src/Engine/Resources.cpp
-        src/Engine/Audio/Listener.cpp
         src/Engine/Audio/SoundBuffer.cpp
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
@@ -184,6 +205,7 @@ set(ENGINE_SRCS
         src/Engine/Component/DirectionalLight.cpp
         src/Engine/Component/PointLight.cpp
         src/Engine/Component/SpotLight.cpp
+        src/Engine/Component/Animation.cpp
         src/Engine/Component/SoundSource.cpp
         src/Engine/Component/Listener.cpp
         src/Engine/Entity/Entity.cpp
@@ -193,6 +215,7 @@ set(ENGINE_SRCS
         src/Engine/System/CollisionSystem.cpp
         src/Engine/System/ParticleSystem.cpp
         src/Engine/System/ParticleRenderSystem.cpp
+        src/Engine/System/AnimationSystem.cpp
         src/Engine/System/SoundSystem.cpp
         src/Engine/Texture/Texture.cpp
         src/Engine/Texture/Texture2D.cpp
@@ -201,6 +224,8 @@ set(ENGINE_SRCS
         src/Engine/PostProcessing/FXAAFilter.cpp
         src/Engine/PostProcessing/FogFilter.cpp
         src/Engine/PostProcessing/GammaCorrectionFilter.cpp
+        src/Engine/PostProcessing/GlowFilter.cpp
+        src/Engine/PostProcessing/GlowBlurFilter.cpp
         src/Engine/GameObject/SuperGameObject.cpp
     )
 
@@ -208,7 +233,6 @@ set(ENGINE_HEADERS
         src/Engine/MainWindow.hpp
         src/Engine/RenderTarget.hpp
         src/Engine/Resources.hpp
-        src/Engine/Audio/Listener.hpp
         src/Engine/Audio/SoundBuffer.hpp
         src/Engine/Audio/SoundFile.hpp
         src/Engine/Audio/VorbisFile.hpp
@@ -239,6 +263,7 @@ set(ENGINE_HEADERS
         src/Engine/Component/DirectionalLight.hpp
         src/Engine/Component/PointLight.hpp
         src/Engine/Component/SpotLight.hpp
+        src/Engine/Component/Animation.hpp
         src/Engine/Component/SoundSource.hpp
         src/Engine/Component/Listener.hpp
         src/Engine/Entity/Entity.hpp
@@ -248,6 +273,7 @@ set(ENGINE_HEADERS
         src/Engine/System/CollisionSystem.hpp
         src/Engine/System/ParticleSystem.hpp
         src/Engine/System/ParticleRenderSystem.hpp
+        src/Engine/System/AnimationSystem.hpp
         src/Engine/System/SoundSystem.hpp
         src/Engine/Texture/Texture.hpp
         src/Engine/Texture/Texture2D.hpp
@@ -257,6 +283,8 @@ set(ENGINE_HEADERS
         src/Engine/PostProcessing/FXAAFilter.hpp
         src/Engine/PostProcessing/FogFilter.hpp
         src/Engine/PostProcessing/GammaCorrectionFilter.hpp
+        src/Engine/PostProcessing/GlowFilter.hpp
+        src/Engine/PostProcessing/GlowBlurFilter.hpp
         src/Engine/GameObject/SuperGameObject.hpp
     )
 
@@ -271,25 +299,26 @@ set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Util/GameSettings.cpp
         src/Game/Util/GameEntityFactory.cpp
-        src/Game/Util/CameraUpdate.cpp
         src/Game/Util/ControlSchemes.cpp
         src/Game/Util/MainCamera.cpp
         src/Game/Util/CaveGenerator.cpp
-        src/Game/CaveSystem/CaveSystem.cpp
         src/Game/System/ControllerSystem.cpp
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
         src/Game/System/LifeTimeSystem.cpp
+        src/Game/System/AISystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
-        src/Game/Component/CameraFollow.cpp
+        src/Game/Component/LifeTime.cpp
+        src/Game/Component/AI/WalkerAI.cpp
         src/Game/GameScenes/MainScene.cpp
+        src/Game/GameScenes/PontusScene.cpp
         src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
+        src/Game/GameScenes/IvarScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
-        src/Game/Component/LifeTime.cpp
         src/Game/GameObject/Bullet.cpp
         src/Game/GameObject/Player.cpp
         src/Game/GameObject/Camera.cpp
@@ -302,25 +331,26 @@ set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameEntityFactory.hpp
-        src/Game/Util/CameraUpdate.hpp
         src/Game/Util/ControlSchemes.hpp
         src/Game/Util/MainCamera.hpp
         src/Game/Util/CaveGenerator.hpp
-        src/Game/CaveSystem/CaveSystem.hpp
         src/Game/System/ControllerSystem.hpp
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/System/LifeTimeSystem.hpp
+        src/Game/System/AISystem.cpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
-        src/Game/Component/CameraFollow.hpp
+        src/Game/Component/LifeTime.hpp
+        src/Game/Component/AI/WalkerAI.hpp
         src/Game/GameScenes/MainScene.hpp
+        src/Game/GameScenes/PontusScene.hpp
         src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp
+        src/Game/GameScenes/IvarScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
-        src/Game/Component/LifeTime.hpp
         src/Game/GameObject/Bullet.hpp
         src/Game/GameObject/Player.hpp
         src/Game/GameObject/Camera.hpp

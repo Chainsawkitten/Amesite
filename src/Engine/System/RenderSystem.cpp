@@ -14,6 +14,7 @@
 #include "../Entity/Entity.hpp"
 #include "../Component/Lens.hpp"
 #include "../Component/Transform.hpp"
+#include "../Component/Animation.hpp"
 #include "../Component/Mesh.hpp"
 #include "../Component/Material.hpp"
 #include "../Texture/Texture2D.hpp"
@@ -47,24 +48,24 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     mShaderProgram->Use();
-   
+    
     Entity* camera = nullptr;
-
+    
     // Find last camera.
     std::vector<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
     for (unsigned int i = 0; i < lenses.size(); i++) {
         if (lenses[i]->entity->GetComponent<Component::Transform>() != nullptr)
             camera = lenses[i]->entity;
     };
-
+    
     // Render from camera.
     if (camera != nullptr) {
-        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
+        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
         glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
-
+        
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
-
+        
         // Finds models in scene.
         std::vector<Component::Mesh*> meshes = scene.GetAll<Component::Mesh>();
         for (unsigned int i = 0; i < meshes.size(); i++) {
@@ -74,25 +75,28 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
             if (transform != nullptr && material != nullptr) {
                 glBindVertexArray(meshes[i]->geometry->GetVertexArray());
                 
-                //Set texture locations
+                // Set texture locations
                 glUniform1i(mShaderProgram->GetUniformLocation("baseImage"), 0);
                 glUniform1i(mShaderProgram->GetUniformLocation("normalMap"), 1);
                 glUniform1i(mShaderProgram->GetUniformLocation("specularMap"), 2);
+                glUniform1i(mShaderProgram->GetUniformLocation("glowMap"), 3);
                 
-                //Textures
+                // Textures
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, material->diffuse->GetTextureID());
                 glActiveTexture(GL_TEXTURE1);
                 glBindTexture(GL_TEXTURE_2D, material->normal->GetTextureID());
                 glActiveTexture(GL_TEXTURE2);
                 glBindTexture(GL_TEXTURE_2D, material->specular->GetTextureID());
+                glActiveTexture(GL_TEXTURE3);
+                glBindTexture(GL_TEXTURE_2D, material->glow->GetTextureID());
                 
                 // Render model.
-                glm::mat4 modelMat = model->GetComponent<Component::Transform>()->modelMatrix;
+                glm::mat4 modelMat = transform->modelMatrix;
                 glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
                 glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
                 glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
-
+                
                 glDrawElements(GL_TRIANGLES, meshes[i]->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
             }
         }
@@ -100,7 +104,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
         renderTarget->SetTarget();
         //mDeferredLighting->ShowTextures(screenSize);
         mDeferredLighting->Render(scene, camera, screenSize);
-
+        
         // Render the particle system
         particleRenderSystem.Render(scene, camera, screenSize);
     }

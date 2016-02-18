@@ -16,5 +16,12 @@ namespace GameObject {
             Bullet(Scene* scene);
            
             ~Bullet();
+
+            /// Body of the %Bullet
+            Entity* body;
+
+            Entity* fireEmitter;
+
+            Entity* blueEmitter;
     };
 }

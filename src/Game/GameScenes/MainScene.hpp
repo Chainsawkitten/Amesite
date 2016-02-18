@@ -5,6 +5,7 @@
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
 #include <System/ParticleSystem.hpp>
+#include <System/AnimationSystem.hpp>
 #include <System/SoundSystem.hpp>
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
@@ -18,9 +19,13 @@
 class PostProcessing;
 class FXAAFilter;
 class GammaCorrectionFilter;
+class GlowFilter;
+class GlowBlurFilter;
 class Entity;
 namespace GameObject {
     class Cave;
+    class Camera;
+    class Player;
 }
 namespace Audio {
     class SoundBuffer;
@@ -42,43 +47,48 @@ class MainScene : public Scene {
         void Update(float deltaTime);
         
     private:
-        // PhysicsSystem.
-        System::PhysicsSystem mPhysicsSystem;
-        
-        // ControllerSystem.
-        System::ControllerSystem mControllerSystem;
-        
-        // HealthSystem.
-        System::HealthSystem mHealthSystem;
-        
-        // DamageSystem.
-        System::DamageSystem mDamageSystem;
-        
-        // RenderSystem.
-        System::RenderSystem mRenderSystem;
-        
-        // CollisionSystem.
-        System::CollisionSystem mCollisionSystem;
-        
         // SoundSystem.
         System::SoundSystem mSoundSystem;
         
+        // PhysicsSystem.
+        System::PhysicsSystem mPhysicsSystem;
+
+        // ControllerSystem.
+        System::ControllerSystem mControllerSystem;
+
+        // HealthSystem.
+        System::HealthSystem mHealthSystem;
+
+        // DamageSystem.
+        System::DamageSystem mDamageSystem;
+
+        // RenderSystem.
+        System::RenderSystem mRenderSystem;
+
+        // CollisionSystem.
+        System::CollisionSystem mCollisionSystem;
+
         // The life time system
         System::LifeTimeSystem mLifeTimeSystem;
-        
+
+        // The life time system
+        System::AnimationSystem mAnimationSystem;
+
         // Vector containing players
-        std::vector<Entity*> mPlayers;
-        
+        std::vector<GameObject::Player*> mPlayers;
+
         // The main camera
-        Entity* mMainCamera;
-        
+        GameObject::Camera* mMainCamera;
+
         // The cave
-        GameObject::Cave* cave;
-        
+        GameObject::Cave* mCave;
+
         // Post processing.
         PostProcessing* postProcessing;
         FXAAFilter* fxaaFilter;
         GammaCorrectionFilter* gammaCorrectionFilter;
+        GlowFilter* glowFilter;
+        GlowBlurFilter* glowBlurFilter;
         
         // Grid collision
         bool GridCollide(Entity* entity, float deltaTime);

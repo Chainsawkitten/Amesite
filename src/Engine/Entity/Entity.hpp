@@ -5,6 +5,10 @@
 #include "../Component/RelativeTransform.hpp"
 #include "../Scene/Scene.hpp"
 
+namespace GameObject {
+    class SuperGameObject;
+}
+
 /// %Entity containing various components.
 class Entity {
     public:
@@ -34,6 +38,12 @@ class Entity {
 
         /// Remove %Entity from scene.
         void Clear();
+
+        // Pointer to which GameObject %Entity is contained.
+        /**
+         * Default: nullptr
+         */
+        GameObject::SuperGameObject* gameObject;
 
     private:
         // Adds a component to this entity and to the scene.

@@ -1,7 +1,10 @@
 #include "Entity.hpp"
 
+#include "../GameObject/SuperGameObject.hpp"
+
 Entity::Entity(Scene* scene) {
     mScene = scene;
+    gameObject = nullptr;
 }
 
 Entity::~Entity() {
@@ -14,7 +17,8 @@ void Entity::AddComponent(Component::SuperComponent* component, const std::type_
 void Entity::Clear() {
     for (auto& it : components) {
         mScene->RemoveComponentFromList(it.second, it.first);
-        delete it.second;
+        if (it.first != &typeid(Component::RelativeTransform*))
+            delete it.second;
     }
     components.clear();
 }

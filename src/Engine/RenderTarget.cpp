@@ -18,11 +18,22 @@ RenderTarget::RenderTarget(const glm::vec2 &size) {
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &mColorBuffer);
     glBindTexture(GL_TEXTURE_2D, mColorBuffer);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    // Extra buffer (eg. bloom).
+    glActiveTexture(GL_TEXTURE0);
+    glGenTextures(1, &mExtraBuffer);
+    glBindTexture(GL_TEXTURE_2D, mExtraBuffer);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glBindTexture(GL_TEXTURE_2D, 0);
     
     // Depth buffer.
@@ -41,7 +52,12 @@ RenderTarget::RenderTarget(const glm::vec2 &size) {
     glGenFramebuffers(1, &mFrameBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, mFrameBuffer);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorBuffer, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mExtraBuffer, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mDepthBuffer, 0);
+    
+    // Initialize draw buffers.
+    GLenum drawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+    glDrawBuffers(2, drawBuffers);
     
     // Check if framebuffer created correctly
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -59,6 +75,7 @@ RenderTarget::RenderTarget(const glm::vec2 &size) {
 
 RenderTarget::~RenderTarget() {
     glDeleteTextures(1, &mDepthBuffer);
+    glDeleteTextures(1, &mExtraBuffer);
     glDeleteTextures(1, &mColorBuffer);
     glDeleteFramebuffers(1, &mFrameBuffer);
     
@@ -83,6 +100,10 @@ glm::vec2 RenderTarget::GetSize() const {
 
 GLuint RenderTarget::GetColorTexture() const {
     return mColorBuffer;
+}
+
+GLuint RenderTarget::GetExtraTexture() const {
+    return mExtraBuffer;
 }
 
 GLuint RenderTarget::GetDepthTexture() const {

@@ -2,7 +2,6 @@
 
 #include <Resources.hpp>
 #include <Audio/SoundBuffer.hpp>
-#include <Audio/Listener.hpp>
 
 #include "../Util/GameSettings.hpp"
 
@@ -16,7 +15,6 @@
 #include "../GameObject/Camera.hpp"
 #include "../GameObject/Player.hpp"
 #include "../Util/MainCamera.hpp"
-#include "../Util/CameraUpdate.hpp"
 #include <Util/Input.hpp>
 
 #include <MainWindow.hpp>
@@ -27,7 +25,7 @@
 using namespace GameObject;
 
 AlbinScene::AlbinScene() {
-    mSoundSystem.GetListener()->SetGain(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    mSoundSystem.SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
     
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -64,7 +62,7 @@ AlbinScene::AlbinScene() {
     
     // Create main camera
     Camera* mainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
-    mMainCamera = mainCamera->GetEntity("body");
+    mMainCamera = mainCamera->body;
     mMainCamera->AddComponent<Component::Listener>();
     MainCameraInstance().SetMainCamera(mMainCamera);
     
@@ -72,8 +70,8 @@ AlbinScene::AlbinScene() {
     Player* player1 = GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     Player* player2 = GameEntityCreator().CreatePlayer(glm::vec3(1.f, 0.f, 1.f), InputHandler::PLAYER_TWO);
     
-    mPlayers.push_back(player1->GetEntity("body"));
-    mPlayers.push_back(player2->GetEntity("body"));
+    mPlayers.push_back(player1->body);
+    mPlayers.push_back(player2->body);
     
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
@@ -98,7 +96,7 @@ void AlbinScene::Update(float deltaTime) {
     mPhysicsSystem.Update(*this, deltaTime);
     
     // Update camera.
-    UpdateCamera(mMainCamera, mPlayers);
+    //UpdateCamera(mMainCamera, mPlayers);
     
     // Updates model matrices for this frame.
     UpdateModelMatrices();

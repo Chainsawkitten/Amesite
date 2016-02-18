@@ -1,6 +1,5 @@
 #include "SoundSystem.hpp"
 
-#include "../Audio/Listener.hpp"
 #include "../Util/Log.hpp"
 #include <AL/al.h>
 
@@ -31,20 +30,22 @@ SoundSystem::SoundSystem() {
     if (!alcMakeContextCurrent(mContext))
         Log() << "Couldn't create audio context.\n";
     
-    mListener = new Listener();
     mInstance = this;
 }
 
 SoundSystem::~SoundSystem() {
-    delete mListener;
-    
     alcMakeContextCurrent(nullptr);
     alcDestroyContext(mContext);
     alcCloseDevice(mDevice);
 }
 
-Listener* SoundSystem::GetListener() const {
-    return mListener;
+void SoundSystem::SetVolume(float volume) {
+    alListenerf(AL_GAIN, volume);
+    mVolume = volume;
+}
+
+float SoundSystem::GetVolume() const {
+    return mVolume;
 }
 
 SoundSystem* SoundSystem::GetInstance() {
@@ -69,6 +70,18 @@ void SoundSystem::Update(Scene& scene) {
     for (Component::SoundSource* sound : soundComponents) {
         Entity* entity = sound->entity;
         
+        // Pause it.
+        if (sound->mShouldPause) {
+            alSourcePause(sound->mSource);
+            sound->mShouldPause = false;
+        }
+        
+        // Stop it.
+        if (sound->mShouldStop) {
+            alSourceStop(sound->mSource);
+            sound->mShouldStop = false;
+        }
+        
         // Set position based on transform.
         Component::Transform* transform = entity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
@@ -85,6 +98,7 @@ void SoundSystem::Update(Scene& scene) {
             alSource3f(sound->mSource, AL_VELOCITY, 0.f, 0.f, 0.f);
         }
         
+        // Set other properties.
         alSourcef(sound->mSource, AL_PITCH, sound->pitch);
         alSourcef(sound->mSource, AL_GAIN, sound->gain);
         alSourcei(sound->mSource, AL_LOOPING, sound->loop);
@@ -93,20 +107,10 @@ void SoundSystem::Update(Scene& scene) {
             sound->mSoundBufferSet = true;
         }
         
-        // Play it / pause it / stop it.
+        // Play it.
         if (sound->mShouldPlay) {
             alSourcePlay(sound->mSource);
             sound->mShouldPlay = false;
-        }
-        
-        if (sound->mShouldPause) {
-            alSourcePause(sound->mSource);
-            sound->mShouldPause = false;
-        }
-        
-        if (sound->mShouldStop) {
-            alSourceStop(sound->mSource);
-            sound->mShouldStop = false;
         }
         
         CheckError("Something went wrong updating a sound source.");
@@ -124,8 +128,8 @@ void SoundSystem::Update(Scene& scene) {
             CheckError("Couldn't set listener position.");
             
             // Set orientation.
-            glm::vec4 forward = glm::inverse(transform->GetOrientation()) * glm::vec4(0.f, 0.f, -1.f, 1.f);
-            glm::vec4 up = glm::inverse(transform->GetOrientation()) * glm::vec4(0.f, 1.f, 0.f, 1.f);
+            glm::vec4 forward = glm::inverse(transform->GetWorldOrientation()) * glm::vec4(0.f, 0.f, -1.f, 1.f);
+            glm::vec4 up = glm::inverse(transform->GetWorldOrientation()) * glm::vec4(0.f, 1.f, 0.f, 1.f);
             ALfloat listenerOri[] = { forward.x, forward.y, forward.z, up.x, up.y, up.z };
             alListenerfv(AL_ORIENTATION, listenerOri);
             CheckError("Couldn't set listener orientation.");

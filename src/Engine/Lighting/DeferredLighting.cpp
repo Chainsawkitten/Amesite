@@ -14,6 +14,7 @@
 #include "../Component/DirectionalLight.hpp"
 #include "../Component/PointLight.hpp"
 #include "../Component/SpotLight.hpp"
+#include "../Component/Animation.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 DeferredLighting::DeferredLighting(const glm::vec2& size) {
@@ -38,6 +39,7 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
     AttachTexture(mTextures[DIFFUSE], width, height, GL_COLOR_ATTACHMENT0 + DIFFUSE, GL_RGB16F);
     AttachTexture(mTextures[NORMAL], width, height, GL_COLOR_ATTACHMENT0 + NORMAL, GL_RGB16F);
     AttachTexture(mTextures[SPECULAR], width, height, GL_COLOR_ATTACHMENT0 + SPECULAR, GL_RGB);
+    AttachTexture(mTextures[GLOW], width, height, GL_COLOR_ATTACHMENT0 + GLOW, GL_RGB);
     
     // Bind depthHandle
     glBindTexture(GL_TEXTURE_2D, mDepthHandle);
@@ -113,6 +115,9 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
     SetReadBuffer(DeferredLighting::SPECULAR);
     glBlitFramebuffer(0, 0, width, height, halfWidth, halfHeight, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
     
+    SetReadBuffer(DeferredLighting::GLOW);
+    glBlitFramebuffer(0, 0, width, height, halfWidth, 0, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    
     if (depthTest)
         glEnable(GL_DEPTH_TEST);
 }
@@ -127,10 +132,10 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glDepthFunc(GL_ALWAYS);
     
     // Blending enabled for handling multiple light sources
-    GLboolean blend = glIsEnabled(GL_BLEND);
-    glEnable(GL_BLEND);
-    glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_ONE, GL_ONE);
+    GLboolean blend = glIsEnabledi(GL_BLEND, 0);
+    glEnablei(GL_BLEND, 0);
+    glBlendEquationi(0, GL_FUNC_ADD);
+    glBlendFunci(0, GL_ONE, GL_ONE);
     
     mShaderProgram->Use();
     
@@ -140,12 +145,13 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glBindVertexArray(mSquare->GetVertexArray());
     
     // Set uniforms.
-    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
+    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     
     glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::DIFFUSE);
     glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), DeferredLighting::NORMAL);
     glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
+    glUniform1i(mShaderProgram->GetUniformLocation("tGlow"), DeferredLighting::GLOW);
     glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
     
     glUniform1f(mShaderProgram->GetUniformLocation("scale"), scale);
@@ -157,7 +163,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Entity* lightEntity = directionalLights[i]->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
-            glm::vec4 direction = transform->GetOrientation() * glm::vec4(0.f, 0.f, 1.f, 0.f);
+            glm::vec4 direction = glm::vec4(transform->GetWorldDirection(), 0.f);
             glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * -direction)[0]);
             glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &directionalLights[i]->color[0]);
             glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), 1.f);
@@ -175,13 +181,12 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Entity* lightEntity = pointLights[i]->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
-            glm::vec4 direction = viewMat * (transform->GetOrientation() * glm::vec4(0.f, 0.f, 1.f, 0.f));
-            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * glm::vec4(transform->GetWorldPosition(), 1.0))[0]);
+            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
             glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &pointLights[i]->color[0]);
             glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), pointLights[i]->attenuation);
             glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), pointLights[i]->ambientCoefficient);
             glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 180.f);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(direction)[0]);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
             
             glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
         }
@@ -193,8 +198,8 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Entity* lightEntity = spotLights[i]->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
-            glm::vec4 direction = viewMat * (transform->GetOrientation() * glm::vec4(0.f, 0.f, 1.f, 0.f));
-            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * glm::vec4(transform->GetWorldPosition(), 1.0))[0]);
+            glm::vec4 direction = viewMat * glm::vec4(transform->GetWorldDirection(), 0.f);
+            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
             glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &spotLights[i]->color[0]);
             glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), spotLights[i]->attenuation);
             glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), spotLights[i]->ambientCoefficient);
@@ -208,7 +213,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     if (!depthTest)
         glDisable(GL_DEPTH_TEST);
     if (!blend)
-        glDisable(GL_BLEND);
+        glDisablei(GL_BLEND, 0);
     
     glDepthFunc(oldDepthFunctionMode);
 }

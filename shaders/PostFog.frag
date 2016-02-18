@@ -6,6 +6,7 @@ Fog based on Real-Time Fog using Post-processing in OpenGL (http://cs.gmu.edu/~j
 #define M_E 2.718
 
 uniform sampler2D tDiffuse;
+uniform sampler2D tExtra;
 uniform sampler2D tDepth;
 
 uniform vec3 color;
