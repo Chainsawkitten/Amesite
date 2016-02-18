@@ -36,6 +36,8 @@ namespace CaveGenerator {
 
 			bool IsConnected(Room& otherRoom);
 
+			void SetAccessibleFromMainRoom();
+
 			bool isAccessibleFromMainRoom;
 			bool isMainRoom;
             std::vector<Coordinate> coordinates;
@@ -69,6 +71,8 @@ namespace CaveGenerator {
             void DetectRooms();
 			
 			void CreatePassage(Room& firstBestRoom, Room& secondBestRoom, Coordinate firstBestCoordinate, Coordinate secondBestCoordinate);
+
+			std::vector<Coordinate> CaveMap::GetLine(Coordinate start, Coordinate end);
 
 			void ConnectRooms(Room& first, Room& second);
 

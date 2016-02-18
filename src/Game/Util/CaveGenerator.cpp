@@ -50,6 +50,12 @@ namespace CaveGenerator {
     }
 
     void CaveMap::ProcessCaveMap(const int& iterations) {
+		std::vector<Coordinate> test = GetLine(Coordinate(0, 0), Coordinate(5, 5));
+
+		for (auto& coordinate : test) {
+			Log() << "X " << coordinate.x << "Y " << coordinate.y << "\n";
+		}
+
         //Iterate over n times over map.
         //Rule: if a cell was a wall and has 4 or more wall neighbours, then it stays a wall.
         //Otherwise, if the cell wasn't a wall and there are 5 or more wall neighbours, then it becomes a wall.
@@ -193,7 +199,6 @@ namespace CaveGenerator {
 				largestRoom = &room;
 			}
 		}
-		Log() << int(largestRoom->coordinates.size()) << "\n";
 		largestRoom->isMainRoom = true;
 		largestRoom->isAccessibleFromMainRoom = true;
     }
@@ -314,6 +319,28 @@ namespace CaveGenerator {
     }
 
 	void CaveMap::ConnectClosestRooms(bool forceAccessibilityFromMainRoom) {
+		std::vector<Room*> roomListA;
+		std::vector<Room*> roomListB;
+
+		for (auto& room : mRoomList)
+			Log() << "Before: " << room.isAccessibleFromMainRoom << "\n";
+
+		//If we are forcing accessibility from the main room, then we should divide the rooms that are connected to the main room and those which are not into separate lists.
+		if (forceAccessibilityFromMainRoom) {
+			for (auto& room : mRoomList) {
+				if (room.isAccessibleFromMainRoom) {
+					roomListB.push_back(&room);
+				} else {
+					roomListA.push_back(&room);
+				}
+			}
+		} else {
+			for (auto& room : mRoomList) {
+				roomListA.push_back(&room);
+				roomListB.push_back(&room);
+			}
+		}
+
 		int bestDistance = 0;
 		bool possibleConnection = false;
 
@@ -322,43 +349,56 @@ namespace CaveGenerator {
 		Room* firstBestRoom;
 		Room* secondBestRoom;
 		
-		for (auto& firstRoom : mRoomList) {
-			possibleConnection = false;
-
-			for (auto& secondRoom : mRoomList) {
-				//Abort early if possible
-				if (firstRoom == secondRoom) {
+		for (auto& firstRoom : roomListA) {
+			if (!forceAccessibilityFromMainRoom) {
+				possibleConnection = false;
+				if (firstRoom->connectedRooms.size() > 0) {
 					continue;
 				}
+			}
 
-				//If already connected, why try to connect the rooms?
-				if (firstRoom.IsConnected(secondRoom)) {
-					possibleConnection = false;
-					break;
+			for (auto& secondRoom : roomListB) {
+				//Abort early if possible
+				if (firstRoom == secondRoom || firstRoom->IsConnected(*secondRoom)) {
+					continue;
 				}
 
 				//Do magic stuff, watch rooms connect!
 				//Look at both rooms edge-tiles and connect the two closest tiles.
-				for (auto& coordinateA : firstRoom.edgeCoordinates) {
-					for (auto& coordinateB : secondRoom.edgeCoordinates) {
+				for (auto& coordinateA : firstRoom->edgeCoordinates) {
+					for (auto& coordinateB : secondRoom->edgeCoordinates) {
 						int xDifference = (coordinateA.x - coordinateB.x);
 						int yDifference = (coordinateA.y - coordinateB.y);
 						int distance = glm::pow<int>(xDifference, 2.f) + glm::pow<int>(xDifference, 2.f);
+
 						if ((distance < bestDistance) || !possibleConnection) {
+							bestDistance = distance;
 							possibleConnection = true;
 							firstBestCoordinate = &coordinateA;
 							secondBestCoordinate = &coordinateB;
-							firstBestRoom = &firstRoom;
-							secondBestRoom = &secondRoom;
+							firstBestRoom = firstRoom;
+							secondBestRoom = secondRoom;
 						}
 					}
 				}
+
 			}
-			if (possibleConnection)
+			if (possibleConnection && !forceAccessibilityFromMainRoom) {
 				CreatePassage(*firstBestRoom, *secondBestRoom, *firstBestCoordinate, *secondBestCoordinate);
+			}
 		}
+
+		if (possibleConnection && forceAccessibilityFromMainRoom) { 
+			CreatePassage(*firstBestRoom, *secondBestRoom, *firstBestCoordinate, *secondBestCoordinate);
+			ConnectClosestRooms(true);
+		}
+
+		if (!forceAccessibilityFromMainRoom) {
+			ConnectClosestRooms(true);
+		}
+
 		for (auto& room : mRoomList)
-			Log() << int(room.connectedRooms.size()) << "\n";
+			Log() << "After: " << room.isAccessibleFromMainRoom << "\n";
 
 		return;
 	}
@@ -367,14 +407,76 @@ namespace CaveGenerator {
 		ConnectRooms(firstBestRoom, secondBestRoom);
 	}
 
+	std::vector<Coordinate> CaveMap::GetLine(Coordinate start, Coordinate end) {
+		std::vector<Coordinate> LineCoordinates;
+		int x = start.x;
+		int y = start.y;
+
+		int dx = end.x - start.x;
+		int dy = end.y - start.y;
+
+		bool inverted = false;
+
+		int xStep;
+		int yStep;
+
+		//Check signs.
+		if (dx >= 0)
+			xStep = 1;
+		else
+			xStep = -1;
+
+		if (dy >= 0)
+			yStep = 1;
+		else
+			yStep = -1;
+
+		int longest = abs(dx);
+		int shortest = abs(dy);
+		if (longest < shortest) {
+			inverted = true;
+			longest = abs(dy);
+			shortest = abs(dx);
+
+			if (dy >= 0)
+				xStep = 1;
+			else
+				xStep = -1;
+
+			if (dx >= 0)
+				yStep = 1;
+			else
+				yStep = -1;
+		}
+
+		int gradientAccumulation = longest / 2;
+		for (int i = 0; i < longest; i++) {
+			LineCoordinates.push_back(Coordinate(x,y));
+
+			if (inverted)
+				y += xStep;
+			else
+				x += xStep;
+
+			gradientAccumulation += shortest;
+			if (gradientAccumulation >= longest) {
+				if (inverted)
+					x += yStep;
+				else
+					x += yStep;
+				gradientAccumulation -= longest;
+			}
+		}
+		return LineCoordinates;
+	}
+
 	void CaveMap::ConnectRooms(Room& first, Room& second) {
 		
 		if (first.isAccessibleFromMainRoom) {
-			second.isAccessibleFromMainRoom = true;
-		}
-
-		if (second.isAccessibleFromMainRoom) {
-			first.isAccessibleFromMainRoom = true;
+			second.SetAccessibleFromMainRoom();
+		} 
+		else if (second.isAccessibleFromMainRoom) {
+			first.SetAccessibleFromMainRoom();
 		}
 
 		first.connectedRooms.push_back(second);
@@ -403,6 +505,15 @@ namespace CaveGenerator {
 							edgeCoordinates.push_back(coordinate);
 					}
 				}
+			}
+		}
+	}
+
+	void Room::SetAccessibleFromMainRoom() {
+		if (!isAccessibleFromMainRoom) {
+			isAccessibleFromMainRoom = true;
+			for (auto& room : connectedRooms) {
+				room.SetAccessibleFromMainRoom();
 			}
 		}
 	}

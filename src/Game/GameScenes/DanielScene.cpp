@@ -101,7 +101,7 @@ DanielScene::DanielScene() {
 	caveMap.ProcessCaveMap(5);
 	caveMap.PrintMapToLog();
 
-	//caveMap.RemoveSmallRooms(20);
+	//caveMap.RemoveSmallRooms(40);
 	caveMap.PrintMapToLog();
 
 	caveMap.ConnectClosestRooms();
