@@ -125,8 +125,8 @@ void SoundSystem::Update(Scene& scene) {
             CheckError("Couldn't set listener position.");
             
             // Set orientation.
-            glm::vec4 forward = glm::inverse(transform->GetOrientation()) * glm::vec4(0.f, 0.f, -1.f, 1.f);
-            glm::vec4 up = glm::inverse(transform->GetOrientation()) * glm::vec4(0.f, 1.f, 0.f, 1.f);
+            glm::vec4 forward = glm::inverse(transform->GetWorldOrientation()) * glm::vec4(0.f, 0.f, -1.f, 1.f);
+            glm::vec4 up = glm::inverse(transform->GetWorldOrientation()) * glm::vec4(0.f, 1.f, 0.f, 1.f);
             ALfloat listenerOri[] = { forward.x, forward.y, forward.z, up.x, up.y, up.z };
             alListenerfv(AL_ORIENTATION, listenerOri);
             CheckError("Couldn't set listener orientation.");
