@@ -176,7 +176,7 @@ namespace CaveGenerator {
             void DetectRooms();
             
             ///Creates a passage between rooms, used by ConnectClosestRooms.
-            /***
+            /**
              * @param firstBestRoom The first closest room.
              * @param secondBestRoom The second closest room.
              * @param firstBestCoordinate The first closest coordinate.
