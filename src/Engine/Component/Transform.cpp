@@ -36,7 +36,7 @@ glm::vec3 Transform::GetWorldYawPitchRoll() const {
 }
 
 glm::vec3 Transform::GetWorldDirection() const {
-    return glm::vec3(glm::normalize(GetWorldOrientation() * glm::vec4(0,0,1,0)));
+    return glm::normalize(glm::vec3(GetWorldOrientation() * glm::vec4(0.f, 0.f, 1.f, 0.f)));
 }
 
 glm::mat4 Transform::GetWorldOrientation() const {
@@ -45,9 +45,9 @@ glm::mat4 Transform::GetWorldOrientation() const {
 
 glm::mat4 Transform::GetLocalOrientation() const {
     glm::mat4 orientation;
-    orientation = glm::rotate(orientation, glm::radians(yaw), glm::vec3(0, 1, 0));
-    orientation = glm::rotate(orientation, glm::radians(pitch), glm::vec3(1, 0, 0));
-    orientation = glm::rotate(orientation, glm::radians(roll), glm::vec3(0, 0, 1));
+    orientation = glm::rotate(orientation, glm::radians(yaw), glm::vec3(0.f, 1.f, 0.f));
+    orientation = glm::rotate(orientation, glm::radians(pitch), glm::vec3(1.f, 0.f, 0.f));
+    orientation = glm::rotate(orientation, glm::radians(roll), glm::vec3(0.f, 0.f, 1.f));
     return orientation;
 }
 
