@@ -70,6 +70,18 @@ void SoundSystem::Update(Scene& scene) {
     for (Component::SoundSource* sound : soundComponents) {
         Entity* entity = sound->entity;
         
+        // Pause it.
+        if (sound->mShouldPause) {
+            alSourcePause(sound->mSource);
+            sound->mShouldPause = false;
+        }
+        
+        // Stop it.
+        if (sound->mShouldStop) {
+            alSourceStop(sound->mSource);
+            sound->mShouldStop = false;
+        }
+        
         // Set position based on transform.
         Component::Transform* transform = entity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
@@ -86,6 +98,7 @@ void SoundSystem::Update(Scene& scene) {
             alSource3f(sound->mSource, AL_VELOCITY, 0.f, 0.f, 0.f);
         }
         
+        // Set other properties.
         alSourcef(sound->mSource, AL_PITCH, sound->pitch);
         alSourcef(sound->mSource, AL_GAIN, sound->gain);
         alSourcei(sound->mSource, AL_LOOPING, sound->loop);
@@ -94,20 +107,10 @@ void SoundSystem::Update(Scene& scene) {
             sound->mSoundBufferSet = true;
         }
         
-        // Play it / pause it / stop it.
+        // Play it.
         if (sound->mShouldPlay) {
             alSourcePlay(sound->mSource);
             sound->mShouldPlay = false;
-        }
-        
-        if (sound->mShouldPause) {
-            alSourcePause(sound->mSource);
-            sound->mShouldPause = false;
-        }
-        
-        if (sound->mShouldStop) {
-            alSourceStop(sound->mSource);
-            sound->mShouldStop = false;
         }
         
         CheckError("Something went wrong updating a sound source.");
