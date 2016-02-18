@@ -65,10 +65,10 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
                 wall->AddComponent<Component::RelativeTransform>()->parentEntity = map;
                 wall->AddComponent<Component::Mesh>()->geometry = cube;
                 wall->AddComponent<Component::Material>();
-                wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j) + 0.5f, 0.f, float(i) + 0.5f);// + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
-                wall->GetComponent<Component::Material>()->SetDiffuse("Resources/Albedo.png");
-                wall->GetComponent<Component::Material>()->SetNormal("Resources/Normal.png");
-                wall->GetComponent<Component::Material>()->SetSpecular("Resources/Height.png");
+                wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j) + 0.5f, 0.f, float(i) + 0.5f);
+                wall->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+                wall->GetComponent<Component::Material>()->SetNormal("Resources/wall2_norm.png");
+                wall->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
                 //wall->AddComponent<Component::Collider2DCircle>()->radius = 1.f;
             }
         }
