@@ -72,12 +72,12 @@ MainScene::MainScene() {
     GameEntityCreator().SetScene(this);
     
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 500.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 10.f), InputHandler::PLAYER_ONE));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 10.f), InputHandler::PLAYER_TWO));
 
     // Create scene
     mCave = GameEntityCreator().CreateMap();
@@ -144,7 +144,7 @@ void MainScene::Update(float deltaTime) {
     mLifeTimeSystem.Update(*this, deltaTime);
 
     // Update game logic
-    mMainCamera->UpdateRelativePosition(mPlayers);
+    //mMainCamera->UpdateRelativePosition(mPlayers);
     for (auto player : mPlayers) {
         GridCollide(player->node, deltaTime);
         if (player->GetHealth() < 0.01f) {
@@ -190,12 +190,11 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime) {
     Component::Transform* transform = entity->GetComponent<Component::Transform>();
     Component::Physics* physics = entity->GetComponent<Component::Physics>();
     
-    float x = transform->position.x + (25.f / 2.f) * 10;
-    float z = transform->position.z + (25.f / 2.f) * 10;
-    z = (250 - z) / 10 + 0.4f;
-    x = x / 10 + 0.4f;
-    
-    if (GameObject::Cave::theMap[(int)x][(int)z]) {
+    float z = transform->position.x + (60.f / 2.f) * 4;
+    float x = transform->position.z + (60.f / 2.f) * 4;
+    z = (240 - z) / 4 + 0.4f;
+    x = x / 4 + 0.4f;
+    if (GameObject::Cave::mMap[(unsigned int)x][(unsigned int)z]) {
         float oldX = x - physics->velocity.x * deltaTime;
         float oldZ = z + physics->velocity.z * deltaTime;
         if (glm::abs(physics->velocity.x) < glm::abs(physics->velocity.z)) {

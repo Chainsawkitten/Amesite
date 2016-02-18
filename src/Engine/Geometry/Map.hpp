@@ -69,22 +69,20 @@ namespace Geometry {
                 MeshNode mCenterTop, mCenterRight, mCenterBottom, mCenterLeft;
                 int mType;
         };
+
+        /// Node creation.
         MeshNode createMeshNode(const glm::vec3 position, glm::uvec2 index, bool above, const float squareSize, glm::vec2 texCoords);
-
         ControlNode createControlNode(const glm::vec3 position, const bool active, const float squareSize, glm::uvec2 index);
-
         MSquare createMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft);
 
+        /// Computations.
         void marchingSquares(bool **data, const float squareSize);
-
-        void createMesh(MeshNode* position);
-
+        void createMesh(MeshNode* position, unsigned int size);
         void triangulateSquare(MSquare* square);
-
         void storeTriangle(MeshNode a, MeshNode b, MeshNode c);
 
+        /// Data
         glm::uvec2 mDataDimensions;
-
         float mMapHeight, mMapWidth;
 
         std::vector<Vertex> mTempVertexData;

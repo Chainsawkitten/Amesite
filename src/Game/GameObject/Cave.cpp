@@ -83,6 +83,7 @@ const bool Cave::theMap[60][60] = {
     { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1 },
     { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 }
 };
+bool** Cave::mMap = nullptr;
 
 
 Cave::Cave(Scene* scene) : SuperGameObject(scene) {
@@ -104,35 +105,16 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
     map->AddComponent<Component::Material>();
 
     map->GetComponent<Component::Mesh>()->geometry = Resources().CreateMap(mMap, 1.f, glm::uvec2(60,60));
+    map->GetComponent<Component::Transform>()->Rotate(0, 0, 0);
     map->GetComponent<Component::Physics>()->angularDragFactor = 0;
     map->GetComponent<Component::Physics>()->gravityFactor = 0;
     map->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f, 0.f, 0.f);
-    //map->GetComponent<Component::Transform>()->Rotate(90, 180, 0);
-    //map->GetComponent<Component::Transform>()->scale = glm::vec3(10, 10, 10);
-    //map->GetComponent<Component::Transform>()->Move(glm::vec3(1.f, 0, -1.f));
+    map->GetComponent<Component::Transform>()->scale = glm::vec3(4, 4, 4);
     map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
     map->GetComponent<Component::Material>()->SetNormal("Resources/wall2_norm.png");
     map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
-
-    //Geometry::Geometry3D* cube = Resources().CreateCube();
-    //for (int i = 0; i < 25; i++) {
-    //    for (int j = 0; j < 25; j++) {
-    //        if (mMap[i][j] > 0.f) {
-    //            Entity* wall = CreateEntity(scene);
-    //            wall->AddComponent<Component::RelativeTransform>()->parentEntity = map;
-    //            wall->AddComponent<Component::Mesh>()->geometry = cube;
-    //            wall->AddComponent<Component::Material>();
-    //            wall->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
-    //            wall->GetComponent<Component::Material>()->SetNormal("Resources/wall2_norm.png");
-    //            wall->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
-    //            wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j), 0.f, -float(i)) + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
-    //            //wall->AddComponent<Component::Collider2DCircle>()->radius = 1.f;
-    //        }
-    //    }
-    //}
 }
 
 Cave::~Cave() {
-    //Resources().FreeCube();
     Resources().FreeMap();
 }

@@ -44,7 +44,7 @@ void Map::marchingSquares(bool ** data, const float squareSize)
         controlNodes[x] = new ControlNode[mDataDimensions.y];
         for (unsigned int y = 0; y < mDataDimensions.y; y++) {
             glm::vec3 pos = glm::vec3(-mMapWidth / 2.f + x * squareSize + squareSize / 2.f, 0.f, -mMapHeight / 2.f + y * squareSize + squareSize / 2.f);
-            controlNodes[x][y] = createControlNode(pos, data[x][y], squareSize, glm::uvec2(x,y));
+            controlNodes[x][y] = createControlNode(pos, data[y][x], squareSize, glm::uvec2(x,y));
         }
     }
 
@@ -63,11 +63,8 @@ void Map::marchingSquares(bool ** data, const float squareSize)
     mIndexData = new unsigned int[mTempIndexData.size()];
     mVertexData = new  Vertex[mTempVertexData.size()];
 
-    for (unsigned int a = 0; a < mTempIndexData.size(); a++)
-        mIndexData[a] = mTempIndexData[a];
-
-    for (unsigned int b = 0; b < mTempVertexData.size(); b++)
-        mVertexData[b] = mTempVertexData[b];
+    std::copy(mTempIndexData.begin(), mTempIndexData.end(), mIndexData);
+    std::copy(mTempVertexData.begin(), mTempVertexData.end(), mVertexData);
 
     for (unsigned int m = 0; m < mDataDimensions.x-1; m++) {
         delete[] controlNodes[m];
@@ -133,10 +130,9 @@ Map::MeshNode Map::createMeshNode(const glm::vec3 position, glm::uvec2 index, bo
     return node;
 }
 
-void Map::createMesh(MeshNode* node)
+void Map::createMesh(MeshNode* node, unsigned int size)
 {
-    int nodeSize = sizeof(node);
-    for (int i = 0; i < nodeSize; i++) {
+    for (unsigned int i = 0; i < size; i++) {
         if (node[i].mVertexIndex == -1) {
             node[i].mVertexIndex = mVertexNr;
             Vertex vertex;
@@ -149,14 +145,14 @@ void Map::createMesh(MeshNode* node)
         }
     }
 
-    if (nodeSize >= 3)
-        storeTriangle(node[0], node[2], node[1]);
-    if (nodeSize >= 4)
-        storeTriangle(node[0], node[3], node[2]);
-    if (nodeSize >= 5)
-        storeTriangle(node[0], node[4], node[3]);
-    if (nodeSize >= 6)
-        storeTriangle(node[0], node[5], node[4]);
+    if (size >= 3)
+        storeTriangle(node[0], node[1], node[2]);
+    if (size >= 4)
+        storeTriangle(node[0], node[2], node[3]);
+    if (size >= 5)
+        storeTriangle(node[0], node[3], node[4]);
+    if (size >= 6)
+        storeTriangle(node[0], node[4], node[5]);
 }
 
 void Map::triangulateSquare(MSquare* square)
@@ -167,55 +163,55 @@ void Map::triangulateSquare(MSquare* square)
         break;
         // 1 points:
     case 1:
-        createMesh(node = new MeshNode[3]{ square->mCenterBottom, square->mBottomLeft, square->mCenterLeft });
+        createMesh(node = new MeshNode[3]{ square->mCenterBottom, square->mBottomLeft, square->mCenterLeft }, 3);
         break;
     case 2:
-        createMesh(node = new MeshNode[3]{ square->mCenterRight, square->mBottomRight, square->mCenterBottom });
+        createMesh(node = new MeshNode[3]{ square->mCenterRight, square->mBottomRight, square->mCenterBottom }, 3);
         break;
     case 4:
-        createMesh(node = new MeshNode[3]{ square->mCenterTop, square->mTopRight, square->mCenterRight });
+        createMesh(node = new MeshNode[3]{ square->mCenterTop, square->mTopRight, square->mCenterRight }, 3);
         break;
     case 8:
-        createMesh(node = new MeshNode[3]{ square->mTopLeft, square->mCenterTop, square->mCenterLeft });
+        createMesh(node = new MeshNode[3]{ square->mTopLeft, square->mCenterTop, square->mCenterLeft }, 3);
         break;
 
         // 2 points:
     case 3:
-        createMesh(node = new MeshNode[4]{ square->mCenterRight, square->mBottomRight, square->mBottomLeft, square->mCenterLeft });
+        createMesh(node = new MeshNode[4]{ square->mCenterRight, square->mBottomRight, square->mBottomLeft, square->mCenterLeft }, 4);
         break;
     case 6:
-        createMesh(node = new MeshNode[4]{ square->mCenterTop, square->mTopRight, square->mBottomRight, square->mCenterBottom });
+        createMesh(node = new MeshNode[4]{ square->mCenterTop, square->mTopRight, square->mBottomRight, square->mCenterBottom }, 4);
         break;
     case 9:
-        createMesh(node = new MeshNode[4]{ square->mTopLeft, square->mCenterTop, square->mCenterBottom, square->mBottomLeft });
+        createMesh(node = new MeshNode[4]{ square->mTopLeft, square->mCenterTop, square->mCenterBottom, square->mBottomLeft }, 4);
         break;
     case 12:
-        createMesh(node = new MeshNode[4]{ square->mTopLeft, square->mTopRight, square->mCenterRight, square->mCenterLeft });
+        createMesh(node = new MeshNode[4]{ square->mTopLeft, square->mTopRight, square->mCenterRight, square->mCenterLeft }, 4);
         break;
     case 5:
-        createMesh(node = new MeshNode[6]{ square->mCenterTop, square->mTopRight, square->mCenterRight, square->mCenterBottom, square->mBottomLeft, square->mCenterLeft });
+        createMesh(node = new MeshNode[6]{ square->mCenterTop, square->mTopRight, square->mCenterRight, square->mCenterBottom, square->mBottomLeft, square->mCenterLeft }, 6);
         break;
     case 10:
-        createMesh(node = new MeshNode[6]{ square->mTopLeft, square->mCenterTop, square->mCenterRight, square->mBottomRight, square->mCenterBottom, square->mCenterLeft });
+        createMesh(node = new MeshNode[6]{ square->mTopLeft, square->mCenterTop, square->mCenterRight, square->mBottomRight, square->mCenterBottom, square->mCenterLeft }, 6);
         break;
 
         // 3 point:
     case 7:
-        createMesh(node = new MeshNode[5]{ square->mCenterTop, square->mTopRight, square->mBottomRight, square->mBottomLeft, square->mCenterLeft });
+        createMesh(node = new MeshNode[5]{ square->mCenterTop, square->mTopRight, square->mBottomRight, square->mBottomLeft, square->mCenterLeft }, 5);
         break;
     case 11:
-        createMesh(node = new MeshNode[5]{ square->mTopLeft, square->mCenterTop, square->mCenterRight, square->mBottomRight, square->mBottomLeft });
+        createMesh(node = new MeshNode[5]{ square->mTopLeft, square->mCenterTop, square->mCenterRight, square->mBottomRight, square->mBottomLeft }, 5);
         break;
     case 13:
-        createMesh(node = new MeshNode[5]{ square->mTopLeft, square->mTopRight, square->mCenterRight, square->mCenterBottom,square->mBottomLeft });
+        createMesh(node = new MeshNode[5]{ square->mTopLeft, square->mTopRight, square->mCenterRight, square->mCenterBottom,square->mBottomLeft }, 5);
         break;
     case 14:
-        createMesh(node = new MeshNode[5]{ square->mTopLeft, square->mTopRight, square->mBottomRight, square->mCenterBottom, square->mCenterLeft });
+        createMesh(node = new MeshNode[5]{ square->mTopLeft, square->mTopRight, square->mBottomRight, square->mCenterBottom, square->mCenterLeft }, 5);
         break;
 
         // 4 point:
     case 15:
-        createMesh(node = new MeshNode[4]{ square->mTopLeft, square->mTopRight, square->mBottomRight, square->mBottomLeft });
+        createMesh(node = new MeshNode[4]{ square->mTopLeft, square->mTopRight, square->mBottomRight, square->mBottomLeft }, 4);
         break;
     }
     if (node != nullptr)
