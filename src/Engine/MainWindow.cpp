@@ -45,12 +45,12 @@ MainWindow* MainWindow::GetInstance() {
     return mInstance;
 }
 
-void MainWindow::Init() {
+void MainWindow::Init(bool showNotifications) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     
     if (mDebugContext)
-        glDebugMessageCallback(DebugMessageCallback, nullptr);
+        glDebugMessageCallback(showNotifications ? DebugMessageCallback : DebugMessageCallbackIgnoreNotifications, nullptr);
 }
 
 void MainWindow::SetVsync(bool vsync) {

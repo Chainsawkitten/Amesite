@@ -9,6 +9,9 @@ class Entity;
 namespace Geometry {
     class OBJModel;
 }
+namespace Audio {
+    class SoundBuffer;
+}
 
 namespace GameObject {
     /// A Player
@@ -70,6 +73,8 @@ namespace GameObject {
             Geometry::OBJModel* mShipFrontEngineLeft;
             Geometry::OBJModel* mShipBackEngineRight;
             Geometry::OBJModel* mShipBackEngineLeft;
+            
+            Audio::SoundBuffer* mShootSound;
 
             void AddEnginePartilces(Entity* entity);
     };

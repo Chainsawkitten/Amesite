@@ -6,7 +6,7 @@
 #include "../Scene/Scene.hpp"
 
 namespace GameObject {
-    SuperGameObject;
+    class SuperGameObject;
 }
 
 /// %Entity containing various components.
