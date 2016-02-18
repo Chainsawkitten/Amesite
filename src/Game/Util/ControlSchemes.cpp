@@ -313,7 +313,7 @@ void ControlScheme::AimedFire(Component::Controller* controller, float deltaTime
             Entity* entity = controller->entity;
 
             Component::Transform* transform = entity->GetComponent<Component::Transform>();
-            float angle = glm::radians(transform->GetWorldRotation().x);
+            float angle = glm::radians(transform->GetWorldYawPitchRoll().x);
 
             glm::vec3 direction = glm::normalize(glm::vec3(glm::sin(angle), 0, glm::cos(angle)));
 

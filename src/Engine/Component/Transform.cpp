@@ -31,8 +31,20 @@ glm::vec3 Transform::GetWorldScale() const {
     return scale;
 }
 
-glm::vec3 Transform::GetWorldRotation() const {
+glm::vec3 Transform::GetWorldYawPitchRoll() const {
     return glm::vec3(yaw, pitch, roll);
+}
+
+glm::vec3 Transform::GetWorldDirection() const {
+    return glm::vec3(glm::normalize(GetWorldOrientation() * glm::vec4(0,0,1,0)));
+}
+
+glm::mat4 Transform::GetWorldOrientation() const {
+    glm::mat4 orientation;
+    orientation = glm::rotate(orientation, glm::radians(yaw), glm::vec3(0, 1, 0));
+    orientation = glm::rotate(orientation, glm::radians(pitch), glm::vec3(1, 0, 0));
+    orientation = glm::rotate(orientation, glm::radians(roll), glm::vec3(0, 0, 1));
+    return orientation;
 }
 
 glm::mat4 Transform::GetOrientation() const {

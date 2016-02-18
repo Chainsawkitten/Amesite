@@ -78,7 +78,7 @@ MainScene::MainScene() {
     // Create players 
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO));
-    
+
     // Create scene
     mCave = GameEntityCreator().CreateMap();
     

@@ -29,9 +29,22 @@ glm::vec3 RelativeTransform::GetWorldScale() const {
         return scale;
 }
 
-glm::vec3 RelativeTransform::GetWorldRotation() const {
+glm::vec3 RelativeTransform::GetWorldYawPitchRoll() const {
     if (parentEntity != nullptr)
-        return parentEntity->GetComponent<Component::Transform>()->GetWorldRotation() + glm::vec3(yaw, pitch, roll);
+        return parentEntity->GetComponent<Component::Transform>()->GetWorldYawPitchRoll() + glm::vec3(yaw, pitch, roll);
     else
         return glm::vec3(yaw, pitch, roll);
+}
+
+glm::vec3 RelativeTransform::GetWorldDirection() const {
+    return glm::vec3(glm::normalize(GetWorldOrientation() * glm::vec4(0, 0, 1, 0)));
+}
+
+glm::mat4 RelativeTransform::GetWorldOrientation() const {
+    glm::mat4 orientation;
+    glm::vec3 yawPitchRoll = GetWorldYawPitchRoll();
+    orientation = glm::rotate(orientation, glm::radians(yawPitchRoll.x), glm::vec3(0, 1, 0));
+    orientation = glm::rotate(orientation, glm::radians(yawPitchRoll.y), glm::vec3(1, 0, 0));
+    orientation = glm::rotate(orientation, glm::radians(yawPitchRoll.z), glm::vec3(0, 0, 1));
+    return orientation;
 }
