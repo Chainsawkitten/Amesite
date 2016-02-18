@@ -2,7 +2,6 @@
 #include <vector>
 #include <random>
 
-///TODO: COMMENT THESE
 namespace CaveGenerator {
 
     struct Coordinate {
@@ -89,6 +88,11 @@ namespace CaveGenerator {
     class CaveMap {
         public:
             ///Constructor
+            /**
+             *@param rowCount the amount of rows in the map.
+             *@param columnCount the amount of columns in the map.
+             *@param seed Seed for the random generator.
+             */
             CaveMap::CaveMap(int rowCount, int columnCount, int seed);
 
             ///Destructor

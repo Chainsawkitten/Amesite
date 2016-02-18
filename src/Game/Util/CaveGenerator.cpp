@@ -10,7 +10,7 @@ namespace CaveGenerator {
 
     CaveMap::CaveMap(int rowCount, int columnCount, int seed) {
         
-        Log() << "Map seed: " << seed << "\n";
+        Log() << "Cave Generator seed: " << seed << "\n";
 
         mRowCount = rowCount;
         mColumnCount = columnCount;
