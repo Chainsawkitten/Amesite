@@ -29,7 +29,10 @@ class MainWindow {
         static MainWindow* GetInstance();
         
         /// Initialize components.
-        void Init();
+        /**
+         * @param showNotifications Whether to show debug messages of notification priority.
+         */
+        void Init(bool showNotifications = false);
         
         /// Set whether vsync is enabled.
         /**
