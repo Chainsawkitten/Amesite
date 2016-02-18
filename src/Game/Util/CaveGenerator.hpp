@@ -4,6 +4,7 @@
 
 namespace CaveGenerator {
 
+    ///A class describing a coordinate.
     struct Coordinate {
         public:
             ///Coordinate X
@@ -39,6 +40,7 @@ namespace CaveGenerator {
             };
     };
 
+    ///A class describing a room.
     class Room {
         public:
             ///Constructor
@@ -84,7 +86,7 @@ namespace CaveGenerator {
             std::vector<Coordinate> edgeCoordinates;
     };
 
-    //Class used to generate and manipulate a map.
+    ///Class used to generate and manipulate a map.
     class CaveMap {
         public:
             ///Constructor
