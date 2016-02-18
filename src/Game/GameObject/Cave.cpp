@@ -122,9 +122,9 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
     //            wall->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
     //            wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j), 0.f, -float(i)) + glm::vec3(-25.f / 2.f, 0.f, 25.f / 2.f);
     //            //wall->AddComponent<Component::Collider2DCircle>()->radius = 1.f;
-            }
-        }
-    }
+    //        }
+    //    }
+    //}
 }
 
 Cave::~Cave() {
