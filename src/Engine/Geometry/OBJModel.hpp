@@ -10,32 +10,32 @@ namespace Geometry {
     public:
         /// Create new model from OBJ file.
         /**
-        * @param filename Filename (relative or absolute) to the OBJ model file.
-        */
+         * @param filename Filename (relative or absolute) to the OBJ model file.
+         */
         OBJModel(const char* filename);
 
         /// Get all the vertices.
         /**
-        * @return Array of vertices
-        */
+         * @return Array of vertices
+         */
         Vertex* GetVertices() const;
 
         /// Get the number of vertices.
         /**
-        * @return The number of vertices
-        */
+         * @return The number of vertices
+         */
         unsigned int GetVertexCount() const;
 
         /// Get all the vertex indices.
         /**
-        * @return Array of vertex indices
-        */
+         * @return Array of vertex indices
+         */
         unsigned int* GetIndices() const;
 
         /// Get the number of indicies.
         /**
-        * @return The number of vertex indices.
-        */
+         * @return The number of vertex indices.
+         */
         unsigned int GetIndexCount() const;
     
     private:
