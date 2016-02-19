@@ -10,15 +10,16 @@
 #include "../Component/Controller.hpp"
 #include "../Component/Health.hpp"
 #include "../Component/Spawner.hpp"
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/Mesh.hpp>
-#include <Engine/Component/Material.hpp>
-#include <Engine/Component/Physics.hpp>
-#include <Engine/Component/Collider2DCircle.hpp>
-#include <Engine/Component/SpotLight.hpp>
-#include <Engine/Component/PointLight.hpp>
-#include <Engine/Component/Animation.hpp>
-#include <Engine/Component/ParticleEmitter.hpp>
+#include <Component/Transform.hpp>
+#include <Component/Mesh.hpp>
+#include <Component/Material.hpp>
+#include <Component/Physics.hpp>
+#include <Component/Collider2DCircle.hpp>
+#include <Component/SpotLight.hpp>
+#include <Component/PointLight.hpp>
+#include <Component/Animation.hpp>
+#include <Component/ParticleEmitter.hpp>
+#include <Component/SoundSource.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 
@@ -48,7 +49,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_body_diff.png");
     body->GetComponent<Component::Material>()->SetSpecular("Resources/ship_body_spec.png");
     body->GetComponent<Component::Material>()->SetGlow("Resources/ship_body_glow.png");
-    body->AddComponent<Component::Animation>();
+    body->AddComponent<Component::Animation>();    
 
     light = CreateEntity(scene);
     light->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
@@ -66,6 +67,10 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     leftTurrent->AddComponent<Component::Animation>();
     leftTurrent->AddComponent<Component::Spawner>()->delay = 0.25f;
     leftTurrent->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
+    Component::SoundSource* sound = leftTurrent->AddComponent<Component::SoundSource>();
+    mShootSound = Resources().CreateSound("Resources/Laser.ogg");
+    sound->soundBuffer = mShootSound;
+    sound->gain = 2.f;
 
     rightTurrent = CreateEntity(scene);
     rightTurrent->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 15);
@@ -123,6 +128,8 @@ Player::~Player() {
     Resources().FreeOBJModel(mShipFrontEngineRight);
     Resources().FreeOBJModel(mShipBackEngineLeft);
     Resources().FreeOBJModel(mShipBackEngineRight);
+    
+    Resources().FreeSound(mShootSound);
 }
 
 glm::vec3 Player::GetPosition() {
