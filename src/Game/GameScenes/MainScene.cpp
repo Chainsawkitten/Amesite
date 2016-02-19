@@ -198,59 +198,25 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
     float Z = (newZ - oldZ) / velocity.z;
 
     if (GameObject::Cave::mMap[newZ][newX]) {
-    
-<<<<<<< HEAD
-    float z = transform->position.x + (60.f / 2.f) * 4;
-    float x = transform->position.z + (60.f / 2.f) * 4;
-    z = (240 - z) / 4 + 0.4f;
-    x = x / 4 + 0.4f;
-    if (GameObject::Cave::mMap[(unsigned int)x][(unsigned int)z]) {
-        float oldX = x - physics->velocity.x * deltaTime;
-        float oldZ = z + physics->velocity.z * deltaTime;
-        if (glm::abs(physics->velocity.x) < glm::abs(physics->velocity.z)) {
-            if ((int)x != (int)oldX) {
-                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);
-                physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
-                physics->acceleration = -glm::normalize(physics->acceleration);
-            } else if ((int)z != (int)oldZ) {
-                transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
-                physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
-                physics->acceleration = -glm::normalize(physics->acceleration);
-=======
         //We collide in X
         if (X > Z) {
 
-            if (oldX != newX) {
-                
+            if (oldX != newX) {         
                 return 0;
-
->>>>>>> b4aae5bec0e032d343833f3f045a16c93f8f4395
-            }
-            else if (oldZ != newZ) {
-
+            } else if (oldZ != newZ) {
                 return 1;
-
             }
-
         }
         //We collide in Z
         else {
-
             if (oldZ != newZ) {
-
                 return 2;
-
-            }
-            else if (oldX != newX) {
-
+            } else if (oldX != newX) {
                 return 3;
-
             }
         }
     }
-
     return -1;
-
 }
 
 bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {

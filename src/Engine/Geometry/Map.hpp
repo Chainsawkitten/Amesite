@@ -71,15 +71,15 @@ namespace Geometry {
         };
 
         /// Node creation.
-        MeshNode createMeshNode(const glm::vec3 position, glm::uvec2 index, bool above, const float squareSize, glm::vec2 texCoords);
-        ControlNode createControlNode(const glm::vec3 position, const bool active, const float squareSize, glm::uvec2 index);
-        MSquare createMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft);
+        MeshNode CreateMeshNode(const glm::vec3 position, glm::uvec2 index, bool above, const float squareSize, glm::vec2 texCoords);
+        ControlNode CreateControlNode(const glm::vec3 position, const bool active, const float squareSize, glm::uvec2 index);
+        MSquare CreateMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft);
 
         /// Computations.
-        void marchingSquares(bool **data, const float squareSize);
-        void createMesh(MeshNode* position, unsigned int size);
-        void triangulateSquare(MSquare* square);
-        void storeTriangle(MeshNode a, MeshNode b, MeshNode c);
+        void MarchingSquares(bool **data, const float squareSize);
+        void CreateMesh(MeshNode* position, unsigned int size);
+        void TriangulateSquare(MSquare* square);
+        void StoreTriangle(MeshNode a, MeshNode b, MeshNode c);
 
         /// Data
         glm::uvec2 mDataDimensions;

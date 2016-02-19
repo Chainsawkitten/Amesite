@@ -130,7 +130,6 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
             }
         }
     }
->>>>>>> b4aae5bec0e032d343833f3f045a16c93f8f4395
 }
 
 Cave::~Cave() {
