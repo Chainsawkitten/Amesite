@@ -78,8 +78,8 @@ MainScene::MainScene() {
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(60.f, 0.f, 40.f), InputHandler::PLAYER_ONE));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(25.f, 0.f, 15.f), InputHandler::PLAYER_ONE));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(25.f, 0.f, 12.f), InputHandler::PLAYER_TWO));
 
     // Create scene
     mCave = GameEntityCreator().CreateMap();
@@ -122,7 +122,7 @@ void MainScene::Update(float deltaTime) {
     mControllerSystem.Update(*this, deltaTime);
     
     for (auto player : mPlayers) {
-        GridCollide(player->node, deltaTime, 20);
+        GridCollide(player->node, deltaTime, 5);
         if (player->GetHealth() < 0.01f) {
             player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
             player->node->GetComponent<Component::Health>()->health = player->node->GetComponent<Component::Health>()->maxHealth;
@@ -197,7 +197,7 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
     float X = (newX - oldX) / velocity.x;
     float Z = (newZ - oldZ) / velocity.z;
 
-    if (GameObject::Cave::mMap[newZ][newX]) {
+    if (GameObject::Cave::mMap[abs(newZ)][abs(newX)]) {
         //We collide in X
         if (X > Z) {
 
@@ -228,8 +228,8 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
     velocity += physics->acceleration * deltaTime;
     velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
 
-    glm::vec3 width = glm::vec3(2.5f, 0, 0);
-    glm::vec3 height = glm::vec3(0, 0, 2.5f);
+    glm::vec3 width = glm::vec3(4.9f, 0, 0);
+    glm::vec3 height = glm::vec3(0, 0, 4.9f);
 
     int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale);
     int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale);
