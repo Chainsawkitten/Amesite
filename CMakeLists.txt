@@ -51,6 +51,40 @@ function(create_directory_groups)
     endforeach()
 endfunction()
 
+# Coding style
+find_program(VERA vera++
+    DOC "Location of vera++"
+)
+if(NOT ${VERA} MATCHES "VERA-NOTFOUND")
+    file(GLOB_RECURSE VERA_SRCS
+            ${CMAKE_SOURCE_DIR}/src/*.cpp
+            ${CMAKE_SOURCE_DIR}/src/*.h
+        )
+    add_custom_target(VeraStyle ALL
+            ${VERA}
+            -R F001
+            -R F002 -P max-directory-depth=100
+            -R L002
+            -R L003
+            -R L005
+            -R L006
+            -R T001
+            -R T002
+            -R T003
+            -R T004
+            -R T005
+            -R T006
+            -R T007
+            -R T008
+            -R T009
+            -R T010
+            -R T015
+            -R T018
+            --warning
+            ${VERA_SRCS}
+        )
+endif()
+
 # Copy resources
 set(RESOURCES
         assets/TestTexture.png
