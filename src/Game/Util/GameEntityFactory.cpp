@@ -99,12 +99,13 @@ Dust* GameEntityFactory::CreateDust(Entity * object, int particleTextureIndex) {
     return gameObject;
 }
 
-Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size) {
+Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex) {
     Explosion* gameObject = new Explosion(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
+    gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
     return gameObject;
 }
 

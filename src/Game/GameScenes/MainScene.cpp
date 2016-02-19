@@ -149,7 +149,7 @@ void MainScene::Update(float deltaTime) {
         if (player->GetHealth() < 0.01f) {
             player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
             player->node->GetComponent<Component::Health>()->health = player->node->GetComponent<Component::Health>()->maxHealth;
-            //Create7
+            GameEntityCreator().CreateExplosion(player->GetPosition(), 0.15f, 15.f, Component::ParticleEmitter::BLUE);
         }
     }
 

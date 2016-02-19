@@ -64,7 +64,6 @@ set(RESOURCES
         assets/Height.png
         assets/Glow.png
         assets/Albedo.png
-        assets/Specular.png
         assets/enemy_head_crystal_diff.png
         assets/enemy_head_crystal_spec.png
         assets/enemy_head_crystal_glow.png
@@ -82,7 +81,6 @@ set(RESOURCES
         assets/Ship/Ship_Dif.png
         assets/Ship/Ship_Glow.png
         assets/Ship/Ship_Spec.png
-        assets/Ship/Ship_Nm.png
         assets/GolfBall.obj
         assets/ship_body.obj
         assets/ship_frontEngine.obj

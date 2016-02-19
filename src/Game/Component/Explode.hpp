@@ -26,5 +26,11 @@ namespace Component {
              * Default: 1.f
              */
             float size;
+
+            /// Type of particle
+            /**
+             * Default: FIRE
+             */
+            int particleTextureIndex;
     };
 }

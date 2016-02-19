@@ -37,9 +37,6 @@ namespace GameObject {
              */
             float GetHealth();
 
-            /// Shoot a bullet.
-            void Shoot();
-
             /// Node of the %Player.
             Entity* node;
 

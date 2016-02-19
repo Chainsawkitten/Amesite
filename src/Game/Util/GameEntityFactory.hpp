@@ -84,7 +84,7 @@ class GameEntityFactory {
          * @param position Position of the explosion.
          * @param position Life time of the explosion.
          */
-        GameObject::Explosion* CreateExplosion(glm::vec3 position, float lifeTime, float size);
+        GameObject::Explosion* CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex);
 
         /// Sets scene that the factory is coupled to.
         /**

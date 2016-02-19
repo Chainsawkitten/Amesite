@@ -6,6 +6,7 @@
 #include "../Util/GameEntityFactory.hpp"
 
 #include <Component/Physics.hpp>
+#include <Component/ParticleEmitter.hpp>
 #include "../Component/Health.hpp"
 #include "../Component/Health.hpp"
 #include "../Component/Damage.hpp"
@@ -38,7 +39,7 @@ void DamageSystem::Update(Scene& scene) {
                         if ((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->removeOnImpact) {// Remove damage entity if it should be removed on impact
                             Component::Explode* explodeComp = (*collisionVector)[i]->intersect[j]->GetComponent<Component::Explode>();
                             if (explodeComp != nullptr)
-                                GameEntityCreator().CreateExplosion((*collisionVector)[i]->intersect[j]->GetComponent<Component::Transform>()->position, explodeComp->lifeTime, explodeComp->size); // Create Explosion
+                                GameEntityCreator().CreateExplosion((*collisionVector)[i]->intersect[j]->GetComponent<Component::Transform>()->position, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex); // Create Explosion
                             if ((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->entity->gameObject != nullptr) // Remove game object
                                 (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->entity->gameObject->Clear();
                             else

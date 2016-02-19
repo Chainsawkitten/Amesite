@@ -18,7 +18,7 @@
 #include <Engine/Component/Physics.hpp>
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/Animation.hpp>
-
+#include <Engine/Component/ParticleEmitter.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 
@@ -33,6 +33,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     node->GetComponent<Component::Health>()->health = 50.f;
     node->AddComponent<Component::Explode>()->lifeTime = 0.25f;
     node->GetComponent<Component::Explode>()->size = 8.f;
+    node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
 
     head = CreateEntity(scene);
     head->AddComponent<Component::RelativeTransform>()->Move(0,0,5.5f);

@@ -152,19 +152,13 @@ float Player::GetHealth() {
     return node->GetComponent<Component::Health>()->health;
 }
 
-void Player::Shoot() {
-}
-
 void Player::AddEnginePartilces(Entity* entity) {
     Component::ParticleEmitter* emitter = entity->AddComponent<Component::ParticleEmitter>();
-    //emitter->follow = entity;
     emitter->emitterType = Component::ParticleEmitter::POINT;
     emitter->maxEmitTime = 0.02;
     emitter->minEmitTime = 0.016;
     emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
     emitter->lifetime = 0.0;
-    //emitter->relative = true;
-    //emitter->origin = glm::vec3(0.f, -1.f, 0.f);
     emitter->particleType.textureIndex = Component::ParticleEmitter::BLUE;
     emitter->particleType.minLifetime = .01f * 2.f;
     emitter->particleType.maxLifetime = .02f * 2.f;
