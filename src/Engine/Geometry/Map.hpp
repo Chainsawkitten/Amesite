@@ -13,9 +13,10 @@ namespace Geometry {
         * @param data to analyze.
         * @param squareSize of a square in the grid.
         * @param dataDimensions of array of data.
+        * @param wallHeight sets the height of wall mesh.
         * @return vector contraining the isolines.
         */
-        Map(bool **data, const float squareSize, glm::uvec2 dataDimensions);
+        Map(bool **data, const float squareSize, glm::uvec2 dataDimensions, float wallHeight = 5.f);
 
         /// Destructor
         ~Map();
@@ -69,24 +70,42 @@ namespace Geometry {
                 MeshNode mCenterTop, mCenterRight, mCenterBottom, mCenterLeft;
                 int mType;
         };
+        struct MapTriangle {
+
+        };
 
         /// Node creation.
         MeshNode CreateMeshNode(const glm::vec3 position, glm::uvec2 index, bool above, const float squareSize, glm::vec2 texCoords);
         ControlNode CreateControlNode(const glm::vec3 position, const bool active, const float squareSize, glm::uvec2 index);
         MSquare CreateMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft);
 
-        /// Computations.
+        /// Computations for retrieving top mesh.
         void MarchingSquares(bool **data, const float squareSize);
         void CreateMesh(MeshNode* position, unsigned int size);
+
+        /// Computations for retrieving wall mesh.
+        void CreateWallMesh();
+        void CalculateMeshOutlines();
+        bool IsOutline(int vertexA, int vertexB);
+        int GetConnectedVertex(int index);
+
+        /// Creating and storing triangles.
         void TriangulateSquare(MSquare* square);
         void StoreTriangle(MeshNode a, MeshNode b, MeshNode c);
 
         /// Data
         glm::uvec2 mDataDimensions;
-        float mMapHeight, mMapWidth;
+        float mMapHeight, mMapWidth, mWallHeight;
+        bool* mVertexChecked;
+
+        std::vector<glm::vec2> mOutlines;
+        std::vector<std::vector<glm::vec3>> mTriangleDictionary;
 
         std::vector<Vertex> mTempVertexData;
         std::vector<unsigned int> mTempIndexData;
+
+        std::vector<Vertex> mTempWallVertexData;
+        std::vector<unsigned int> mTempWallIndexData;
 
         Vertex *mVertexData = nullptr;
         unsigned int mVertexNr = 0;

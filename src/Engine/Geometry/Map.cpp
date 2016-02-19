@@ -3,8 +3,9 @@
 
 using namespace Geometry;
 
-Map::Map(bool **data, const float squareSize, glm::uvec2 dataDimensions) {
+Map::Map(bool **data, const float squareSize, glm::uvec2 dataDimensions, float wallHeight) {
     mDataDimensions = dataDimensions;
+    mWallHeight = wallHeight;
     MarchingSquares(data, squareSize);
 
     GenerateBuffers();
@@ -60,6 +61,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize)
             TriangulateSquare(&mSquares[k][l]);
         }
     }
+
     mIndexData = new unsigned int[mTempIndexData.size()];
     mVertexData = new  Vertex[mTempVertexData.size()];
 
@@ -71,6 +73,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize)
         delete[] mSquares[m];
     }
     delete[] controlNodes[mDataDimensions.x-1];
+    delete[] mVertexChecked;
 }
 
 Map::MSquare Map::CreateMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft)
@@ -153,6 +156,42 @@ void Map::CreateMesh(MeshNode* node, unsigned int size)
         StoreTriangle(node[0], node[3], node[4]);
     if (size >= 6)
         StoreTriangle(node[0], node[4], node[5]);
+}
+
+void Map::CreateWallMesh()
+{
+    mVertexChecked = new bool[mVertexNr];
+
+    for (int i = 0; i < mVertexNr; i++)
+        mVertexChecked[i] = false;
+
+    CalculateMeshOutlines();
+
+    for (auto outline : mOutlines) {
+        for (int j = 0; j < outline.length(); j++) {
+
+        }
+    }
+
+}
+
+void Map::CalculateMeshOutlines()
+{
+    for (int i = 0; i < mVertexNr; i++) {
+        if (!mVertexChecked[i]) {
+
+        }
+    }
+}
+
+bool Map::IsOutline(int vertexA, int vertexB)
+{
+    return false;
+}
+
+int Map::GetConnectedVertex(int index)
+{
+    return 0;
 }
 
 void Map::TriangulateSquare(MSquare* square)

@@ -76,7 +76,7 @@ MainScene::MainScene() {
     GameEntityCreator().SetScene(this);
     
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 70.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(90.f, 500.f, 90.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
     // Create players 
@@ -174,7 +174,7 @@ void MainScene::Update(float deltaTime) {
     mSoundSystem.Update(*this);
     
     // Update game logic
-    mMainCamera->UpdateRelativePosition(mPlayers);
+    //mMainCamera->UpdateRelativePosition(mPlayers);
 
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
