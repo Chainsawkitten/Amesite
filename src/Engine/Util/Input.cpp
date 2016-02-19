@@ -127,8 +127,8 @@ void InputHandler::Update() {
     // Update triggered and released.
     for (int player=0; player<PLAYERS-1; player++) {
         for (int button=0; button<BUTTONS; button++) {
-            mButtonData[player][button].triggered = (mButtonData[player][button].value == 1.0) && (values[player][button] == 1.0);
-            mButtonData[player][button].released = (mButtonData[player][button].value == 0.0) && (values[player][button] == 0.0);
+            mButtonData[player][button].triggered = (mButtonData[player][button].value == 0.0) && (values[player][button] == 1.0);
+            mButtonData[player][button].released = (mButtonData[player][button].value == 1.0) && (values[player][button] == 0.0);
             mButtonData[player][button].value = values[player][button];
             
             // Update anyone buttons.

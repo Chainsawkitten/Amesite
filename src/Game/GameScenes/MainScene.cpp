@@ -16,14 +16,16 @@
 #include <Component/Listener.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
+#include <Component/SoundSource.hpp>
+#include <Component/Listener.hpp>
+#include <Component/ParticleEmitter.hpp>
+#include "Game/Component/Health.hpp"
+#include "Game/Component/Damage.hpp"
+#include "Game/Component/LifeTime.hpp"
+
 #include "../GameObject/Player.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
-#include <Component/ParticleEmitter.hpp>
-#include "Game/Component/Health.hpp"
-#include <Component/ParticleEmitter.hpp>
-#include <Component/SoundSource.hpp>
-#include <Component/Listener.hpp>
 
 #include <Audio/SoundBuffer.hpp>
 
@@ -38,6 +40,7 @@
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
 #include "../Util/MainCamera.hpp"
+#include <Util/Log.hpp>
 
 #include "../GameObject/Player.hpp"
 #include "../GameObject/Cave.hpp"
@@ -54,7 +57,8 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
-    
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::BOOST, InputHandler::JOYSTICK, InputHandler::LEFT_BUMPER);
+
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
@@ -72,12 +76,12 @@ MainScene::MainScene() {
     GameEntityCreator().SetScene(this);
     
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 40.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 70.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(-4.f, 0.f, 0.f), InputHandler::PLAYER_ONE));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(60.f, 0.f, 40.f), InputHandler::PLAYER_ONE));
+    //mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO));
 
     // Create scene
     mCave = GameEntityCreator().CreateMap();
@@ -95,13 +99,13 @@ MainScene::MainScene() {
     glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
 
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
 }
 
 MainScene::~MainScene() {
@@ -119,21 +123,34 @@ void MainScene::Update(float deltaTime) {
     // ControllerSystem
     mControllerSystem.Update(*this, deltaTime);
     
-    // PhysicsSystem.
-    mPhysicsSystem.Update(*this, deltaTime);
+    for (auto player : mPlayers) {
+        GridCollide(player->node, deltaTime, 20);
+        if (player->GetHealth() < 0.01f) {
+            player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
+            player->node->GetComponent<Component::Health>()->health = player->node->GetComponent<Component::Health>()->maxHealth;
+        }
+    }
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
-    
-    // ParticleSystem
-    System::Particle().Update(*this, deltaTime);
+
+    // PhysicsSystem.
+    mPhysicsSystem.Update(*this, deltaTime);
     
     // Updates model matrices for this frame.
     UpdateModelMatrices();
+
+    // ParticleSystem
+    System::Particle().Update(*this, deltaTime);
     
     // Check collisions.
     mCollisionSystem.Update(*this);
     
+    std::vector<Component::Damage*> bulletVector = this->GetAll<Component::Damage>();
+    for (auto bullet : bulletVector)
+        if (GridCollide(bullet->entity, deltaTime, 20.f))
+            bullet->entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
+
     // Update health
     mHealthSystem.Update(*this, deltaTime);
     
@@ -143,20 +160,12 @@ void MainScene::Update(float deltaTime) {
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
 
-    // Update game logic
-    mMainCamera->UpdateRelativePosition(mPlayers);
-    for (auto player : mPlayers) {
-        GridCollide(player->node, deltaTime);
-        if (player->GetHealth() < 0.01f) {
-            player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
-            player->node->GetComponent<Component::Health>()->health = player->node->GetComponent<Component::Health>()->maxHealth;
-        }
-    }
-
-
     // Update sounds.
     mSoundSystem.Update(*this);
     
+    // Update game logic
+    mMainCamera->UpdateRelativePosition(mPlayers);
+
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
     
@@ -185,42 +194,166 @@ void MainScene::Update(float deltaTime) {
     postProcessing->Render();
 }
 
-bool MainScene::GridCollide(Entity* entity, float deltaTime) {
+int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale) {
+
+    int oldX = glm::floor(point.x / gridScale);
+    int oldZ = glm::floor(point.z / gridScale);
+    int newX = glm::floor((point + velocity * deltaTime).x / gridScale);
+    int newZ = glm::floor((point + velocity * deltaTime).z / gridScale);
+
+    float X = (newX - oldX) / velocity.x;
+    float Z = (newZ - oldZ) / velocity.z;
+
+    if (GameObject::Cave::mMap[newZ][newX]) {
     
-    Component::Transform* transform = entity->GetComponent<Component::Transform>();
-    Component::Physics* physics = entity->GetComponent<Component::Physics>();
-    
-    float x = transform->position.x + (25.f / 2.f) * 10;
-    float z = transform->position.z + (25.f / 2.f) * 10;
-    z = (250 - z) / 10 + 0.4f;
-    x = x / 10 + 0.4f;
-    
-    if (GameObject::Cave::mMap[(int)x][(int)z]) {
-        float oldX = x - physics->velocity.x * deltaTime;
-        float oldZ = z + physics->velocity.z * deltaTime;
-        if (glm::abs(physics->velocity.x) < glm::abs(physics->velocity.z)) {
-            if ((int)x != (int)oldX) {
-                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);
-                physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
-                physics->acceleration = -glm::normalize(physics->acceleration);
-            } else if ((int)z != (int)oldZ) {
-                transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
-                physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
-                physics->acceleration = -glm::normalize(physics->acceleration);
+        //We collide in X
+        if (X > Z) {
+
+            if (oldX != newX) {
+                
+                return 0;
+
             }
-        } else {
-            if ((int)z != (int)oldZ) {
-                transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
-                physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
-                physics->acceleration = -glm::normalize(physics->acceleration);
+            else if (oldZ != newZ) {
+
+                return 1;
+
             }
-            else if ((int)x != (int)oldX) {
-                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);
-                physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
-                physics->acceleration = -glm::normalize(physics->acceleration);
+
+        }
+        //We collide in Z
+        else {
+
+            if (oldZ != newZ) {
+
+                return 2;
+
+            }
+            else if (oldX != newX) {
+
+                return 3;
+
             }
         }
-        return true;
     }
+
+    return -1;
+
+}
+
+bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
+
+    Component::Transform* transform = entity->GetComponent<Component::Transform>();
+    Component::Physics* physics = entity->GetComponent<Component::Physics>();
+
+    glm::vec3 velocity = physics->velocity;
+    velocity += physics->acceleration * deltaTime;
+    velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
+
+    glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 2.f, 0, 0);
+    glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 2.f);
+
+    int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale);
+    int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale);
+    int c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime, gridScale);
+    int c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime, gridScale);
+
+    switch (c0) {
+
+    case 0:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    case 1:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    case 2:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    case 3:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    }
+    switch (c1) {
+
+    case 0:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    case 1:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    case 2:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    case 3:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    }
+    switch (c2) {
+
+    case 0:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    case 1:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    case 2:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    case 3:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    }
+    switch (c3) {
+
+    case 0:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    case 1:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    case 2:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    case 3:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    }
+
+    if (c0 != -1 || c1 != -1 || c2 != -1 || c3 != -1)
+        return true;
+
     return false;
+
 }

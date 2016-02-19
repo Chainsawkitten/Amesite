@@ -47,6 +47,7 @@ class InputHandler {
             AIM_X, ///< Aim in X axis
             AIM_Z, ///< Aim in Z axis
             SHOOT, ///< Fire bullet
+            BOOST, ///< Fire bullet
             QUIT, ///< Quit game
             UP, ///< Move up
             DOWN, ///< Move down

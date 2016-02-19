@@ -94,7 +94,7 @@ namespace Component {
         private:
             // Map containing animation clips.
             std::map<std::string, AnimationClip*> mAnimationClipMap;
-
+            
             // Active animation clip.
             /**
              * Default: nullptr

@@ -13,6 +13,7 @@ namespace GameObject{
     class Enemy;
     class Cave;
     class Dust;
+    class Explosion;
 }
 
 /// Factory responsible for creating prefab entities.
@@ -45,14 +46,23 @@ class GameEntityFactory {
          */
         GameObject::Player* CreatePlayer(const glm::vec3& origin, InputHandler::Player player);
         
-        /// Create a bullet.
+        /// Create player bullet.
         /**
          * @param position The bullet's starting position.
          * @param direction The direction the bullet is traveling in.
-         * @param faction The faction, bullets only harm entites of other factions.
+         * @param faction The faction, bullets only harm entities of other factions.
          * @return The bullet GameObject.
          */
-        GameObject::Bullet* CreateBullet(const glm::vec3& position, const glm::vec3& direction, int faction);
+        GameObject::Bullet* CreatePlayerBullet(const glm::vec3& position, const glm::vec3& direction, int faction);
+
+        /// Create enemy bullet.
+        /**
+         * @param position The bullet's starting position.
+         * @param direction The direction the bullet is traveling in.
+         * @param faction The faction, bullets only harm entities of other factions.
+         * @return The bullet GameObject.
+         */
+        GameObject::Bullet* CreateEnemyBullet(const glm::vec3& position, const glm::vec3& direction, int faction);
 
         /// Create a camera.
         /**
@@ -64,10 +74,17 @@ class GameEntityFactory {
 
         /// Creates a cuboid dust particle emitter and bind it to an Entity.
         /**
-        * @param object Entity to which the system is relative.
-        * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
-        */
+         * @param object Entity to which the system is relative.
+         * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
+         */
         GameObject::Dust* CreateDust(Entity* object, int particleTextureIndex);
+
+        /// Creates a point fire particle emitter and bind it to an Entity.
+        /**
+         * @param position Position of the explosion.
+         * @param position Life time of the explosion.
+         */
+        GameObject::Explosion* CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex);
 
         /// Sets scene that the factory is coupled to.
         /**

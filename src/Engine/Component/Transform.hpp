@@ -28,6 +28,12 @@ namespace Component {
              */
             glm::vec3 GetWorldPosition() const;
 
+            /// Get world position of the entity.
+            /**
+             * @return The entity's world position.
+             */
+            virtual glm::vec3 CalculateWorldPosition() const;
+
             /// Get scale of the entity.
             /**
              * @return The entity's scale.

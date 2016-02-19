@@ -17,11 +17,9 @@ namespace GameObject {
            
             ~Bullet();
 
-            /// Body of the %Bullet
-            Entity* body;
+            /// Node of the %Bullet
+            Entity* node;
 
-            Entity* fireEmitter;
-
-            Entity* blueEmitter;
+            Entity* tail;
     };
 }
