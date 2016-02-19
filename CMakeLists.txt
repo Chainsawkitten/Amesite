@@ -60,16 +60,40 @@ set(RESOURCES
         assets/DefaultSpecular.png
         assets/DefaultGlow.png
         assets/ParticleAtlas.png
-        assets/Laser.ogg
-        assets/GolfBall.obj
-        assets/ship.obj
         assets/Normal.png
         assets/Height.png
         assets/Glow.png
         assets/Albedo.png
         assets/Specular.png
+        assets/enemy_head_crystal_diff.png
+        assets/enemy_head_crystal_spec.png
+        assets/enemy_head_crystal_glow.png
+        assets/enemy_tail_crystal_diff.png
+        assets/enemy_tail_crystal_spec.png
+        assets/enemy_tail_crystal_glow.png
+        assets/ship_body_diff.png
+        assets/ship_body_spec.png
+        assets/ship_body_glow.png
+        assets/ship_engine_diff.png
+        assets/wall_diff.png
+        assets/wall_norm.png
+        assets/wall2_diff.png
+        assets/wall2_norm.png
+        assets/Ship/Ship_Dif.png
+        assets/Ship/Ship_Glow.png
+        assets/Ship/Ship_Spec.png
+        assets/Ship/Ship_Nm.png
+        assets/GolfBall.obj
+        assets/ship_body.obj
+        assets/ship_frontEngine.obj
+        assets/ship_backEngine.obj
+        assets/enemy_head_crystal.obj
+        assets/enemy_tail_crystal.obj
+        assets/Ship/Ship_01.obj
+        assets/Ship/Ship_01.mtl
         assets/MusicAction.ogg
         assets/MusicCalm.ogg
+        assets/Laser.ogg
     )
 
 add_custom_target(ResourceTarget ALL)
