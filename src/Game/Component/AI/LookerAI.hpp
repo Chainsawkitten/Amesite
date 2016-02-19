@@ -7,22 +7,19 @@
 
 namespace Component {
     /// %Component providing player control.
-    class WalkerAI : public SuperComponent {
+    class LookerAI : public SuperComponent {
         public:
             /// Create new %Controller.
             /**
              * @param entity Pointer to which Entity this %Component corresponds.
              */
-            WalkerAI(Entity* entity);
+            LookerAI(Entity* entity);
             
             /// Destructor.
-            ~WalkerAI();
+            ~LookerAI();
 
-            ///How close is close enough.
-            float mThreshold;
-
-            ///How fast do we move.
-            float mSpeed;
+            ///How far it will look.
+            float mDistance;
 
             /// Updates the walker AI.
             /**
@@ -34,17 +31,14 @@ namespace Component {
             /**
              * @param The point to add.
              */
-            void AddPoint(glm::vec3 point);
+            void AddEntity(Entity* entity);
 
         private:
             //The index of the point we're targeting.
             int mTarget;
 
             //The points to travel through.
-            std::vector<glm::vec3> mPoints;
-
-            //The direction we are moving through the points.
-            bool mForward;
+            std::vector<Entity*> mTargets;
 
     };
 }

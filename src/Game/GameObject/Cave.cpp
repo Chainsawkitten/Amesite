@@ -113,6 +113,24 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
     map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
     map->GetComponent<Component::Material>()->SetNormal("Resources/wall2_norm.png");
     map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
+
+    Geometry::Geometry3D* cube = Resources().CreateCube();
+    for (int i = 0; i < 25; i++) {
+        for (int j = 0; j < 25; j++) {
+            if (mMap[i][j] > 0.f) {
+                Entity* wall = CreateEntity(scene);
+                wall->AddComponent<Component::RelativeTransform>()->parentEntity = map;
+                wall->AddComponent<Component::Mesh>()->geometry = cube;
+                wall->AddComponent<Component::Material>();
+                wall->GetComponent<Component::Transform>()->position = glm::vec3(float(j) + 0.5f, 0.f, float(i) + 0.5f);
+                wall->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+                wall->GetComponent<Component::Material>()->SetNormal("Resources/wall2_norm.png");
+                wall->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
+                //wall->AddComponent<Component::Collider2DCircle>()->radius = 1.f;
+            }
+        }
+    }
+>>>>>>> b4aae5bec0e032d343833f3f045a16c93f8f4395
 }
 
 Cave::~Cave() {

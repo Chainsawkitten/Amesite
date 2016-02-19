@@ -60,12 +60,26 @@ namespace ControlScheme {
      * @param deltaTime Time since last frame (in seconds).
      */
     void AimedFire(Component::Controller* controller, float deltaTime);
-
-    /// Mouse rotation.
+    
+    /// Shoots automatically in the direction the object is facing.
     /**
      * @param controller Component to control.
      * @param deltaTime Time since last frame (in seconds).
      */
+    void AutoAimedFire(Component::Controller* controller, float deltaTime);
+
+    /// Mouse rotation.
+    /**
+    * @param controller Component to control.
+    * @param deltaTime Time since last frame (in seconds).
+    */
     void MouseRotate(Component::Controller* controller, float deltaTime);
+
+    /// Boost.
+    /**
+    * @param controller Component to control.
+    * @param deltaTime Time since last frame (in seconds).
+    */
+    void Boost(Component::Controller* controller, float deltaTime);
 
 }

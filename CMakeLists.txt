@@ -318,6 +318,7 @@ set(GAME_SRCS
         src/Game/Component/LifeTime.cpp
         src/Game/Component/Explode.cpp
         src/Game/Component/AI/WalkerAI.cpp
+        src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
         src/Game/GameScenes/PontusScene.cpp
         src/Game/GameScenes/AlbinScene.cpp
@@ -352,6 +353,7 @@ set(GAME_HEADERS
         src/Game/Component/LifeTime.hpp
         src/Game/Component/Explode.hpp
         src/Game/Component/AI/WalkerAI.hpp
+        src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
         src/Game/GameScenes/PontusScene.hpp
         src/Game/GameScenes/AlbinScene.hpp

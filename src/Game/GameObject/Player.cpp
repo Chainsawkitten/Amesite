@@ -28,7 +28,7 @@ using namespace GameObject;
 Player::Player(Scene* scene) : SuperGameObject(scene) {
     node = CreateEntity(scene);
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
-    node->AddComponent<Component::Controller>()->speed = 3000.f;
+    node->AddComponent<Component::Controller>()->speed = 5000.f;
     node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     node->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     node->AddComponent<Component::Health>()->removeOnLowHealth = false;
