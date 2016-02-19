@@ -99,13 +99,23 @@ MainScene::MainScene() {
     glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
 
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 5));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-20, 0, -10));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-10, 0, -10));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(-30, 0, -10));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 20));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(5, 0, 30));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(2, 0, 0));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(80, 0, 25));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 35));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(160, 0, 65));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 85));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(110, 0, 55));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(50, 0, 105));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(115, 0, 135));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(175, 0, 135));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 145));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 245));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(225, 0, 235));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(105, 0, 190));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
 }
 
 MainScene::~MainScene() {
@@ -148,7 +158,7 @@ void MainScene::Update(float deltaTime) {
     
     std::vector<Component::Damage*> bulletVector = this->GetAll<Component::Damage>();
     for (auto bullet : bulletVector)
-        if (GridCollide(bullet->entity, deltaTime, 20.f))
+        if (GridCollide(bullet->entity, deltaTime, 5.f))
             bullet->entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
 
     // Update health
@@ -235,8 +245,11 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
     velocity += physics->acceleration * deltaTime;
     velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
 
-    glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 2.f, 0, 0);
-    glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 2.f);
+    glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
+    glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
+
+    //glm::vec3 width = glm::vec3(2.9f, 0.f, 0.f);
+    //glm::vec3 height = glm::vec3(0.f, 0.f, 2.9f);
 
     int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale);
     int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale);
