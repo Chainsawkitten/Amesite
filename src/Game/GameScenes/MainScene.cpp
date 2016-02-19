@@ -118,18 +118,18 @@ MainScene::~MainScene() {
 void MainScene::Update(float deltaTime) {
     // ControllerSystem
     mControllerSystem.Update(*this, deltaTime);
-    
-    // PhysicsSystem.
-    mPhysicsSystem.Update(*this, deltaTime);
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
-    
-    // ParticleSystem
-    System::Particle().Update(*this, deltaTime);
+
+    // PhysicsSystem.
+    mPhysicsSystem.Update(*this, deltaTime);
     
     // Updates model matrices for this frame.
     UpdateModelMatrices();
+
+    // ParticleSystem
+    System::Particle().Update(*this, deltaTime);
     
     // Check collisions.
     mCollisionSystem.Update(*this);
@@ -144,15 +144,16 @@ void MainScene::Update(float deltaTime) {
     mLifeTimeSystem.Update(*this, deltaTime);
 
     // Update game logic
-    mMainCamera->UpdateRelativePosition(mPlayers);
     for (auto player : mPlayers) {
         GridCollide(player->node, deltaTime);
         if (player->GetHealth() < 0.01f) {
             player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
             player->node->GetComponent<Component::Health>()->health = player->node->GetComponent<Component::Health>()->maxHealth;
+            //Create7
         }
     }
 
+    mMainCamera->UpdateRelativePosition(mPlayers);
 
     // Update sounds.
     mSoundSystem.Update(*this);

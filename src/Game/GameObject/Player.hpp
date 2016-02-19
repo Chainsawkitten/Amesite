@@ -37,7 +37,7 @@ namespace GameObject {
             /// Shoot a bullet.
             void Shoot();
 
-            /// Position of the %Player.
+            /// Node of the %Player.
             Entity* node;
 
             /// Body relative to node.

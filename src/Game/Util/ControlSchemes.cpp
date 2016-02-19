@@ -171,7 +171,7 @@ void ControlScheme::ButtonShoot(Component::Controller* controller, float deltaTi
                 direction = direction / directionLength;
             }
             float bulletSpeed = 40.f;
-            GameEntityCreator().CreateBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), spawnerComponent->faction);
+            GameEntityCreator().CreatePlayerBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), spawnerComponent->faction);
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }
@@ -187,7 +187,7 @@ void ControlScheme::AlwaysShoot(Component::Controller* controller, float deltaTi
             glm::vec2 direction = glm::vec2(1 - ((rand() % 1000) / 1000.f) * 2, 1 - ((rand() % 1000) / 1000.f) * 2);
             
             float bulletSpeed = 20.f;
-            GameEntityCreator().CreateBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), spawnerComponent->faction);
+            GameEntityCreator().CreateEnemyBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), spawnerComponent->faction);
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }
@@ -318,7 +318,7 @@ void ControlScheme::AimedFire(Component::Controller* controller, float deltaTime
             glm::vec3 direction = glm::normalize(glm::vec3(glm::sin(angle), 0, glm::cos(angle)));
 
             float bulletSpeed = 40.f;
-            GameEntityCreator().CreateBullet(transform->GetWorldPosition(), bulletSpeed *  direction, spawnerComponent->faction);
+            GameEntityCreator().CreatePlayerBullet(transform->GetWorldPosition(), bulletSpeed *  direction, spawnerComponent->faction);
             spawnerComponent->timeSinceSpawn = 0.f;
         }
     }

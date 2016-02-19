@@ -11,6 +11,7 @@ using namespace GameObject;
 
 Dust::Dust(Scene* scene) : SuperGameObject(scene) {
     body = CreateEntity(scene);
+    body->AddComponent<Component::RelativeTransform>();
     body->AddComponent<Component::ParticleEmitter>();
 
     // Particle emitter.
@@ -20,9 +21,7 @@ Dust::Dust(Scene* scene) : SuperGameObject(scene) {
     emitter->maxEmitTime = 0.015;
     emitter->minEmitTime = 0.01;
     emitter->lifetime = 0.0;
-    emitter->origin = glm::vec3(0.f, -5.f, 0.f);
     emitter->size = glm::vec3(40.f, 20.f, 40.f);
-    emitter->relative = true;
     emitter->timeToNext = 0.0;
     emitter->particleType.minLifetime = .7f;
     emitter->particleType.maxLifetime = 1.5f;

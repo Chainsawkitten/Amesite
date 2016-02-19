@@ -316,6 +316,7 @@ set(GAME_SRCS
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
         src/Game/Component/LifeTime.cpp
+        src/Game/Component/Explode.cpp
         src/Game/Component/AI/WalkerAI.cpp
         src/Game/GameScenes/MainScene.cpp
         src/Game/GameScenes/PontusScene.cpp
@@ -329,6 +330,7 @@ set(GAME_SRCS
         src/Game/GameObject/Enemy.cpp
         src/Game/GameObject/Cave.cpp
         src/Game/GameObject/Dust.cpp
+        src/Game/GameObject/Explosion.cpp
     )
 
 set(GAME_HEADERS
@@ -347,6 +349,7 @@ set(GAME_HEADERS
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
         src/Game/Component/LifeTime.hpp
+        src/Game/Component/Explode.hpp
         src/Game/Component/AI/WalkerAI.hpp
         src/Game/GameScenes/MainScene.hpp
         src/Game/GameScenes/PontusScene.hpp
@@ -360,6 +363,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Enemy.hpp
         src/Game/GameObject/Cave.hpp
         src/Game/GameObject/Dust.hpp
+        src/Game/GameObject/Explosion.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

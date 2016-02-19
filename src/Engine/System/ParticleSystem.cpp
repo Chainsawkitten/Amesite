@@ -91,19 +91,18 @@ void ParticleSystem::Update(Scene& scene, double time) {
 }
 
 void ParticleSystem::EmitParticle(Component::ParticleEmitter* emitter) {
-    glm::vec3 position;
-    if (emitter->emitterType == Component::ParticleEmitter::CUBOID) {
-        position.x = emitter->origin.x - emitter->size.x / 2.f + rand() / (RAND_MAX / emitter->size.x);
-        position.y = emitter->origin.y - emitter->size.y / 2.f + rand() / (RAND_MAX / emitter->size.y);
-        position.z = emitter->origin.z - emitter->size.z / 2.f + rand() / (RAND_MAX / emitter->size.z);
+    Component::Transform* transform = emitter->entity->GetComponent<Component::Transform>();
+    if (transform != nullptr) {
+        glm::vec3 position;
+        if (emitter->emitterType == Component::ParticleEmitter::CUBOID) {
+            position.x = transform->GetWorldPosition().x - emitter->size.x / 2.f + rand() / (RAND_MAX / emitter->size.x);
+            position.y = transform->GetWorldPosition().y - emitter->size.y / 2.f + rand() / (RAND_MAX / emitter->size.y);
+            position.z = transform->GetWorldPosition().z - emitter->size.z / 2.f + rand() / (RAND_MAX / emitter->size.z);
+        }
+        else
+            position = transform->GetWorldPosition();
+        EmitParticle(position, emitter);
     }
-    else if (emitter->emitterType == Component::ParticleEmitter::POINT) {
-        position = emitter->origin;
-    }
-    if (emitter->relative) {
-        position += emitter->follow->GetComponent<Component::Transform>()->GetWorldPosition();
-    }
-    EmitParticle(position, emitter);
 }
 
 ParticleSystem& ParticleSystem::GetActiveInstance() {

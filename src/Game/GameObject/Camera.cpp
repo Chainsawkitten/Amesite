@@ -59,5 +59,7 @@ void Camera::UpdateRelativePosition(const std::vector<GameObject::Player*>& play
     distance = glm::clamp(distance, 30.f, 60.f);
     cameraPos.y = distance;
 
-    body->GetComponent<Component::Transform>()->position = cameraPos;
+    Component::Transform* transform = body->GetComponent<Component::Transform>();
+    transform->position = cameraPos;
+    transform->UpdateModelMatrix();
 }
