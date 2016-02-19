@@ -60,35 +60,38 @@ set(RESOURCES
         assets/DefaultSpecular.png
         assets/DefaultGlow.png
         assets/ParticleAtlas.png
-        assets/Laser.ogg
-        assets/GolfBall.obj
-        assets/ship.obj
-        assets/ship_body.obj
-        assets/ship_body_diff.png
-        assets/ship_body_spec.png
-        assets/ship_body_glow.png
-        assets/ship_frontEngine.obj
-        assets/ship_frontEngine_diff.png
-        assets/ship_backEngine.obj
-        assets/ship_backEngine_diff.png
-        assets/wall2_diff.png
-        assets/wall2_norm.png
-        assets/wall2_spec.png
-        assets/enemy_head_crystal.obj
-        assets/enemy_head_crystal_diff.png
-        assets/enemy_head_crystal_spec.png
-        assets/enemy_head_crystal_glow.png
-        assets/enemy_tail_crystal.obj
-        assets/enemy_tail_crystal_diff.png
-        assets/enemy_tail_crystal_spec.png
-        assets/enemy_tail_crystal_glow.png
         assets/Normal.png
         assets/Height.png
         assets/Glow.png
         assets/Albedo.png
-        assets/Specular.png
+        assets/enemy_head_crystal_diff.png
+        assets/enemy_head_crystal_spec.png
+        assets/enemy_head_crystal_glow.png
+        assets/enemy_tail_crystal_diff.png
+        assets/enemy_tail_crystal_spec.png
+        assets/enemy_tail_crystal_glow.png
+        assets/ship_body_diff.png
+        assets/ship_body_spec.png
+        assets/ship_body_glow.png
+        assets/ship_engine_diff.png
+        assets/wall_diff.png
+        assets/wall_norm.png
+        assets/wall2_diff.png
+        assets/wall2_norm.png
+        assets/Ship/Ship_Dif.png
+        assets/Ship/Ship_Glow.png
+        assets/Ship/Ship_Spec.png
+        assets/GolfBall.obj
+        assets/ship_body.obj
+        assets/ship_frontEngine.obj
+        assets/ship_backEngine.obj
+        assets/enemy_head_crystal.obj
+        assets/enemy_tail_crystal.obj
+        assets/Ship/Ship_01.obj
+        assets/Ship/Ship_01.mtl
         assets/MusicAction.ogg
         assets/MusicCalm.ogg
+        assets/Laser.ogg
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -312,6 +315,7 @@ set(GAME_SRCS
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
         src/Game/Component/LifeTime.cpp
+        src/Game/Component/Explode.cpp
         src/Game/Component/AI/WalkerAI.cpp
         src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
@@ -326,6 +330,7 @@ set(GAME_SRCS
         src/Game/GameObject/Enemy.cpp
         src/Game/GameObject/Cave.cpp
         src/Game/GameObject/Dust.cpp
+        src/Game/GameObject/Explosion.cpp
     )
 
 set(GAME_HEADERS
@@ -345,6 +350,7 @@ set(GAME_HEADERS
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
         src/Game/Component/LifeTime.hpp
+        src/Game/Component/Explode.hpp
         src/Game/Component/AI/WalkerAI.hpp
         src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
@@ -359,6 +365,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Enemy.hpp
         src/Game/GameObject/Cave.hpp
         src/Game/GameObject/Dust.hpp
+        src/Game/GameObject/Explosion.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

@@ -89,10 +89,10 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
         glDepthMask(GL_FALSE);
 
         // Blending
-        GLboolean blending;
-        glGetBooleanv(GL_BLEND, &blending);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        glEnablei(GL_BLEND, 0);
+        glEnablei(GL_BLEND, 1);
+        glBlendFunci(0, GL_SRC_ALPHA, GL_ONE);
+        glBlendFunci(1, GL_SRC_ALPHA, GL_ONE);
 
         mParticleShaderProgram->Use();
 
@@ -105,13 +105,12 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
         glBindTexture(GL_TEXTURE_2D, mTextureAtlas->GetTextureID());
 
         // Send the matrices to the shader.
-        glm::mat4 view = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
+        glm::mat4 view = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
         glm::vec3 up(glm::inverse(camera->GetComponent<Component::Transform>()->worldOrientationMatrix)* glm::vec4(0, 1, 0, 1));
-        camera->GetComponent<Component::Transform>()->position;
 
         // Ugly hardcoded resolution.
-        glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraPosition"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
-        glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraUp"), 1, &camera->GetComponent<Component::Transform>()->position[0]);
+        glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraPosition"), 1, &camera->GetComponent<Component::Transform>()->GetWorldPosition()[0]);
+        glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraUp"), 1, &camera->GetComponent<Component::Transform>()->GetWorldPosition()[0]);
         glUniformMatrix4fv(mParticleShaderProgram->GetUniformLocation("viewProjectionMatrix"), 1, GL_FALSE, &(camera->GetComponent<Component::Lens>()->GetProjection(screenSize) * view)[0][0]);
         glUniform1fv(mParticleShaderProgram->GetUniformLocation("textureAtlasRows"), 1, &mTextureAtlasNumRows);
 
@@ -120,7 +119,7 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
 
         // Reset state values we've changed.
         glDepthMask(depthWriting);
-        if (!blending)
-            glDisable(GL_BLEND);
+        glDisablei(GL_BLEND, 0);
+        glDisablei(GL_BLEND, 1);
     }
 }

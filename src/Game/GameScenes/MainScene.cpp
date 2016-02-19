@@ -129,20 +129,17 @@ void MainScene::Update(float deltaTime) {
         }
     }
 
+    // AnimationSystem.
+    mAnimationSystem.Update(*this, deltaTime);
+
     // PhysicsSystem.
     mPhysicsSystem.Update(*this, deltaTime);
     
-    // Update game logic
-    mMainCamera->UpdateRelativePosition(mPlayers);
-
-    // AnimationSystem.
-    mAnimationSystem.Update(*this, deltaTime);
-    
-    // ParticleSystem
-    System::Particle().Update(*this, deltaTime);
-    
     // Updates model matrices for this frame.
     UpdateModelMatrices();
+
+    // ParticleSystem
+    System::Particle().Update(*this, deltaTime);
     
     // Check collisions.
     mCollisionSystem.Update(*this);
@@ -159,6 +156,9 @@ void MainScene::Update(float deltaTime) {
     // Update sounds.
     mSoundSystem.Update(*this);
     
+    // Update game logic
+    mMainCamera->UpdateRelativePosition(mPlayers);
+
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
     

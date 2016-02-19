@@ -71,59 +71,59 @@ namespace Component {
             /// Particletype
             ParticleType particleType;
 
-            /// Origin of the particle emitter.
-            /**
-            * Default: 0.f, 0.f, 0.f
-            */
-            glm::vec3 origin;
+            ///// Origin of the particle emitter.
+            ///**
+            // * Default: 0.f, 0.f, 0.f
+            // */
+            //glm::vec3 origin;
 
             /// Size of the emitter (area of effect).
             /**
-            * Default: 0.f, 0.f, 0.f
-            */
+             * Default: 0.f, 0.f, 0.f
+             */
             glm::vec3 size;
 
             /// Minimum time for emitting particle.
             /**
-            * Default: 0.03
-            */
+             * Default: 0.03
+             */
             double minEmitTime;
 
             /// Maximum time for emitting particle.
             /**
-            * Default: 0.05
-            */
+             * Default: 0.05
+             */
             double maxEmitTime;
 
             /// Time to next emit (random value between min and max),
             /**
-            * Default: 5.0
-            */
+             * Default: 5.0
+             */
             double timeToNext;
 
             /// Type of emitter - se enum in ParticleEmitter.hpp.
             /**
-            * Default: 0
-            */
+             * Default: 0
+             */
             int emitterType;
 
-            /// Is the emitter relative to an entity?
-            /**
-            * Default: false
-            */
-            bool relative;
+            ///// Is the emitter relative to an entity?
+            ///**
+            // * Default: false
+            // */
+            //bool relative;
 
             /// Time the particle has lived (thus far).
             /**
-            * Default: 0.0
-            */
+             * Default: 0.0
+             */
             double lifetime;
 
-            /// Entity to follow / be relative to.
-            /**
-            * Default: nullptr
-            */
-            Entity* follow;
+            ///// Entity to follow / be relative to.
+            ///**
+            // * Default: nullptr
+            // */
+            //Entity* follow;
     };
 }
 
