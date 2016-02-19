@@ -31,6 +31,7 @@
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
 #include "../Util/MainCamera.hpp"
+#include "../Util/CaveGenerator.hpp"
 #include <Util/Picking.hpp>
 #include <Util/Input.hpp>
 #include <Util/Log.hpp>
@@ -85,6 +86,30 @@ DanielScene::DanielScene() {
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
     gammaCorrectionFilter = new GammaCorrectionFilter();
+
+    //Used for cave generation.
+    int percent = 50;
+    int iterations = 5;
+
+    CaveGenerator::CaveMap caveMap(60, 60, 0);
+    //caveMap.PrintMapToLog();
+    //Log() << "\n";
+
+    caveMap.GenerateCaveMap(percent);
+    //caveMap.PrintMapToLog();
+    //Log() << "\n";
+
+    caveMap.ProcessCaveMap(10);
+    //caveMap.PrintMapToLog();
+    //Log() << "\n";
+    
+    caveMap.RemoveSmallRooms(40);
+    //caveMap.PrintMapToLog();
+    //Log() << "\n";
+
+    caveMap.ConnectClosestRooms(true);
+    caveMap.PrintMapToLog();
+    //Log() << "\n";
 }
 
 DanielScene::~DanielScene() {

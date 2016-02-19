@@ -82,7 +82,6 @@ set(RESOURCES
         assets/enemy_tail_crystal_diff.png
         assets/enemy_tail_crystal_spec.png
         assets/enemy_tail_crystal_glow.png
-
         assets/Normal.png
         assets/Height.png
         assets/Glow.png
@@ -304,6 +303,7 @@ set(GAME_SRCS
         src/Game/Util/GameEntityFactory.cpp
         src/Game/Util/ControlSchemes.cpp
         src/Game/Util/MainCamera.cpp
+        src/Game/Util/CaveGenerator.cpp
         src/Game/System/ControllerSystem.cpp
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
@@ -335,6 +335,7 @@ set(GAME_HEADERS
         src/Game/Util/GameEntityFactory.hpp
         src/Game/Util/ControlSchemes.hpp
         src/Game/Util/MainCamera.hpp
+        src/Game/Util/CaveGenerator.hpp
         src/Game/System/ControllerSystem.hpp
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp

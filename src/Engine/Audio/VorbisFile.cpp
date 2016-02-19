@@ -21,7 +21,7 @@ VorbisFile::VorbisFile(const char *filename) {
 }
 
 VorbisFile::~VorbisFile() {
-    delete[] mData;
+    free(mData);
 }
 
 const char* VorbisFile::Data() const {
