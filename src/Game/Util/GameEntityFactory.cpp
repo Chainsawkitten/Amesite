@@ -81,7 +81,11 @@ Bullet* GameEntityFactory::CreateEnemyBullet(const glm::vec3& position, const gl
     gameObject->node->GetComponent<Component::Physics>()->velocity = direction;
     gameObject->node->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
     gameObject->node->GetComponent<Component::Damage>()->faction = faction;
-    gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = Component::ParticleEmitter::FIRE;
+    gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = Component::ParticleEmitter::PURPLE;
+    gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= 1.6f;
+    gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= 1.9f;
+    gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= 1.5f;
+    gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= 1.8f;
     return gameObject;
 }
 

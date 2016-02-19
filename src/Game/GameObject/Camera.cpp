@@ -58,7 +58,7 @@ void Camera::UpdateRelativePosition(const std::vector<GameObject::Player*>& play
     // Calculate how far away the camera should be.
     float distance = glm::distance(min, max) * 0.75f;
 
-    distance = glm::clamp(distance, 60.f, 60.f);
+    distance = glm::clamp(distance, 60.f, 110.f);
     
     Component::Transform* transform = body->GetComponent<Component::Transform>();
     
