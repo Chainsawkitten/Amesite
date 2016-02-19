@@ -78,7 +78,7 @@ MainScene::MainScene() {
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(50.f, 0.f, 40.f), InputHandler::PLAYER_ONE));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(60.f, 0.f, 40.f), InputHandler::PLAYER_ONE));
     //mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_TWO));
 
     // Create scene
@@ -243,13 +243,13 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
     velocity += physics->acceleration * deltaTime;
     velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
 
-    glm::vec3 width = glm::vec3(3.5f, 0, 0);
-    glm::vec3 height = glm::vec3(0, 0, 3.5f);
+    glm::vec3 width = glm::vec3(2.5f, 0, 0);
+    glm::vec3 height = glm::vec3(0, 0, 2.5f);
 
-    int c0 = PointCollide(transform->GetWorldPosition() - width - height, velocity, deltaTime, gridScale);
-    int c1 = PointCollide(transform->GetWorldPosition() + width - height, velocity, deltaTime, gridScale);
-    int c2 = PointCollide(transform->GetWorldPosition() + width + height, velocity, deltaTime, gridScale);
-    int c3 = PointCollide(transform->GetWorldPosition() - width + height, velocity, deltaTime, gridScale);
+    int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale);
+    int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale);
+    int c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime, gridScale);
+    int c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime, gridScale);
 
     switch (c0) {
 
