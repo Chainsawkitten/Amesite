@@ -16,14 +16,16 @@
 #include <Component/Listener.hpp>
 #include <Component/Physics.hpp>
 #include <Component/Collider2DCircle.hpp>
+#include <Component/SoundSource.hpp>
+#include <Component/Listener.hpp>
+#include <Component/ParticleEmitter.hpp>
+#include "Game/Component/Health.hpp"
+#include "Game/Component/Damage.hpp"
+#include "Game/Component/LifeTime.hpp"
+
 #include "../GameObject/Player.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
-#include <Component/ParticleEmitter.hpp>
-#include "Game/Component/Health.hpp"
-#include <Component/ParticleEmitter.hpp>
-#include <Component/SoundSource.hpp>
-#include <Component/Listener.hpp>
 
 #include <Audio/SoundBuffer.hpp>
 
@@ -38,7 +40,7 @@
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
 #include "../Util/MainCamera.hpp"
-#include <Util\Log.hpp>
+#include <Util/Log.hpp>
 
 #include "../GameObject/Player.hpp"
 #include "../GameObject/Cave.hpp"
@@ -144,6 +146,11 @@ void MainScene::Update(float deltaTime) {
     // Check collisions.
     mCollisionSystem.Update(*this);
     
+    std::vector<Component::Damage*> bulletVector = this->GetAll<Component::Damage>();
+    for (auto bullet : bulletVector)
+        if (GridCollide(bullet->entity, deltaTime, 20.f))
+            bullet->entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
+
     // Update health
     mHealthSystem.Update(*this, deltaTime);
     
@@ -243,8 +250,8 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
     velocity += physics->acceleration * deltaTime;
     velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
 
-    glm::vec3 width = glm::vec3(2.5f, 0, 0);
-    glm::vec3 height = glm::vec3(0, 0, 2.5f);
+    glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 2.f, 0, 0);
+    glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 2.f);
 
     int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale);
     int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale);
@@ -344,5 +351,9 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
 
     }
 
+    if (c0 != -1 || c1 != -1 || c2 != -1 || c3 != -1)
+        return true;
+
     return false;
+
 }
