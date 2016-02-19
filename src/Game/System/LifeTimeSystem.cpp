@@ -4,6 +4,9 @@
 #include <Engine/Entity/Entity.hpp>
 #include <Engine/GameObject/SuperGameObject.hpp>
 
+#include "../Util/GameEntityFactory.hpp"
+
+#include "../Component/Explode.hpp"
 #include "../Component/LifeTime.hpp"
 
 #include <vector>
@@ -21,10 +24,13 @@ void LifeTimeSystem::Update(Scene& scene, float deltaTime) {
     for (auto& lifeTimeComponent : lifeTimeVector) {
         lifeTimeComponent->lifeTime -= deltaTime;
         if (lifeTimeComponent->lifeTime < 0.f) {
-            if (lifeTimeComponent->entity->gameObject != nullptr)
-                lifeTimeComponent->entity->gameObject->Clear();
-            else
-                lifeTimeComponent->entity->Clear();
+            Component::Explode* explodeComp = lifeTimeComponent->entity->GetComponent<Component::Explode>();
+            if (explodeComp != nullptr)
+                GameEntityCreator().CreateExplosion(lifeTimeComponent->entity->GetComponent<Component::Transform>()->position, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex); // Create Explosion
+                if (lifeTimeComponent->entity->gameObject != nullptr)
+                    lifeTimeComponent->entity->gameObject->Clear();
+                else
+                    lifeTimeComponent->entity->Clear();
         }
     }
 }
