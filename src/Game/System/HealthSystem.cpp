@@ -5,6 +5,9 @@
 #include <Engine/GameObject/SuperGameObject.hpp>
 
 #include "../Component/Health.hpp"
+#include "../Component/Explode.hpp"
+
+#include "../Util/GameEntityFactory.hpp"
 
 #include <vector>
 
@@ -26,6 +29,9 @@ void HealthSystem::Update(Scene& scene, float deltaTime) {
             healthComponent->health += std::fminf(healthComponent->regenAmount * deltaTime, healthComponent->maxHealth);
         if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth) {
             if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth) {
+                Component::Explode* explodeComp = healthComponent->entity->GetComponent<Component::Explode>();
+                if (explodeComp != nullptr)
+                    GameEntityCreator().CreateExplosion(healthComponent->entity->GetComponent<Component::Transform>()->position, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex); // Create Explosion
                 if (healthComponent->entity->gameObject != nullptr)
                     healthComponent->entity->gameObject->Clear();
                 else

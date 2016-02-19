@@ -8,12 +8,13 @@
 #include <Component/Collider2DCircle.hpp>
 #include <Component/Collider2DRectangle.hpp>
 #include <Component/Physics.hpp>
-#include "../Component/Spawner.hpp"
 #include <Component/SpotLight.hpp>
 #include <Component/ParticleEmitter.hpp>
+#include "../Component/Spawner.hpp"
 #include "../Component/Controller.hpp"
 #include "../Component/Damage.hpp"
 #include "../Component/Health.hpp"
+#include "../Component/LifeTime.hpp"
 
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
@@ -30,6 +31,7 @@
 #include "../GameObject/Enemy.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Dust.hpp"
+#include "../GameObject/Explosion.hpp"
 
 using namespace GameObject;
 
@@ -55,6 +57,7 @@ Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     gameObject->node->GetComponent<Component::Controller>()->playerID = player;
     gameObject->leftTurrent->GetComponent<Component::Controller>()->playerID = player;
     gameObject->rightTurrent->GetComponent<Component::Controller>()->playerID = player;
+    CreateDust(gameObject->node, Component::ParticleEmitter::DUST);
     if (player == InputHandler::PLAYER_ONE) {
         gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
     } else {
@@ -63,12 +66,22 @@ Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     return gameObject;
 }
 
-Bullet* GameEntityFactory::CreateBullet(const glm::vec3& position, const glm::vec3& direction, int faction) {
+Bullet* GameEntityFactory::CreatePlayerBullet(const glm::vec3& position, const glm::vec3& direction, int faction) {
     Bullet* gameObject = new Bullet(mScene);
-    gameObject->body->GetComponent<Component::Transform>()->position = position;
-    gameObject->body->GetComponent<Component::Physics>()->velocity = direction;
-    gameObject->body->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
-    gameObject->body->GetComponent<Component::Damage>()->faction = faction;
+    gameObject->node->GetComponent<Component::Transform>()->position = position;
+    gameObject->node->GetComponent<Component::Physics>()->velocity = direction;
+    gameObject->node->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
+    gameObject->node->GetComponent<Component::Damage>()->faction = faction;
+    return gameObject;
+}
+
+Bullet* GameEntityFactory::CreateEnemyBullet(const glm::vec3& position, const glm::vec3& direction, int faction) {
+    Bullet* gameObject = new Bullet(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = position;
+    gameObject->node->GetComponent<Component::Physics>()->velocity = direction;
+    gameObject->node->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
+    gameObject->node->GetComponent<Component::Damage>()->faction = faction;
+    gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = Component::ParticleEmitter::FIRE;
     return gameObject;
 }
 
@@ -81,9 +94,18 @@ Camera* GameEntityFactory::CreateCamera(const glm::vec3& origin, const glm::vec3
 
 Dust* GameEntityFactory::CreateDust(Entity * object, int particleTextureIndex) {
     Dust* gameObject = new Dust(mScene);
-
-    gameObject->body->GetComponent<Component::ParticleEmitter>()->follow = object;
+    gameObject->body->GetComponent<Component::RelativeTransform>()->parentEntity = object;
     gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
+    return gameObject;
+}
+
+Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex) {
+    Explosion* gameObject = new Explosion(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = position;
+    gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
+    gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
+    gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
+    gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
     return gameObject;
 }
 
