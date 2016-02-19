@@ -17,8 +17,14 @@ namespace Component {
             
             /// Elapsed time since last spawn (in second).
             float timeSinceSpawn;
+            /**
+             * Default: 0.f
+             */
             
             /// Delay between spawns.
+            /**
+             * Default: 0.f
+             */
             float delay;
 
             /// Faction, ID of the faction this spawner belongs to (players, enemies).
