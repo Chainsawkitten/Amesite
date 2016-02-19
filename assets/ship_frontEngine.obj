@@ -1,6 +1,5 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib ship_frontEngine.mtl
 g default
 v -1.557771 -3.476548 1.267191
 v -1.296605 -3.476548 1.331393
@@ -1400,7 +1399,6 @@ vn 0.710909 0.000000 -0.703284
 vn 0.710909 0.000000 -0.703284
 s 1
 g pasted__pCube3 group
-usemtl initialShadingGroup
 f 1/1/1 2/2/2 8/4/3
 f 8/4/3 2/2/2 9/3/4
 s 2

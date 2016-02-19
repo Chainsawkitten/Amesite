@@ -1,6 +1,5 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib enemy_tail_crystal.mtl
 g default
 v -2.689988 -5.720720 1.832051
 v -4.858764 -3.112683 6.195204
@@ -148,7 +147,6 @@ vn 0.391015 -0.691901 -0.606944
 vn 0.391015 -0.691900 -0.606944
 s 1
 g pCube2
-usemtl initialShadingGroup
 f 1/1/1 3/2/2 21/4/3
 f 21/4/3 3/2/2 19/3/4
 s 2

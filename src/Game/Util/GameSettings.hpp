@@ -9,6 +9,7 @@
  * ------------------- | ----------------------------------- | ------ | -------------
  * Logging             | Output a log file.                  | bool   | false
  * Debug Context       | Create an OpenGL Debug Context.     | bool   | false
+ * Show Notifications  | Show notification messages.         | bool   | false
  * Show Frame Times    | Display update and render times.    | bool   | false
  * Screen Width        | Width of the game window.           | long   | 800
  * Screen Height       | Height of the game window.          | long   | 600
@@ -21,7 +22,6 @@
  * Audio Volume        | How loud to play sounds.            | double | 1.0
  * Aim Deadzone        | Deadzone on controller aim vector   | double | 0.3
  * Move Deadzone       | Deadzone on controller move vector  | double | 0.3
-
  */
 class GameSettings : public Settings {
     public:
