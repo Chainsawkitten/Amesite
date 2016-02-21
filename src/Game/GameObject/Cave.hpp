@@ -24,5 +24,6 @@ namespace GameObject {
 
             /// Map of the %Cave
             Entity* map;
+			Entity* heightMap;
     };
 }

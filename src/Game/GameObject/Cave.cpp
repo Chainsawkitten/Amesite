@@ -16,6 +16,7 @@
 #include <Engine/Component/Physics.hpp>
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/SpotLight.hpp>
+#include <Engine/Geometry/Terrain.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 
@@ -114,6 +115,37 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
     map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
     map->GetComponent<Component::Material>()->SetNormal("Resources/wall2_norm.png");
     map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
+
+	heightMap = CreateEntity(scene);
+
+	float** floatMap = new float*[60];
+	for (int i = 0; i < 60; i++) {
+		floatMap[i] = new float[60];
+	}
+
+	for (int i = 0; i < 60; i++) {
+		for (int j = 0; j < 60; j++) {
+			if (mMap[i][j] == true)
+				floatMap[i][j] = 1.0f;
+			else
+				floatMap[i][j] = 0.0f;
+		}
+	}
+
+	heightMap = CreateEntity(scene);
+	
+	heightMap->AddComponent<Component::Mesh>();
+	heightMap->AddComponent<Component::Transform>();
+	heightMap->AddComponent<Component::Material>();
+
+	heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(5 * 30.f, -11.f, 5 * 30.f));
+	heightMap->GetComponent<Component::Transform>()->scale = glm::vec3(300.f, 10.f, 300.f);
+
+	heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, 60, 60);
+
+	heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+	heightMap->GetComponent<Component::Material>()->SetNormal("Resources/wall2_norm.png");
+
 }
 
 Cave::~Cave() {
