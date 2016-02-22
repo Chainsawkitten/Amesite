@@ -187,7 +187,7 @@ namespace CaveGenerator {
         delete[] flagMap;
 
         for (auto& room : rooms) {
-            mRoomList.push_back(Room(mMap,room) );
+            mRoomList.push_back(Room(mMap, room));
         }
 
         int largestRoomSize = 0;
@@ -204,7 +204,7 @@ namespace CaveGenerator {
 
     void CaveMap::FillCoordinates(const std::vector<Coordinate>& coordinates, bool tileType) {
         for (auto &i : coordinates) {
-            if(IsWithinMapRange(i))
+            if (IsWithinMapRange(i))
                 mMap[i.x][i.y] = tileType;
         }
     }
@@ -261,11 +261,11 @@ namespace CaveGenerator {
             for (int i = (currentCoordinate.x - 1); i <= (currentCoordinate.x + 1); i++) {
                 for (int j = (currentCoordinate.y - 1); j <= (currentCoordinate.y + 1); j++) {
                     //Check if the neighbour coordinate is within the map, and check if it is neighbouring LR/UD
-                    if (IsWithinMapRange(Coordinate(i,j)) && (i == currentCoordinate.x || j == currentCoordinate.y)) {
+                    if (IsWithinMapRange(Coordinate(i, j)) && (i == currentCoordinate.x || j == currentCoordinate.y)) {
                         //If the neighboring tile is of the type we are looking for and we haven't looked at it, look at it.
                         if (flagMap[i][j] == false && mMap[i][j] == tileType) {
                             flagMap[i][j] = true;
-                            tileQueue.push(Coordinate(i,j));
+                            tileQueue.push(Coordinate(i, j));
                         }
                     }
                 }
@@ -292,7 +292,7 @@ namespace CaveGenerator {
         std::uniform_int_distribution<uint32_t> hundredDistribution(1, 100);
 
         //Create array.
-        if(mMap == nullptr) {
+        if (mMap == nullptr) {
             mMap = new bool*[mRowCount];
             for (int i = 0; i < mRowCount; ++i)
                 mMap[i] = new bool[mColumnCount];
@@ -395,7 +395,7 @@ namespace CaveGenerator {
             }
         }
 
-        if (possibleConnection && forceAccessibilityFromMainRoom) { 
+        if (possibleConnection && forceAccessibilityFromMainRoom) {
             CreatePassage(*firstBestRoom, *secondBestRoom, *firstBestCoordinate, *secondBestCoordinate);
             ConnectClosestRooms(true);
         }
@@ -439,7 +439,7 @@ namespace CaveGenerator {
 
         int gradientAccumulation = longest / 2;
         for (int i = 0; i < longest; i++) {
-            LineCoordinates.push_back(Coordinate(x,y));
+            LineCoordinates.push_back(Coordinate(x, y));
 
             if (inverted)
                 y += step;

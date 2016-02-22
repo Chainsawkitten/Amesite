@@ -10,11 +10,11 @@
 
 namespace FileSystem {
 #if defined(_WIN32) || defined(WIN32)
-	// Windows
-	const char DELIMITER = '\\';
+    // Windows
+    const char DELIMITER = '\\';
 #else
-	// MacOS and Linux
-	const char DELIMITER = '/';
+    // MacOS and Linux
+    const char DELIMITER = '/';
 #endif
     
     bool FileExists(const char* filename) {
