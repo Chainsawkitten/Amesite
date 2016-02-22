@@ -11,6 +11,7 @@
 #include "Audio/WaveFile.hpp"
 #include "Audio/VorbisFile.hpp"
 #include "Util/FileSystem.hpp"
+#include "Font/Font.hpp"
 
 #include "Util/Log.hpp"
 
@@ -271,6 +272,90 @@ void ResourceManager::FreeSound(Audio::SoundBuffer* soundBuffer) {
         mSoundsInverse.erase(soundBuffer);
         delete soundBuffer;
         mSounds.erase(filename);
+    }
+}
+
+ResourceManager::FontKey::FontKey() {
+    source = nullptr;
+    height = 0.f;
+}
+
+bool ResourceManager::FontKey::operator<(const FontKey& other) const {
+    if (source < other.source) return true;
+    if (source > other.source) return false;
+    
+    if (height < other.height) return true;
+    if (height > other.height) return false;
+    
+    return false;
+}
+
+Font* ResourceManager::CreateFontEmbedded(const char* source, int sourceLength, float height) {
+    FontKey key;
+    key.source = source;
+    key.height = height;
+    
+    if (mFonts.find(key) == mFonts.end()) {
+        mFonts[key].font = new Font(source, sourceLength, height);
+        mFontsInverse[mFonts[key].font] = key;
+        mFonts[key].count = 1;
+    } else {
+        mFonts[key].count++;
+    }
+    
+    return mFonts[key].font;
+}
+
+void ResourceManager::FreeFont(Font* font) {
+    FontKey key = mFontsInverse[font];
+    
+    mFonts[key].count--;
+    if (mFonts[key].count <= 0) {
+        mFontsInverse.erase(font);
+        delete font;
+        mFonts.erase(key);
+    }
+}
+
+ResourceManager::FontFromFileKey::FontFromFileKey() {
+    filename = "";
+    height = 0.f;
+}
+
+bool ResourceManager::FontFromFileKey::operator<(const FontFromFileKey& other) const {
+    if (filename < other.filename) return true;
+    if (filename > other.filename) return false;
+    
+    if (height < other.height) return true;
+    if (height > other.height) return false;
+    
+    return false;
+}
+
+Font* ResourceManager::CreateFontFromFile(std::string filename, float height) {
+    FontFromFileKey key;
+    key.filename = filename;
+    key.height = height;
+    
+    if (mFontsFromFile.find(key) == mFontsFromFile.end()) {
+        mFontsFromFile[key].font = new Font(filename.c_str(), height);
+        mFontsFromFileInverse[mFontsFromFile[key].font] = key;
+        mFontsFromFile[key].count = 1;
+    } else {
+        mFontsFromFile[key].count++;
+    }
+    
+    return mFontsFromFile[key].font;
+}
+
+void ResourceManager::FreeFontFromFile(Font* font) {
+    FontFromFileKey key = mFontsFromFileInverse[font];
+    
+    mFontsFromFile[key].count--;
+    if (mFontsFromFile[key].count <= 0) {
+        mFontsFromFileInverse.erase(font);
+        delete font;
+        mFontsFromFile.erase(key);
     }
 }
 

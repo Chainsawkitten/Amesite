@@ -22,6 +22,8 @@
 #include <PostProcessing/FXAAFilter.hpp>
 #include <PostProcessing/GammaCorrectionFilter.hpp>
 
+#include <Font/Font.hpp>
+
 using namespace GameObject;
 
 AlbinScene::AlbinScene() {
@@ -76,6 +78,9 @@ AlbinScene::AlbinScene() {
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
     gammaCorrectionFilter = new GammaCorrectionFilter();
+    
+    mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 24.f);
+    mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
 }
 
 AlbinScene::~AlbinScene() {
@@ -86,6 +91,8 @@ AlbinScene::~AlbinScene() {
     delete fxaaFilter;
     delete gammaCorrectionFilter;
     delete postProcessing;
+    
+    Resources().FreeFontFromFile(mFont);
 }
 
 void AlbinScene::Update(float deltaTime) {
@@ -117,4 +124,6 @@ void AlbinScene::Update(float deltaTime) {
     postProcessing->ApplyFilter(gammaCorrectionFilter);
     
     postProcessing->Render();
+    
+    mFont->RenderText("Test", glm::vec2(10.f, 10.f), 1000.f);
 }
