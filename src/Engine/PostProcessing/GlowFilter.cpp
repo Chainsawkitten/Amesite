@@ -19,7 +19,7 @@ GlowFilter::~GlowFilter() {
 }
 
 ShaderProgram* GlowFilter::GetShaderProgram() const {
-	return mShaderProgram;
+    return mShaderProgram;
 }
 
 void GlowFilter::SetUniforms() {
