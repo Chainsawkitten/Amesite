@@ -13,16 +13,18 @@ namespace GameObject {
             /**
              * @param scene Pointer to which Scene %Cave Enities' are contained.
              */
-            Cave(Scene* scene);
+            Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold);
            
             ~Cave();
 
 
             /// Map of all walls in the cave system.
             static bool** mMap;
-            static const bool theMap[60][60];
 
             /// Map of the %Cave
             Entity* map;
+        private:
+            int mWidth;
+            int mHeight;
     };
 }
