@@ -64,12 +64,16 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
 
     std::copy(mTempIndexData.begin(), mTempIndexData.end(), mIndexData);
     std::copy(mTempVertexData.begin(), mTempVertexData.end(), mVertexData);
-
+    
+    // Free used memory.
     for (unsigned int m = 0; m < mDataDimensions.x-1; m++) {
         delete[] controlNodes[m];
         delete[] mSquares[m];
     }
     delete[] controlNodes[mDataDimensions.x-1];
+    delete[] controlNodes;
+    delete[] mSquares;
+    
 }
 
 Map::MSquare Map::CreateMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft) {
@@ -209,7 +213,7 @@ void Map::TriangulateSquare(MSquare* square) {
         break;
     }
     if (node != nullptr)
-        delete node;
+        delete[] node;
 }
 
 void Geometry::Map::StoreTriangle(MeshNode a, MeshNode b, MeshNode c)
