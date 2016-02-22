@@ -117,5 +117,15 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
 }
 
 Cave::~Cave() {
-    Resources().FreeMap();
+
+    for (int i = 0; i < 60; i++) {
+
+        delete mMap[i];
+
+    }
+
+    delete[] mMap;
+
+    Resources().FreeCube();
+
 }
