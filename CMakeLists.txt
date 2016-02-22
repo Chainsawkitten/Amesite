@@ -71,6 +71,7 @@ endif()
 
 # Copy resources
 set(RESOURCES
+        assets/ABeeZee.ttf
         assets/TestTexture.png
         assets/DefaultDiffuse.png
         assets/DefaultNormal.png
