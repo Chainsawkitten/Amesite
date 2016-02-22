@@ -306,17 +306,6 @@ Font* ResourceManager::CreateFontEmbedded(const char* source, int sourceLength, 
     return mFonts[key].font;
 }
 
-void ResourceManager::FreeFont(Font* font) {
-    FontKey key = mFontsInverse[font];
-    
-    mFonts[key].count--;
-    if (mFonts[key].count <= 0) {
-        mFontsInverse.erase(font);
-        delete font;
-        mFonts.erase(key);
-    }
-}
-
 ResourceManager::FontFromFileKey::FontFromFileKey() {
     filename = "";
     height = 0.f;
@@ -348,14 +337,25 @@ Font* ResourceManager::CreateFontFromFile(std::string filename, float height) {
     return mFontsFromFile[key].font;
 }
 
-void ResourceManager::FreeFontFromFile(Font* font) {
-    FontFromFileKey key = mFontsFromFileInverse[font];
-    
-    mFontsFromFile[key].count--;
-    if (mFontsFromFile[key].count <= 0) {
-        mFontsFromFileInverse.erase(font);
-        delete font;
-        mFontsFromFile.erase(key);
+void ResourceManager::FreeFont(Font* font) {
+    if (font->IsFromFile()) {
+        FontFromFileKey key = mFontsFromFileInverse[font];
+        
+        mFontsFromFile[key].count--;
+        if (mFontsFromFile[key].count <= 0) {
+            mFontsFromFileInverse.erase(font);
+            delete font;
+            mFontsFromFile.erase(key);
+        }
+    } else {
+        FontKey key = mFontsInverse[font];
+        
+        mFonts[key].count--;
+        if (mFonts[key].count <= 0) {
+            mFontsInverse.erase(font);
+            delete font;
+            mFonts.erase(key);
+        }
     }
 }
 

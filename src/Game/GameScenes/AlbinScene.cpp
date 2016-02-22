@@ -92,7 +92,7 @@ AlbinScene::~AlbinScene() {
     delete gammaCorrectionFilter;
     delete postProcessing;
     
-    Resources().FreeFontFromFile(mFont);
+    Resources().FreeFont(mFont);
 }
 
 void AlbinScene::Update(float deltaTime) {
