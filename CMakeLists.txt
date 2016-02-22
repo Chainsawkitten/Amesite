@@ -136,6 +136,8 @@ set(EMBEDDED_INPUT
         shaders/Default2D.vert
         shaders/SingleColor2D.frag
         shaders/Texture2D.frag
+        shaders/Font.vert
+        shaders/Font.frag
         shaders/Post.vert
         shaders/PostCopy.frag
         shaders/PostColor.frag
@@ -199,6 +201,7 @@ set(ENGINE_SRCS
         src/Engine/Audio/SoundBuffer.cpp
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
+        src/Engine/Font/Font.cpp
         src/Engine/Geometry/Geometry2D.cpp
         src/Engine/Geometry/Square.cpp
         src/Engine/Geometry/Geometry3D.cpp
@@ -258,6 +261,7 @@ set(ENGINE_HEADERS
         src/Engine/Audio/SoundFile.hpp
         src/Engine/Audio/VorbisFile.hpp
         src/Engine/Audio/WaveFile.hpp
+        src/Engine/Font/Font.hpp
         src/Engine/Geometry/Geometry2D.hpp
         src/Engine/Geometry/Square.hpp
         src/Engine/Geometry/Geometry3D.hpp
