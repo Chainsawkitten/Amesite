@@ -214,6 +214,7 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
     float X = (newX - oldX) / velocity.x;
     float Z = (newZ - oldZ) / velocity.z;
 
+    //We check if we moved to another cell in the grid.
     if (GameObject::Cave::mMap[abs(newZ)][abs(newX)]) {
         //We collide in X
         if (X > Z) {
@@ -227,9 +228,9 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
         //We collide in Z
         else {
             if (oldZ != newZ) {
-                return 2;
+                return 1;
             } else if (oldX != newX) {
-                return 3;
+                return 0;
             }
         }
     }
@@ -268,16 +269,6 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
         physics->acceleration *= glm::vec3(1, 0, 0);
         break;
 
-    case 2:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    case 3:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
     }
     switch (c1) {
 
@@ -289,16 +280,6 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
     case 1:
         physics->velocity *= glm::vec3(1, 0, 0);
         physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    case 2:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    case 3:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
         break;
 
     }
@@ -314,16 +295,6 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
         physics->acceleration *= glm::vec3(1, 0, 0);
         break;
 
-    case 2:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    case 3:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
     }
     switch (c3) {
 
@@ -335,16 +306,6 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
     case 1:
         physics->velocity *= glm::vec3(1, 0, 0);
         physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    case 2:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    case 3:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
         break;
 
     }

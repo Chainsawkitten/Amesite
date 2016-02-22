@@ -62,7 +62,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     light->GetComponent<Component::SpotLight>()->color.g = 0.f;
 
     leftTurrent = CreateEntity(scene);
-    leftTurrent->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 15);
+    leftTurrent->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
     leftTurrent->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     leftTurrent->AddComponent<Component::Animation>();
     leftTurrent->AddComponent<Component::Spawner>()->delay = 0.25f;
@@ -73,7 +73,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     sound->gain = 2.f;
 
     rightTurrent = CreateEntity(scene);
-    rightTurrent->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 15);
+    rightTurrent->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 13);
     rightTurrent->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     rightTurrent->AddComponent<Component::Animation>();
     rightTurrent->AddComponent<Component::Spawner>()->delay = 0.25f;
