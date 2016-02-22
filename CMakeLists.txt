@@ -69,10 +69,23 @@ set(RESOURCES
         assets/enemy_tail_crystal_diff.png
         assets/enemy_tail_crystal_spec.png
         assets/enemy_tail_crystal_glow.png
-        assets/ship_body_diff.png
-        assets/ship_body_spec.png
-        assets/ship_body_glow.png
-        assets/ship_engine_diff.png
+        assets/enemy_head_crystal.obj
+        assets/enemy_tail_crystal.obj
+        assets/player/ship_body_diff.png
+        assets/player/ship_body_spec.png
+        assets/player/ship_body_glow.png
+        assets/player/ship_engine_diff.png
+        assets/player/ship_body.obj
+        assets/player/ship_frontEngine.obj
+        assets/player/ship_backEngine.obj
+        assets/pylon/Pylon_01_spec.png
+        assets/pylon/Pylon_01_glow.png
+        assets/pylon/Pylon_01_diff.png
+        assets/pylon/Pylon_01.obj
+        assets/crystal/Crystal_01_spec.png
+        assets/crystal/Crystal_01_glow.png
+        assets/crystal/Crystal_01_diff.png
+        assets/crystal/Crystal_01.obj
         assets/wall_diff.png
         assets/wall_norm.png
         assets/wall2_diff.png
@@ -80,14 +93,9 @@ set(RESOURCES
         assets/Ship/Ship_Dif.png
         assets/Ship/Ship_Glow.png
         assets/Ship/Ship_Spec.png
-        assets/GolfBall.obj
-        assets/ship_body.obj
-        assets/ship_frontEngine.obj
-        assets/ship_backEngine.obj
-        assets/enemy_head_crystal.obj
-        assets/enemy_tail_crystal.obj
         assets/Ship/Ship_01.obj
         assets/Ship/Ship_01.mtl
+        assets/GolfBall.obj
         assets/MusicAction.ogg
         assets/MusicCalm.ogg
         assets/Laser.ogg
