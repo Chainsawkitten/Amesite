@@ -37,6 +37,10 @@ namespace GameObject {
              */
             float GetHealth();
 
+            bool Active();
+            void Activate();
+            void Deactivate();
+
             /// Node of the %Player.
             Entity* node;
 
@@ -64,6 +68,8 @@ namespace GameObject {
             /// Turrent relative to body.
             Entity* rightTurrent;
 
+            float mRespawnTimer;
+
         private:
             Geometry::OBJModel* mShipBody;
             Geometry::OBJModel* mShipFrontEngineRight;
@@ -72,6 +78,8 @@ namespace GameObject {
             Geometry::OBJModel* mShipBackEngineLeft;
             
             Audio::SoundBuffer* mShootSound;
+
+            bool mActive;
 
             void AddEnginePartilces(Entity* entity);
     };

@@ -93,6 +93,9 @@ class MainScene : public Scene {
         // Grid collision
         bool GridCollide(Entity* entity, float deltaTime, float gridScale);
 
+        //Respawn
+        void Respawn(float deltaTime);
+
         // Music.
         Audio::SoundBuffer* mMusicSoundBuffer;
         ALuint mSource;

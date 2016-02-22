@@ -99,7 +99,7 @@ MainScene::MainScene() {
     glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
 
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(80, 0, 25));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(25, 0, 15));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 35));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
@@ -135,9 +135,9 @@ void MainScene::Update(float deltaTime) {
     
     for (auto player : mPlayers) {
         GridCollide(player->node, deltaTime, 5);
-        if (player->GetHealth() < 0.01f) {
+        if (player->GetHealth() < 0.01f && player->Active()) {
             player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
-            player->node->GetComponent<Component::Health>()->health = player->node->GetComponent<Component::Health>()->maxHealth;
+            player->Deactivate();
         }
     }
 
@@ -175,6 +175,8 @@ void MainScene::Update(float deltaTime) {
     
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
+
+    Respawn(deltaTime);
 
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
@@ -315,4 +317,28 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
 
     return false;
 
+}
+
+void MainScene::Respawn(float deltaTime) {
+
+    if (!mPlayers[0]->Active() || !mPlayers[1]->Active()) 
+        if (glm::distance(mPlayers[0]->GetPosition(), mPlayers[1]->GetPosition()) < 15) {
+
+            mPlayers[0]->mRespawnTimer -= deltaTime;
+            mPlayers[1]->mRespawnTimer -= deltaTime;
+
+            if (mPlayers[0]->mRespawnTimer <= 0)
+                mPlayers[0]->Activate();
+
+            if (mPlayers[1]->mRespawnTimer <= 0)
+                mPlayers[1]->Activate();
+
+        }
+        else {
+
+            mPlayers[0]->mRespawnTimer = 5;
+            mPlayers[1]->mRespawnTimer = 5;
+
+        }
+        
 }

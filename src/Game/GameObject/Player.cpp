@@ -26,6 +26,10 @@
 using namespace GameObject;
 
 Player::Player(Scene* scene) : SuperGameObject(scene) {
+
+    mActive = true;
+    mRespawnTimer = 5;
+
     node = CreateEntity(scene);
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
     node->AddComponent<Component::Controller>()->speed = 5000.f;
@@ -150,6 +154,31 @@ glm::vec3 Player::GetPosition() {
 
 float Player::GetHealth() {
     return node->GetComponent<Component::Health>()->health;
+}
+
+bool Player::Active() {
+
+    return mActive;
+
+}
+
+void Player::Activate() {
+
+    mActive = true;
+    node->GetComponent<Component::Controller>()->enabled = true;
+    leftTurrent->GetComponent<Component::Controller>()->enabled = true;
+    rightTurrent->GetComponent<Component::Controller>()->enabled = true;
+    node->GetComponent<Component::Health>()->health = node->GetComponent<Component::Health>()->maxHealth;
+
+}
+
+void Player::Deactivate() {
+
+    mActive = false;
+    node->GetComponent<Component::Controller>()->enabled = false;
+    leftTurrent->GetComponent<Component::Controller>()->enabled = false;
+    rightTurrent->GetComponent<Component::Controller>()->enabled = false;
+
 }
 
 void Player::AddEnginePartilces(Entity* entity) {

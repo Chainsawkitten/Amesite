@@ -29,6 +29,8 @@ namespace Component {
              */
             float speed;
 
+            bool enabled;
+
             /// Stores the control scheme functions for this controller.
             std::vector<void (*)(Controller* controller, float deltaTime)> controlSchemes;
 
