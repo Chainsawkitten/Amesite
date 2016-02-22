@@ -4,6 +4,9 @@
 
 class Scene;
 class Entity;
+namespace CaveGenerator {
+    class CaveMap;
+}
 
 namespace GameObject {
     /// A Cave
@@ -12,17 +15,27 @@ namespace GameObject {
             /// Create %Cave
             /**
              * @param scene Pointer to which Scene %Cave Enities' are contained.
+             * @param width Map width.
+             * @param height Map height.
+             * @param seed The seed used for random generation.
+             * @param percent The amount of walls to place initially.
+             * @param iterations How many iterations of smoothing we will do.
+             * @param threshold The minimum room size in tiles.
              */
-            Cave(Scene* scene);
+            Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold);
            
+            /// Destructor
             ~Cave();
-
 
             /// Map of all walls in the cave system.
             static bool** mMap;
-            static const bool theMap[60][60];
 
             /// Map of the %Cave
             Entity* map;
+            /// CaveMap instance.
+            CaveGenerator::CaveMap* caveMap;
+        private:
+            int mWidth;
+            int mHeight;
     };
 }
