@@ -119,9 +119,8 @@ void Font::RenderText(const char* text, const glm::vec2& position, float wrap) {
     glm::vec2 pos = position;
     pos.y += mHeight;
     while (*text) {
-        if (*text >= 32 && *text < 128) {
+        if (*text >= 32 && *text < 128)
             pos.x = RenderCharacter(*text, pos);
-        }
         
         if (pos.x > position.x + wrap || *text == '\n') {
             pos.x = position.x;
