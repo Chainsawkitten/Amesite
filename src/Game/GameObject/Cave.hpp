@@ -24,15 +24,15 @@ namespace GameObject {
              */
             Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold);
            
+            /// Destructor
             ~Cave();
-
-
 
             /// Map of all walls in the cave system.
             static bool** mMap;
 
             /// Map of the %Cave
             Entity* map;
+            /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;
         private:
             int mWidth;
