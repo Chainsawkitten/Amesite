@@ -124,7 +124,7 @@ Cave::~Cave() {
 
     }
 
-    delete mMap;
+    delete[] mMap;
 
     Resources().FreeCube();
 
