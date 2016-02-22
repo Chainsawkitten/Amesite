@@ -4,6 +4,9 @@
 
 class Scene;
 class Entity;
+namespace CaveGenerator {
+    class CaveMap;
+}
 
 namespace GameObject {
     /// A Cave
@@ -24,11 +27,13 @@ namespace GameObject {
             ~Cave();
 
 
+
             /// Map of all walls in the cave system.
             static bool** mMap;
 
             /// Map of the %Cave
             Entity* map;
+            CaveGenerator::CaveMap* caveMap;
         private:
             int mWidth;
             int mHeight;
