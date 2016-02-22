@@ -2,6 +2,8 @@
 
 #include "Geometry3D.hpp"
 #include <vector>
+#include <map>
+#include <unordered_set>
 #include <fstream>
 
 namespace Geometry {
@@ -48,36 +50,41 @@ namespace Geometry {
     private:
         /// The node that is used to create mesh.
         struct MeshNode {
-                /// Position of node.
-                glm::vec3 mPosition;
-                /// Index of node.
-                int mVertexIndex;
-                /// Texture coordinates.
-                glm::vec2 mTexCoords;
+            /// Position of node.
+            glm::vec3 mPosition;
+            /// Index of node.
+            int mVertexIndex;
+            /// Texture coordinates.
+            glm::vec2 mTexCoords;
         };
 
         /// Node with data from the cellular automata.
         struct ControlNode : MeshNode{
-                /// In mesh or not.
-                bool mActive;
-                /// Corresponding mesh nodes.
-                MeshNode mAbove, mRight;
+            /// In mesh or not.
+            bool mActive;
+            /// Corresponding mesh nodes.
+            MeshNode mAbove, mRight;
         };
 
         /// Representation of a square in the algorithm
         struct MSquare {
-                ControlNode mTopLeft, mTopRight, mBottomRight, mBottomLeft;
-                MeshNode mCenterTop, mCenterRight, mCenterBottom, mCenterLeft;
-                int mType;
+            ControlNode mTopLeft, mTopRight, mBottomRight, mBottomLeft;
+            MeshNode mCenterTop, mCenterRight, mCenterBottom, mCenterLeft;
+            int mType;
         };
         struct MapTriangle {
+            int indexA;
+            int indexB;
+            int indexC;
 
+            bool Contains(int index);
         };
 
         /// Node creation.
         MeshNode CreateMeshNode(const glm::vec3 position, glm::uvec2 index, bool above, const float squareSize, glm::vec2 texCoords);
         ControlNode CreateControlNode(const glm::vec3 position, const bool active, const float squareSize, glm::uvec2 index);
         MSquare CreateMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft);
+        MapTriangle CreateMapTriangle(int a, int b, int c);
 
         /// Computations for retrieving top mesh.
         void MarchingSquares(bool **data, const float squareSize);
@@ -88,6 +95,8 @@ namespace Geometry {
         void CalculateMeshOutlines();
         bool IsOutline(int vertexA, int vertexB);
         int GetConnectedVertex(int index);
+        void AddToDictionary(int indexKey, MapTriangle triangle);
+        void FollowOutline(int index, int outlineIndex);
 
         /// Creating and storing triangles.
         void TriangulateSquare(MSquare* square);
@@ -96,10 +105,10 @@ namespace Geometry {
         /// Data
         glm::uvec2 mDataDimensions;
         float mMapHeight, mMapWidth, mWallHeight;
-        bool* mVertexChecked;
+        std::unordered_set<int> mVertexChecked;
 
-        std::vector<glm::vec2> mOutlines;
-        std::vector<std::vector<glm::vec3>> mTriangleDictionary;
+        std::vector<std::vector<int>> mOutlines;
+        std::map<int, std::vector<MapTriangle>> mTriangleDictionary;
 
         std::vector<Vertex> mTempVertexData;
         std::vector<unsigned int> mTempIndexData;

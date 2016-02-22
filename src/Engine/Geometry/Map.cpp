@@ -62,6 +62,8 @@ void Map::MarchingSquares(bool ** data, const float squareSize)
         }
     }
 
+    CreateWallMesh();
+
     mIndexData = new unsigned int[mTempIndexData.size()];
     mVertexData = new  Vertex[mTempVertexData.size()];
 
@@ -73,7 +75,6 @@ void Map::MarchingSquares(bool ** data, const float squareSize)
         delete[] mSquares[m];
     }
     delete[] controlNodes[mDataDimensions.x-1];
-    delete[] mVertexChecked;
 }
 
 Map::MSquare Map::CreateMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft)
@@ -101,6 +102,15 @@ Map::MSquare Map::CreateMSquare(ControlNode topLeft, ControlNode topRight, Contr
         square.mType += 1;
 
     return square;
+}
+
+Map::MapTriangle Map::CreateMapTriangle(int a, int b, int c)
+{
+    MapTriangle triangle;
+    triangle.indexA = a;
+    triangle.indexB = b;
+    triangle.indexC = c;
+    return triangle;
 }
 
 Map::ControlNode Map::CreateControlNode(const glm::vec3 position, const bool active, const float squareSize, glm::uvec2 index)
@@ -160,16 +170,53 @@ void Map::CreateMesh(MeshNode* node, unsigned int size)
 
 void Map::CreateWallMesh()
 {
-    mVertexChecked = new bool[mVertexNr];
-
-    for (int i = 0; i < mVertexNr; i++)
-        mVertexChecked[i] = false;
-
     CalculateMeshOutlines();
 
     for (auto outline : mOutlines) {
-        for (int j = 0; j < outline.length(); j++) {
+        for (unsigned int j = 0; j < outline.size()-1; j++) {
+            int startIndex = mTempVertexData.size();
 
+            Vertex vertex[4];
+
+            // Left.
+            vertex[0].position = mTempVertexData[outline[j]].position;
+            vertex[0].textureCoordinate = glm::vec2(0.f, 1.f);
+
+            // Right.
+            vertex[1].position = mTempVertexData[outline[j+1]].position;
+            vertex[1].textureCoordinate = glm::vec2(1.f, 1.f);
+
+            // Bottom Left.
+            vertex[2].position = mTempVertexData[outline[j]].position - glm::vec3(0.f, 1.f, 0.f) * mWallHeight;
+            vertex[2].textureCoordinate = glm::vec2(0.f, 0.f);
+
+            // Bottom Right.
+            vertex[3].position = mTempVertexData[outline[j+1]].position - glm::vec3(0.f, 1.f, 0.f) * mWallHeight;
+            vertex[3].textureCoordinate = glm::vec2(1.f, 0.f);
+
+            // Normal of quad.
+            glm::vec3 ab = vertex[2].position - vertex[0].position;
+            glm::vec3 ac = vertex[3].position - vertex[0].position;
+            glm::vec3 normal = glm::normalize(glm::cross(ab, ac));
+
+            vertex[0].normal = normal;
+            vertex[1].normal = normal;
+            vertex[2].normal = normal;
+            vertex[3].normal = normal;
+
+
+            mTempVertexData.push_back(vertex[0]);
+            mTempVertexData.push_back(vertex[1]);
+            mTempVertexData.push_back(vertex[2]);
+            mTempVertexData.push_back(vertex[3]);
+
+            mTempIndexData.push_back(startIndex + 0);
+            mTempIndexData.push_back(startIndex + 2);
+            mTempIndexData.push_back(startIndex + 3);
+
+            mTempIndexData.push_back(startIndex + 3);
+            mTempIndexData.push_back(startIndex + 1);
+            mTempIndexData.push_back(startIndex + 0);
         }
     }
 
@@ -177,22 +224,73 @@ void Map::CreateWallMesh()
 
 void Map::CalculateMeshOutlines()
 {
-    for (int i = 0; i < mVertexNr; i++) {
-        if (!mVertexChecked[i]) {
-
+    for (unsigned int i = 0; i < mVertexNr; i++) {
+        if (mVertexChecked.count(i) == 0) {
+            int outLineVertex = GetConnectedVertex(i);
+            if (outLineVertex != -1) {
+                mVertexChecked.insert(i);
+                std::vector<int> outline;
+                outline.push_back(i);
+                mOutlines.push_back(outline);
+                FollowOutline(outLineVertex, mOutlines.size() - 1);
+                mOutlines[mOutlines.size()-1].push_back(i);
+            }
         }
     }
 }
 
 bool Map::IsOutline(int vertexA, int vertexB)
 {
-    return false;
+    std::vector<MapTriangle> containingVertexA = mTriangleDictionary[vertexA];
+    int triangleCount = 0;
+
+    for (unsigned int i = 0; i < containingVertexA.size() && triangleCount <= 1; i++) {
+        if (containingVertexA[i].Contains(vertexB)) {
+            triangleCount++;
+        }
+    }
+    return triangleCount == 1;
 }
 
 int Map::GetConnectedVertex(int index)
 {
-    return 0;
+    std::vector<MapTriangle> containingVertex = mTriangleDictionary[index];
+
+    for (unsigned int i = 0; i < containingVertex.size(); i++) {
+        MapTriangle triangle = containingVertex[i];
+        
+
+        if (mVertexChecked.count(triangle.indexA) == 0 && index != triangle.indexA && IsOutline(index, triangle.indexA))
+            return triangle.indexA;
+        if (mVertexChecked.count(triangle.indexB) == 0 && index != triangle.indexB && IsOutline(index, triangle.indexB))
+            return triangle.indexB;
+        if (mVertexChecked.count(triangle.indexC) == 0 && index != triangle.indexC && IsOutline(index, triangle.indexC))
+            return triangle.indexC;
+    }
+    return -1;
 }
+
+void Map::AddToDictionary(int indexKey, MapTriangle triangle)
+{
+    if (mTriangleDictionary.count(indexKey) == 1) {
+        mTriangleDictionary[indexKey].push_back(triangle);
+    } else {
+        mTriangleDictionary[indexKey].push_back(triangle);
+    }
+}
+
+void Map::FollowOutline(int index, int outlineIndex)
+{
+    mOutlines[outlineIndex].push_back(index);
+    mVertexChecked.insert(index);
+    int nextVertex = GetConnectedVertex(index);
+
+    if (nextVertex != -1) {
+        FollowOutline(nextVertex, outlineIndex);
+    }
+
+}
+
 
 void Map::TriangulateSquare(MSquare* square)
 {
@@ -202,13 +300,13 @@ void Map::TriangulateSquare(MSquare* square)
         break;
         // 1 points:
     case 1:
-        CreateMesh(node = new MeshNode[3]{ square->mCenterBottom, square->mBottomLeft, square->mCenterLeft }, 3);
+        CreateMesh(node = new MeshNode[3]{ square->mCenterLeft, square->mCenterBottom, square->mBottomLeft }, 3);
         break;
     case 2:
-        CreateMesh(node = new MeshNode[3]{ square->mCenterRight, square->mBottomRight, square->mCenterBottom }, 3);
+        CreateMesh(node = new MeshNode[3]{ square->mBottomRight, square->mCenterBottom, square->mCenterRight }, 3);
         break;
     case 4:
-        CreateMesh(node = new MeshNode[3]{ square->mCenterTop, square->mTopRight, square->mCenterRight }, 3);
+        CreateMesh(node = new MeshNode[3]{ square->mTopRight, square->mCenterRight, square->mCenterTop }, 3);
         break;
     case 8:
         CreateMesh(node = new MeshNode[3]{ square->mTopLeft, square->mCenterTop, square->mCenterLeft }, 3);
@@ -251,16 +349,30 @@ void Map::TriangulateSquare(MSquare* square)
         // 4 point:
     case 15:
         CreateMesh(node = new MeshNode[4]{ square->mTopLeft, square->mTopRight, square->mBottomRight, square->mBottomLeft }, 4);
+        mVertexChecked.insert(node[0].mVertexIndex);
+        mVertexChecked.insert(node[1].mVertexIndex);
+        mVertexChecked.insert(node[2].mVertexIndex);
+        mVertexChecked.insert(node[3].mVertexIndex);
         break;
     }
     if (node != nullptr)
         delete node;
 }
 
-void Geometry::Map::StoreTriangle(MeshNode a, MeshNode b, MeshNode c)
+void Map::StoreTriangle(MeshNode a, MeshNode b, MeshNode c)
 {
     mTempIndexData.push_back(a.mVertexIndex);
     mTempIndexData.push_back(b.mVertexIndex);
     mTempIndexData.push_back(c.mVertexIndex);
     mIndexNr += 3;
+
+    MapTriangle triangle = CreateMapTriangle(a.mVertexIndex, b.mVertexIndex, c.mVertexIndex);
+    AddToDictionary(triangle.indexA, triangle);
+    AddToDictionary(triangle.indexB, triangle);
+    AddToDictionary(triangle.indexC, triangle);
+}
+
+bool Map::MapTriangle::Contains(int index)
+{
+    return (index == indexA || index == indexB || index == indexC);
 }
