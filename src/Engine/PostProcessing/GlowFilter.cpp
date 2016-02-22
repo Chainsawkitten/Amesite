@@ -25,4 +25,3 @@ ShaderProgram* GlowFilter::GetShaderProgram() const {
 void GlowFilter::SetUniforms() {
     
 }
-

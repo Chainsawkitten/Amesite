@@ -261,4 +261,3 @@ void ResourceManager::FreeSound(Audio::SoundBuffer* soundBuffer) {
 ResourceManager& Resources() {
     return ResourceManager::GetInstance();
 }
-
