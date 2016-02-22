@@ -5,6 +5,7 @@
 #include "Geometry/Cube.hpp"
 #include "Geometry/Square.hpp"
 #include "Geometry/OBJModel.hpp"
+#include "Geometry/Map.hpp"
 #include "Texture/Texture2D.hpp"
 #include "Audio/SoundBuffer.hpp"
 #include "Audio/WaveFile.hpp"
@@ -127,6 +128,21 @@ bool ResourceManager::ShaderProgramKey::operator<(const ShaderProgramKey& other)
     if (fragmentShader > other.fragmentShader) return false;
     
     return false;
+}
+
+Geometry::Map* ResourceManager::CreateMap(bool **data, const float squareSize, glm::uvec2 dataDimensions) {
+    if (mMapCount == 0)
+        mMap = new Geometry::Map(data, squareSize, dataDimensions);
+
+    mMapCount++;
+    return mMap;
+}
+
+void ResourceManager::FreeMap() {
+    mMapCount--;
+
+    if (mMapCount <= 0)
+        delete mMap;
 }
 
 Geometry::Cube* ResourceManager::CreateCube() {

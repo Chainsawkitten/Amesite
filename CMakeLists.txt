@@ -54,7 +54,6 @@ endfunction()
 # Copy resources
 set(RESOURCES
         assets/TestTexture.png
-        assets/DustParticle.png
         assets/DefaultDiffuse.png
         assets/DefaultNormal.png
         assets/DefaultSpecular.png
@@ -187,6 +186,7 @@ set(ENGINE_SRCS
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Geometry/Cube.cpp
         src/Engine/Geometry/OBJModel.cpp
+        src/Engine/Geometry/Map.cpp
         src/Engine/Lighting/DeferredLighting.cpp
         src/Engine/Shader/Shader.cpp
         src/Engine/Shader/ShaderProgram.cpp
@@ -245,6 +245,7 @@ set(ENGINE_HEADERS
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Geometry/Cube.hpp
         src/Engine/Geometry/OBJModel.hpp
+        src/Engine/Geometry/Map.hpp
         src/Engine/Lighting/DeferredLighting.hpp
         src/Engine/Shader/Shader.hpp
         src/Engine/Shader/ShaderProgram.hpp
