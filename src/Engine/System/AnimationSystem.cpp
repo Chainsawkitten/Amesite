@@ -37,7 +37,7 @@ glm::vec3 AnimationSystem::Lerp(glm::vec3 p0, glm::vec3 p1, float t) {
 
 glm::vec3 AnimationSystem::Slerp(glm::vec3 p0, glm::vec3 p1, float t) {
     float slerpAngle = glm::acos(glm::dot(glm::normalize(p0), glm::normalize(p1)));
-    if (glm::abs(slerpAngle) < 3.14f)
+    if (glm::sin(slerpAngle) > 0.01f)
         return glm::sin((1 - t) * slerpAngle) / glm::sin(slerpAngle) * p0 + glm::sin(t * slerpAngle) / glm::sin(slerpAngle) * p1;
     return Lerp(p0, p1, t);
 }

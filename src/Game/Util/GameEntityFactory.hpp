@@ -14,6 +14,8 @@ namespace GameObject{
     class Cave;
     class Dust;
     class Explosion;
+    class Pylon;
+    class Shield;
 }
 
 /// Factory responsible for creating prefab entities.
@@ -37,7 +39,24 @@ class GameEntityFactory {
          * @return The enemy GameObject.
          */
         GameObject::Enemy* CreateBasicEnemy(const glm::vec3& origin);
+
+        /// Create pylon enemy.
+        /**
+         * @param origin The enemy's starting position
+         * @return The pylon GameObject.
+         */
+        GameObject::Pylon* CreateEnemyPylon(const glm::vec3& origin);
        
+        /// Create Shield.
+        /**
+         * @param parent Entity The shield's parent entity
+         * @param offset Offset of the shield to the parent entity
+         * @param lifeTime Life time of the sheild
+         * @param health Health of the shield
+         * @return The shield GameObject.
+         */
+        GameObject::Shield* CreateShield(Entity* parentEntity, glm::vec3 offset, float lifeTime, float health);
+
         /// Create a player.
         /**
          * @param origin The player's starting position.

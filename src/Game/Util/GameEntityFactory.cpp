@@ -32,6 +32,8 @@
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Dust.hpp"
 #include "../GameObject/Explosion.hpp"
+#include "../GameObject/Pylon.hpp"
+#include "../GameObject/Shield.hpp"
 
 using namespace GameObject;
 
@@ -48,6 +50,22 @@ GameEntityFactory::GameEntityFactory(){
 Enemy* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
     Enemy* gameObject = new Enemy(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+Pylon* GameEntityFactory::CreateEnemyPylon(const glm::vec3& origin) {
+    Pylon* gameObject = new Pylon(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::Shield* GameEntityFactory::CreateShield(Entity* parentEntity, glm::vec3 offset, float lifeTime, float health) {
+    Shield* gameObject = new Shield(mScene);
+    gameObject->node->GetComponent<Component::RelativeTransform>()->parentEntity = parentEntity;
+    gameObject->node->GetComponent<Component::RelativeTransform>()->Move(offset);
+    gameObject->body->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
+    gameObject->body->GetComponent<Component::Health>()->health = health;
+    gameObject->body->GetComponent<Component::Health>()->maxHealth = health;
     return gameObject;
 }
 

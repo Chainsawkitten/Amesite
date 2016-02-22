@@ -82,6 +82,7 @@ MainScene::MainScene() {
     // Create players 
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(25.f, 0.f, 15.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(25.f, 0.f, 12.f), InputHandler::PLAYER_TWO));
+    GameEntityCreator().CreateShield(mPlayers[1]->node, glm::vec3(0,0,4), 100, 100);
 
     // Create scene
     mCave = GameEntityCreator().CreateMap();
@@ -99,7 +100,7 @@ MainScene::MainScene() {
     glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
 
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(80, 0, 25));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(80, 0, 25));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 35));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
