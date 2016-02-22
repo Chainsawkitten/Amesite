@@ -29,15 +29,15 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mWidth = width;
     mHeight = height;
 
-    CaveGenerator::CaveMap caveMap(width, height, seed);
+    caveMap = new CaveGenerator::CaveMap(width, height, seed);
 
-    caveMap.GenerateCaveMap(percent);
+    caveMap->GenerateCaveMap(percent);
 
-    caveMap.ProcessCaveMap(iterations);
+    caveMap->ProcessCaveMap(iterations);
 
-    caveMap.RemoveSmallRooms(threshold);
+    caveMap->RemoveSmallRooms(threshold);
 
-    caveMap.ConnectClosestRooms(true);
+    caveMap->ConnectClosestRooms(true);
 
     mMap = new bool*[width];
     for (int i = 0; i < width; i++) {
@@ -46,7 +46,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     for (int i = 0; i < width; i++) {   
         for (int j = 0; j < height; j++) {
-            mMap[i][j] = caveMap.GetMap()[i][j];
+            mMap[i][j] = caveMap->GetMap()[i][j];
         }
     }
 
@@ -69,15 +69,9 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 }
 
 Cave::~Cave() {
-
     for (int i = 0; i < 60; i++) {
-
         delete mMap[i];
-
     }
-
+    delete caveMap;
     delete[] mMap;
-
-    Resources().FreeCube();
-
 }
