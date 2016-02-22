@@ -463,6 +463,11 @@ namespace CaveGenerator {
         FillCoordinates(lineCoordinates, tileType);
     }
 
+    void CaveMap::CreateCircle(Coordinate origin, int radius, bool tileType) {
+        std::vector<Coordinate> circleCoordinates = GetCircle(origin, radius);
+        FillCoordinates(circleCoordinates, tileType);
+    }
+
     void CaveMap::CreateTileCircledLine(Coordinate start, Coordinate end, int radius, bool tileType) {
         std::vector<Coordinate> lineCoordinates = GetLine(start, end);
         for (auto& coordinate : lineCoordinates) {
