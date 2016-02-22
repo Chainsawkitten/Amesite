@@ -117,8 +117,8 @@ void GameEntityFactory::SetScene(Scene* scene) {
     mScene = scene;
 }
 
-Cave* GameEntityFactory::CreateMap() {
-    Cave* gameObject = new Cave(mScene);
+Cave* GameEntityFactory::CreateMap(int width, int height, int seed, int percent, int iterations, int threshold) {
+    Cave* gameObject = new Cave(mScene, width, height, seed, percent, iterations, threshold);
     return gameObject;
 }
 

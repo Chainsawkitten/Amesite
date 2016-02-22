@@ -94,9 +94,15 @@ class GameEntityFactory {
 
         /// Create a map.
         /**
+         * @param width Map width.
+         * @param height Map height.
+         * @param seed The seed used for random generation.
+         * @param percent The amount of walls to place initially.
+         * @param iterations How many iterations of smoothing we will do.
+         * @param threshold The minimum room size in tiles.
          * @return The Map GameObject.
          */ 
-        GameObject::Cave* CreateMap();
+        GameObject::Cave* CreateMap(int width, int height, int seed, int percent, int iterations, int threshold);
 
     private:
         Scene* mScene;
