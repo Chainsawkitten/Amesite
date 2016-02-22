@@ -4,6 +4,7 @@ rule=F001
 rule=F002
 parameter=max-directory-depth=100
 
+rule=L001
 rule=L002
 rule=L003
 rule=L005
