@@ -25,7 +25,6 @@ bool** Cave::mMap = nullptr;
 
 
 Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold) : SuperGameObject(scene) {
-
     mWidth = width;
     mHeight = height;
 
@@ -69,15 +68,11 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 }
 
 Cave::~Cave() {
-
     for (int i = 0; i < 60; i++) {
-
-        delete mMap[i];
-
+        delete[] mMap[i];
     }
 
     delete[] mMap;
 
     Resources().FreeCube();
-
 }
