@@ -71,15 +71,11 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 Cave::~Cave() {
 
     for (int i = 0; i < 60; i++) {
-
         delete mMap[i];
-
     }
 
     delete caveMap;
 
     delete[] mMap;
-
-    Resources().FreeCube();
 
 }
