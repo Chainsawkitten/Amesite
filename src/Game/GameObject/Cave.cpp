@@ -44,7 +44,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
         mMap[i] = new bool[height];
     }
 
-    for (int i = 0; i < width; i++) {   
+    for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             mMap[i][j] = caveMap.GetMap()[i][j];
         }
