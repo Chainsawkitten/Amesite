@@ -17,12 +17,11 @@ out VertexData {
 
 void main () {
 	vertexOut.texCoords.x = uv1.x + vertexTexture.x * (uv2.x - uv1.x);
-	vertexOut.texCoords.y = uv1.y + vertexTexture.y * (uv2.y - uv1.y);
+	vertexOut.texCoords.y = uv2.y + vertexTexture.y * (uv1.y - uv2.y);
 	
-    vec2 pos = (vertexPosition + vec2(1.0, 1.0)) / 2.0;
-	pos = position + size * pos;
-	pos = 2.0 * pos - vec2(1.0, 1.0);
-	pos.y = -pos.y;
+    vec2 pos = (vertexPosition + vec2(1.0, 1.0)) * 0.5;
+	vec2 bottomLeft = vec2(2.0 * position.x - 1.0, 1.0 - 2.0 * (position.y + size.y));
+	pos = bottomLeft + 2.0 * size * pos;
 
 	gl_Position = vec4(pos, 0.0, 1.0);
 }
