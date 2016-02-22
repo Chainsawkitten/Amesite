@@ -32,7 +32,7 @@ namespace System {
                 glm::vec3 velocity;
 
                 /// Start, mid and end of life alpha of particle.
-                float alpha[3];
+                glm::vec3 alpha;
 
                 /// Color of the particle.
                 glm::vec3 color;
