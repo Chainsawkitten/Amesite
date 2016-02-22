@@ -133,7 +133,7 @@ namespace CaveGenerator {
              * @param radius The circles radius.
              * @param tileType true if we are filling with walls, false otherwise.
              */
-            void CreateTileCircledLine(Coordinate origin, int radius, bool tileType);
+            void CreateCircle(Coordinate origin, int radius, bool tileType);
 
 
             ///Gets the 2D array of bools that represent the map.
