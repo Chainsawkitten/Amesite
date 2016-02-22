@@ -74,7 +74,7 @@ DanielScene::DanielScene() {
     mPlayers.push_back(player2->body);
     
     // Create scene
-    cave = GameEntityCreator().CreateMap();
+    //cave = GameEntityCreator().CreateMap();
     
     // Directional light.
     Entity* dirLight = CreateEntity();
@@ -128,13 +128,13 @@ void DanielScene::Update(float deltaTime) {
     // UpdateCamera
     //UpdateCamera(mMainCamera, mPlayers);
     
-    for (auto player : mPlayers) {
-        GridCollide(player, deltaTime);
-        if (player->GetComponent<Component::Health>()->health < 0.01f) {
-            player->GetComponent<Component::Physics>()->velocity.x = -10.f;
-            player->GetComponent<Component::Health>()->health = player->GetComponent<Component::Health>()->maxHealth;
-        }
-    }
+    //for (auto player : mPlayers) {
+    //    GridCollide(player, deltaTime);
+    //    if (player->GetComponent<Component::Health>()->health < 0.01f) {
+    //        player->GetComponent<Component::Physics>()->velocity.x = -10.f;
+    //        player->GetComponent<Component::Health>()->health = player->GetComponent<Component::Health>()->maxHealth;
+    //    }
+    //}
 
     // ParticleSystem
     System::Particle().Update(*this, deltaTime);
@@ -169,42 +169,42 @@ void DanielScene::Update(float deltaTime) {
     postProcessing->Render();
 }
 
-bool DanielScene::GridCollide(Entity* entity, float deltaTime) {
-    
-    Component::Transform* transform = entity->GetComponent<Component::Transform>();
-    Component::Physics* physics = entity->GetComponent<Component::Physics>();
-    
-    float x = transform->position.x + (25.f / 2.f) * 10;
-    float z = transform->position.z + (25.f / 2.f) * 10;
-    z = (250 - z) / 10 + 0.4f;
-    x = x / 10 + 0.4f;
-    
-    if (GameObject::Cave::theMap[(int)x][(int)z]) {
-        float oldX = x - physics->velocity.x * deltaTime;
-        float oldZ = z + physics->velocity.z * deltaTime;
-        if (glm::abs(physics->velocity.x) < glm::abs(physics->velocity.z)) {
-            if ((int)x != (int)oldX) {
-                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);
-                physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
-                physics->acceleration = -glm::normalize(physics->acceleration);
-            } else if ((int)z != (int)oldZ) {
-                transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
-                physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
-                physics->acceleration = -glm::normalize(physics->acceleration);
-            }
-        } else {
-            if ((int)z != (int)oldZ) {
-                transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
-                physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
-                physics->acceleration = -glm::normalize(physics->acceleration);
-            }
-            else if ((int)x != (int)oldX) {
-                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);
-                physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
-                physics->acceleration = -glm::normalize(physics->acceleration);
-            }
-        }
-        return true;
-    }
-    return false;
-}
+//bool DanielScene::GridCollide(Entity* entity, float deltaTime) {
+//    
+//    Component::Transform* transform = entity->GetComponent<Component::Transform>();
+//    Component::Physics* physics = entity->GetComponent<Component::Physics>();
+//    
+//    float x = transform->position.x + (25.f / 2.f) * 10;
+//    float z = transform->position.z + (25.f / 2.f) * 10;
+//    z = (250 - z) / 10 + 0.4f;
+//    x = x / 10 + 0.4f;
+//    
+//    if (GameObject::Cave::theMap[(int)x][(int)z]) {
+//        float oldX = x - physics->velocity.x * deltaTime;
+//        float oldZ = z + physics->velocity.z * deltaTime;
+//        if (glm::abs(physics->velocity.x) < glm::abs(physics->velocity.z)) {
+//            if ((int)x != (int)oldX) {
+//                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);
+//                physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
+//                physics->acceleration = -glm::normalize(physics->acceleration);
+//            } else if ((int)z != (int)oldZ) {
+//                transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
+//                physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
+//                physics->acceleration = -glm::normalize(physics->acceleration);
+//            }
+//        } else {
+//            if ((int)z != (int)oldZ) {
+//                transform->position += glm::vec3(0, 0, (int)z - (int)oldZ);
+//                physics->velocity = glm::vec3(physics->velocity.x, 0, -physics->velocity.z);
+//                physics->acceleration = -glm::normalize(physics->acceleration);
+//            }
+//            else if ((int)x != (int)oldX) {
+//                transform->position -= glm::vec3((int)x - (int)oldX, 0, 0);
+//                physics->velocity = glm::vec3(-physics->velocity.x, 0, physics->velocity.z);
+//                physics->acceleration = -glm::normalize(physics->acceleration);
+//            }
+//        }
+//        return true;
+//    }
+//    return false;
+//}
