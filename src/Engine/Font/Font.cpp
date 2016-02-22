@@ -51,6 +51,7 @@ Font::Font(const char* filename, float height) {
     Resources().FreeShader(fragmentShader);
     
     mColor = glm::vec3(0.f, 0.f, 0.f);
+    mIsFromFile = true;
 }
 
 Font::Font(const char* source, int sourceLength, float height) {
@@ -77,6 +78,7 @@ Font::Font(const char* source, int sourceLength, float height) {
     Resources().FreeShader(fragmentShader);
     
     mColor = glm::vec3(0.f, 0.f, 0.f);
+    mIsFromFile = false;
 }
 
 Font::~Font() {
@@ -144,6 +146,10 @@ void Font::SetColor(const glm::vec3& color) {
 
 float Font::GetHeight() const {
     return mHeight;
+}
+
+bool Font::IsFromFile() const {
+    return mIsFromFile;
 }
 
 float Font::RenderCharacter(char character, const glm::vec2& position) {

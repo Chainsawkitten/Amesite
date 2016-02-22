@@ -67,8 +67,14 @@ class Font {
          */
         float GetHeight() const;
         
+        /// Get whether the font was created from file.
+        /**
+         * @return true if the font was loaded from a file, false otherwise.
+         */
+        bool IsFromFile() const;
+        
     private:
-        float RenderCharacter(char character, const glm::vec2& position);
+        bool mIsFromFile;
         
         GLuint mTexture;
         stbtt_bakedchar mCData[96]; // ASCII 32..126 is 95 glyphs
@@ -80,4 +86,6 @@ class Font {
         
         // Shaders
         ShaderProgram* mShaderProgram;
+        
+        float RenderCharacter(char character, const glm::vec2& position);
 };
