@@ -47,16 +47,16 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
         }
     }
 
-    for (unsigned int i = 0; i < mDataDimensions.x - 1; i++) {
-        mSquares[i] = new MSquare[mDataDimensions.y - 1];
-        for (unsigned int j = 0; j < mDataDimensions.y - 1; j++) {
-            mSquares[i][j] = CreateMSquare(controlNodes[i][j + 1], controlNodes[i + 1][j + 1], controlNodes[i + 1][j], controlNodes[i][j]);
+    for (unsigned int x = 0; x < mDataDimensions.x - 1; x++) {
+        mSquares[x] = new MSquare[mDataDimensions.y - 1];
+        for (unsigned int y = 0; y < mDataDimensions.y - 1; y++) {
+            mSquares[x][y] = CreateMSquare(controlNodes[x][y + 1], controlNodes[x + 1][y + 1], controlNodes[x + 1][y], controlNodes[x][y]);
         }
     }
 
-    for (unsigned int k = 0; k < mDataDimensions.x-1; k++) {
-        for (unsigned int l = 0; l < mDataDimensions.y-1; l++) {
-            TriangulateSquare(&mSquares[k][l]);
+    for (unsigned int x = 0; x < mDataDimensions.x-1; x++) {
+        for (unsigned int y = 0; y < mDataDimensions.y-1; y++) {
+            TriangulateSquare(&mSquares[x][y]);
         }
     }
     mIndexData = new unsigned int[mTempIndexData.size()];
