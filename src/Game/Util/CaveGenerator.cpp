@@ -395,7 +395,7 @@ namespace CaveGenerator {
             }
         }
 
-        if (possibleConnection && forceAccessibilityFromMainRoom) { 
+        if (possibleConnection && forceAccessibilityFromMainRoom) {
             CreatePassage(*firstBestRoom, *secondBestRoom, *firstBestCoordinate, *secondBestCoordinate);
             ConnectClosestRooms(true);
         }

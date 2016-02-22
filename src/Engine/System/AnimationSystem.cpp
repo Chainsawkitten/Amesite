@@ -81,7 +81,7 @@ void AnimationSystem::Update(Scene& scene, float deltaTime) {
                 if (interpolation > 0.99f) {
                     animationClip->activeKeyFrame = (animationClip->activeKeyFrame + 1) % keyFrameVector->size();
                     animationClip->animationTime = 0.f;
-                } 
+                }
             }
         }
     }
