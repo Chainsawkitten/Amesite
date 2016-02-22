@@ -13,6 +13,7 @@ namespace Audio {
 class PostProcessing;
 class FXAAFilter;
 class GammaCorrectionFilter;
+class Font;
 
 /// Albin's testing scene.
 class AlbinScene : public Scene {
@@ -56,4 +57,7 @@ class AlbinScene : public Scene {
         
         // Vector containing players
         std::vector<Entity*> mPlayers;
+        
+        // Text rendering.
+        Font* mFont;
 };

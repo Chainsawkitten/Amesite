@@ -84,7 +84,7 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(25.f, 0.f, 12.f), InputHandler::PLAYER_TWO));
 
     // Create scene
-    mCave = GameEntityCreator().CreateMap();
+    mCave = GameEntityCreator().CreateMap(60, 60, 0, 50, 10, 40);
     
     // Directional light.
     Entity* dirLight = CreateEntity();
@@ -205,7 +205,6 @@ void MainScene::Update(float deltaTime) {
 }
 
 int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale) {
-
     int oldX = glm::floor(point.x / gridScale);
     int oldZ = glm::floor(point.z / gridScale);
     int newX = glm::floor((point + velocity * deltaTime).x / gridScale);
@@ -219,7 +218,7 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
         //We collide in X
         if (X > Z) {
 
-            if (oldX != newX) {         
+            if (oldX != newX) {
                 return 0;
             } else if (oldZ != newZ) {
                 return 1;

@@ -75,9 +75,9 @@ ALenum WaveFile::ToALFormat(short channels, short bitsPerSample) {
     
     switch (bitsPerSample) {
     case 16:
-    	if (stereo)
+        if (stereo)
             return AL_FORMAT_STEREO16;
-    	else
+        else
             return AL_FORMAT_MONO16;
     case 8:
         if (stereo)

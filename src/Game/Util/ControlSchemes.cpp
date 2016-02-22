@@ -61,7 +61,7 @@ void ControlScheme::StickRotate(Component::Controller* controller, float deltaTi
     
     if (glm::length(direction) > Input()->AimDeadzone()) {
         Input()->SetLastValidAimDirection(controller->playerID, glm::vec2(b, a));
-        if(a >= 0)
+        if (a >= 0)
             entity->GetComponent<Component::Transform>()->yaw = (float)glm::degrees(glm::atan(b / a));
         else
             entity->GetComponent<Component::Transform>()->yaw = 180.f + (float)glm::degrees(glm::atan(b / a));
