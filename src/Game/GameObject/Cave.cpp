@@ -57,7 +57,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     map->AddComponent<Component::Material>();
 
     map->GetComponent<Component::Mesh>()->geometry = Resources().CreateMap(mMap, 1.f, glm::uvec2(width, height));
-    map->GetComponent<Component::Transform>()->Rotate(0, 0, 0);
+    map->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
     map->GetComponent<Component::Physics>()->angularDragFactor = 0;
     map->GetComponent<Component::Physics>()->gravityFactor = 0;
     map->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f, 0.f, 0.f);
