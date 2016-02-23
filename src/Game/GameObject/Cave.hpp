@@ -27,11 +27,14 @@ namespace GameObject {
             /// Destructor
             ~Cave();
 
+            bool** GetCaveData();
+
             /// Map of all walls in the cave system.
-            static bool** mMap;
+            bool** mMap;
 
             /// Map of the %Cave
             Entity* map;
+
             /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;
         private:

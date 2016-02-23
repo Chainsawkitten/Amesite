@@ -204,7 +204,7 @@ void MainScene::Update(float deltaTime) {
     postProcessing->Render();
 }
 
-int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale) {
+int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
     int oldX = glm::floor(point.x / gridScale);
     int oldZ = glm::floor(point.z / gridScale);
     int newX = glm::floor((point + velocity * deltaTime).x / gridScale);
@@ -213,14 +213,17 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
     float X = (newX - oldX) / velocity.x;
     float Z = (newZ - oldZ) / velocity.z;
 
+    bool** map = cave->GetCaveData();
+
     //We check if we moved to another cell in the grid.
-    if (GameObject::Cave::mMap[abs(newZ)][abs(newX)]) {
+    if (map[abs(newZ)][abs(newX)]) {
         //We collide in X
         if (X > Z) {
 
             if (oldX != newX) {
                 return 0;
-            } else if (oldZ != newZ) {
+            }
+            else if (oldZ != newZ) {
                 return 1;
             }
         }
@@ -228,7 +231,8 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
         else {
             if (oldZ != newZ) {
                 return 1;
-            } else if (oldX != newX) {
+            }
+            else if (oldX != newX) {
                 return 0;
             }
         }
@@ -251,10 +255,10 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
     //glm::vec3 width = glm::vec3(2.9f, 0.f, 0.f);
     //glm::vec3 height = glm::vec3(0.f, 0.f, 2.9f);
 
-    int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale);
-    int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale);
-    int c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime, gridScale);
-    int c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime, gridScale);
+    int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale, mCave);
+    int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale, mCave);
+    int c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime, gridScale, mCave);
+    int c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime, gridScale, mCave);
 
     switch (c0) {
 
