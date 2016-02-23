@@ -122,7 +122,7 @@ void Texture2D::SetWrapping(GLint wrapMode) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 }
 
-void Texture2D::Render(const glm::vec2 &position, const glm::vec2 &size) const {
+void Texture2D::Render(const glm::vec2 &position, const glm::vec2 &size, float alpha) const {
     // Disable depth testing.
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
     glDisable(GL_DEPTH_TEST);
@@ -145,6 +145,7 @@ void Texture2D::Render(const glm::vec2 &position, const glm::vec2 &size) const {
     glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
     glUniform2fv(mShaderProgram->GetUniformLocation("position"), 1, &(position / screenSize)[0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("size"), 1, &(size / screenSize)[0]);
+    glUniform1f(mShaderProgram->GetUniformLocation("alpha"), alpha);
     
     glBindVertexArray(mSquare->GetVertexArray());
     
