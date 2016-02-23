@@ -24,7 +24,7 @@ using namespace GameObject;
 bool** Cave::mMap = nullptr;
 
 
-Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold) : SuperGameObject(scene) {
+Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold, CaveGenerator::Coordinate playerPosition, std::vector<CaveGenerator::Coordinate> bossPositions) : SuperGameObject(scene) {
 
     mWidth = width;
     mHeight = height;
@@ -40,6 +40,14 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     caveMap->RemoveSmallRooms(threshold);
 
+    caveMap->CreateCircle(playerPosition, 7, false);
+
+    caveMap->ConnectClosestRooms(true);
+
+    for (auto& bossPosition : bossPositions) {
+        caveMap->CreateCircle(bossPosition, 7, false);
+    }
+
     mMap = new bool*[width];
     for (int i = 0; i < width; i++) {
         mMap[i] = new bool[height];
@@ -50,18 +58,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
             mMap[i][j] = caveMap->GetMap()[i][j];
         }
     }
-}
 
-void GameObject::Cave::UpdateMap() {
-    for (int i = 0; i < mWidth; i++) {
-        for (int j = 0; j < mHeight; j++) {
-            mMap[i][j] = caveMap->GetMap()[i][j];
-        }
-    }
-}
-
-
-void Cave::CreateGeometry(Scene* scene) {
     map = CreateEntity(scene);
     map->AddComponent<Component::Mesh>();
     map->AddComponent<Component::Transform>();
@@ -73,7 +70,7 @@ void Cave::CreateGeometry(Scene* scene) {
     map->GetComponent<Component::Physics>()->angularDragFactor = 0;
     map->GetComponent<Component::Physics>()->gravityFactor = 0;
     map->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f, 0.f, 0.f);
-    map->GetComponent<Component::Transform>()->Move(glm::vec3(5.f*static_cast<float>(mWidth) / 2.f, 0.f, 5.f*static_cast<float>(mWidth) / 2.f));
+    map->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*static_cast<float>(mWidth) / 2.f, 0.f, zScale*static_cast<float>(mWidth) / 2.f));
     map->GetComponent<Component::Transform>()->scale = glm::vec3(xScale, 5.f, zScale);
     map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
     map->GetComponent<Component::Material>()->SetNormal("Resources/wall2_norm.png");

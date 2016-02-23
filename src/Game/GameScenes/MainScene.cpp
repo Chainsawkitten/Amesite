@@ -88,11 +88,11 @@ MainScene::MainScene() {
     int iterations = 10;
     int threshold = 40;
 
-    // Create a map.
-    mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold);
+    CaveGenerator::Coordinate playerPosition(width/2, height/2);
+    std::vector<CaveGenerator::Coordinate> bossPositions;
 
-    // Create a circle big enough for the players to start in.
-    mCave->caveMap->CreateCircle(CaveGenerator::Coordinate(width/2, height/2), 7, false);
+    // Create a map.
+    mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
 
     float playerStartX = mCave->xScale*(static_cast<float>(width) / 2.f);
     float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
@@ -100,15 +100,6 @@ MainScene::MainScene() {
     // Create players 
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
-
-    // Connect closest rooms.
-    mCave->caveMap->ConnectClosestRooms(true);
-
-    // Update caves internal map.
-    mCave->UpdateMap();
-
-    // Create geometry.
-    mCave->CreateGeometry(this);
     
     // Directional light.
     Entity* dirLight = CreateEntity();
