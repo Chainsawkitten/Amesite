@@ -8,6 +8,7 @@
 #include <System/SoundSystem.hpp>
 
 #include "Game.hpp"
+#include "GameScenes/SplashScene.hpp"
 #include "GameScenes/MainScene.hpp"
 //#include "GameScenes/PontusScene.hpp"
 //#include "GameScenes/AlbinScene.hpp"
@@ -47,7 +48,7 @@ int main() {
     System::SoundSystem* soundSystem = new System::SoundSystem();
     
     Game game;
-    game.SetScene(new MainScene());
+    game.SetScene(new SplashScene());
 
     // Main game loop.
     double lastTime = glfwGetTime();
