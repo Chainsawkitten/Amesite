@@ -25,4 +25,5 @@ class Game {
     
     private:
         Scene* mActiveScene;
+        Scene* mNextScene;
 };

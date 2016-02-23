@@ -45,6 +45,8 @@ int main() {
     
     Game game;
     game.SetScene(new MainScene());
+    game.Update(0.001f);
+    game.SetScene(new MainScene());
 
     // Main game loop.
     double lastTime = glfwGetTime();
