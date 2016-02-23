@@ -19,11 +19,11 @@ FXAAFilter::~FXAAFilter() {
 }
 
 ShaderProgram* FXAAFilter::GetShaderProgram() const {
-	return mShaderProgram;
+    return mShaderProgram;
 }
 
 void FXAAFilter::SetUniforms() {
-	glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &mScreenSize[0]);
+    glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &mScreenSize[0]);
 }
 
 void FXAAFilter::SetScreenSize(const glm::vec2& screenSize) {

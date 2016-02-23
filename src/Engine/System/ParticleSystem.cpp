@@ -18,7 +18,7 @@ using namespace System;
 
 ParticleSystem* ParticleSystem::mActiveInstance = nullptr;
 
-ParticleSystem::ParticleSystem() { 
+ParticleSystem::ParticleSystem() {
     mMaxParticleCount = 1000;
     mParticleCount = 0;
 }
@@ -59,8 +59,8 @@ void ParticleSystem::EmitParticle(glm::vec3 position, Component::ParticleEmitter
         particle.velocity.y = emitter->particleType.minVelocity.y + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.y - emitter->particleType.minVelocity.y));
         particle.velocity.z = emitter->particleType.minVelocity.z + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.z - emitter->particleType.minVelocity.z));
         
-        std::vector<Particle>* particleVector = mScene->GetVectorContents<Particle>();       
-        particleVector->push_back(particle);      
+        std::vector<Particle>* particleVector = mScene->GetVectorContents<Particle>();
+        particleVector->push_back(particle);
         mParticleCount++;
     }
 }
@@ -70,7 +70,7 @@ void ParticleSystem::Update(Scene& scene, double time) {
     std::vector<Particle>* particleVector = scene.GetVectorContents<Particle>();
     if (particleVector!= nullptr && !particleVector->empty()) {
         for (std::vector<int>::size_type i = 0; i != particleVector->size(); i++) {
-            particleVector->at(i).life += static_cast<float>(time);         
+            particleVector->at(i).life += static_cast<float>(time);
             if (particleVector->at(i).life >= particleVector->at(i).lifetime) {
                 particleVector->erase(particleVector->begin() + i);
                 mParticleCount--;

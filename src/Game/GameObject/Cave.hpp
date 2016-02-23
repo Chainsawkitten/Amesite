@@ -38,8 +38,12 @@ namespace GameObject {
             /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;
 
+            /// cave X scale.
             float xScale;
+
+            /// cave Z scale.
             float zScale;
+
         private:
             int mWidth;
             int mHeight;

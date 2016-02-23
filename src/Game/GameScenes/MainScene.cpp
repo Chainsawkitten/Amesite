@@ -27,6 +27,7 @@
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
 
+#include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
 
 #include <Resources.hpp>
@@ -50,7 +51,7 @@
 using namespace GameObject;
 
 MainScene::MainScene() {
-    mSoundSystem.SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    System::SoundSystem::GetInstance()->SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
     
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -186,7 +187,7 @@ void MainScene::Update(float deltaTime) {
     mLifeTimeSystem.Update(*this, deltaTime);
 
     // Update sounds.
-    mSoundSystem.Update(*this);
+    System::SoundSystem::GetInstance()->Update(*this);
     
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
@@ -220,7 +221,6 @@ void MainScene::Update(float deltaTime) {
 }
 
 int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale) {
-
     int oldX = glm::floor(point.x / gridScale);
     int oldZ = glm::floor(point.z / gridScale);
     int newX = glm::floor((point + velocity * deltaTime).x / gridScale);
@@ -234,7 +234,7 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
         //We collide in X
         if (X > Z) {
 
-            if (oldX != newX) {         
+            if (oldX != newX) {
                 return 0;
             } else if (oldZ != newZ) {
                 return 1;

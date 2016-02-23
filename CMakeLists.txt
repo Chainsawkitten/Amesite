@@ -51,8 +51,27 @@ function(create_directory_groups)
     endforeach()
 endfunction()
 
+# Coding style
+find_program(VERA vera++
+    DOC "Location of vera++"
+)
+if(NOT ${VERA} MATCHES "VERA-NOTFOUND")
+    file(GLOB_RECURSE VERA_SRCS
+            ${CMAKE_SOURCE_DIR}/src/*.cpp
+            ${CMAKE_SOURCE_DIR}/src/*.h
+        )
+    add_custom_target(VeraStyle ALL
+            ${VERA}
+            -r ${CMAKE_SOURCE_DIR}/vera
+            -p modership
+            --warning
+            ${VERA_SRCS}
+        )
+endif()
+
 # Copy resources
 set(RESOURCES
+        assets/ABeeZee.ttf
         assets/TestTexture.png
         assets/DefaultDiffuse.png
         assets/DefaultNormal.png
@@ -118,6 +137,8 @@ set(EMBEDDED_INPUT
         shaders/Default2D.vert
         shaders/SingleColor2D.frag
         shaders/Texture2D.frag
+        shaders/Font.vert
+        shaders/Font.frag
         shaders/Post.vert
         shaders/PostCopy.frag
         shaders/PostColor.frag
@@ -181,6 +202,7 @@ set(ENGINE_SRCS
         src/Engine/Audio/SoundBuffer.cpp
         src/Engine/Audio/VorbisFile.cpp
         src/Engine/Audio/WaveFile.cpp
+        src/Engine/Font/Font.cpp
         src/Engine/Geometry/Geometry2D.cpp
         src/Engine/Geometry/Square.cpp
         src/Engine/Geometry/Geometry3D.cpp
@@ -240,6 +262,7 @@ set(ENGINE_HEADERS
         src/Engine/Audio/SoundFile.hpp
         src/Engine/Audio/VorbisFile.hpp
         src/Engine/Audio/WaveFile.hpp
+        src/Engine/Font/Font.hpp
         src/Engine/Geometry/Geometry2D.hpp
         src/Engine/Geometry/Square.hpp
         src/Engine/Geometry/Geometry3D.hpp
@@ -301,6 +324,7 @@ set_property(TARGET Engine PROPERTY CXX_STANDARD_REQUIRED ON)
 ## Game ##
 set(GAME_SRCS
         src/Game/main.cpp
+        src/Game/Game.cpp
         src/Game/Util/GameSettings.cpp
         src/Game/Util/GameEntityFactory.cpp
         src/Game/Util/ControlSchemes.cpp
@@ -335,6 +359,7 @@ set(GAME_SRCS
     )
 
 set(GAME_HEADERS
+        src/Game/Game.hpp
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameEntityFactory.hpp
