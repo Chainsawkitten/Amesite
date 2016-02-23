@@ -41,6 +41,7 @@
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
 #include "../Util/MainCamera.hpp"
+#include "../Util/CaveGenerator.hpp"
 #include <Util/Log.hpp>
 
 #include "../GameObject/Player.hpp"
@@ -80,12 +81,26 @@ MainScene::MainScene() {
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 70.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
-    // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(25.f, 0.f, 15.f), InputHandler::PLAYER_ONE));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(25.f, 0.f, 12.f), InputHandler::PLAYER_TWO));
-
     // Create scene
-    mCave = GameEntityCreator().CreateMap(60, 60, 0, 50, 10, 40);
+    int width = 60;
+    int height = 60;
+    int seed = 0;
+    int percent = 50;
+    int iterations = 10;
+    int threshold = 40;
+
+    CaveGenerator::Coordinate playerPosition(width/2, height/2);
+    std::vector<CaveGenerator::Coordinate> bossPositions;
+
+    // Create a map.
+    mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
+
+    float playerStartX = mCave->xScale*(static_cast<float>(width) / 2.f);
+    float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
+
+    // Create players 
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
     // Directional light.
     Entity* dirLight = CreateEntity();
