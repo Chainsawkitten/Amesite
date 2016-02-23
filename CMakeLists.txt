@@ -324,6 +324,7 @@ set_property(TARGET Engine PROPERTY CXX_STANDARD_REQUIRED ON)
 ## Game ##
 set(GAME_SRCS
         src/Game/main.cpp
+        src/Game/Game.cpp
         src/Game/Util/GameSettings.cpp
         src/Game/Util/GameEntityFactory.cpp
         src/Game/Util/ControlSchemes.cpp
@@ -358,6 +359,7 @@ set(GAME_SRCS
     )
 
 set(GAME_HEADERS
+        src/Game/Game.hpp
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameEntityFactory.hpp

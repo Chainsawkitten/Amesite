@@ -6,6 +6,7 @@
 #include "Util/GameSettings.hpp"
 #include <Util/FileSystem.hpp>
 
+#include "Game.hpp"
 #include "GameScenes/MainScene.hpp"
 //#include "GameScenes/PontusScene.hpp"
 //#include "GameScenes/AlbinScene.hpp"
@@ -41,11 +42,9 @@ int main() {
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
     Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
-
-    //AlbinScene scene;
-    //DanielScene scene;
-    //IvarScene scene;
-    MainScene scene;
+    
+    Game game;
+    game.SetScene(new MainScene());
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -55,7 +54,7 @@ int main() {
         lastTime = glfwGetTime();
 
         window->Update();
-        scene.Update(static_cast<float>(deltaTime));
+        game.Update(static_cast<float>(deltaTime));
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
@@ -75,6 +74,7 @@ int main() {
         glfwPollEvents();
     }
     
+    game.Free();
     delete window;
     
     glfwTerminate();
