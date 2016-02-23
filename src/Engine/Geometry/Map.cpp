@@ -32,8 +32,7 @@ unsigned int Map::GetIndexCount() const {
     return mIndexNr;
 }
 
-void Map::MarchingSquares(bool ** data, const float squareSize)
-{
+void Map::MarchingSquares(bool ** data, const float squareSize) {
     mMapWidth = mDataDimensions.x * squareSize;
     mMapHeight = mDataDimensions.y * squareSize;
 
@@ -44,37 +43,40 @@ void Map::MarchingSquares(bool ** data, const float squareSize)
         controlNodes[x] = new ControlNode[mDataDimensions.y];
         for (unsigned int y = 0; y < mDataDimensions.y; y++) {
             glm::vec3 pos = glm::vec3(-mMapWidth / 2.f + x * squareSize + squareSize / 2.f, 0.f, -mMapHeight / 2.f + y * squareSize + squareSize / 2.f);
-            controlNodes[x][y] = CreateControlNode(pos, data[y][x], squareSize, glm::uvec2(x,y));
+            controlNodes[x][y] = CreateControlNode(pos, data[y][x], squareSize, glm::uvec2(x, y));
         }
     }
 
-    for (unsigned int i = 0; i < mDataDimensions.x - 1; i++) {
-        mSquares[i] = new MSquare[mDataDimensions.y - 1];
-        for (unsigned int j = 0; j < mDataDimensions.y - 1; j++) {
-            mSquares[i][j] = CreateMSquare(controlNodes[i][j + 1], controlNodes[i + 1][j + 1], controlNodes[i + 1][j], controlNodes[i][j]);
+    for (unsigned int x = 0; x < mDataDimensions.x - 1; x++) {
+        mSquares[x] = new MSquare[mDataDimensions.y - 1];
+        for (unsigned int y = 0; y < mDataDimensions.y - 1; y++) {
+            mSquares[x][y] = CreateMSquare(controlNodes[x][y + 1], controlNodes[x + 1][y + 1], controlNodes[x + 1][y], controlNodes[x][y]);
         }
     }
 
-    for (unsigned int k = 0; k < mDataDimensions.x-1; k++) {
-        for (unsigned int l = 0; l < mDataDimensions.y-1; l++) {
-            TriangulateSquare(&mSquares[k][l]);
+    for (unsigned int x = 0; x < mDataDimensions.x-1; x++) {
+        for (unsigned int y = 0; y < mDataDimensions.y-1; y++) {
+            TriangulateSquare(&mSquares[x][y]);
         }
     }
     mIndexData = new unsigned int[mTempIndexData.size()];
-    mVertexData = new  Vertex[mTempVertexData.size()];
+    mVertexData = new Vertex[mTempVertexData.size()];
 
     std::copy(mTempIndexData.begin(), mTempIndexData.end(), mIndexData);
     std::copy(mTempVertexData.begin(), mTempVertexData.end(), mVertexData);
-
+    
+    // Free used memory.
     for (unsigned int m = 0; m < mDataDimensions.x-1; m++) {
         delete[] controlNodes[m];
         delete[] mSquares[m];
     }
     delete[] controlNodes[mDataDimensions.x-1];
+    delete[] controlNodes;
+    delete[] mSquares;
+    
 }
 
-Map::MSquare Map::CreateMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft)
-{
+Map::MSquare Map::CreateMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft) {
     MSquare square;
     square.mTopLeft = topLeft;
     square.mTopRight = topRight;
@@ -100,8 +102,7 @@ Map::MSquare Map::CreateMSquare(ControlNode topLeft, ControlNode topRight, Contr
     return square;
 }
 
-Map::ControlNode Map::CreateControlNode(const glm::vec3 position, const bool active, const float squareSize, glm::uvec2 index)
-{
+Map::ControlNode Map::CreateControlNode(const glm::vec3 position, const bool active, const float squareSize, glm::uvec2 index) {
     ControlNode node;
 
     node.mActive = active;
@@ -115,9 +116,8 @@ Map::ControlNode Map::CreateControlNode(const glm::vec3 position, const bool act
     return node;
 }
 
-Map::MeshNode Map::CreateMeshNode(const glm::vec3 position, glm::uvec2 index, bool above, const float squareSize, glm::vec2 texCoords)
-{
-    MeshNode node; 
+Map::MeshNode Map::CreateMeshNode(const glm::vec3 position, glm::uvec2 index, bool above, const float squareSize, glm::vec2 texCoords) {
+    MeshNode node;
     node.mVertexIndex = -1;
     if (above) {
         node.mPosition = position + glm::vec3(0.f, 0.f, 1.f)* squareSize / 2.f;
@@ -130,8 +130,7 @@ Map::MeshNode Map::CreateMeshNode(const glm::vec3 position, glm::uvec2 index, bo
     return node;
 }
 
-void Map::CreateMesh(MeshNode* node, unsigned int size)
-{
+void Map::CreateMesh(MeshNode* node, unsigned int size) {
     for (unsigned int i = 0; i < size; i++) {
         if (node[i].mVertexIndex == -1) {
             node[i].mVertexIndex = mVertexNr;
@@ -155,8 +154,7 @@ void Map::CreateMesh(MeshNode* node, unsigned int size)
         StoreTriangle(node[0], node[4], node[5]);
 }
 
-void Map::TriangulateSquare(MSquare* square)
-{
+void Map::TriangulateSquare(MSquare* square) {
     MeshNode* node = nullptr;
     switch (square->mType) {
     case 0:
@@ -203,7 +201,7 @@ void Map::TriangulateSquare(MSquare* square)
         CreateMesh(node = new MeshNode[5]{ square->mTopLeft, square->mCenterTop, square->mCenterRight, square->mBottomRight, square->mBottomLeft }, 5);
         break;
     case 13:
-        CreateMesh(node = new MeshNode[5]{ square->mTopLeft, square->mTopRight, square->mCenterRight, square->mCenterBottom,square->mBottomLeft }, 5);
+        CreateMesh(node = new MeshNode[5]{ square->mTopLeft, square->mTopRight, square->mCenterRight, square->mCenterBottom, square->mBottomLeft }, 5);
         break;
     case 14:
         CreateMesh(node = new MeshNode[5]{ square->mTopLeft, square->mTopRight, square->mBottomRight, square->mCenterBottom, square->mCenterLeft }, 5);
@@ -215,7 +213,7 @@ void Map::TriangulateSquare(MSquare* square)
         break;
     }
     if (node != nullptr)
-        delete node;
+        delete[] node;
 }
 
 void Geometry::Map::StoreTriangle(MeshNode a, MeshNode b, MeshNode c)

@@ -207,7 +207,6 @@ void MainScene::Update(float deltaTime) {
 }
 
 int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale) {
-
     int oldX = glm::floor(point.x / gridScale);
     int oldZ = glm::floor(point.z / gridScale);
     int newX = glm::floor((point + velocity * deltaTime).x / gridScale);
@@ -221,7 +220,7 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
         //We collide in X
         if (X > Z) {
 
-            if (oldX != newX) {         
+            if (oldX != newX) {
                 return 0;
             } else if (oldZ != newZ) {
                 return 1;
