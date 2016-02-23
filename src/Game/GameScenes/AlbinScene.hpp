@@ -3,7 +3,6 @@
 #include <Scene/Scene.hpp>
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
-#include <System/SoundSystem.hpp>
 #include "../System/ControllerSystem.hpp"
 
 namespace Audio {
@@ -39,9 +38,6 @@ class AlbinScene : public Scene {
         
         // ControllerSystem.
         System::ControllerSystem mControllerSystem;
-        
-        // SoundSystem.
-        System::SoundSystem mSoundSystem;
         
         Audio::SoundBuffer* mTestSoundBuffer;
         

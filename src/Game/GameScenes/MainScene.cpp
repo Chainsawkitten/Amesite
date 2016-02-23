@@ -27,6 +27,7 @@
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
 
+#include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
 
 #include <Resources.hpp>
@@ -49,7 +50,7 @@
 using namespace GameObject;
 
 MainScene::MainScene() {
-    mSoundSystem.SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    System::SoundSystem::GetInstance()->SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
     
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -171,7 +172,7 @@ void MainScene::Update(float deltaTime) {
     mLifeTimeSystem.Update(*this, deltaTime);
 
     // Update sounds.
-    mSoundSystem.Update(*this);
+    System::SoundSystem::GetInstance()->Update(*this);
     
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
