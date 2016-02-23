@@ -23,7 +23,10 @@ namespace GameObject {
              * @param threshold The minimum room size in tiles.
              */
             Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold);
-           
+
+            void UpdateMap();
+
+            void CreateGeometry(Scene* scene);
             /// Destructor
             ~Cave();
 
@@ -34,6 +37,9 @@ namespace GameObject {
             Entity* map;
             /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;
+
+            float xScale;
+            float zScale;
         private:
             int mWidth;
             int mHeight;
