@@ -113,9 +113,6 @@ namespace Geometry {
         std::vector<Vertex> mTempVertexData;
         std::vector<unsigned int> mTempIndexData;
 
-        std::vector<Vertex> mTempWallVertexData;
-        std::vector<unsigned int> mTempWallIndexData;
-
         Vertex *mVertexData = nullptr;
         unsigned int mVertexNr = 0;
 

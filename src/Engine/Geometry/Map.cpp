@@ -210,6 +210,8 @@ void Map::CreateWallMesh()
             mTempVertexData.push_back(vertex[2]);
             mTempVertexData.push_back(vertex[3]);
 
+            mVertexNr += 4;
+
             mTempIndexData.push_back(startIndex + 0);
             mTempIndexData.push_back(startIndex + 2);
             mTempIndexData.push_back(startIndex + 3);
@@ -217,6 +219,8 @@ void Map::CreateWallMesh()
             mTempIndexData.push_back(startIndex + 3);
             mTempIndexData.push_back(startIndex + 1);
             mTempIndexData.push_back(startIndex + 0);
+
+            mIndexNr += 6;
         }
     }
 

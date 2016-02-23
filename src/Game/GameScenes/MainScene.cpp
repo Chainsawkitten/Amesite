@@ -174,7 +174,7 @@ void MainScene::Update(float deltaTime) {
     mSoundSystem.Update(*this);
     
     // Update game logic
-    //mMainCamera->UpdateRelativePosition(mPlayers);
+    mMainCamera->UpdateRelativePosition(mPlayers);
 
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());

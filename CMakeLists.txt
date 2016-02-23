@@ -347,6 +347,7 @@ set(GAME_SRCS
         src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
         src/Game/GameScenes/IvarScene.cpp
+        src/Game/GameScenes/JonathanScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
         src/Game/GameObject/Bullet.cpp
         src/Game/GameObject/Player.cpp
@@ -382,6 +383,7 @@ set(GAME_HEADERS
         src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp
         src/Game/GameScenes/IvarScene.hpp
+        src/Game/GameScenes/JonathanScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
         src/Game/GameObject/Bullet.hpp
         src/Game/GameObject/Player.hpp
