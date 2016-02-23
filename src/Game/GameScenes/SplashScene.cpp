@@ -18,5 +18,11 @@ void SplashScene::Update(float deltaTime) {
     
     // Render logo.
     glm::vec2 size = glm::vec2(static_cast<float>(mLogo->GetWidth()), static_cast<float>(mLogo->GetHeight()));
-    mLogo->Render((MainWindow::GetInstance()->GetSize() - size) * 0.5f, size);
+    glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
+    if (size.x > screenSize.x || size.y > screenSize.y) {
+        float xScale = screenSize.x / size.x;
+        float yScale = screenSize.y / size.y;
+        size *= xScale < yScale ? xScale : yScale;
+    }
+    mLogo->Render((screenSize - size) * 0.5f, size);
 }
