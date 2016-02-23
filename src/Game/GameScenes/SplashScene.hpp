@@ -25,4 +25,5 @@ class SplashScene : public Scene {
         
     private:
         Texture2D* mLogo;
+        float mElapsedTime;
 };

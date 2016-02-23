@@ -6,6 +6,7 @@
 
 SplashScene::SplashScene() {
     mLogo = Resources().CreateTexture2DFromFile("Resources/Mugglorna.png");
+    mElapsedTime = 0.f;
 }
 
 SplashScene::~SplashScene() {
@@ -13,16 +14,31 @@ SplashScene::~SplashScene() {
 }
 
 void SplashScene::Update(float deltaTime) {
+    mElapsedTime += deltaTime;
+    
     // Clear screen.
     glClear(GL_COLOR_BUFFER_BIT);
     
     // Render logo.
     glm::vec2 size = glm::vec2(static_cast<float>(mLogo->GetWidth()), static_cast<float>(mLogo->GetHeight()));
     glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
+    
+    // Scale logo down if larger than screen.
     if (size.x > screenSize.x || size.y > screenSize.y) {
         float xScale = screenSize.x / size.x;
         float yScale = screenSize.y / size.y;
         size *= xScale < yScale ? xScale : yScale;
     }
-    mLogo->Render((screenSize - size) * 0.5f, size);
+    
+    // Fade in and out logo.
+    float alpha = 0.5f;
+    if (mElapsedTime > 2.5f) {
+        alpha = 3.f - mElapsedTime;
+    } else if (mElapsedTime > 0.5f) {
+        alpha = 1.f;
+    } else {
+        alpha = mElapsedTime * 2.f;
+    }
+    
+    mLogo->Render((screenSize - size) * 0.5f, size, alpha);
 }
