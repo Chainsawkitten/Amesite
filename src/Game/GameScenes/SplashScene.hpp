@@ -1,7 +1,9 @@
 #pragma once
-#include <Scene/Scene.hpp>
 
+#include <Scene/Scene.hpp>
 #include <vector>
+
+class Texture2D;
 
 /// Splash screen shown when starting the game.
 /**
@@ -22,5 +24,5 @@ class SplashScene : public Scene {
         void Update(float deltaTime);
         
     private:
-        
+        Texture2D* mLogo;
 };
