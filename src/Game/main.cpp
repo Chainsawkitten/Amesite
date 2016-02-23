@@ -5,6 +5,7 @@
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
 #include <Util/FileSystem.hpp>
+#include <System/SoundSystem.hpp>
 
 #include "Game.hpp"
 #include "GameScenes/MainScene.hpp"
@@ -43,9 +44,9 @@ int main() {
     Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
     
+    System::SoundSystem* soundSystem = new System::SoundSystem();
+    
     Game game;
-    game.SetScene(new MainScene());
-    game.Update(0.001f);
     game.SetScene(new MainScene());
 
     // Main game loop.
@@ -77,6 +78,7 @@ int main() {
     }
     
     game.Free();
+    delete soundSystem;
     delete window;
     
     glfwTerminate();
