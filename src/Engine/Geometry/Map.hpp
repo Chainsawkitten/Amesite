@@ -18,7 +18,7 @@ namespace Geometry {
         * @param wallHeight sets the height of wall mesh.
         * @return vector contraining the isolines.
         */
-        Map(bool **data, const float squareSize, glm::uvec2 dataDimensions, float wallHeight = 5.f);
+        Map(bool **data, glm::uvec2 dataDimensions, float wallHeight);
 
         /// Destructor
         ~Map();
@@ -66,17 +66,20 @@ namespace Geometry {
             MeshNode mAbove, mRight;
         };
 
-        /// Representation of a square in the algorithm
+        /// Representation of a square in the algorithm.
         struct MSquare {
             ControlNode mTopLeft, mTopRight, mBottomRight, mBottomLeft;
             MeshNode mCenterTop, mCenterRight, mCenterBottom, mCenterLeft;
             int mType;
         };
+
+        /// Triangle representation used when generating walls.
         struct MapTriangle {
             int indexA;
             int indexB;
             int indexC;
 
+            int indices[3];
             bool Contains(int index);
         };
 
@@ -107,9 +110,16 @@ namespace Geometry {
         float mMapHeight, mMapWidth, mWallHeight;
         std::unordered_set<int> mVertexChecked;
 
+        /// List of all outlines.
         std::vector<std::vector<int>> mOutlines;
+
+        /// Mapping indices to the triangles that contain them.
         std::map<int, std::vector<MapTriangle>> mTriangleDictionary;
 
+        /// Mapping vertices solely based on position - to assist creating outlines.
+        std::map<std::vector<int>, int> mVertexIndexMap;
+
+        /// Vertex and index data
         std::vector<Vertex> mTempVertexData;
         std::vector<unsigned int> mTempIndexData;
 

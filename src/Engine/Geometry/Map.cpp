@@ -3,10 +3,10 @@
 
 using namespace Geometry;
 
-Map::Map(bool **data, const float squareSize, glm::uvec2 dataDimensions, float wallHeight) {
+Map::Map(bool **data, glm::uvec2 dataDimensions, float wallHeight) {
     mDataDimensions = dataDimensions;
     mWallHeight = wallHeight;
-    MarchingSquares(data, squareSize);
+    MarchingSquares(data, 1.f);
 
     GenerateBuffers();
     GenerateVertexArray();
@@ -112,6 +112,10 @@ Map::MapTriangle Map::CreateMapTriangle(int a, int b, int c)
     triangle.indexA = a;
     triangle.indexB = b;
     triangle.indexC = c;
+
+    triangle.indices[0] = a;
+    triangle.indices[1] = b;
+    triangle.indices[2] = c;
     return triangle;
 }
 
@@ -263,13 +267,14 @@ int Map::GetConnectedVertex(int index)
     for (unsigned int i = 0; i < containingVertex.size(); i++) {
         MapTriangle triangle = containingVertex[i];
         
+        for (int j = 0; j < 3; j++) {
+            int vertex = triangle.indices[j];
 
-        if (mVertexChecked.count(triangle.indexA) == 0 && index != triangle.indexA && IsOutline(index, triangle.indexA))
-            return triangle.indexA;
-        if (mVertexChecked.count(triangle.indexB) == 0 && index != triangle.indexB && IsOutline(index, triangle.indexB))
-            return triangle.indexB;
-        if (mVertexChecked.count(triangle.indexC) == 0 && index != triangle.indexC && IsOutline(index, triangle.indexC))
-            return triangle.indexC;
+            if (vertex != index && mVertexChecked.count(vertex) == 0) {
+                if (IsOutline(index, vertex))
+                    return vertex;
+            }
+        }
     }
     return -1;
 }
@@ -370,7 +375,35 @@ void Map::StoreTriangle(MeshNode a, MeshNode b, MeshNode c)
     mTempIndexData.push_back(c.mVertexIndex);
     mIndexNr += 3;
 
-    MapTriangle triangle = CreateMapTriangle(a.mVertexIndex, b.mVertexIndex, c.mVertexIndex);
+    int tempIndexA, tempIndexB, tempIndexC;
+    std::vector<int> indexPositionA, indexPositionB, indexPositionC;
+    indexPositionA.push_back((int)(a.mPosition.x * 10.f));
+    indexPositionA.push_back((int)(a.mPosition.y * 10.f));
+    indexPositionA.push_back((int)(a.mPosition.z * 10.f));
+
+    indexPositionB.push_back((int)(b.mPosition.x * 10.f));
+    indexPositionB.push_back((int)(b.mPosition.y * 10.f));
+    indexPositionB.push_back((int)(b.mPosition.z * 10.f));
+
+    indexPositionC.push_back((int)(c.mPosition.x * 10.f));
+    indexPositionC.push_back((int)(c.mPosition.y * 10.f));
+    indexPositionC.push_back((int)(c.mPosition.z * 10.f));
+
+
+    if (mVertexIndexMap.count(indexPositionA) == 0)
+        mVertexIndexMap[indexPositionA] = a.mVertexIndex;
+
+    if (mVertexIndexMap.count(indexPositionB) == 0)
+        mVertexIndexMap[indexPositionB] = b.mVertexIndex;
+
+    if (mVertexIndexMap.count(indexPositionC) == 0)
+        mVertexIndexMap[indexPositionC] = c.mVertexIndex;
+
+    tempIndexA = mVertexIndexMap[indexPositionA];
+    tempIndexB = mVertexIndexMap[indexPositionB];
+    tempIndexC = mVertexIndexMap[indexPositionC];
+
+    MapTriangle triangle = CreateMapTriangle(tempIndexA, tempIndexB, tempIndexC);
     AddToDictionary(triangle.indexA, triangle);
     AddToDictionary(triangle.indexB, triangle);
     AddToDictionary(triangle.indexC, triangle);
