@@ -90,7 +90,9 @@ set(RESOURCES
         assets/enemy_tail_crystal_glow.png
         assets/enemy_head_crystal.obj
         assets/enemy_tail_crystal.obj
-        assets/player/ship_body_diff.png
+        assets/player/ship_body_diff_healthy.png
+        assets/player/ship_body_diff_heavy_damage.png
+        assets/player/ship_body_diff_medium_damage.png
         assets/player/ship_body_spec.png
         assets/player/ship_body_glow.png
         assets/player/ship_engine_diff.png
