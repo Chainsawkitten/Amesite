@@ -36,7 +36,7 @@ void PhysicsSystem::Update(Scene& scene, float deltaTime) {
                 physicsComp->velocity = glm::vec3(0.f, 0.f, 0.f);
 
             // Update position.
-            transformComp->position += physicsComp->velocity * deltaTime;     
+            transformComp->position += physicsComp->velocity * deltaTime;
 
             // --- Angular Velocity ---
             // Add angular acceleration.

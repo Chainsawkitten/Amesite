@@ -30,6 +30,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
     node->AddComponent<Component::Controller>()->speed = 5000.f;
     node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
+    node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     node->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     node->AddComponent<Component::Health>()->removeOnLowHealth = false;
     node->GetComponent<Component::Health>()->faction = 0;
@@ -46,6 +47,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     body->AddComponent<Component::Mesh>()->geometry = mShipBody = Resources().CreateOBJModel("Resources/player/ship_body.obj");
     body->AddComponent<Component::Material>();
+
     body->GetComponent<Component::Material>()->SetDiffuse("Resources/player/ship_body_diff.png");
     body->GetComponent<Component::Material>()->SetSpecular("Resources/player/ship_body_spec.png");
     body->GetComponent<Component::Material>()->SetGlow("Resources/player/ship_body_glow.png");
@@ -54,15 +56,14 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     light = CreateEntity(scene);
     light->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
     light->GetComponent<Component::RelativeTransform>()->parentEntity = body;
-    light->AddComponent<Component::Animation>(); 
+    light->AddComponent<Component::Animation>();
     light->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
     light->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
     light->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
     light->GetComponent<Component::SpotLight>()->attenuation = 0.01f;
-    light->GetComponent<Component::SpotLight>()->color.g = 0.f;
 
     leftTurrent = CreateEntity(scene);
-    leftTurrent->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 15);
+    leftTurrent->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
     leftTurrent->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     leftTurrent->AddComponent<Component::Animation>();
     leftTurrent->AddComponent<Component::Spawner>()->delay = 0.25f;
@@ -73,7 +74,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     sound->gain = 2.f;
 
     rightTurrent = CreateEntity(scene);
-    rightTurrent->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 15);
+    rightTurrent->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 13);
     rightTurrent->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     rightTurrent->AddComponent<Component::Animation>();
     rightTurrent->AddComponent<Component::Spawner>()->delay = 0.25f;

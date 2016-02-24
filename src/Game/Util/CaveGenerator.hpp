@@ -127,6 +127,14 @@ namespace CaveGenerator {
              */
             bool IsWithinMapRange(const Coordinate & coordinate);
 
+            ///Creates a circle of given tiletype.
+            /**
+             * @param origin The circles origin.
+             * @param radius The circles radius.
+             * @param tileType true if we are filling with walls, false otherwise.
+             */
+            void CreateCircle(Coordinate origin, int radius, bool tileType);
+
 
             ///Gets the 2D array of bools that represent the map.
             /**

@@ -6,7 +6,6 @@
 #include <System/CollisionSystem.hpp>
 #include <System/ParticleSystem.hpp>
 #include <System/AnimationSystem.hpp>
-#include <System/SoundSystem.hpp>
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
 #include "Game/System/ControllerSystem.hpp"
@@ -49,9 +48,6 @@ class MainScene : public Scene {
         void Update(float deltaTime);
         
     private:
-        // SoundSystem.
-        System::SoundSystem mSoundSystem;
-        
         // PhysicsSystem.
         System::PhysicsSystem mPhysicsSystem;
 

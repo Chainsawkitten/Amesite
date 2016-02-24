@@ -36,7 +36,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
 
     head = CreateEntity(scene);
-    head->AddComponent<Component::RelativeTransform>()->Move(0,0,5.5f);
+    head->AddComponent<Component::RelativeTransform>()->Move(0, 0, 5.5f);
     head->GetComponent<Component::RelativeTransform>()->parentEntity = node;
     head->AddComponent<Component::Mesh>()->geometry = mEnemyHead = Resources().CreateOBJModel("Resources/enemy_head_crystal.obj");
     head->AddComponent<Component::Material>();
@@ -50,7 +50,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
 
     tail = CreateEntity(scene);
     tail->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    tail->GetComponent<Component::RelativeTransform>()->Move(0,0,-5.5f);
+    tail->GetComponent<Component::RelativeTransform>()->Move(0, 0, -5.5f);
     tail->AddComponent<Component::Mesh>()->geometry = mEnemyTail = Resources().CreateOBJModel("Resources/enemy_tail_crystal.obj");
     tail->AddComponent<Component::Material>();
     tail->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_tail_crystal_diff.png");

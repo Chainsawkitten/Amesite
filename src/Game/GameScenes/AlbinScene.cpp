@@ -1,6 +1,7 @@
 #include "AlbinScene.hpp"
 
 #include <Resources.hpp>
+#include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
 
 #include "../Util/GameSettings.hpp"
@@ -22,10 +23,12 @@
 #include <PostProcessing/FXAAFilter.hpp>
 #include <PostProcessing/GammaCorrectionFilter.hpp>
 
+#include <Font/Font.hpp>
+
 using namespace GameObject;
 
 AlbinScene::AlbinScene() {
-    mSoundSystem.SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    System::SoundSystem::GetInstance()->SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
     
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -76,16 +79,21 @@ AlbinScene::AlbinScene() {
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
     gammaCorrectionFilter = new GammaCorrectionFilter();
+    
+    mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 24.f);
+    mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
 }
 
 AlbinScene::~AlbinScene() {
-    RemoveEntity(s1);
+    (s1);
     
     Resources().FreeSound(mTestSoundBuffer);
     
     delete fxaaFilter;
     delete gammaCorrectionFilter;
     delete postProcessing;
+    
+    Resources().FreeFont(mFont);
 }
 
 void AlbinScene::Update(float deltaTime) {
@@ -102,7 +110,7 @@ void AlbinScene::Update(float deltaTime) {
     UpdateModelMatrices();
     
     // Update sounds.
-    mSoundSystem.Update(*this);
+    System::SoundSystem::GetInstance()->Update(*this);
     
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
@@ -117,4 +125,6 @@ void AlbinScene::Update(float deltaTime) {
     postProcessing->ApplyFilter(gammaCorrectionFilter);
     
     postProcessing->Render();
+    
+    mFont->RenderText("Test", glm::vec2(10.f, 10.f), 1000.f);
 }

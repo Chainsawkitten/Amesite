@@ -24,11 +24,11 @@ glm::mat4 AnimationSystem::GetOrientation(float yaw, float pitch, float roll) {
 }
 
 float AnimationSystem::LerpTime(float animationTime, float frameTime) {
-    return  std::min(animationTime / frameTime, 1.f);
+    return std::min(animationTime / frameTime, 1.f);
 }
 
 float AnimationSystem::SlerpTime(float animationTime, float frameTime) {
-    return  std::min((1 - glm::cos(3.14f / frameTime * animationTime)) / 2, 1.f);
+    return std::min((1 - glm::cos(3.14f / frameTime * animationTime)) / 2, 1.f);
 }
 
 glm::vec3 AnimationSystem::Lerp(glm::vec3 p0, glm::vec3 p1, float t) {
@@ -81,7 +81,7 @@ void AnimationSystem::Update(Scene& scene, float deltaTime) {
                 if (interpolation > 0.99f) {
                     animationClip->activeKeyFrame = (animationClip->activeKeyFrame + 1) % keyFrameVector->size();
                     animationClip->animationTime = 0.f;
-                } 
+                }
             }
         }
     }

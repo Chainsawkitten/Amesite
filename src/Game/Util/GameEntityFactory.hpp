@@ -6,6 +6,10 @@
 class Scene;
 class Entity;
 
+namespace CaveGenerator {
+    class Coordinate;
+}
+
 namespace GameObject{
     class Bullet;
     class Player;
@@ -121,9 +125,17 @@ class GameEntityFactory {
 
         /// Create a map.
         /**
+         * @param width Map width.
+         * @param height Map height.
+         * @param seed The seed used for random generation.
+         * @param percent The amount of walls to place initially.
+         * @param iterations How many iterations of smoothing we will do.
+         * @param threshold The minimum room size in tiles.
+         * @param playerPosition Where the players start.
+         * @param bossPositions A vector of boss positions.
          * @return The Map GameObject.
          */ 
-        GameObject::Cave* CreateMap();
+        GameObject::Cave* CreateMap(int width, int height, int seed, int percent, int iterations, int threshold, CaveGenerator::Coordinate playerPosition, std::vector<CaveGenerator::Coordinate> bossPositions);
 
     private:
         Scene* mScene;

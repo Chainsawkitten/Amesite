@@ -5,7 +5,9 @@
 #include <Util/Log.hpp>
 #include "Util/GameSettings.hpp"
 #include <Util/FileSystem.hpp>
+#include <System/SoundSystem.hpp>
 
+#include "Game.hpp"
 #include "GameScenes/MainScene.hpp"
 //#include "GameScenes/PontusScene.hpp"
 //#include "GameScenes/AlbinScene.hpp"
@@ -13,9 +15,9 @@
 //#include "GameScenes/DanielScene.hpp"
 //#include "GameScenes/IvarScene.hpp"
 
-//#define _CRTDBG_MAP_ALLOC
-//#include <stdlib.h>
-//#include <crtdbg.h>
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 #include <thread>
 #include <vector>
@@ -24,7 +26,7 @@
 using namespace std;
 
 int main() {
-    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     
     //Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
@@ -41,11 +43,11 @@ int main() {
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
     Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
-
-    //AlbinScene scene;
-    //DanielScene scene;
-    //IvarScene scene;
-    MainScene scene;
+    
+    System::SoundSystem* soundSystem = new System::SoundSystem();
+    
+    Game game;
+    game.SetScene(new MainScene());
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -55,7 +57,7 @@ int main() {
         lastTime = glfwGetTime();
 
         window->Update();
-        scene.Update(static_cast<float>(deltaTime));
+        game.Update(static_cast<float>(deltaTime));
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
@@ -75,6 +77,8 @@ int main() {
         glfwPollEvents();
     }
     
+    game.Free();
+    delete soundSystem;
     delete window;
     
     glfwTerminate();
@@ -83,6 +87,6 @@ int main() {
     
     Log() << "Game ended - " << time(nullptr) << "\n";
 
-    //_CrtDumpMemoryLeaks();
+    _CrtDumpMemoryLeaks();
     return 0;
 }

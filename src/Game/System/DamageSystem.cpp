@@ -29,22 +29,27 @@ DamageSystem::~DamageSystem() {
 
 void DamageSystem::Update(Scene& scene) {
     std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
+    // Loop through collision vector
     for (auto collisionX : *collisionVector) {
+        // Does the colliding entity have a health component or a reflect component?
         Component::Health* HealthX = collisionX->entity->GetComponent<Component::Health>();
         if (HealthX != nullptr && collisionX->entity->GetComponent<Component::Reflect>() == nullptr) {
             for (auto collisionY : collisionX->intersect) {
+                // Does the intersecting entities have a damage component?
                 Component::Damage* damageY = collisionY->GetComponent<Component::Damage>();
                 if (damageY != nullptr) {
-                    if (damageY->faction != HealthX->faction) { //Does the damaging if entity doesn't belong to the same faction as the health entity.
-                        HealthX->health -= damageY->damageAmount;   //Reduce health by damage.
-                        if (damageY->removeOnImpact) {// Remove damage entity if it should be removed on impact
+                    // Does the damaging if entity doesn't belong to the same faction as the health entity.
+                    if (damageY->faction != HealthX->faction) {
+                        // Reduce health by damage.
+                        HealthX->health -= damageY->damageAmount;
+                        // Remove damage entity if it should be removed on impact
+                        if (damageY->removeOnImpact) {
+                            // Create Explosion
                             Component::Explode* explodeComp = collisionY->GetComponent<Component::Explode>();
                             if (explodeComp != nullptr)
-                                GameEntityCreator().CreateExplosion(collisionY->GetComponent<Component::Transform>()->GetWorldPosition() + explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex); // Create Explosion
-                            if (damageY->entity->gameObject != nullptr) // Remove game object
-                                damageY->entity->gameObject->Clear();
-                            else
-                                damageY->entity->Clear();
+                                GameEntityCreator().CreateExplosion(collisionY->GetComponent<Component::Transform>()->GetWorldPosition() + explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex);
+                            //Kill game object
+                            damageY->entity->gameObject->Kill();
                         }
                     }
                 }

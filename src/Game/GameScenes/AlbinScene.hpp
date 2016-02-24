@@ -3,7 +3,6 @@
 #include <Scene/Scene.hpp>
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
-#include <System/SoundSystem.hpp>
 #include "../System/ControllerSystem.hpp"
 
 namespace Audio {
@@ -13,6 +12,7 @@ namespace Audio {
 class PostProcessing;
 class FXAAFilter;
 class GammaCorrectionFilter;
+class Font;
 
 /// Albin's testing scene.
 class AlbinScene : public Scene {
@@ -39,9 +39,6 @@ class AlbinScene : public Scene {
         // ControllerSystem.
         System::ControllerSystem mControllerSystem;
         
-        // SoundSystem.
-        System::SoundSystem mSoundSystem;
-        
         Audio::SoundBuffer* mTestSoundBuffer;
         
         Entity* s1;
@@ -56,4 +53,7 @@ class AlbinScene : public Scene {
         
         // Vector containing players
         std::vector<Entity*> mPlayers;
+        
+        // Text rendering.
+        Font* mFont;
 };
