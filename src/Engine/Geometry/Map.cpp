@@ -40,6 +40,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
     ControlNode** controlNodes = new ControlNode*[mDataDimensions.x];
     MSquare** mSquares = new MSquare*[mDataDimensions.x - 1];
 
+    // Node creation for marching squares
     for (unsigned int x = 0; x < mDataDimensions.x; x++) {
         controlNodes[x] = new ControlNode[mDataDimensions.y];
         for (unsigned int y = 0; y < mDataDimensions.y; y++) {
@@ -48,6 +49,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
         }
     }
 
+    // Node creation for marching squares
     for (unsigned int x = 0; x < mDataDimensions.x - 1; x++) {
         mSquares[x] = new MSquare[mDataDimensions.y - 1];
         for (unsigned int y = 0; y < mDataDimensions.y - 1; y++) {
@@ -55,14 +57,17 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
         }
     }
 
+    // Top mesh generation.
     for (unsigned int x = 0; x < mDataDimensions.x-1; x++) {
         for (unsigned int y = 0; y < mDataDimensions.y-1; y++) {
             TriangulateSquare(&mSquares[x][y]);
         }
     }
 
+    // Wall mesh generation
     CreateWallMesh();
 
+    // Initialize index and vertex data and copy from temp.
     mIndexData = new unsigned int[mTempIndexData.size()];
     mVertexData = new Vertex[mTempVertexData.size()];
 
