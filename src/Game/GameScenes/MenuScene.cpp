@@ -36,22 +36,22 @@ MenuScene::MenuScene() {
     dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.2f;
     
     // Initialize post-processing.
-    postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
-    fxaaFilter = new FXAAFilter();
-    gammaCorrectionFilter = new GammaCorrectionFilter();
-    glowFilter = new GlowFilter();
-    glowBlurFilter = new GlowBlurFilter();
+    mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
+    mFxaaFilter = new FXAAFilter();
+    mGammaCorrectionFilter = new GammaCorrectionFilter();
+    mGlowFilter = new GlowFilter();
+    mGlowBlurFilter = new GlowBlurFilter();
     
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 20.f);
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
 }
 
 MenuScene::~MenuScene() {
-    delete fxaaFilter;
-    delete gammaCorrectionFilter;
-    delete glowFilter;
-    delete glowBlurFilter;
-    delete postProcessing;
+    delete mFxaaFilter;
+    delete mGammaCorrectionFilter;
+    delete mGlowFilter;
+    delete mGlowBlurFilter;
+    delete mPostProcessing;
     
     Resources().FreeFont(mFont);
 }
@@ -61,31 +61,31 @@ void MenuScene::Update(float deltaTime) {
     UpdateModelMatrices();
     
     // Render.
-    mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
+    mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
     // Glow.
-    glowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+    mGlowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
     int blurAmount = 5;
     for (int i=0; i<blurAmount; ++i) {
-        glowBlurFilter->SetHorizontal(true);
-        postProcessing->ApplyFilter(glowBlurFilter);
-        glowBlurFilter->SetHorizontal(false);
-        postProcessing->ApplyFilter(glowBlurFilter);
+        mGlowBlurFilter->SetHorizontal(true);
+        mPostProcessing->ApplyFilter(mGlowBlurFilter);
+        mGlowBlurFilter->SetHorizontal(false);
+        mPostProcessing->ApplyFilter(mGlowBlurFilter);
     }
-    postProcessing->ApplyFilter(glowFilter);
+    mPostProcessing->ApplyFilter(mGlowFilter);
     
     // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
-        fxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
-        postProcessing->ApplyFilter(fxaaFilter);
+        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+        mPostProcessing->ApplyFilter(mFxaaFilter);
     }
     
     // Gamma correction.
-    gammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
-    postProcessing->ApplyFilter(gammaCorrectionFilter);
+    mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
+    mPostProcessing->ApplyFilter(mGammaCorrectionFilter);
     
     // Render to back buffer.
-    postProcessing->Render();
+    mPostProcessing->Render();
     
     // Test text rendering.
     mFont->RenderText("Test", glm::vec2(0.f, 0.f), 1000.f);

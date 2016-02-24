@@ -36,11 +36,11 @@ class MenuScene : public Scene {
         GameObject::Camera* mMainCamera;
         
         // Post processing.
-        PostProcessing* postProcessing;
-        FXAAFilter* fxaaFilter;
-        GammaCorrectionFilter* gammaCorrectionFilter;
-        GlowFilter* glowFilter;
-        GlowBlurFilter* glowBlurFilter;
+        PostProcessing* mPostProcessing;
+        FXAAFilter* mFxaaFilter;
+        GammaCorrectionFilter* mGammaCorrectionFilter;
+        GlowFilter* mGlowFilter;
+        GlowBlurFilter* mGlowBlurFilter;
         
         // Text.
         Font* mFont;
