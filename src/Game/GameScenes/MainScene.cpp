@@ -107,6 +107,13 @@ MainScene::MainScene() {
     
     // Create boss
     mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
+    
+    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX,playerStartZ));
+
+    // Add players to checkpoint system.
+    for (auto& player : mPlayers) {
+        mCheckpointSystem.AddPlayer(player);
+    }
 
     // Directional light.
     Entity* dirLight = CreateEntity();
@@ -207,6 +214,8 @@ void MainScene::Update(float deltaTime) {
     
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
+
+    mCheckpointSystem.Update();
 
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
