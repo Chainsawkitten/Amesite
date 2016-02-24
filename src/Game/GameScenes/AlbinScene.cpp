@@ -1,6 +1,7 @@
 #include "AlbinScene.hpp"
 
 #include <Resources.hpp>
+#include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
 
 #include "../Util/GameSettings.hpp"
@@ -27,7 +28,7 @@
 using namespace GameObject;
 
 AlbinScene::AlbinScene() {
-    mSoundSystem.SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    System::SoundSystem::GetInstance()->SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
     
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -109,7 +110,7 @@ void AlbinScene::Update(float deltaTime) {
     UpdateModelMatrices();
     
     // Update sounds.
-    mSoundSystem.Update(*this);
+    System::SoundSystem::GetInstance()->Update(*this);
     
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());

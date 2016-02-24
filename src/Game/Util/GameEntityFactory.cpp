@@ -24,6 +24,7 @@
 #include <Scene/Scene.hpp>
 
 #include <../Game/Util/ControlSchemes.hpp>
+#include "../Util/CaveGenerator.hpp"
 
 #include "../GameObject/Bullet.hpp"
 #include "../GameObject/Player.hpp"
@@ -117,8 +118,8 @@ void GameEntityFactory::SetScene(Scene* scene) {
     mScene = scene;
 }
 
-Cave* GameEntityFactory::CreateMap(int width, int height, int seed, int percent, int iterations, int threshold) {
-    Cave* gameObject = new Cave(mScene, width, height, seed, percent, iterations, threshold);
+Cave* GameEntityFactory::CreateMap(int width, int height, int seed, int percent, int iterations, int threshold, CaveGenerator::Coordinate playerPosition, std::vector<CaveGenerator::Coordinate> bossPositions) {
+    Cave* gameObject = new Cave(mScene, width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
     return gameObject;
 }
 

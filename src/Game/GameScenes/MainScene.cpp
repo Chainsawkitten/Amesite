@@ -27,6 +27,7 @@
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
 
+#include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
 
 #include <Resources.hpp>
@@ -40,6 +41,7 @@
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
 #include "../Util/MainCamera.hpp"
+#include "../Util/CaveGenerator.hpp"
 #include <Util/Log.hpp>
 
 #include "../GameObject/Player.hpp"
@@ -49,7 +51,7 @@
 using namespace GameObject;
 
 MainScene::MainScene() {
-    mSoundSystem.SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    System::SoundSystem::GetInstance()->SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
     
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -79,13 +81,34 @@ MainScene::MainScene() {
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(90.f, 500.f, 90.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
-    // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(25.f, 0.f, 15.f), InputHandler::PLAYER_ONE));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(25.f, 0.f, 12.f), InputHandler::PLAYER_TWO));
-
     // Create scene
-    mCave = GameEntityCreator().CreateMap(60, 60, 0, 50, 10, 40);
+    int width = 60;
+    int height = 60;
+    int seed = 0;
+    int percent = 50;
+    int iterations = 10;
+    int threshold = 40;
+
+    CaveGenerator::Coordinate playerPosition(width/2, height/2);
+    std::vector<CaveGenerator::Coordinate> bossPositions;
+
+    // Create a map.
+    mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
+
+    float playerStartX = mCave->xScale*(static_cast<float>(width) / 2.f);
+    float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
+
+    // Create players 
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
+    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX,playerStartZ));
+
+    // Add players to checkpoint system.
+    for (auto& player : mPlayers) {
+        mCheckpointSystem.AddPlayer(player);
+    }
+
     // Directional light.
     Entity* dirLight = CreateEntity();
     dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
@@ -171,10 +194,12 @@ void MainScene::Update(float deltaTime) {
     mLifeTimeSystem.Update(*this, deltaTime);
 
     // Update sounds.
-    mSoundSystem.Update(*this);
+    System::SoundSystem::GetInstance()->Update(*this);
     
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
+
+    mCheckpointSystem.Update();
 
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
