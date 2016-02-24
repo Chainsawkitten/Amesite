@@ -17,6 +17,7 @@ class Texture2D;
 namespace Audio {
     class SoundBuffer;
 }
+class Font;
 
 /// Handles all resource loading.
 class ResourceManager {
@@ -69,9 +70,12 @@ class ResourceManager {
 
         /// Create a map for rendering if it doesn't already exist.
         /**
+        * @param data from which to generate the map.
+        * @param dataDimensions height and width of the data.
+        * @param wallheight height of wall mesh. Default = 5.0
         * @return The map instance.
         */
-        Geometry::Map* CreateMap(bool **data, const float squareSize, glm::uvec2 dataDimensions);
+        Geometry::Map* CreateMap(bool **data, glm::uvec2 dataDimensions, float wallHeight = 5.f);
 
         /// Free the reference to the map.
         /**
@@ -155,6 +159,30 @@ class ResourceManager {
          */
         void FreeSound(Audio::SoundBuffer* soundBuffer);
         
+        /// Create a font if it doesn't already exist.
+        /**
+         * @param source TTF source.
+         * @param sourceLength Length of the source.
+         * @param height Character height.
+         * @return The %Font instance
+         */
+        Font* CreateFontEmbedded(const char* source, int sourceLength, float height);
+        
+        /// Create a font if it doesn't already exist.
+        /**
+         * @param filename Filename of the TTF file.
+         * @param height Character height.
+         * @return The %Font instance
+         */
+        Font* CreateFontFromFile(std::string filename, float height);
+        
+        /// Free the reference to the font.
+        /**
+         * Deletes the instance if no more references exist.
+         * @param font %Font to dereference.
+         */
+        void FreeFont(Font* font);
+        
     private:
         ResourceManager();
         ResourceManager(ResourceManager const&);
@@ -227,6 +255,34 @@ class ResourceManager {
         };
         std::map<std::string, SoundInstance> mSounds;
         std::map<Audio::SoundBuffer*, std::string> mSoundsInverse;
+        
+        // Font
+        struct FontInstance {
+            Font* font;
+            int count;
+        };
+        struct FontKey {
+            const char* source;
+            float height;
+            
+            FontKey();
+            
+            bool operator<(const FontKey& other) const;
+        };
+        std::map<FontKey, FontInstance> mFonts;
+        std::map<Font*, FontKey> mFontsInverse;
+        
+        // Font from file
+        struct FontFromFileKey {
+            std::string filename;
+            float height;
+            
+            FontFromFileKey();
+            
+            bool operator<(const FontFromFileKey& other) const;
+        };
+        std::map<FontFromFileKey, FontInstance> mFontsFromFile;
+        std::map<Font*, FontFromFileKey> mFontsFromFileInverse;
 };
 
 /// Get the resource manager.

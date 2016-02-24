@@ -21,11 +21,11 @@ GlowBlurFilter::~GlowBlurFilter() {
 }
 
 ShaderProgram* GlowBlurFilter::GetShaderProgram() const {
-	return mShaderProgram;
+    return mShaderProgram;
 }
 
 void GlowBlurFilter::SetUniforms() {
-	glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &mScreenSize[0]);
+    glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &mScreenSize[0]);
     glUniform1f(mShaderProgram->GetUniformLocation("horizontal"), mHorizontal);
 }
 

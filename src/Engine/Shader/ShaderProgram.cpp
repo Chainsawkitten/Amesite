@@ -2,29 +2,29 @@
 #include "Shader.hpp"
 
 ShaderProgram::ShaderProgram(std::initializer_list<const Shader*> shaders) {
-	mShaderProgram = glCreateProgram();
-
-	for (auto shader : shaders)
-		glAttachShader(mShaderProgram, shader->GetShaderID());
-
-	glLinkProgram(mShaderProgram);
+    mShaderProgram = glCreateProgram();
     
     for (auto shader : shaders)
-		glDetachShader(mShaderProgram, shader->GetShaderID());
+        glAttachShader(mShaderProgram, shader->GetShaderID());
+    
+    glLinkProgram(mShaderProgram);
+    
+    for (auto shader : shaders)
+        glDetachShader(mShaderProgram, shader->GetShaderID());
 }
 
 ShaderProgram::~ShaderProgram() {
-	glDeleteProgram(mShaderProgram);
+    glDeleteProgram(mShaderProgram);
 }
 
 void ShaderProgram::Use() const {
-	glUseProgram(mShaderProgram);
+    glUseProgram(mShaderProgram);
 }
 
 GLuint ShaderProgram::GetAttributeLocation(const char* name) const {
-	return glGetAttribLocation(mShaderProgram, name);
+    return glGetAttribLocation(mShaderProgram, name);
 }
 
 GLuint ShaderProgram::GetUniformLocation(const char* name) const {
-	return glGetUniformLocation(mShaderProgram, name);
+    return glGetUniformLocation(mShaderProgram, name);
 }

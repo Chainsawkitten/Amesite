@@ -18,7 +18,7 @@ namespace Geometry {
             Terrain(const char* filename);
 
 			///TODO comment.
-			Terrain::Terrain(float** floatArray, int width, int height);
+			Terrain::Terrain(float** floatArray, int width, int height, glm::vec2 textureRepeat);
     
             /// Destructor
             ~Terrain();
@@ -70,7 +70,7 @@ namespace Geometry {
              * Default: (1.0, 1.0)
              * @return How many times the texture should repeat
              */
-            glm::vec2 TextureRepeat() const;
+            glm::vec2 GetTextureRepeat() const;
     
             /// Set how many times the texture should repeat.
             /**
@@ -80,6 +80,7 @@ namespace Geometry {
             
         private:
             void GenerateVertices();
+            void GenerateVertices(glm::vec2 textureRepeat);
             void GenerateIndices();
             void Filter3x3();
             float SampleHeight(int x, int y) const;

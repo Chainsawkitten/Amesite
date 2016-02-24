@@ -6,6 +6,10 @@
 class Scene;
 class Entity;
 
+namespace CaveGenerator {
+    class Coordinate;
+}
+
 namespace GameObject{
     class Bullet;
     class Player;
@@ -14,6 +18,9 @@ namespace GameObject{
     class Cave;
     class Dust;
     class Explosion;
+    class Pylon;
+    class Shield;
+    class SpinBoss;
 }
 
 /// Factory responsible for creating prefab entities.
@@ -37,7 +44,24 @@ class GameEntityFactory {
          * @return The enemy GameObject.
          */
         GameObject::Enemy* CreateBasicEnemy(const glm::vec3& origin);
+
+        /// Create pylon enemy.
+        /**
+         * @param origin The enemy's starting position
+         * @return The pylon GameObject.
+         */
+        GameObject::Pylon* CreateEnemyPylon(const glm::vec3& origin);
        
+        /// Create Shield.
+        /**
+         * @param parent Entity The shield's parent entity
+         * @param offset Offset of the shield to the parent entity
+         * @param lifeTime Life time of the sheild
+         * @param health Health of the shield
+         * @return The shield GameObject.
+         */
+        GameObject::Shield* CreateShield(Entity* parentEntity, glm::vec3 offset, float lifeTime, float health);
+
         /// Create a player.
         /**
          * @param origin The player's starting position.
@@ -45,6 +69,13 @@ class GameEntityFactory {
          * @return The player GameObject.
          */
         GameObject::Player* CreatePlayer(const glm::vec3& origin, InputHandler::Player player);
+
+        /// Create SpinBoss.
+        /**
+         * @param origin The SpinBoss's starting position.
+         * @return The SpinBoss GameObject.
+         */
+        GameObject::SpinBoss* CreateSpinBoss(const glm::vec3& origin);
         
         /// Create player bullet.
         /**
@@ -94,9 +125,17 @@ class GameEntityFactory {
 
         /// Create a map.
         /**
+         * @param width Map width.
+         * @param height Map height.
+         * @param seed The seed used for random generation.
+         * @param percent The amount of walls to place initially.
+         * @param iterations How many iterations of smoothing we will do.
+         * @param threshold The minimum room size in tiles.
+         * @param playerPosition Where the players start.
+         * @param bossPositions A vector of boss positions.
          * @return The Map GameObject.
          */ 
-        GameObject::Cave* CreateMap();
+        GameObject::Cave* CreateMap(int width, int height, int seed, int percent, int iterations, int threshold, CaveGenerator::Coordinate playerPosition, std::vector<CaveGenerator::Coordinate> bossPositions);
 
     private:
         Scene* mScene;

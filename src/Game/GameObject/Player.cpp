@@ -26,10 +26,17 @@
 using namespace GameObject;
 
 Player::Player(Scene* scene) : SuperGameObject(scene) {
+    healthyTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_healthy.png");
+    mediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_medium_damage.png");
+    heavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_heavy_damage.png");
+    
+    state = LIGHTDAMAGE;
+
     node = CreateEntity(scene);
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
     node->AddComponent<Component::Controller>()->speed = 5000.f;
     node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
+    node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     node->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     node->AddComponent<Component::Health>()->removeOnLowHealth = false;
     node->GetComponent<Component::Health>()->faction = 0;
@@ -46,38 +53,39 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     body->AddComponent<Component::Mesh>()->geometry = mShipBody = Resources().CreateOBJModel("Resources/ship_body.obj");
     body->AddComponent<Component::Material>();
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_body_diff.png");
+
+    Resources().FreeTexture2D(body->GetComponent<Component::Material>()->diffuse);
+    body->GetComponent<Component::Material>()->diffuse = healthyTexture;
     body->GetComponent<Component::Material>()->SetSpecular("Resources/ship_body_spec.png");
     body->GetComponent<Component::Material>()->SetGlow("Resources/ship_body_glow.png");
-    body->AddComponent<Component::Animation>();    
+    body->AddComponent<Component::Animation>();
 
     light = CreateEntity(scene);
     light->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
     light->GetComponent<Component::RelativeTransform>()->parentEntity = body;
-    light->AddComponent<Component::Animation>(); 
+    light->AddComponent<Component::Animation>();
     light->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
     light->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
     light->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
     light->GetComponent<Component::SpotLight>()->attenuation = 0.01f;
-    light->GetComponent<Component::SpotLight>()->color.g = 0.f;
 
-    leftTurrent = CreateEntity(scene);
-    leftTurrent->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 15);
-    leftTurrent->GetComponent<Component::RelativeTransform>()->parentEntity = body;
-    leftTurrent->AddComponent<Component::Animation>();
-    leftTurrent->AddComponent<Component::Spawner>()->delay = 0.25f;
-    leftTurrent->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
-    Component::SoundSource* sound = leftTurrent->AddComponent<Component::SoundSource>();
+    leftTurret = CreateEntity(scene);
+    leftTurret->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
+    leftTurret->GetComponent<Component::RelativeTransform>()->parentEntity = body;
+    leftTurret->AddComponent<Component::Animation>();
+    leftTurret->AddComponent<Component::Spawner>()->delay = 0.25f;
+    leftTurret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
+    Component::SoundSource* sound = leftTurret->AddComponent<Component::SoundSource>();
     mShootSound = Resources().CreateSound("Resources/Laser.ogg");
     sound->soundBuffer = mShootSound;
     sound->gain = 2.f;
 
-    rightTurrent = CreateEntity(scene);
-    rightTurrent->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 15);
-    rightTurrent->GetComponent<Component::RelativeTransform>()->parentEntity = body;
-    rightTurrent->AddComponent<Component::Animation>();
-    rightTurrent->AddComponent<Component::Spawner>()->delay = 0.25f;
-    rightTurrent->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
+    rightTurret = CreateEntity(scene);
+    rightTurret->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 13);
+    rightTurret->GetComponent<Component::RelativeTransform>()->parentEntity = body;
+    rightTurret->AddComponent<Component::Animation>();
+    rightTurret->AddComponent<Component::Spawner>()->delay = 0.25f;
+    rightTurret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
 
     frontEngineLeft = CreateEntity(scene);
     frontEngineLeft->AddComponent<Component::RelativeTransform>()->Move(8.5f, 0.f, 8.3f);
@@ -132,9 +140,18 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     backEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = backEngineRight;
     backEngineRightParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
     AddEnginePartilces(backEngineRightParticles);
+
+
 }
 
 Player::~Player() {
+    if(state != LIGHTDAMAGE)
+        Resources().FreeTexture2D(healthyTexture);
+    if (state != MEDIUMDAMAGE)
+        Resources().FreeTexture2D(mediumDamageTexture);
+    if(state != HEAVYDAMAGE)
+        Resources().FreeTexture2D(heavyDamageTexture);
+
     Resources().FreeOBJModel(mShipBody);
     Resources().FreeOBJModel(mShipFrontEngineLeft);
     Resources().FreeOBJModel(mShipFrontEngineRight);
@@ -150,6 +167,20 @@ glm::vec3 Player::GetPosition() {
 
 float Player::GetHealth() {
     return node->GetComponent<Component::Health>()->health;
+}
+
+void GameObject::Player::UpdatePlayerTexture() {
+    if (GetHealth() >= 2.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
+        state = LIGHTDAMAGE;
+        body->GetComponent<Component::Material>()->diffuse = healthyTexture;
+    } else if (GetHealth() >= 1.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
+        state = MEDIUMDAMAGE;
+        body->GetComponent<Component::Material>()->diffuse = mediumDamageTexture;
+    } else {
+        state = HEAVYDAMAGE;
+        body->GetComponent<Component::Material>()->diffuse = heavyDamageTexture;
+    }
+
 }
 
 void Player::AddEnginePartilces(Entity* entity) {

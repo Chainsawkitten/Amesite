@@ -33,10 +33,10 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     node->GetComponent<Component::Health>()->health = 50.f;
     node->AddComponent<Component::Explode>()->lifeTime = 0.25f;
     node->GetComponent<Component::Explode>()->size = 8.f;
-    node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
+    node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
 
     head = CreateEntity(scene);
-    head->AddComponent<Component::RelativeTransform>()->Move(0,0,5.5f);
+    head->AddComponent<Component::RelativeTransform>()->Move(0, 0, 5.5f);
     head->GetComponent<Component::RelativeTransform>()->parentEntity = node;
     head->AddComponent<Component::Mesh>()->geometry = mEnemyHead = Resources().CreateOBJModel("Resources/enemy_head_crystal.obj");
     head->AddComponent<Component::Material>();
@@ -50,7 +50,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
 
     tail = CreateEntity(scene);
     tail->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    tail->GetComponent<Component::RelativeTransform>()->Move(0,0,-5.5f);
+    tail->GetComponent<Component::RelativeTransform>()->Move(0, 0, -5.5f);
     tail->AddComponent<Component::Mesh>()->geometry = mEnemyTail = Resources().CreateOBJModel("Resources/enemy_tail_crystal.obj");
     tail->AddComponent<Component::Material>();
     tail->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_tail_crystal_diff.png");
@@ -61,12 +61,12 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     idleTail->CreateKeyFrame(glm::vec3(0.1f, 0.f, 0.f), 0.f, 0.f, 0.f, 2.f, false, true);
     tail->GetComponent<Component::Animation>()->Start("idle");
 
-    turrent = CreateEntity(scene);
-    turrent->AddComponent<Component::RelativeTransform>()->parentEntity = head;
-    turrent->GetComponent<Component::RelativeTransform>()->Move(0, 0, 8.f);
-    turrent->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShoot);
-    turrent->AddComponent<Component::Spawner>()->delay = 0.5f;
-    turrent->GetComponent<Component::Spawner>()->faction = 1;
+    turret = CreateEntity(scene);
+    turret->AddComponent<Component::RelativeTransform>()->parentEntity = head;
+    turret->GetComponent<Component::RelativeTransform>()->Move(0, 0, 8.f);
+    turret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShoot);
+    turret->AddComponent<Component::Spawner>()->delay = 0.5f;
+    turret->GetComponent<Component::Spawner>()->faction = 1;
 }
 
 Enemy::~Enemy() {

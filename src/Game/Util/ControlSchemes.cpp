@@ -61,7 +61,7 @@ void ControlScheme::StickRotate(Component::Controller* controller, float deltaTi
     
     if (glm::length(direction) > Input()->AimDeadzone()) {
         Input()->SetLastValidAimDirection(controller->playerID, glm::vec2(b, a));
-        if(a >= 0)
+        if (a >= 0)
             entity->GetComponent<Component::Transform>()->yaw = (float)glm::degrees(glm::atan(b / a));
         else
             entity->GetComponent<Component::Transform>()->yaw = 180.f + (float)glm::degrees(glm::atan(b / a));
@@ -296,5 +296,9 @@ void ControlScheme::Boost(Component::Controller* controller, float deltaTime) {
 
     //if(Input()->Triggered(controller->playerID, InputHandler::BOOST))
     //    entity->GetComponent<Component::Physics>()->acceleration += glm::normalize(glm::vec3(glm::sin(oldAngle), 0, glm::cos(oldAngle))) * 50000.f;
+}
 
+void ControlScheme::Shield(Component::Controller* controller, float deltaTime) {
+    //if (Input()->Pressed(controller->playerID, InputHandler::SHOOT))
+        //GameEntityCreator().CreateShield(controller->entity, glm::vec3(0, 0, 4), 1.f, 100);
 }

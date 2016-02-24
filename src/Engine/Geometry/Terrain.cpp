@@ -48,7 +48,7 @@ namespace Geometry {
         GenerateVertexArray();
     }
 
-	Terrain::Terrain(float** floatArray, int width, int height ) {
+	Terrain::Terrain(float** floatArray, int width, int height, glm::vec2 textureRepeat ) {
 		// Load height map from file
 		this->width = width;
 		this->height = height;
@@ -71,7 +71,7 @@ namespace Geometry {
 		Filter3x3();
 		CalculateNormals();
 
-		GenerateVertices();
+		GenerateVertices(textureRepeat);
 		GenerateIndices();
 
 		for (int i = 0; i < width; i++) {
@@ -169,7 +169,7 @@ namespace Geometry {
 		return glm::normalize(a1 * a.normal + a2 * b.normal + a3 * c.normal);
 	}
     
-    glm::vec2 Terrain::TextureRepeat() const {
+    glm::vec2 Terrain::GetTextureRepeat() const {
         return textureRepeat;
     }
     
@@ -194,6 +194,27 @@ namespace Geometry {
                 glm::vec3(normals[i % width][i / width].x,
                           normals[i % width][i / width].y,
                           normals[i % width][i / width].z)
+            };
+        }
+    }
+
+    void Terrain::GenerateVertices(glm::vec2 textureRepeat) {
+        vertexNr = width * height;
+        vertexData = new Vertex[vertexNr];
+
+        for (unsigned int i = 0; i < vertexNr; i++) {
+            vertexData[i] = {
+                // Position
+                glm::vec3(static_cast<float>(i % width) / width - 0.5f,
+                heightMap[i % width][i / width],
+                    static_cast<float>(i / width) / height - 0.5f),
+                // Texture coordinates
+                glm::vec2(static_cast<float>(i % width) / width,
+                    static_cast<float>(i / width) / height)*textureRepeat,
+                // Normal
+                glm::vec3(normals[i % width][i / width].x,
+                    normals[i % width][i / width].y,
+                    normals[i % width][i / width].z)
             };
         }
     }
