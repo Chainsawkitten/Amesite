@@ -39,7 +39,7 @@ void CollisionSystem::Update(Scene& scene) {
         delete collision;
     }
     collisionVector->clear();
-    //collisionVector->shrink_to_fit();
+    collisionVector->shrink_to_fit();
  
     Node node;
     glm::vec3 pos;

@@ -39,6 +39,12 @@ class Scene {
         /// Updates all model matrices in %Scene.
         void UpdateModelMatrices();
 
+        /// Removes all killed objects in %Scene.
+        void ClearKilledGameObjects();
+
+        /// Add killed game object.
+        void AddKilledGameObject(GameObject::SuperGameObject* gameObject);
+
         /// Gets all components of a specific type.
         /**
          * @return A vector of pointers to all components of the specified scene.
@@ -65,9 +71,15 @@ class Scene {
 
         /// Removes Entity from %Scene
         /**
-         *@param entity Entity to be removed.
+         * @param entity Entity to be removed.
          */
         void RemoveEntity(Entity* entity);
+
+        /// Removes GameObject from %Scene
+        /**
+         *@param entity Game object to be removed.
+         */
+        void RemoveGameObject(GameObject::SuperGameObject* gameObject);
 
         virtual void Update(float deltaTime) = 0;
 
@@ -92,6 +104,9 @@ class Scene {
 
         // List of all game objects in this scene.
         std::vector<GameObject::SuperGameObject*> mGameObjectVector;
+
+        // List of game objects to be removed.
+        std::vector<GameObject::SuperGameObject*> mKilledGameObjectVector;
 };
 
 // GetAll<T>

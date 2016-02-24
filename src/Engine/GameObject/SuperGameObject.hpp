@@ -23,6 +23,9 @@ namespace GameObject {
             /// Remove %SuperGameObject from scene.
             void Clear();
 
+            /// Kill gameobject, will be removed at end of frame by scene.
+            void Kill();
+
         protected:
             // Create Entity to %GameObject.
             /**

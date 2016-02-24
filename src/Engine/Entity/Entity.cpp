@@ -21,4 +21,7 @@ void Entity::Clear() {
             delete it.second;
     }
     components.clear();
+    std::vector<Entity*>* entityVector = mScene->GetVector<Entity>();
+    entityVector->erase(std::remove(entityVector->begin(), entityVector->end(), this), entityVector->end());
+    delete this;
 }
