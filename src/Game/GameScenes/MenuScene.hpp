@@ -3,7 +3,6 @@
 #include <Scene/Scene.hpp>
 #include <System/RenderSystem.hpp>
 
-class Texture2D;
 class PostProcessing;
 class FXAAFilter;
 class GammaCorrectionFilter;
@@ -41,6 +40,4 @@ class MenuScene : public Scene {
         GammaCorrectionFilter* gammaCorrectionFilter;
         GlowFilter* glowFilter;
         GlowBlurFilter* glowBlurFilter;
-        
-        Texture2D* mLogo;
 };
