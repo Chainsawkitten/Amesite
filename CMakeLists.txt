@@ -89,10 +89,33 @@ set(RESOURCES
         assets/enemy_tail_crystal_diff.png
         assets/enemy_tail_crystal_spec.png
         assets/enemy_tail_crystal_glow.png
-        assets/ship_body_diff.png
-        assets/ship_body_spec.png
-        assets/ship_body_glow.png
-        assets/ship_engine_diff.png
+        assets/enemy_head_crystal.obj
+        assets/enemy_tail_crystal.obj
+        assets/player/ship_body_diff_healthy.png
+        assets/player/ship_body_diff_heavy_damage.png
+        assets/player/ship_body_diff_medium_damage.png
+        assets/player/ship_body_spec.png
+        assets/player/ship_body_glow.png
+        assets/player/ship_engine_diff.png
+        assets/player/ship_body.obj
+        assets/player/ship_frontEngine.obj
+        assets/player/ship_backEngine.obj
+        assets/pylon/Pylon_01_spec.png
+        assets/pylon/Pylon_01_glow.png
+        assets/pylon/Pylon_01_diff.png
+        assets/pylon/Pylon_01.obj
+        assets/crystal/Crystal_01_spec.png
+        assets/crystal/Crystal_01_glow.png
+        assets/crystal/Crystal_01_diff.png
+        assets/crystal/Crystal_01.obj
+        assets/shield/Shield_01_diff.png
+        assets/shield/Shield_01_glow.png
+        assets/shield/Shield_01_spec.png
+        assets/shield/Shield_01.obj
+        assets/circle/Circle.obj
+        assets/circle/Circle_red_diff.png
+        assets/circle/Circle_green_diff.png
+        assets/circle/Circle_blue_diff.png
         assets/wall_diff.png
         assets/wall_norm.png
         assets/wall2_diff.png
@@ -100,14 +123,9 @@ set(RESOURCES
         assets/Ship/Ship_Dif.png
         assets/Ship/Ship_Glow.png
         assets/Ship/Ship_Spec.png
-        assets/GolfBall.obj
-        assets/ship_body.obj
-        assets/ship_frontEngine.obj
-        assets/ship_backEngine.obj
-        assets/enemy_head_crystal.obj
-        assets/enemy_tail_crystal.obj
         assets/Ship/Ship_01.obj
         assets/Ship/Ship_01.mtl
+        assets/GolfBall.obj
         assets/MusicAction.ogg
         assets/MusicCalm.ogg
         assets/Laser.ogg
@@ -335,13 +353,16 @@ set(GAME_SRCS
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
         src/Game/System/LifeTimeSystem.cpp
+        src/Game/System/ReflectSystem.cpp
         src/Game/System/AISystem.cpp
+        src/Game/System/CheckpointSystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
         src/Game/Component/Damage.cpp
         src/Game/Component/LifeTime.cpp
         src/Game/Component/Explode.cpp
+        src/Game/Component/Reflect.cpp
         src/Game/Component/AI/WalkerAI.cpp
         src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
@@ -351,6 +372,7 @@ set(GAME_SRCS
         src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
         src/Game/GameScenes/IvarScene.cpp
+        src/Game/GameScenes/JonathanScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
         src/Game/GameObject/Bullet.cpp
         src/Game/GameObject/Player.cpp
@@ -359,6 +381,10 @@ set(GAME_SRCS
         src/Game/GameObject/Cave.cpp
         src/Game/GameObject/Dust.cpp
         src/Game/GameObject/Explosion.cpp
+        src/Game/GameObject/Pylon.cpp
+        src/Game/GameObject/Shield.cpp
+        src/Game/GameObject/SpinBoss.cpp
+        src/Game/GameObject/TurretBoss.cpp
     )
 
 set(GAME_HEADERS
@@ -373,13 +399,16 @@ set(GAME_HEADERS
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/System/LifeTimeSystem.hpp
-        src/Game/System/AISystem.cpp
+        src/Game/System/ReflectSystem.hpp
+        src/Game/System/AISystem.hpp
+        src/Game/System/CheckpointSystem.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
         src/Game/Component/LifeTime.hpp
         src/Game/Component/Explode.hpp
+        src/Game/Component/Reflect.hpp
         src/Game/Component/AI/WalkerAI.hpp
         src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
@@ -389,6 +418,7 @@ set(GAME_HEADERS
         src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp
         src/Game/GameScenes/IvarScene.hpp
+        src/Game/GameScenes/JonathanScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
         src/Game/GameObject/Bullet.hpp
         src/Game/GameObject/Player.hpp
@@ -397,6 +427,10 @@ set(GAME_HEADERS
         src/Game/GameObject/Cave.hpp
         src/Game/GameObject/Dust.hpp
         src/Game/GameObject/Explosion.hpp
+        src/Game/GameObject/Pylon.hpp
+        src/Game/GameObject/Shield.hpp
+        src/Game/GameObject/SpinBoss.hpp
+        src/Game/GameObject/TurretBoss.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

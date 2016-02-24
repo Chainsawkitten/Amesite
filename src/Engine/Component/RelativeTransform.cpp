@@ -25,9 +25,9 @@ void RelativeTransform::UpdateModelMatrix() {
 
 glm::vec3 RelativeTransform::CalculateWorldPosition() const {
     if (parentEntity != nullptr)
-        glm::vec3 relativePosition = (position + parentEntity->GetComponent<Component::Transform>()->CalculateWorldPosition()) * scale;
+        return position * scale + parentEntity->GetComponent<Component::Transform>()->CalculateWorldPosition();
     else
-        return position;
+        return position * scale;
 }
 
 glm::vec3 RelativeTransform::GetWorldScale() const {
