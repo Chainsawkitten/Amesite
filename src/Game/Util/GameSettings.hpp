@@ -20,8 +20,9 @@
  * FXAA                | Whether to enable fxaa.             | bool   | false
  * Gamma               | Gamma brightness.                   | double | 2.2
  * Audio Volume        | How loud to play sounds.            | double | 1.0
- * Aim Deadzone        | Deadzone on controller aim vector   | double | 0.3
- * Move Deadzone       | Deadzone on controller move vector  | double | 0.3
+ * Aim Deadzone        | Deadzone on controller aim vector.  | double | 0.3
+ * Move Deadzone       | Deadzone on controller move vector. | double | 0.3
+ * Show Splash Screen  | Show logo when starting game.       | bool   | true
  */
 class GameSettings : public Settings {
     public:

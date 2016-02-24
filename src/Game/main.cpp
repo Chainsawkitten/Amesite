@@ -47,7 +47,10 @@ int main() {
     
     System::SoundSystem* soundSystem = new System::SoundSystem();
     
-    Game::GetInstance().SetScene(new SplashScene());
+    if (GameSettings::GetInstance().GetBool("Show Splash Screen"))
+        Game::GetInstance().SetScene(new SplashScene());
+    else
+        Game::GetInstance().SetScene(new MainScene());
 
     // Main game loop.
     double lastTime = glfwGetTime();
