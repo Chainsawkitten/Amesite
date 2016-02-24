@@ -13,8 +13,6 @@
 #include "../Component/Damage.hpp"
 #include "../Component/Explode.hpp"
 
-
-
 #include <vector>
 
 #include <Util/Log.hpp>
