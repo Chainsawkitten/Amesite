@@ -26,9 +26,7 @@ namespace System {
             void AddPlayer(GameObject::Player* player);
 
         private:
-
             void RespawnPlayers();
-
             std::vector<GameObject::Player*> mPlayers;
             glm::vec2 mPosition;
 
