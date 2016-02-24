@@ -11,6 +11,7 @@
 #include "Game/System/DamageSystem.hpp"
 #include "Game/System/ControllerSystem.hpp"
 #include "Game/System/LifeTimeSystem.hpp"
+#include "Game/System/ReflectSystem.hpp"
 
 #include <AL/al.h>
 
@@ -26,6 +27,7 @@ namespace GameObject {
     class Cave;
     class Camera;
     class Player;
+    class SpinBoss;
 }
 namespace Audio {
     class SoundBuffer;
@@ -68,7 +70,10 @@ class MainScene : public Scene {
         // The life time system
         System::LifeTimeSystem mLifeTimeSystem;
 
-        // The life time system
+        // The reflect system
+        System::ReflectSystem mReflectSystem;
+
+        // The animation system
         System::AnimationSystem mAnimationSystem;
 
         // checkpoint system
@@ -76,6 +81,9 @@ class MainScene : public Scene {
 
         // Vector containing players
         std::vector<GameObject::Player*> mPlayers;
+
+        // Vector containing bosses
+        std::vector<GameObject::SpinBoss*> mBosses;
 
         // The main camera
         GameObject::Camera* mMainCamera;

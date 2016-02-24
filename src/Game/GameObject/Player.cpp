@@ -30,6 +30,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
     node->AddComponent<Component::Controller>()->speed = 5000.f;
     node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
+    node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     node->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     node->AddComponent<Component::Health>()->removeOnLowHealth = false;
     node->GetComponent<Component::Health>()->faction = 0;
@@ -44,12 +45,13 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
 
     body = CreateEntity(scene);
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    body->AddComponent<Component::Mesh>()->geometry = mShipBody = Resources().CreateOBJModel("Resources/ship_body.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mShipBody = Resources().CreateOBJModel("Resources/player/ship_body.obj");
     body->AddComponent<Component::Material>();
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_body_diff.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/ship_body_spec.png");
-    body->GetComponent<Component::Material>()->SetGlow("Resources/ship_body_glow.png");
-    body->AddComponent<Component::Animation>();
+
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/player/ship_body_diff.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/player/ship_body_spec.png");
+    body->GetComponent<Component::Material>()->SetGlow("Resources/player/ship_body_glow.png");
+    body->AddComponent<Component::Animation>();    
 
     light = CreateEntity(scene);
     light->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
@@ -59,34 +61,33 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     light->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
     light->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
     light->GetComponent<Component::SpotLight>()->attenuation = 0.01f;
-    light->GetComponent<Component::SpotLight>()->color.g = 0.f;
 
-    leftTurrent = CreateEntity(scene);
-    leftTurrent->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
-    leftTurrent->GetComponent<Component::RelativeTransform>()->parentEntity = body;
-    leftTurrent->AddComponent<Component::Animation>();
-    leftTurrent->AddComponent<Component::Spawner>()->delay = 0.25f;
-    leftTurrent->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
-    Component::SoundSource* sound = leftTurrent->AddComponent<Component::SoundSource>();
+    leftTurret = CreateEntity(scene);
+    leftTurret->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
+    leftTurret->GetComponent<Component::RelativeTransform>()->parentEntity = body;
+    leftTurret->AddComponent<Component::Animation>();
+    leftTurret->AddComponent<Component::Spawner>()->delay = 0.25f;
+    leftTurret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
+    Component::SoundSource* sound = leftTurret->AddComponent<Component::SoundSource>();
     mShootSound = Resources().CreateSound("Resources/Laser.ogg");
     sound->soundBuffer = mShootSound;
     sound->gain = 2.f;
 
-    rightTurrent = CreateEntity(scene);
-    rightTurrent->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 13);
-    rightTurrent->GetComponent<Component::RelativeTransform>()->parentEntity = body;
-    rightTurrent->AddComponent<Component::Animation>();
-    rightTurrent->AddComponent<Component::Spawner>()->delay = 0.25f;
-    rightTurrent->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
+    rightTurret = CreateEntity(scene);
+    rightTurret->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 13);
+    rightTurret->GetComponent<Component::RelativeTransform>()->parentEntity = body;
+    rightTurret->AddComponent<Component::Animation>();
+    rightTurret->AddComponent<Component::Spawner>()->delay = 0.25f;
+    rightTurret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
 
     frontEngineLeft = CreateEntity(scene);
     frontEngineLeft->AddComponent<Component::RelativeTransform>()->Move(8.5f, 0.f, 8.3f);
     frontEngineLeft->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     frontEngineLeft->GetComponent<Component::RelativeTransform>()->scale *= 1.1f;
     frontEngineLeft->AddComponent<Component::Animation>();
-    frontEngineLeft->AddComponent<Component::Mesh>()->geometry = mShipFrontEngineLeft = Resources().CreateOBJModel("Resources/ship_frontEngine.obj");
+    frontEngineLeft->AddComponent<Component::Mesh>()->geometry = mShipFrontEngineLeft = Resources().CreateOBJModel("Resources/player/ship_frontEngine.obj");
     frontEngineLeft->AddComponent<Component::Material>();
-    frontEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_engine_diff.png");
+    frontEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player/ship_engine_diff.png");
     Entity* frontEngineLeftParticles = CreateEntity(scene);
     frontEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = frontEngineLeft;
     frontEngineLeftParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
@@ -98,9 +99,9 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     frontEngineRight->GetComponent<Component::RelativeTransform>()->scale *= 1.1f;
     frontEngineRight->GetComponent<Component::RelativeTransform>()->yaw = 180.f;
     frontEngineRight->AddComponent<Component::Animation>();
-    frontEngineRight->AddComponent<Component::Mesh>()->geometry = mShipFrontEngineRight = Resources().CreateOBJModel("Resources/ship_frontEngine.obj");
+    frontEngineRight->AddComponent<Component::Mesh>()->geometry = mShipFrontEngineRight = Resources().CreateOBJModel("Resources/player/ship_frontEngine.obj");
     frontEngineRight->AddComponent<Component::Material>();
-    frontEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_engine_diff.png");
+    frontEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player/ship_engine_diff.png");
     Entity* frontEngineRightParticles = CreateEntity(scene);
     frontEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = frontEngineRight;
     frontEngineRightParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
@@ -111,9 +112,9 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     backEngineLeft->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     backEngineLeft->GetComponent<Component::RelativeTransform>()->scale *= 1.2f;
     backEngineLeft->AddComponent<Component::Animation>();
-    backEngineLeft->AddComponent<Component::Mesh>()->geometry = mShipBackEngineLeft = Resources().CreateOBJModel("Resources/ship_backEngine.obj");
+    backEngineLeft->AddComponent<Component::Mesh>()->geometry = mShipBackEngineLeft = Resources().CreateOBJModel("Resources/player/ship_backEngine.obj");
     backEngineLeft->AddComponent<Component::Material>();
-    backEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_engine_diff.png");
+    backEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player/ship_engine_diff.png");
     Entity* backEngineLeftParticles = CreateEntity(scene);
     backEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = backEngineLeft;
     backEngineLeftParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
@@ -125,13 +126,15 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     backEngineRight->GetComponent<Component::RelativeTransform>()->scale *= 1.2f;
     backEngineRight->GetComponent<Component::RelativeTransform>()->yaw = 180.f;
     backEngineRight->AddComponent<Component::Animation>();
-    backEngineRight->AddComponent<Component::Mesh>()->geometry = mShipBackEngineRight = Resources().CreateOBJModel("Resources/ship_backEngine.obj");
+    backEngineRight->AddComponent<Component::Mesh>()->geometry = mShipBackEngineRight = Resources().CreateOBJModel("Resources/player/ship_backEngine.obj");
     backEngineRight->AddComponent<Component::Material>();
-    backEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_engine_diff.png");
+    backEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player/ship_engine_diff.png");
     Entity* backEngineRightParticles = CreateEntity(scene);
     backEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = backEngineRight;
     backEngineRightParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
     AddEnginePartilces(backEngineRightParticles);
+
+
 }
 
 Player::~Player() {
