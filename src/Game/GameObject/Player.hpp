@@ -59,10 +59,10 @@ namespace GameObject {
             Entity* light;
 
             /// Turrent relative to body.
-            Entity* leftTurrent;
+            Entity* leftTurret;
 
             /// Turrent relative to body.
-            Entity* rightTurrent;
+            Entity* rightTurret;
 
         private:
             Geometry::OBJModel* mShipBody;

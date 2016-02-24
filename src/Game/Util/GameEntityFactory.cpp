@@ -75,8 +75,8 @@ Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     Player* gameObject = new Player(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     gameObject->node->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->leftTurrent->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->rightTurrent->GetComponent<Component::Controller>()->playerID = player;
+    gameObject->leftTurret->GetComponent<Component::Controller>()->playerID = player;
+    gameObject->rightTurret->GetComponent<Component::Controller>()->playerID = player;
     CreateDust(gameObject->node, Component::ParticleEmitter::DUST);
     if (player == InputHandler::PLAYER_ONE) {
         gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);

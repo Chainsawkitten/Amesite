@@ -106,11 +106,11 @@ set(RESOURCES
         assets/crystal/Crystal_01_diff.png
         assets/crystal/Crystal_01.obj
         assets/shield/Shield_01_diff.png
-		assets/shield/Shield_01_glow.png
+        assets/shield/Shield_01_glow.png
         assets/shield/Shield_01_spec.png
         assets/shield/Shield_01.obj
         assets/cricle/Cricle.obj
-		assets/cricle/Cricle_red_diff.png
+        assets/cricle/Cricle_red_diff.png
         assets/cricle/Cricle_green_diff.png
         assets/cricle/Cricle_blue_diff.png
         assets/wall_diff.png
@@ -378,7 +378,7 @@ set(GAME_SRCS
         src/Game/GameObject/Pylon.cpp
         src/Game/GameObject/Shield.cpp
         src/Game/GameObject/SpinBoss.cpp
-        src/Game/GameObject/TurrentBoss.cpp
+        src/Game/GameObject/TurretBoss.cpp
     )
 
 set(GAME_HEADERS
@@ -421,7 +421,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Pylon.hpp
         src/Game/GameObject/Shield.hpp
         src/Game/GameObject/SpinBoss.hpp
-        src/Game/GameObject/TurrentBoss.hpp
+        src/Game/GameObject/TurretBoss.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

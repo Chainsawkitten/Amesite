@@ -27,7 +27,7 @@ namespace GameObject {
             /// Tail relative to Node
             Entity* tail;
             /// Turrent relative to Head
-            Entity* turrent;
+            Entity* turret;
 
             /// Gets health of the enemy.
             /**

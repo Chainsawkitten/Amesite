@@ -31,7 +31,7 @@ namespace GameObject {
             /// Pylon3 relative to Node
             Entity* pylon3;
             /// Turrent relative to Body
-            Entity* turrent;
+            Entity* turret;
 
         private:
             Geometry::OBJModel* mBody;

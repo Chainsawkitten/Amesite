@@ -10,15 +10,15 @@ namespace Geometry {
 
 namespace GameObject {
     /// A TurrentBoss
-    class TurrentBoss : public SuperGameObject {
+    class TurretBoss : public SuperGameObject {
         public:
             /// Create %TurrentBoss
             /**
              * @param scene Pointer to which Scene %Enemy Enities' are contained.
              */
-            TurrentBoss(Scene* scene);
+            TurretBoss(Scene* scene);
            
-            ~TurrentBoss();
+            ~TurretBoss();
 
             /// Node of %TurrentBoss
             Entity* node;

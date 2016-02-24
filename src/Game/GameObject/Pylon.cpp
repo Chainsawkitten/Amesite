@@ -85,12 +85,12 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
     pylon2->GetComponent<Component::Spawner>()->faction = 1;
     AddPylonPartilces(pylon2);
 
-    turrent = CreateEntity(scene);
-    turrent->AddComponent<Component::RelativeTransform>()->parentEntity = body;
-    turrent->GetComponent<Component::RelativeTransform>()->Move(0, 5.f, 0.f);
-    turrent->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShoot);
-    turrent->AddComponent<Component::Spawner>()->delay = 0.5f;
-    turrent->GetComponent<Component::Spawner>()->faction = 1;
+    turret = CreateEntity(scene);
+    turret->AddComponent<Component::RelativeTransform>()->parentEntity = body;
+    turret->GetComponent<Component::RelativeTransform>()->Move(0, 5.f, 0.f);
+    turret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShoot);
+    turret->AddComponent<Component::Spawner>()->delay = 0.5f;
+    turret->GetComponent<Component::Spawner>()->faction = 1;
 }
 
 Pylon::~Pylon() {

@@ -62,23 +62,23 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     light->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
     light->GetComponent<Component::SpotLight>()->attenuation = 0.01f;
 
-    leftTurrent = CreateEntity(scene);
-    leftTurrent->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
-    leftTurrent->GetComponent<Component::RelativeTransform>()->parentEntity = body;
-    leftTurrent->AddComponent<Component::Animation>();
-    leftTurrent->AddComponent<Component::Spawner>()->delay = 0.25f;
-    leftTurrent->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
-    Component::SoundSource* sound = leftTurrent->AddComponent<Component::SoundSource>();
+    leftTurret = CreateEntity(scene);
+    leftTurret->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
+    leftTurret->GetComponent<Component::RelativeTransform>()->parentEntity = body;
+    leftTurret->AddComponent<Component::Animation>();
+    leftTurret->AddComponent<Component::Spawner>()->delay = 0.25f;
+    leftTurret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
+    Component::SoundSource* sound = leftTurret->AddComponent<Component::SoundSource>();
     mShootSound = Resources().CreateSound("Resources/Laser.ogg");
     sound->soundBuffer = mShootSound;
     sound->gain = 2.f;
 
-    rightTurrent = CreateEntity(scene);
-    rightTurrent->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 13);
-    rightTurrent->GetComponent<Component::RelativeTransform>()->parentEntity = body;
-    rightTurrent->AddComponent<Component::Animation>();
-    rightTurrent->AddComponent<Component::Spawner>()->delay = 0.25f;
-    rightTurrent->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
+    rightTurret = CreateEntity(scene);
+    rightTurret->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 13);
+    rightTurret->GetComponent<Component::RelativeTransform>()->parentEntity = body;
+    rightTurret->AddComponent<Component::Animation>();
+    rightTurret->AddComponent<Component::Spawner>()->delay = 0.25f;
+    rightTurret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
 
     frontEngineLeft = CreateEntity(scene);
     frontEngineLeft->AddComponent<Component::RelativeTransform>()->Move(8.5f, 0.f, 8.3f);

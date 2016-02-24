@@ -22,7 +22,7 @@
 
 using namespace GameObject;
 
-TurrentBoss::TurrentBoss(Scene* scene) : SuperGameObject(scene) {
+TurretBoss::TurretBoss(Scene* scene) : SuperGameObject(scene) {
     //node = CreateEntity(scene);
     //node->AddComponent<Component::RelativeTransform>()->scale *= 2.f;
     //node->AddComponent<Component::Animation>();
@@ -41,6 +41,6 @@ TurrentBoss::TurrentBoss(Scene* scene) : SuperGameObject(scene) {
     //body->GetComponent<Component::Material>()->SetSpecular("Resources/shield/Shield_01_spec.png");
 }
 
-TurrentBoss::~TurrentBoss() {
+TurretBoss::~TurretBoss() {
     //Resources().FreeOBJModel(mShield);
 }
