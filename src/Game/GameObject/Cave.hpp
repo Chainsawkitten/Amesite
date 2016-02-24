@@ -6,6 +6,7 @@ class Scene;
 class Entity;
 namespace CaveGenerator {
     class CaveMap;
+    class Coordinate;
 }
 
 namespace GameObject {
@@ -21,9 +22,11 @@ namespace GameObject {
              * @param percent The amount of walls to place initially.
              * @param iterations How many iterations of smoothing we will do.
              * @param threshold The minimum room size in tiles.
+             * @param playerPosition Where the players start.
+             * @param bossPositions A vector of boss positions.
              */
-            Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold);
-           
+            Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold, CaveGenerator::Coordinate playerPosition, std::vector<CaveGenerator::Coordinate> bossPositions );
+
             /// Destructor
             ~Cave();
 
@@ -34,6 +37,13 @@ namespace GameObject {
             Entity* map;
             /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;
+
+            /// cave X scale.
+            float xScale;
+
+            /// cave Z scale.
+            float zScale;
+
         private:
             int mWidth;
             int mHeight;
