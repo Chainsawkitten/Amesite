@@ -47,8 +47,7 @@ int main() {
     
     System::SoundSystem* soundSystem = new System::SoundSystem();
     
-    Game game;
-    game.SetScene(new SplashScene());
+    Game::GetInstance().SetScene(new SplashScene());
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -58,7 +57,7 @@ int main() {
         lastTime = glfwGetTime();
 
         window->Update();
-        game.Update(static_cast<float>(deltaTime));
+        Game::GetInstance().Update(static_cast<float>(deltaTime));
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
@@ -78,7 +77,7 @@ int main() {
         glfwPollEvents();
     }
     
-    game.Free();
+    Game::GetInstance().Free();
     delete soundSystem;
     delete window;
     
