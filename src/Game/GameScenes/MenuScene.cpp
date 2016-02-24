@@ -66,10 +66,12 @@ void MenuScene::Update(float deltaTime) {
     UpdateModelMatrices();
     
     // Render.
+    const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
+    glViewport(0, 0, screenSize.x, screenSize.y);
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
     // Glow.
-    mGlowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+    mGlowBlurFilter->SetScreenSize(screenSize);
     int blurAmount = 5;
     for (int i=0; i<blurAmount; ++i) {
         mGlowBlurFilter->SetHorizontal(true);
@@ -81,7 +83,7 @@ void MenuScene::Update(float deltaTime) {
     
     // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
-        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+        mFxaaFilter->SetScreenSize(screenSize);
         mPostProcessing->ApplyFilter(mFxaaFilter);
     }
     
@@ -95,5 +97,5 @@ void MenuScene::Update(float deltaTime) {
     // Test text rendering.
     mFont->RenderText("Test", glm::vec2(0.f, 0.f), 1000.f);
     
-    mTestTexture->Render(glm::vec2(0.f, 0.f), MainWindow::GetInstance()->GetSize());
+    mTestTexture->Render(glm::vec2(0.f, 0.f), screenSize);
 }

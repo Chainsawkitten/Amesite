@@ -114,6 +114,10 @@ Texture2D::Texture2D(Font* font, const char* text) {
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexID, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     
+    // Initialize draw buffers.
+    GLenum drawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, drawBuffers);
+    
     // Check if framebuffer was created correctly.
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         Log() << "Framebuffer creation failed\n";
@@ -121,10 +125,12 @@ Texture2D::Texture2D(Font* font, const char* text) {
     // Render.
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
     
-    glClearColor(1.f, 0.f, 0.f, 1.f);
+    glViewport(0, 0, mWidth, mHeight);
     glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(0.f, 0.f, 0.f, 0.f);
+    font->RenderText(text, glm::vec2(0.f, 0.f), 10000.f, glm::vec2(static_cast<float>(mWidth), static_cast<float>(mHeight)));
     
+    glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     
     // Free render target.
