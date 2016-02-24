@@ -8,6 +8,7 @@ namespace Geometry {
 }
 class Shader;
 class ShaderProgram;
+class Font;
 
 /// A two-dimensional texture.
 /**
@@ -30,6 +31,13 @@ class Texture2D : public Texture {
          * @param srgb Whether the image is in SRGB space and should be converted to linear space.
          */
         Texture2D(const char* source, int sourceLength, bool srgb = false);
+        
+        /// Prerender a font to a texture.
+        /**
+         * @param font Font to use for rendering.
+         * @param text Text to render.
+         */
+        Texture2D(Font* font, const char* text);
         
         /// Destructor
         ~Texture2D();

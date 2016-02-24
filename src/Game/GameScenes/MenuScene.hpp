@@ -12,6 +12,7 @@ namespace GameObject {
     class Camera;
 }
 class Font;
+class Texture2D;
 
 /// Main menu.
 class MenuScene : public Scene {
@@ -44,4 +45,7 @@ class MenuScene : public Scene {
         
         // Text.
         Font* mFont;
+        
+        // Pre-rendered text test.
+        Texture2D* mTestTexture;
 };

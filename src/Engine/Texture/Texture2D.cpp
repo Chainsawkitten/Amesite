@@ -14,6 +14,7 @@
 #include "../Shader/ShaderProgram.hpp"
 #include "../Geometry/Square.hpp"
 #include "../MainWindow.hpp"
+#include "../Font/Font.hpp"
 
 Texture2D::Texture2D(const char* filename, bool srgb) {
     glGenTextures(1, &mTexID);
@@ -82,6 +83,46 @@ Texture2D::Texture2D(const char *source, int sourceLength, bool srgb) {
     
     // Generate mipmaps, by the way.
     glGenerateMipmap(GL_TEXTURE_2D);
+    
+    // For rendering.
+    mSquare = Resources().CreateSquare();
+    
+    mVertexShader = Resources().CreateShader(DEFAULT2D_VERT, DEFAULT2D_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(TEXTURE2D_FRAG, TEXTURE2D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
+    
+    mIsFromFile = false;
+}
+
+Texture2D::Texture2D(Font* font, const char* text) {
+    // Create texture.
+    mWidth = 40;
+    mHeight = 40;
+    glGenTextures(1, &mTexID);
+    glBindTexture(GL_TEXTURE_2D, mTexID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    // Create render target.
+    GLuint frameBuffer;
+    glGenFramebuffers(1, &frameBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexID, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    
+    // Check if framebuffer was created correctly.
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        Log() << "Framebuffer creation failed\n";
+    
+    // Render.
+    
+    
+    // Free render target.
+    glDeleteFramebuffers(1, &frameBuffer);
     
     // For rendering.
     mSquare = Resources().CreateSquare();

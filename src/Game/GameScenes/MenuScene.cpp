@@ -2,6 +2,7 @@
 
 #include <Resources.hpp>
 #include <Font/Font.hpp>
+#include <Texture/Texture2D.hpp>
 #include <MainWindow.hpp>
 
 #include <PostProcessing/PostProcessing.hpp>
@@ -44,6 +45,8 @@ MenuScene::MenuScene() {
     
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 20.f);
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
+    
+    mTestTexture = new Texture2D(mFont, "Pre rendered test");
 }
 
 MenuScene::~MenuScene() {
@@ -54,6 +57,8 @@ MenuScene::~MenuScene() {
     delete mPostProcessing;
     
     Resources().FreeFont(mFont);
+    
+    delete mTestTexture;
 }
 
 void MenuScene::Update(float deltaTime) {
