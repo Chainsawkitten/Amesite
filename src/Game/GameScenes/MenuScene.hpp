@@ -11,6 +11,7 @@ class GlowBlurFilter;
 namespace GameObject {
     class Camera;
 }
+class Font;
 
 /// Main menu.
 class MenuScene : public Scene {
@@ -40,4 +41,7 @@ class MenuScene : public Scene {
         GammaCorrectionFilter* gammaCorrectionFilter;
         GlowFilter* glowFilter;
         GlowBlurFilter* glowBlurFilter;
+        
+        // Text.
+        Font* mFont;
 };

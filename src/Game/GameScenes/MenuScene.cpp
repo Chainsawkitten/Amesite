@@ -1,5 +1,7 @@
 #include "MenuScene.hpp"
 
+#include <Resources.hpp>
+#include <Font/Font.hpp>
 #include <MainWindow.hpp>
 
 #include <PostProcessing/PostProcessing.hpp>
@@ -39,6 +41,9 @@ MenuScene::MenuScene() {
     gammaCorrectionFilter = new GammaCorrectionFilter();
     glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
+    
+    mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 20.f);
+    mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
 }
 
 MenuScene::~MenuScene() {
@@ -47,6 +52,8 @@ MenuScene::~MenuScene() {
     delete glowFilter;
     delete glowBlurFilter;
     delete postProcessing;
+    
+    Resources().FreeFont(mFont);
 }
 
 void MenuScene::Update(float deltaTime) {
@@ -79,4 +86,7 @@ void MenuScene::Update(float deltaTime) {
     
     // Render to back buffer.
     postProcessing->Render();
+    
+    // Test text rendering.
+    mFont->RenderText("Test", glm::vec2(0.f, 0.f), 1000.f);
 }
