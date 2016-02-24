@@ -6,6 +6,7 @@
 #include <System/CollisionSystem.hpp>
 #include <System/ParticleSystem.hpp>
 #include <System/AnimationSystem.hpp>
+#include "Game/System/CheckpointSystem.hpp"
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
 #include "Game/System/ControllerSystem.hpp"
@@ -69,6 +70,9 @@ class MainScene : public Scene {
 
         // The life time system
         System::AnimationSystem mAnimationSystem;
+
+        // checkpoint system
+        System::CheckpointSystem mCheckpointSystem;
 
         // Vector containing players
         std::vector<GameObject::Player*> mPlayers;

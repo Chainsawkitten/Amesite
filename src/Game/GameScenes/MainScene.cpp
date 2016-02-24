@@ -99,9 +99,16 @@ MainScene::MainScene() {
     float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
 
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
+    //mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
+    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX,playerStartZ));
+
+    // Add players to checkpoint system.
+    for (auto& player : mPlayers) {
+        mCheckpointSystem.AddPlayer(player);
+    }
+
     // Directional light.
     Entity* dirLight = CreateEntity();
     dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
@@ -191,6 +198,8 @@ void MainScene::Update(float deltaTime) {
     
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
+
+    mCheckpointSystem.CheckIfPlayersAreDead();
 
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
