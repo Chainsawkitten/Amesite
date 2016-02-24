@@ -146,6 +146,19 @@ void Font::SetColor(const glm::vec3& color) {
     mColor = color;
 }
 
+float Font::GetWidth(const char* text) {
+    float x = 0.f;
+    float y = 0.f;
+    
+    stbtt_aligned_quad q;
+    while (*text) {
+        q = BakedQuad(*text, x, y);
+        ++text;
+    }
+    
+    return q.x1;
+}
+
 float Font::GetHeight() const {
     return mHeight;
 }
