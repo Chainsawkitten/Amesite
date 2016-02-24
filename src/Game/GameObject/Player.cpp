@@ -170,13 +170,13 @@ float Player::GetHealth() {
 }
 
 void GameObject::Player::UpdatePlayerTexture() {
-    if (state != LIGHTDAMAGE && GetHealth() >= 2.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
+    if (GetHealth() >= 2.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         state = LIGHTDAMAGE;
         body->GetComponent<Component::Material>()->diffuse = healthyTexture;
-    } else if (state != MEDIUMDAMAGE && GetHealth() >= 1.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f) && GetHealth() < 2.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f) ) {
+    } else if (GetHealth() >= 1.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         state = MEDIUMDAMAGE;
         body->GetComponent<Component::Material>()->diffuse = mediumDamageTexture;
-    } else if (state != HEAVYDAMAGE && GetHealth() < 1.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
+    } else {
         state = HEAVYDAMAGE;
         body->GetComponent<Component::Material>()->diffuse = heavyDamageTexture;
     }
