@@ -79,7 +79,7 @@ void SpinBoss::Update() {
             body->GetComponent<Component::Material>()->SetGlow("Resources/Crystal_01_spec.png");
             body->RemoveComponent<Component::Reflect>();
         }
-    } 
+    }
 }
 
 void SpinBoss::Reset() {
