@@ -27,6 +27,7 @@
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
 
+#include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
 
 #include <Resources.hpp>
@@ -40,16 +41,19 @@
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
 #include "../Util/MainCamera.hpp"
+#include "../Util/CaveGenerator.hpp"
 #include <Util/Log.hpp>
 
 #include "../GameObject/Player.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
+#include "../GameObject/SpinBoss.hpp"
+#include "../GameObject/Bullet.hpp"
 
 using namespace GameObject;
 
 JonathanScene::JonathanScene() {
-    mSoundSystem.SetVolume((float)GameSettings::GetInstance().GetDouble("Audio Volume"));
+    System::SoundSystem::GetInstance()->SetVolume((float)GameSettings::GetInstance().GetDouble("Audio Volume"));
 
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -79,19 +83,44 @@ JonathanScene::JonathanScene() {
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(90.f, 500.f, 90.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
 
-    // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(25.f, 0.f, 15.f), InputHandler::PLAYER_ONE));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(25.f, 0.f, 12.f), InputHandler::PLAYER_TWO));
-
     // Create scene
-    mCave = GameEntityCreator().CreateMap(60, 60, 0, 50, 10, 40);
+    int width = 60;
+    int height = 60;
+    int seed = 0;
+    int percent = 50;
+    int iterations = 10;
+    int threshold = 40;
+
+    CaveGenerator::Coordinate playerPosition(width / 2, height / 2);
+    std::vector<CaveGenerator::Coordinate> bossPositions;
+    bossPositions.push_back(CaveGenerator::Coordinate(45, 45));
+
+    // Create a map.
+    mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
+
+    float playerStartX = mCave->xScale*(static_cast<float>(width) / 2.f);
+    float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
+
+    // Create players 
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f), InputHandler::PLAYER_ONE));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f), InputHandler::PLAYER_TWO));
+
+    // Create boss
+    mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
+
+    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
+
+    // Add players to checkpoint system.
+    for (auto& player : mPlayers) {
+        mCheckpointSystem.AddPlayer(player);
+    }
 
     // Directional light.
     Entity* dirLight = CreateEntity();
     dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
     dirLight->AddComponent<Component::DirectionalLight>();
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
-    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.2f;
+    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.04f;
 
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
@@ -99,22 +128,21 @@ JonathanScene::JonathanScene() {
     glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
 
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(80, 0, 25));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(80, 0, 25));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 35));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(160, 0, 65));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(160, 0, 65));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 85));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(110, 0, 55));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(110, 0, 55));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(50, 0, 105));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(115, 0, 135));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(115, 0, 135));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(175, 0, 135));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 145));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(195, 0, 145));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 245));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(225, 0, 235));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(225, 0, 235));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(105, 0, 190));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
 }
 
@@ -171,7 +199,7 @@ void JonathanScene::Update(float deltaTime) {
     mLifeTimeSystem.Update(*this, deltaTime);
 
     // Update sounds.
-    mSoundSystem.Update(*this);
+    System::SoundSystem::GetInstance()->Update(*this);
 
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
