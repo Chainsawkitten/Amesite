@@ -85,11 +85,11 @@ MainScene::MainScene() {
 
     // Create scene
     int width = 60;
-    int height = 60;
-    int seed = 0;
+    int height = 40;
+    int seed = 1;
     int percent = 50;
     int iterations = 10;
-    int threshold = 40;
+    int threshold = 100;
 
     CaveGenerator::Coordinate playerPosition(width/2, height/2);
     std::vector<CaveGenerator::Coordinate> bossPositions;
@@ -102,7 +102,7 @@ MainScene::MainScene() {
     float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
 
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
+    //mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
     // Create boss

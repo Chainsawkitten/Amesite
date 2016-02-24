@@ -64,11 +64,11 @@ namespace Geometry {
 
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				heightMap[j][i] = floatArray[i][j];
+				heightMap[i][j] = floatArray[i][j];
 			}
 		}
 
-		Filter3x3();
+		//Filter3x3();
 		CalculateNormals();
 
 		GenerateVertices(textureRepeat);

@@ -72,13 +72,13 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
 	heightMap = CreateEntity(scene);
 
-	float** floatMap = new float*[60];
-	for (int i = 0; i < 60; i++) {
-		floatMap[i] = new float[60];
+	float** floatMap = new float*[width];
+	for (int i = 0; i < width; i++) {
+		floatMap[i] = new float[height];
 	}
 
-	for (int i = 0; i < 60; i++) {
-		for (int j = 0; j < 60; j++) {
+	for (int i = 0; i < width; i++) {
+		for (int j = 0; j < height; j++) {
 			if (mMap[i][j] == true)
 				floatMap[i][j] = 1.0f;
 			else
@@ -91,9 +91,9 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 	heightMap->AddComponent<Component::Mesh>();
 	heightMap->AddComponent<Component::Transform>();
 	heightMap->AddComponent<Component::Material>();
-
-	heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(5 * 30.f, -11.f, 5 * 30.f));
-	heightMap->GetComponent<Component::Transform>()->scale = glm::vec3(300.f, 10.f, 300.f);
+    heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f), -11.f, zScale*(static_cast<float>(height) / 2.f)));
+	//heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(5 * 30.f, -11.f, 5 * 30.f));
+	heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 5.f, (static_cast<float>(height) / 2.f) * 10);
 
 	heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, 60, 60, glm::vec2(5.f, 5.f));
 
