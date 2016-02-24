@@ -30,7 +30,7 @@ namespace GameObject {
             Entity* pylon2;
             /// Pylon3 relative to Node
             Entity* pylon3;
-            /// Turrent relative to Body
+            /// Turret relative to Body
             Entity* turret;
 
         private:

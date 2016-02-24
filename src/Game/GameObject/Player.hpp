@@ -58,10 +58,10 @@ namespace GameObject {
             /// Light relative to body.
             Entity* light;
 
-            /// Turrent relative to body.
+            /// Turret relative to body.
             Entity* leftTurret;
 
-            /// Turrent relative to body.
+            /// Turret relative to body.
             Entity* rightTurret;
 
         private:
