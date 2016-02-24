@@ -6,7 +6,7 @@
 #include <glm\glm.hpp>
 #include <vector>
 
-void System::CheckpointSystem::CheckIfPlayersAreDead() {
+void System::CheckpointSystem::Update() {
     for (auto &player : mPlayers) {
         if (player->GetHealth() > 0.001f)
             return;

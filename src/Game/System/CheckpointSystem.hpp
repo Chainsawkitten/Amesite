@@ -11,7 +11,7 @@ namespace System {
     class CheckpointSystem {
         public:
             ///Checks if all players are dead. If they are, respawn them.
-            void CheckIfPlayersAreDead();
+            void Update();
 
             ///Moves checkpoint to designated location.
             /**

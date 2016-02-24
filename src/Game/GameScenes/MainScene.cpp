@@ -199,7 +199,7 @@ void MainScene::Update(float deltaTime) {
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
 
-    mCheckpointSystem.CheckIfPlayersAreDead();
+    mCheckpointSystem.Update();
 
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
