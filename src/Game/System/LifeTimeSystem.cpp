@@ -25,12 +25,11 @@ void LifeTimeSystem::Update(Scene& scene, float deltaTime) {
         lifeTimeComponent->lifeTime -= deltaTime;
         if (lifeTimeComponent->lifeTime < 0.f) {
             Component::Explode* explodeComp = lifeTimeComponent->entity->GetComponent<Component::Explode>();
+            // Create Explosion
             if (explodeComp != nullptr)
-                GameEntityCreator().CreateExplosion(lifeTimeComponent->entity->GetComponent<Component::Transform>()->position, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex); // Create Explosion
-                if (lifeTimeComponent->entity->gameObject != nullptr)
-                    lifeTimeComponent->entity->gameObject->Clear();
-                else
-                    lifeTimeComponent->entity->Clear();
+                GameEntityCreator().CreateExplosion(lifeTimeComponent->entity->GetComponent<Component::Transform>()->GetWorldPosition()+explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex);
+            //Kill game object
+            lifeTimeComponent->entity->gameObject->Kill();
         }
     }
 }

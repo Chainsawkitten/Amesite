@@ -2,6 +2,8 @@
 
 #include <Engine/Entity/Entity.hpp>
 
+#include <algorithm>
+
 using namespace GameObject;
 
 SuperGameObject::SuperGameObject(Scene* scene) {
@@ -16,6 +18,13 @@ void SuperGameObject::Clear() {
     for (auto& entity : mEntityVector)
         entity->Clear();
     mEntityVector.clear();
+    std::vector<GameObject::SuperGameObject*>* gameObjectVector = mScene->GetVector<SuperGameObject>();
+    gameObjectVector->erase(std::remove(gameObjectVector->begin(), gameObjectVector->end(), this), gameObjectVector->end());
+    delete this;
+}
+
+void SuperGameObject::Kill() {
+    mScene->AddKilledGameObject(this);
 }
 
 Entity* SuperGameObject::CreateEntity(Scene* scene) {

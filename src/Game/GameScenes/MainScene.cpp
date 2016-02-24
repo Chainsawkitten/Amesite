@@ -47,6 +47,8 @@
 #include "../GameObject/Player.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
+#include "../GameObject/SpinBoss.hpp"
+#include "../GameObject/Bullet.hpp"
 
 using namespace GameObject;
 
@@ -91,6 +93,7 @@ MainScene::MainScene() {
 
     CaveGenerator::Coordinate playerPosition(width/2, height/2);
     std::vector<CaveGenerator::Coordinate> bossPositions;
+    bossPositions.push_back(CaveGenerator::Coordinate(45, 45));
 
     // Create a map.
     mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
@@ -101,6 +104,9 @@ MainScene::MainScene() {
     // Create players 
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
+    
+    // Create boss
+    mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
     
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX,playerStartZ));
 
@@ -114,7 +120,7 @@ MainScene::MainScene() {
     dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
     dirLight->AddComponent<Component::DirectionalLight>();
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
-    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.2f;
+    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.04f;
     
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
@@ -122,22 +128,21 @@ MainScene::MainScene() {
     glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
 
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(80, 0, 25));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(80, 0, 25));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 35));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(160, 0, 65));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(160, 0, 65));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 85));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(110, 0, 55));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(110, 0, 55));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(50, 0, 105));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(115, 0, 135));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(115, 0, 135));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(175, 0, 135));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 145));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(195, 0, 145));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 245));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(225, 0, 235));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(225, 0, 235));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(105, 0, 190));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
 }
 
@@ -155,14 +160,19 @@ MainScene::~MainScene() {
 void MainScene::Update(float deltaTime) {
     // ControllerSystem
     mControllerSystem.Update(*this, deltaTime);
-    
+
     for (auto player : mPlayers) {
         GridCollide(player->node, deltaTime, 5);
         if (player->GetHealth() < 0.01f) {
             player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
             player->node->GetComponent<Component::Health>()->health = player->node->GetComponent<Component::Health>()->maxHealth;
+            GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
         }
     }
+
+    for (auto boss : mBosses)
+        boss->Update();
+
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
@@ -186,12 +196,18 @@ void MainScene::Update(float deltaTime) {
 
     // Update health
     mHealthSystem.Update(*this, deltaTime);
+
+    // Update reflection
+    mReflectSystem.Update(*this, deltaTime);
     
     // Update damage
     mDamageSystem.Update(*this);
     
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
+
+    // Remove killed game objects
+    ClearKilledGameObjects();
 
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
