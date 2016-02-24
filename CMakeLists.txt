@@ -326,6 +326,7 @@ set(GAME_SRCS
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
         src/Game/System/LifeTimeSystem.cpp
+        src/Game/System/ReflectSystem.cpp
         src/Game/System/AISystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
@@ -333,6 +334,7 @@ set(GAME_SRCS
         src/Game/Component/Damage.cpp
         src/Game/Component/LifeTime.cpp
         src/Game/Component/Explode.cpp
+        src/Game/Component/Reflect.cpp
         src/Game/Component/AI/WalkerAI.cpp
         src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
@@ -350,6 +352,8 @@ set(GAME_SRCS
         src/Game/GameObject/Explosion.cpp
         src/Game/GameObject/Pylon.cpp
         src/Game/GameObject/Shield.cpp
+        src/Game/GameObject/SpinBoss.cpp
+        src/Game/GameObject/TurrentBoss.cpp
     )
 
 set(GAME_HEADERS
@@ -363,13 +367,15 @@ set(GAME_HEADERS
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/System/LifeTimeSystem.hpp
-        src/Game/System/AISystem.cpp
+        src/Game/System/ReflectSystem.hpp
+        src/Game/System/AISystem.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
         src/Game/Component/Damage.hpp
         src/Game/Component/LifeTime.hpp
         src/Game/Component/Explode.hpp
+        src/Game/Component/Reflect.hpp
         src/Game/Component/AI/WalkerAI.hpp
         src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
@@ -387,6 +393,8 @@ set(GAME_HEADERS
         src/Game/GameObject/Explosion.hpp
         src/Game/GameObject/Pylon.hpp
         src/Game/GameObject/Shield.hpp
+        src/Game/GameObject/SpinBoss.hpp
+        src/Game/GameObject/TurrentBoss.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

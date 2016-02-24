@@ -101,14 +101,14 @@ Cave::Cave(Scene* scene) : SuperGameObject(scene) {
     map = CreateEntity(scene);
     map->AddComponent<Component::Mesh>();
     map->AddComponent<Component::Transform>();
-    map->AddComponent<Component::Physics>();
+    //map->AddComponent<Component::Physics>();
     map->AddComponent<Component::Material>();
 
     map->GetComponent<Component::Mesh>()->geometry = Resources().CreateMap(mMap, 1.f, glm::uvec2(60,60));
     map->GetComponent<Component::Transform>()->Rotate(0, 0, 0);
-    map->GetComponent<Component::Physics>()->angularDragFactor = 0;
-    map->GetComponent<Component::Physics>()->gravityFactor = 0;
-    map->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f, 0.f, 0.f);
+    //map->GetComponent<Component::Physics>()->angularDragFactor = 0;
+    //map->GetComponent<Component::Physics>()->gravityFactor = 0;
+    //map->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f, 0.f, 0.f);
     map->GetComponent<Component::Transform>()->Move(glm::vec3(5*30.f, 0.f, 5*30.f));
     map->GetComponent<Component::Transform>()->scale = glm::vec3(5, 5, 5);
     map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");

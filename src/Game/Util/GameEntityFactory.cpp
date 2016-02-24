@@ -34,6 +34,7 @@
 #include "../GameObject/Explosion.hpp"
 #include "../GameObject/Pylon.hpp"
 #include "../GameObject/Shield.hpp"
+#include "../GameObject/SpinBoss.hpp"
 
 using namespace GameObject;
 
@@ -81,6 +82,12 @@ Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::P
     } else {
         gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::MouseRotate);
     }
+    return gameObject;
+}
+
+GameObject::SpinBoss* GameEntityFactory::CreateSpinBoss(const glm::vec3& origin) {
+    SpinBoss* gameObject = new SpinBoss(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }
 

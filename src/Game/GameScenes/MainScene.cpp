@@ -45,6 +45,7 @@
 #include "../GameObject/Player.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
+#include "../GameObject/SpinBoss.hpp"
 
 using namespace GameObject;
 
@@ -101,7 +102,7 @@ MainScene::MainScene() {
     glowBlurFilter = new GlowBlurFilter();
 
     GameEntityCreator().CreateEnemyPylon(glm::vec3(80, 0, 25));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
+    mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(100, 0, 35)));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 35));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(160, 0, 65));
@@ -142,6 +143,10 @@ void MainScene::Update(float deltaTime) {
         }
     }
 
+    for (auto boss : mBosses)
+        boss->Update();
+
+
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
 
@@ -164,6 +169,9 @@ void MainScene::Update(float deltaTime) {
 
     // Update health
     mHealthSystem.Update(*this, deltaTime);
+
+    // Update reflection
+    mReflectSystem.Update(*this, deltaTime);
     
     // Update damage
     mDamageSystem.Update(*this);
