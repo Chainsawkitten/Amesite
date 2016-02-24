@@ -6,12 +6,20 @@
 
 class Scene;
 class Entity;
+class Texture2D;
+
 namespace Geometry {
     class OBJModel;
 }
 namespace Audio {
     class SoundBuffer;
 }
+
+enum PlayerState {
+    HEALTHY = 0,
+    MEDIUMDAMAGE,
+    HEAVYDAMAGE
+};
 
 namespace GameObject {
     /// A Player
@@ -74,5 +82,11 @@ namespace GameObject {
             Audio::SoundBuffer* mShootSound;
 
             void AddEnginePartilces(Entity* entity);
+
+            PlayerState state;
+
+            Texture2D* healthyTexture;
+            Texture2D* heavyDamageTexture;
+            Texture2D* mediumDamageTexture;
     };
 }
