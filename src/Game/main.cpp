@@ -9,7 +9,7 @@
 
 #include "Game.hpp"
 #include "GameScenes/SplashScene.hpp"
-#include "GameScenes/MainScene.hpp"
+#include "GameScenes/MenuScene.hpp"
 //#include "GameScenes/PontusScene.hpp"
 //#include "GameScenes/AlbinScene.hpp"
 //#include "GameScenes/EmptyScene.hpp"
@@ -50,7 +50,7 @@ int main() {
     if (GameSettings::GetInstance().GetBool("Show Splash Screen"))
         Game::GetInstance().SetScene(new SplashScene());
     else
-        Game::GetInstance().SetScene(new MainScene());
+        Game::GetInstance().SetScene(new MenuScene());
 
     // Main game loop.
     double lastTime = glfwGetTime();

@@ -4,7 +4,7 @@
 #include <Texture/Texture2D.hpp>
 #include <MainWindow.hpp>
 #include "../Game.hpp"
-#include "MainScene.hpp"
+#include "MenuScene.hpp"
 
 SplashScene::SplashScene() {
     mLogo = Resources().CreateTexture2DFromFile("Resources/Mugglorna.png");
@@ -20,7 +20,7 @@ void SplashScene::Update(float deltaTime) {
     
     // Go to main scene when splash screen is over.
     if (mElapsedTime > 4.5f)
-        Game::GetInstance().SetScene(new MainScene());
+        Game::GetInstance().SetScene(new MenuScene());
     
     // Clear screen.
     glClear(GL_COLOR_BUFFER_BIT);
