@@ -95,7 +95,10 @@ stbtt_aligned_quad Font::BakedQuad(char character, float& x, float& y) {
     return q;
 }
 
-void Font::RenderText(const char* text, const glm::vec2& position, float wrap) {
+void Font::RenderText(const char* text, const glm::vec2& position, float wrap, glm::vec2 screenSize) {
+    if (screenSize == glm::vec2(0.f, 0.f))
+        screenSize = MainWindow::GetInstance()->GetSize();
+    
     // Disable depth testing
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
     glDisable(GL_DEPTH_TEST);
@@ -120,7 +123,7 @@ void Font::RenderText(const char* text, const glm::vec2& position, float wrap) {
     pos.y += mHeight;
     while (*text) {
         if (*text >= 32 && *text < 128)
-            pos.x = RenderCharacter(*text, pos);
+            pos.x = RenderCharacter(*text, pos, screenSize);
         
         if (pos.x > position.x + wrap || *text == '\n') {
             pos.x = position.x;
@@ -151,7 +154,7 @@ bool Font::IsFromFile() const {
     return mIsFromFile;
 }
 
-float Font::RenderCharacter(char character, const glm::vec2& position) {
+float Font::RenderCharacter(char character, const glm::vec2& position, const glm::vec2& screenSize) {
     stbtt_aligned_quad q;
     float x = position.x;
     float y = position.y;
@@ -160,7 +163,6 @@ float Font::RenderCharacter(char character, const glm::vec2& position) {
     glm::vec2 pos = glm::vec2(q.x0, q.y0);
     glm::vec2 siz = glm::vec2(q.x1, q.y1) - glm::vec2(q.x0, q.y0);
     
-    glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
     glUniform2fv(mShaderProgram->GetUniformLocation("position"), 1, &(pos / screenSize)[0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("size"), 1, &(siz / screenSize)[0]);
     

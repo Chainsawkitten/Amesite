@@ -45,9 +45,9 @@ class Font {
          * @param text Text to render.
          * @param position Position to render the text at (in pixels).
          * @param wrap Width of text before wrapping.
-         * @param screenSize Size of the screen in pixels.
+         * @param screenSize Size of the rendering context in pixels.
          */
-        void RenderText(const char* text, const glm::vec2& position, float wrap);
+        void RenderText(const char* text, const glm::vec2& position, float wrap, glm::vec2 screenSize = glm::vec2(0.f, 0.f));
         
         /// Get rendering color.
         /**
@@ -87,5 +87,5 @@ class Font {
         // Shaders
         ShaderProgram* mShaderProgram;
         
-        float RenderCharacter(char character, const glm::vec2& position);
+        float RenderCharacter(char character, const glm::vec2& position, const glm::vec2& screenSize);
 };
