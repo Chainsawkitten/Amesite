@@ -38,7 +38,7 @@ Font::Font(const char* filename, float height) {
     float scale = stbtt_ScaleForPixelHeight(&fontInfo, mHeight);
     int ascent;
     stbtt_GetFontVMetrics(&fontInfo, &ascent, 0, 0);
-    mBaseline = static_cast<int>(ascent * scale);
+    mBaseline = static_cast<int>(mHeight - ascent * scale);
     
     delete[] ttfBuffer;
     

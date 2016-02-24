@@ -46,7 +46,7 @@ MenuScene::MenuScene() {
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 20.f);
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
-    mTestTexture = new Texture2D(mFont, "Pre rendered test");
+    mTestTexture = new Texture2D(mFont, "Pre rendgered test");
 }
 
 MenuScene::~MenuScene() {
