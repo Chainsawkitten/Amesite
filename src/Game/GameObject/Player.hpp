@@ -72,6 +72,8 @@ namespace GameObject {
             /// Turret relative to body.
             Entity* rightTurret;
 
+            void UpdatePlayerTexture();
+
         private:
             Geometry::OBJModel* mShipBody;
             Geometry::OBJModel* mShipFrontEngineRight;

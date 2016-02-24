@@ -109,10 +109,10 @@ set(RESOURCES
         assets/shield/Shield_01_glow.png
         assets/shield/Shield_01_spec.png
         assets/shield/Shield_01.obj
-        assets/cricle/Cricle.obj
-        assets/cricle/Cricle_red_diff.png
-        assets/cricle/Cricle_green_diff.png
-        assets/cricle/Cricle_blue_diff.png
+        assets/circle/Circle.obj
+        assets/circle/Circle_red_diff.png
+        assets/circle/Circle_green_diff.png
+        assets/circle/Circle_blue_diff.png
         assets/wall_diff.png
         assets/wall_norm.png
         assets/wall2_diff.png

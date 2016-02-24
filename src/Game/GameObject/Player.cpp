@@ -169,6 +169,20 @@ float Player::GetHealth() {
     return node->GetComponent<Component::Health>()->health;
 }
 
+void GameObject::Player::UpdatePlayerTexture() {
+    if (state != HEALTHY && GetHealth() >= 3.f*(node->GetComponent<Component::Health>()->maxHealth / 4.f)) {
+        state = HEALTHY;
+        body->GetComponent<Component::Material>()->diffuse = healthyTexture;
+    } else if (state != MEDIUMDAMAGE && GetHealth() >= 2.f*(node->GetComponent<Component::Health>()->maxHealth / 4.f) && GetHealth() < 3.f*(node->GetComponent<Component::Health>()->maxHealth / 4.f) ) {
+        state = MEDIUMDAMAGE;
+        body->GetComponent<Component::Material>()->diffuse = mediumDamageTexture;
+    } else if (state != HEAVYDAMAGE && GetHealth() < 2.f*(node->GetComponent<Component::Health>()->maxHealth / 4.f)) {
+        state = HEAVYDAMAGE;
+        body->GetComponent<Component::Material>()->diffuse = heavyDamageTexture;
+    }
+
+}
+
 void Player::AddEnginePartilces(Entity* entity) {
     Component::ParticleEmitter* emitter = entity->AddComponent<Component::ParticleEmitter>();
     emitter->emitterType = Component::ParticleEmitter::POINT;
