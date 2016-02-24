@@ -162,6 +162,7 @@ void MainScene::Update(float deltaTime) {
     mControllerSystem.Update(*this, deltaTime);
 
     for (auto player : mPlayers) {
+        player->UpdatePlayerTexture();
         GridCollide(player->node, deltaTime, 5);
         if (player->GetHealth() < 0.01f) {
             player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;

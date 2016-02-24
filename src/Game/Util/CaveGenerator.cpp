@@ -280,7 +280,7 @@ namespace CaveGenerator {
     }
 
     bool CaveMap::IsWithinMapRange(const Coordinate & coordinate) {
-        return ((coordinate.x > 0) && (coordinate.x < mColumnCount) && (coordinate.y > 0) && (coordinate.y < mRowCount));
+        return ((coordinate.x > 0) && (coordinate.x < (mColumnCount-1)) && (coordinate.y > 0) && (coordinate.y < (mRowCount-1)));
     }
 
     bool ** CaveMap::GetMap(){

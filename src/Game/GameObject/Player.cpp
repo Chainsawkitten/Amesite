@@ -26,6 +26,12 @@
 using namespace GameObject;
 
 Player::Player(Scene* scene) : SuperGameObject(scene) {
+    healthyTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_healthy.png");
+    mediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_medium_damage.png");
+    heavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_heavy_damage.png");
+    
+    state = LIGHTDAMAGE;
+
     node = CreateEntity(scene);
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
     node->AddComponent<Component::Controller>()->speed = 5000.f;
@@ -48,10 +54,11 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::Mesh>()->geometry = mShipBody = Resources().CreateOBJModel("Resources/ship_body.obj");
     body->AddComponent<Component::Material>();
 
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_body_diff.png");
+    Resources().FreeTexture2D(body->GetComponent<Component::Material>()->diffuse);
+    body->GetComponent<Component::Material>()->diffuse = healthyTexture;
     body->GetComponent<Component::Material>()->SetSpecular("Resources/ship_body_spec.png");
     body->GetComponent<Component::Material>()->SetGlow("Resources/ship_body_glow.png");
-    body->AddComponent<Component::Animation>();    
+    body->AddComponent<Component::Animation>();
 
     light = CreateEntity(scene);
     light->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
@@ -138,6 +145,13 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
 }
 
 Player::~Player() {
+    if(state != LIGHTDAMAGE)
+        Resources().FreeTexture2D(healthyTexture);
+    if (state != MEDIUMDAMAGE)
+        Resources().FreeTexture2D(mediumDamageTexture);
+    if(state != HEAVYDAMAGE)
+        Resources().FreeTexture2D(heavyDamageTexture);
+
     Resources().FreeOBJModel(mShipBody);
     Resources().FreeOBJModel(mShipFrontEngineLeft);
     Resources().FreeOBJModel(mShipFrontEngineRight);
@@ -153,6 +167,20 @@ glm::vec3 Player::GetPosition() {
 
 float Player::GetHealth() {
     return node->GetComponent<Component::Health>()->health;
+}
+
+void GameObject::Player::UpdatePlayerTexture() {
+    if (GetHealth() >= 2.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
+        state = LIGHTDAMAGE;
+        body->GetComponent<Component::Material>()->diffuse = healthyTexture;
+    } else if (GetHealth() >= 1.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
+        state = MEDIUMDAMAGE;
+        body->GetComponent<Component::Material>()->diffuse = mediumDamageTexture;
+    } else {
+        state = HEAVYDAMAGE;
+        body->GetComponent<Component::Material>()->diffuse = heavyDamageTexture;
+    }
+
 }
 
 void Player::AddEnginePartilces(Entity* entity) {
