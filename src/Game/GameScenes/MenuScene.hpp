@@ -9,6 +9,9 @@ class FXAAFilter;
 class GammaCorrectionFilter;
 class GlowFilter;
 class GlowBlurFilter;
+namespace GameObject {
+    class Camera;
+}
 
 /// Main menu.
 class MenuScene : public Scene {
@@ -28,6 +31,9 @@ class MenuScene : public Scene {
     private:
         // RenderSystem.
         System::RenderSystem mRenderSystem;
+        
+        // The main camera
+        GameObject::Camera* mMainCamera;
         
         // Post processing.
         PostProcessing* postProcessing;
