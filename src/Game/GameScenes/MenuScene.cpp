@@ -14,6 +14,9 @@
 #include "../Util/GameEntityFactory.hpp"
 #include "../Util/MainCamera.hpp"
 #include "../GameObject/Camera.hpp"
+#include <Entity/Entity.hpp>
+#include <Component/Transform.hpp>
+#include <Component/DirectionalLight.hpp>
 
 MenuScene::MenuScene() {
     mLogo = Resources().CreateTexture2DFromFile("Resources/Mugglorna.png");
@@ -22,10 +25,17 @@ MenuScene::MenuScene() {
     GameEntityCreator().SetScene(this);
     
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 70.f, 0.f), glm::vec3(0.f, 90.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 0.f, 10.f), glm::vec3(0.f, 0.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
     GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    
+    // Directional light.
+    Entity* dirLight = CreateEntity();
+    dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
+    dirLight->AddComponent<Component::DirectionalLight>();
+    dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
+    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.2f;
     
     // Initialize post-processing.
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
@@ -46,6 +56,9 @@ MenuScene::~MenuScene() {
 }
 
 void MenuScene::Update(float deltaTime) {
+    // Updates model matrices for this frame.
+    UpdateModelMatrices();
+    
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
     
