@@ -58,34 +58,33 @@ namespace Geometry {
          * @param repeat the amount of times to repeat in x and y.
          */
         void SetTextureRepeat(const glm::vec2 repeat);
-
     private:
-        /// The node that is used to create mesh.
+        // The node that is used to create mesh.
         struct MeshNode {
-            /// Position of node.
+            // Position of node.
             glm::vec3 mPosition;
-            /// Index of node.
+            // Index of node.
             int mVertexIndex;
-            /// Texture coordinates.
+            // Texture coordinates.
             glm::vec2 mTexCoords;
         };
 
-        /// Node with data from the cellular automata.
+        // Node with data from the cellular automata.
         struct ControlNode : MeshNode{
-            /// In mesh or not.
+            // In mesh or not.
             bool mActive;
-            /// Corresponding mesh nodes.
+            // Corresponding mesh nodes.
             MeshNode mAbove, mRight;
         };
 
-        /// Representation of a square in the algorithm.
+        // Representation of a square in the algorithm.
         struct MSquare {
             ControlNode mTopLeft, mTopRight, mBottomRight, mBottomLeft;
             MeshNode mCenterTop, mCenterRight, mCenterBottom, mCenterLeft;
             int mType;
         };
 
-        /// Triangle representation used when generating walls.
+        // Triangle representation used when generating walls.
         struct MapTriangle {
             int indexA;
             int indexB;
@@ -95,17 +94,17 @@ namespace Geometry {
             bool Contains(int index);
         };
 
-        /// Node creation.
+        // Node creation.
         MeshNode CreateMeshNode(const glm::vec3 position, glm::uvec2 index, bool above, const float squareSize, glm::vec2 texCoords);
         ControlNode CreateControlNode(const glm::vec3 position, const bool active, const float squareSize, glm::uvec2 index);
         MSquare CreateMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft);
         MapTriangle CreateMapTriangle(int a, int b, int c);
 
-        /// Computations for retrieving top mesh.
+        // Computations for retrieving top mesh.
         void MarchingSquares(bool **data, const float squareSize);
         void CreateMesh(MeshNode* position, unsigned int size);
 
-        /// Computations for retrieving wall mesh.
+        // Computations for retrieving wall mesh.
         void CreateWallMesh();
         void CalculateMeshOutlines();
         bool IsOutline(int vertexA, int vertexB);
@@ -113,26 +112,26 @@ namespace Geometry {
         void AddToDictionary(int indexKey, MapTriangle triangle);
         void FollowOutline(int index, int outlineIndex);
 
-        /// Creating and storing triangles.
+        // Creating and storing triangles.
         void TriangulateSquare(MSquare* square);
         void StoreTriangle(MeshNode a, MeshNode b, MeshNode c);
 
-        /// Data
+        // Data
         glm::uvec2 mDataDimensions;
         float mMapHeight, mMapWidth, mWallHeight;
         std::unordered_set<int> mVertexChecked;
         glm::vec2 mTextureRepeat;
 
-        /// List of all outlines.
+        // List of all outlines.
         std::vector<std::vector<int>> mOutlines;
 
-        /// Mapping indices to the triangles that contain them.
+        // Mapping indices to the triangles that contain them.
         std::map<int, std::vector<MapTriangle>> mTriangleDictionary;
 
-        /// Mapping vertices solely based on position - to assist creating outlines.
+        // Mapping vertices solely based on position - to assist creating outlines.
         std::map<std::vector<int>, int> mVertexIndexMap;
 
-        /// Vertex and index data
+        // Vertex and index data
         std::vector<Vertex> mTempVertexData;
         std::vector<unsigned int> mTempIndexData;
 
