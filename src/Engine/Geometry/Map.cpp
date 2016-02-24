@@ -6,6 +6,7 @@ using namespace Geometry;
 Map::Map(bool **data, glm::uvec2 dataDimensions, float wallHeight) {
     mDataDimensions = dataDimensions;
     mWallHeight = wallHeight;
+    mTextureRepeat = glm::vec2(60.f, 60.f);
     MarchingSquares(data, 1.f);
 
     GenerateBuffers();
@@ -129,7 +130,7 @@ Map::ControlNode Map::CreateControlNode(const glm::vec3 position, const bool act
     ControlNode node;
 
     node.mActive = active;
-    node.mTexCoords = glm::vec2((float)index.x / (float)mDataDimensions.x, (float)index.y / (float)mDataDimensions.y);
+    node.mTexCoords = glm::vec2(((float)index.x / (float)mDataDimensions.x) * mTextureRepeat.x, ((float)index.y / ((float)mDataDimensions.y))* mTextureRepeat.y);
     node.mAbove = CreateMeshNode(position, index, true, squareSize, node.mTexCoords);
     node.mRight = CreateMeshNode(position, index, false, squareSize, node.mTexCoords);
     node.mPosition = position;
@@ -144,10 +145,10 @@ Map::MeshNode Map::CreateMeshNode(const glm::vec3 position, glm::uvec2 index, bo
     node.mVertexIndex = -1;
     if (above) {
         node.mPosition = position + glm::vec3(0.f, 0.f, 1.f)* squareSize / 2.f;
-        node.mTexCoords = texCoords + glm::vec2(0.f, (0.5f / (float)mDataDimensions.y));
+        node.mTexCoords = texCoords + glm::vec2(0.f, (0.5f / ((float)mDataDimensions.y / mTextureRepeat.y)));
     } else {
         node.mPosition = position + glm::vec3(1.f, 0.f, 0.f)* squareSize / 2.f;
-        node.mTexCoords = texCoords + glm::vec2((0.5f / (float)mDataDimensions.x), 0.f);
+        node.mTexCoords = texCoords + glm::vec2((0.5f / ((float)mDataDimensions.x / mTextureRepeat.x), 0.f));
     }
 
     return node;

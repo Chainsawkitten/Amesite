@@ -47,6 +47,18 @@ namespace Geometry {
         */
         unsigned int GetIndexCount() const;
 
+        /// Get amount of times texture should repeat
+        /**
+         * @return number of times the texture repeats in x and y.
+         */
+        glm::vec2 TextureRepeat() const;
+
+        /// Set texture repeat.
+        /**
+         * @param repeat the amount of times to repeat in x and y.
+         */
+        void SetTextureRepeat(const glm::vec2 repeat);
+
     private:
         /// The node that is used to create mesh.
         struct MeshNode {
@@ -109,6 +121,7 @@ namespace Geometry {
         glm::uvec2 mDataDimensions;
         float mMapHeight, mMapWidth, mWallHeight;
         std::unordered_set<int> mVertexChecked;
+        glm::vec2 mTextureRepeat;
 
         /// List of all outlines.
         std::vector<std::vector<int>> mOutlines;
