@@ -393,13 +393,9 @@ set(GAME_HEADERS
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/System/LifeTimeSystem.hpp
-<<<<<<< HEAD
         src/Game/System/ReflectSystem.hpp
         src/Game/System/AISystem.hpp
-=======
-        src/Game/System/AISystem.hpp
         src/Game/System/CheckpointSystem.hpp
->>>>>>> ba2606bda41ccd24d58b21bfee055df8c671cc93
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp

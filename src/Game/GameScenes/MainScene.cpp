@@ -120,7 +120,7 @@ MainScene::MainScene() {
     dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
     dirLight->AddComponent<Component::DirectionalLight>();
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
-    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.01f;
+    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.04f;
     
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();

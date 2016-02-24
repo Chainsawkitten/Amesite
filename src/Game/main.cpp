@@ -15,9 +15,9 @@
 //#include "GameScenes/DanielScene.hpp"
 //#include "GameScenes/IvarScene.hpp"
 
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
+//#define _CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
+//#include <crtdbg.h>
 
 #include <thread>
 #include <vector>
@@ -26,7 +26,7 @@
 using namespace std;
 
 int main() {
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     
     //Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
@@ -87,6 +87,6 @@ int main() {
     
     Log() << "Game ended - " << time(nullptr) << "\n";
 
-    _CrtDumpMemoryLeaks();
+    //_CrtDumpMemoryLeaks();
     return 0;
 }
