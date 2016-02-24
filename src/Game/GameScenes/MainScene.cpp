@@ -109,11 +109,11 @@ MainScene::MainScene() {
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
     dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.2f;
     
-    postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
-    fxaaFilter = new FXAAFilter();
-    gammaCorrectionFilter = new GammaCorrectionFilter();
-    glowFilter = new GlowFilter();
-    glowBlurFilter = new GlowBlurFilter();
+    mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
+    mFxaaFilter = new FXAAFilter();
+    mGammaCorrectionFilter = new GammaCorrectionFilter();
+    mGlowFilter = new GlowFilter();
+    mGlowBlurFilter = new GlowBlurFilter();
 
     GameEntityCreator().CreateBasicEnemy(glm::vec3(80, 0, 25));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
@@ -135,11 +135,11 @@ MainScene::MainScene() {
 }
 
 MainScene::~MainScene() {
-    delete fxaaFilter;
-    delete gammaCorrectionFilter;
-    delete glowFilter;
-    delete glowBlurFilter;
-    delete postProcessing;
+    delete mFxaaFilter;
+    delete mGammaCorrectionFilter;
+    delete mGlowFilter;
+    delete mGlowBlurFilter;
+    delete mPostProcessing;
     
     alDeleteSources(1, &mSource);
     Resources().FreeSound(mMusicSoundBuffer);
@@ -193,31 +193,31 @@ void MainScene::Update(float deltaTime) {
     mMainCamera->UpdateRelativePosition(mPlayers);
 
     // Render.
-    mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
+    mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
     // Glow.
-    glowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+    mGlowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
     int blurAmount = 5;
     for (int i=0; i<blurAmount; ++i) {
-        glowBlurFilter->SetHorizontal(true);
-        postProcessing->ApplyFilter(glowBlurFilter);
-        glowBlurFilter->SetHorizontal(false);
-        postProcessing->ApplyFilter(glowBlurFilter);
+        mGlowBlurFilter->SetHorizontal(true);
+        mPostProcessing->ApplyFilter(mGlowBlurFilter);
+        mGlowBlurFilter->SetHorizontal(false);
+        mPostProcessing->ApplyFilter(mGlowBlurFilter);
     }
-    postProcessing->ApplyFilter(glowFilter);
+    mPostProcessing->ApplyFilter(mGlowFilter);
     
     // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
-        fxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
-        postProcessing->ApplyFilter(fxaaFilter);
+        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+        mPostProcessing->ApplyFilter(mFxaaFilter);
     }
     
     // Gamma correction.
-    gammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
-    postProcessing->ApplyFilter(gammaCorrectionFilter);
+    mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
+    mPostProcessing->ApplyFilter(mGammaCorrectionFilter);
     
     // Render to back buffer.
-    postProcessing->Render();
+    mPostProcessing->Render();
 }
 
 int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale) {
