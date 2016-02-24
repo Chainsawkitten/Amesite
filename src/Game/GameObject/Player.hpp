@@ -6,6 +6,8 @@
 
 class Scene;
 class Entity;
+class Texture2D;
+
 namespace Geometry {
     class OBJModel;
 }
@@ -64,7 +66,16 @@ namespace GameObject {
             /// Turret relative to body.
             Entity* rightTurret;
 
+            void UpdatePlayerTexture();
+
         private:
+            //The players current state.
+            enum PlayerState {
+                LIGHTDAMAGE = 0,
+                MEDIUMDAMAGE,
+                HEAVYDAMAGE
+            };
+
             Geometry::OBJModel* mShipBody;
             Geometry::OBJModel* mShipFrontEngineRight;
             Geometry::OBJModel* mShipFrontEngineLeft;
@@ -74,5 +85,11 @@ namespace GameObject {
             Audio::SoundBuffer* mShootSound;
 
             void AddEnginePartilces(Entity* entity);
+
+            PlayerState state;
+
+            Texture2D* healthyTexture;
+            Texture2D* heavyDamageTexture;
+            Texture2D* mediumDamageTexture;
     };
 }
