@@ -1,4 +1,4 @@
-#include "MainScene.hpp"
+#include "JonathanScene.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -52,9 +52,9 @@
 
 using namespace GameObject;
 
-MainScene::MainScene() {
-    System::SoundSystem::GetInstance()->SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
-    
+JonathanScene::JonathanScene() {
+    System::SoundSystem::GetInstance()->SetVolume((float)GameSettings::GetInstance().GetDouble("Audio Volume"));
+
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
@@ -68,21 +68,21 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
-    
+
     // Music
     mMusicSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
     alGenSources(1, &mSource);
     alSourcei(mSource, AL_BUFFER, mMusicSoundBuffer->Buffer());
     alSourcei(mSource, AL_LOOPING, AL_TRUE);
     alSourcePlay(mSource);
-    
+
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
-    
+
     // Create main camera
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(90.f, 500.f, 90.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
-    
+
     // Create scene
     int width = 60;
     int height = 60;
@@ -91,7 +91,7 @@ MainScene::MainScene() {
     int iterations = 10;
     int threshold = 40;
 
-    CaveGenerator::Coordinate playerPosition(width/2, height/2);
+    CaveGenerator::Coordinate playerPosition(width / 2, height / 2);
     std::vector<CaveGenerator::Coordinate> bossPositions;
     bossPositions.push_back(CaveGenerator::Coordinate(45, 45));
 
@@ -102,13 +102,13 @@ MainScene::MainScene() {
     float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
 
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
-    
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f), InputHandler::PLAYER_ONE));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f), InputHandler::PLAYER_TWO));
+
     // Create boss
     mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
-    
-    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX,playerStartZ));
+
+    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
 
     // Add players to checkpoint system.
     for (auto& player : mPlayers) {
@@ -121,7 +121,7 @@ MainScene::MainScene() {
     dirLight->AddComponent<Component::DirectionalLight>();
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
     dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.04f;
-    
+
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
     gammaCorrectionFilter = new GammaCorrectionFilter();
@@ -146,50 +146,44 @@ MainScene::MainScene() {
     GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
 }
 
-MainScene::~MainScene() {
+JonathanScene::~JonathanScene() {
     delete fxaaFilter;
     delete gammaCorrectionFilter;
     delete glowFilter;
     delete glowBlurFilter;
     delete postProcessing;
-    
+
     alDeleteSources(1, &mSource);
     Resources().FreeSound(mMusicSoundBuffer);
 }
 
-void MainScene::Update(float deltaTime) {
+void JonathanScene::Update(float deltaTime) {
     // ControllerSystem
     mControllerSystem.Update(*this, deltaTime);
 
     for (auto player : mPlayers) {
-        player->UpdatePlayerTexture();
         GridCollide(player->node, deltaTime, 5);
         if (player->GetHealth() < 0.01f) {
             player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
             player->node->GetComponent<Component::Health>()->health = player->node->GetComponent<Component::Health>()->maxHealth;
-            GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
         }
     }
-
-    for (auto boss : mBosses)
-        boss->Update();
-
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
 
     // PhysicsSystem.
     mPhysicsSystem.Update(*this, deltaTime);
-    
+
     // Updates model matrices for this frame.
     UpdateModelMatrices();
 
     // ParticleSystem
     System::Particle().Update(*this, deltaTime);
-    
+
     // Check collisions.
     mCollisionSystem.Update(*this);
-    
+
     std::vector<Component::Damage*> bulletVector = this->GetAll<Component::Damage>();
     for (auto bullet : bulletVector)
         if (GridCollide(bullet->entity, deltaTime, 5.f))
@@ -198,55 +192,47 @@ void MainScene::Update(float deltaTime) {
     // Update health
     mHealthSystem.Update(*this, deltaTime);
 
-    // Update reflection
-    mReflectSystem.Update(*this, deltaTime);
-    
     // Update damage
     mDamageSystem.Update(*this);
-    
+
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
 
-    // Remove killed game objects
-    ClearKilledGameObjects();
-
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
-    
+
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
 
-    mCheckpointSystem.Update();
-
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
-    
+
     // Glow.
     glowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
     int blurAmount = 5;
-    for (int i=0; i<blurAmount; ++i) {
+    for (int i = 0; i<blurAmount; ++i) {
         glowBlurFilter->SetHorizontal(true);
         postProcessing->ApplyFilter(glowBlurFilter);
         glowBlurFilter->SetHorizontal(false);
         postProcessing->ApplyFilter(glowBlurFilter);
     }
     postProcessing->ApplyFilter(glowFilter);
-    
+
     // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
         fxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
         postProcessing->ApplyFilter(fxaaFilter);
     }
-    
+
     // Gamma correction.
     gammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
     postProcessing->ApplyFilter(gammaCorrectionFilter);
-    
+
     // Render to back buffer.
     postProcessing->Render();
 }
 
-int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
+int JonathanPointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
     int oldX = glm::floor(point.x / gridScale);
     int oldZ = glm::floor(point.z / gridScale);
     int newX = glm::floor((point + velocity * deltaTime).x / gridScale);
@@ -282,7 +268,7 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
     return -1;
 }
 
-bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
+bool JonathanScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
 
     Component::Transform* transform = entity->GetComponent<Component::Transform>();
     Component::Physics* physics = entity->GetComponent<Component::Physics>();
@@ -297,10 +283,10 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
     //glm::vec3 width = glm::vec3(2.9f, 0.f, 0.f);
     //glm::vec3 height = glm::vec3(0.f, 0.f, 2.9f);
 
-    int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale, mCave);
-    int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale, mCave);
-    int c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime, gridScale, mCave);
-    int c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime, gridScale, mCave);
+    int c0 = JonathanPointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale, mCave);
+    int c1 = JonathanPointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale, mCave);
+    int c2 = JonathanPointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime, gridScale, mCave);
+    int c3 = JonathanPointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime, gridScale, mCave);
 
     switch (c0) {
 
