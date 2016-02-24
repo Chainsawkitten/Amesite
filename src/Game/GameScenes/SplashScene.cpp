@@ -3,6 +3,8 @@
 #include <Resources.hpp>
 #include <Texture/Texture2D.hpp>
 #include <MainWindow.hpp>
+#include "../Game.hpp"
+#include "MainScene.hpp"
 
 SplashScene::SplashScene() {
     mLogo = Resources().CreateTexture2DFromFile("Resources/Mugglorna.png");
@@ -15,6 +17,10 @@ SplashScene::~SplashScene() {
 
 void SplashScene::Update(float deltaTime) {
     mElapsedTime += deltaTime;
+    
+    // Go to main scene when splash screen is over.
+    if (mElapsedTime > 4.5f)
+        Game::GetInstance().SetScene(new MainScene());
     
     // Clear screen.
     glClear(GL_COLOR_BUFFER_BIT);
@@ -32,8 +38,8 @@ void SplashScene::Update(float deltaTime) {
     
     // Fade in and out logo.
     float alpha = 0.5f;
-    if (mElapsedTime > 2.5f) {
-        alpha = 3.f - mElapsedTime;
+    if (mElapsedTime > 3.5f) {
+        alpha = 4.f - mElapsedTime;
     } else if (mElapsedTime > 0.5f) {
         alpha = 1.f;
     } else {
