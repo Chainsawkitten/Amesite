@@ -108,7 +108,7 @@ MainScene::MainScene() {
     // Create boss
     mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
     
-    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX,playerStartZ));
+    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
 
     // Add players to checkpoint system.
     for (auto& player : mPlayers) {

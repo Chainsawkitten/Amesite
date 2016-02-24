@@ -145,11 +145,11 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
 }
 
 Player::~Player() {
-    if(state != LIGHTDAMAGE)
+    if (state != LIGHTDAMAGE)
         Resources().FreeTexture2D(healthyTexture);
     if (state != MEDIUMDAMAGE)
         Resources().FreeTexture2D(mediumDamageTexture);
-    if(state != HEAVYDAMAGE)
+    if (state != HEAVYDAMAGE)
         Resources().FreeTexture2D(heavyDamageTexture);
 
     Resources().FreeOBJModel(mShipBody);
