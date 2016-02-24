@@ -15,12 +15,6 @@ namespace Audio {
     class SoundBuffer;
 }
 
-enum PlayerState {
-    HEALTHY = 0,
-    MEDIUMDAMAGE,
-    HEAVYDAMAGE
-};
-
 namespace GameObject {
     /// A Player
     class Player : public SuperGameObject {
@@ -75,6 +69,13 @@ namespace GameObject {
             void UpdatePlayerTexture();
 
         private:
+            //The players current state.
+            enum PlayerState {
+                LIGHTDAMAGE = 0,
+                MEDIUMDAMAGE,
+                HEAVYDAMAGE
+            };
+
             Geometry::OBJModel* mShipBody;
             Geometry::OBJModel* mShipFrontEngineRight;
             Geometry::OBJModel* mShipFrontEngineLeft;

@@ -30,7 +30,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     mediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_medium_damage.png");
     heavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_heavy_damage.png");
     
-    state = HEALTHY;
+    state = LIGHTDAMAGE;
 
     node = CreateEntity(scene);
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
@@ -145,7 +145,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
 }
 
 Player::~Player() {
-    if(state != HEALTHY)
+    if(state != LIGHTDAMAGE)
         Resources().FreeTexture2D(healthyTexture);
     if (state != MEDIUMDAMAGE)
         Resources().FreeTexture2D(mediumDamageTexture);
@@ -170,13 +170,13 @@ float Player::GetHealth() {
 }
 
 void GameObject::Player::UpdatePlayerTexture() {
-    if (state != HEALTHY && GetHealth() >= 3.f*(node->GetComponent<Component::Health>()->maxHealth / 4.f)) {
-        state = HEALTHY;
+    if (state != LIGHTDAMAGE && GetHealth() >= 2.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
+        state = LIGHTDAMAGE;
         body->GetComponent<Component::Material>()->diffuse = healthyTexture;
-    } else if (state != MEDIUMDAMAGE && GetHealth() >= 2.f*(node->GetComponent<Component::Health>()->maxHealth / 4.f) && GetHealth() < 3.f*(node->GetComponent<Component::Health>()->maxHealth / 4.f) ) {
+    } else if (state != MEDIUMDAMAGE && GetHealth() >= 1.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f) && GetHealth() < 2.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f) ) {
         state = MEDIUMDAMAGE;
         body->GetComponent<Component::Material>()->diffuse = mediumDamageTexture;
-    } else if (state != HEAVYDAMAGE && GetHealth() < 2.f*(node->GetComponent<Component::Health>()->maxHealth / 4.f)) {
+    } else if (state != HEAVYDAMAGE && GetHealth() < 1.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         state = HEAVYDAMAGE;
         body->GetComponent<Component::Material>()->diffuse = heavyDamageTexture;
     }
