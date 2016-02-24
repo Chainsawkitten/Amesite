@@ -74,6 +74,12 @@ class Font {
          */
         float GetHeight() const;
         
+        /// Get baseline.
+        /**
+         * @return The baseline in pixels.
+         */
+        int GetBaseline() const;
+        
         /// Get whether the font was created from file.
         /**
          * @return true if the font was loaded from a file, false otherwise.
@@ -87,6 +93,7 @@ class Font {
         stbtt_bakedchar mCData[96]; // ASCII 32..126 is 95 glyphs
         
         float mHeight;
+        int mBaseline;
         glm::vec3 mColor;
         
         Geometry::Square* mSquare;

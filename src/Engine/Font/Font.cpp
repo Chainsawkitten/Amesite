@@ -32,6 +32,14 @@ Font::Font(const char* filename, float height) {
     
     stbtt_BakeFontBitmap(ttfBuffer, 0, height, tempBitmap, 512, 512, 32, 96, mCData);
     
+    // Get baseline.
+    stbtt_fontinfo fontInfo;
+    stbtt_InitFont(&fontInfo, ttfBuffer, 0);
+    float scale = stbtt_ScaleForPixelHeight(&fontInfo, mHeight);
+    int ascent;
+    stbtt_GetFontVMetrics(&fontInfo, &ascent, 0, 0);
+    mBaseline = static_cast<int>(ascent * scale);
+    
     delete[] ttfBuffer;
     
     glGenTextures(1, &mTexture);
@@ -161,6 +169,10 @@ float Font::GetWidth(const char* text) {
 
 float Font::GetHeight() const {
     return mHeight;
+}
+
+int Font::GetBaseline() const {
+    return mBaseline;
 }
 
 bool Font::IsFromFile() const {
