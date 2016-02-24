@@ -262,9 +262,8 @@ bool Map::IsOutline(int vertexA, int vertexB) {
     int triangleCount = 0;
 
     for (unsigned int i = 0; i < containingVertexA.size() && triangleCount <= 1; i++) {
-        if (containingVertexA[i].Contains(vertexB)) {
+        if (containingVertexA[i].Contains(vertexB))
             triangleCount++;
-        }
     }
     return triangleCount == 1;
 }
@@ -288,11 +287,10 @@ int Map::GetConnectedVertex(int index) {
 }
 
 void Map::AddToDictionary(int indexKey, MapTriangle triangle) {
-    if (mTriangleDictionary.count(indexKey) == 1) {
+    if (mTriangleDictionary.count(indexKey) == 1)
         mTriangleDictionary[indexKey].push_back(triangle);
-    } else {
+    else
         mTriangleDictionary[indexKey].push_back(triangle);
-    }
 }
 
 void Map::FollowOutline(int index, int outlineIndex) {
@@ -300,9 +298,8 @@ void Map::FollowOutline(int index, int outlineIndex) {
     mVertexChecked.insert(index);
     int nextVertex = GetConnectedVertex(index);
 
-    if (nextVertex != -1) {
+    if (nextVertex != -1)
         FollowOutline(nextVertex, outlineIndex);
-    }
 
 }
 
