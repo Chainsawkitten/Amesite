@@ -93,6 +93,7 @@ MainScene::MainScene() {
 
     CaveGenerator::Coordinate playerPosition(width/2, height/2);
     std::vector<CaveGenerator::Coordinate> bossPositions;
+    bossPositions.push_back(CaveGenerator::Coordinate(45, 45));
 
     // Create a map.
     mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
@@ -104,6 +105,9 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
+    // Create boss
+    mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
+
     // Directional light.
     Entity* dirLight = CreateEntity();
     dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
@@ -117,10 +121,8 @@ MainScene::MainScene() {
     glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
 
-    //mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(100, 0, 35)));
-
     GameEntityCreator().CreateEnemyPylon(glm::vec3(80, 0, 25));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
     GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
     GameEntityCreator().CreateEnemyPylon(glm::vec3(160, 0, 65));
