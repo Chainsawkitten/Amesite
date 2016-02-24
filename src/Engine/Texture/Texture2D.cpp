@@ -96,8 +96,10 @@ Texture2D::Texture2D(const char *source, int sourceLength, bool srgb) {
 
 Texture2D::Texture2D(Font* font, const char* text) {
     // Create texture.
-    mWidth = 40;
-    mHeight = 40;
+    mWidth = static_cast<int>(font->GetWidth(text));
+    mWidth += mWidth % 4;
+    mHeight = static_cast<int>(font->GetHeight());
+    mHeight += mHeight % 4;
     glGenTextures(1, &mTexID);
     glBindTexture(GL_TEXTURE_2D, mTexID);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
