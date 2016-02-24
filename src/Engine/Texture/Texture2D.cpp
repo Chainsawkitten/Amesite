@@ -119,7 +119,13 @@ Texture2D::Texture2D(Font* font, const char* text) {
         Log() << "Framebuffer creation failed\n";
     
     // Render.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
     
+    glClearColor(1.f, 0.f, 0.f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.f, 0.f, 0.f, 0.f);
+    
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     
     // Free render target.
     glDeleteFramebuffers(1, &frameBuffer);

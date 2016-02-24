@@ -94,4 +94,6 @@ void MenuScene::Update(float deltaTime) {
     
     // Test text rendering.
     mFont->RenderText("Test", glm::vec2(0.f, 0.f), 1000.f);
+    
+    mTestTexture->Render(glm::vec2(0.f, 0.f), MainWindow::GetInstance()->GetSize());
 }
