@@ -50,10 +50,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     Log() << "Map" << "\n";
     caveMap->PrintMapToLog();
 
-
-    //int rowCount = height;
-    //int columnCount = width;
-
     mMap = caveMap->GetMap();
 
     //map = CreateEntity(scene);
