@@ -6,11 +6,12 @@
 #include <System/CollisionSystem.hpp>
 #include <System/ParticleSystem.hpp>
 #include <System/AnimationSystem.hpp>
-#include <System/SoundSystem.hpp>
+#include "Game/System/CheckpointSystem.hpp"
 #include "Game/System/HealthSystem.hpp"
 #include "Game/System/DamageSystem.hpp"
 #include "Game/System/ControllerSystem.hpp"
 #include "Game/System/LifeTimeSystem.hpp"
+#include "Game/System/ReflectSystem.hpp"
 
 #include <AL/al.h>
 
@@ -26,6 +27,7 @@ namespace GameObject {
     class Cave;
     class Camera;
     class Player;
+    class SpinBoss;
 }
 namespace Audio {
     class SoundBuffer;
@@ -47,9 +49,6 @@ class MainScene : public Scene {
         void Update(float deltaTime);
         
     private:
-        // SoundSystem.
-        System::SoundSystem mSoundSystem;
-        
         // PhysicsSystem.
         System::PhysicsSystem mPhysicsSystem;
 
@@ -71,11 +70,20 @@ class MainScene : public Scene {
         // The life time system
         System::LifeTimeSystem mLifeTimeSystem;
 
-        // The life time system
+        // The reflect system
+        System::ReflectSystem mReflectSystem;
+
+        // The animation system
         System::AnimationSystem mAnimationSystem;
+
+        // checkpoint system
+        System::CheckpointSystem mCheckpointSystem;
 
         // Vector containing players
         std::vector<GameObject::Player*> mPlayers;
+
+        // Vector containing bosses
+        std::vector<GameObject::SpinBoss*> mBosses;
 
         // The main camera
         GameObject::Camera* mMainCamera;

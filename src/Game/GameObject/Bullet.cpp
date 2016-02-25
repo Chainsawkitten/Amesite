@@ -28,7 +28,7 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
     node->AddComponent<Component::Collider2DCircle>()->radius = 0.25f;
     node->AddComponent<Component::Physics>();
-    node->AddComponent<Component::LifeTime>()->lifeTime = 2.f;
+    node->AddComponent<Component::LifeTime>()->lifeTime = 15.f;
     Component::ParticleEmitter* emitter = node->AddComponent<Component::ParticleEmitter>();
     emitter->emitterType = Component::ParticleEmitter::POINT;
     emitter->maxEmitTime = 0.02;
@@ -36,8 +36,8 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
     emitter->lifetime = 0.0;
     emitter->particleType.textureIndex = Component::ParticleEmitter::FIRE;
-    emitter->particleType.minLifetime = .01f * 2.f;
-    emitter->particleType.maxLifetime = .02f * 2.f;
+    emitter->particleType.minLifetime = .01f * 4.f;
+    emitter->particleType.maxLifetime = .02f * 4.f;
     emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -.2f);
     emitter->particleType.maxVelocity = glm::vec3(.3f, 0.f, .2f);
     emitter->particleType.minSize = glm::vec2(.5f, .5f) * 1.5f;
@@ -59,8 +59,8 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
     emitter->lifetime = 0.0;
     emitter->particleType.textureIndex = Component::ParticleEmitter::BLUE;
-    emitter->particleType.minLifetime = .026f * 3.f;
-    emitter->particleType.maxLifetime = .029f * 3.f;
+    emitter->particleType.minLifetime = .026f * 5.f;
+    emitter->particleType.maxLifetime = .029f * 5.f;
     emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -.2f) / 2.f;
     emitter->particleType.maxVelocity = glm::vec3(.3f, 0.f, .2f) / 2.f;
     emitter->particleType.minSize = glm::vec2(.5f, .5f);

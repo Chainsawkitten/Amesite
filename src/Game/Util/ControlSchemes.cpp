@@ -296,5 +296,9 @@ void ControlScheme::Boost(Component::Controller* controller, float deltaTime) {
 
     //if(Input()->Triggered(controller->playerID, InputHandler::BOOST))
     //    entity->GetComponent<Component::Physics>()->acceleration += glm::normalize(glm::vec3(glm::sin(oldAngle), 0, glm::cos(oldAngle))) * 50000.f;
+}
 
+void ControlScheme::Shield(Component::Controller* controller, float deltaTime) {
+    //if (Input()->Pressed(controller->playerID, InputHandler::SHOOT))
+        //GameEntityCreator().CreateShield(controller->entity, glm::vec3(0, 0, 4), 1.f, 100);
 }

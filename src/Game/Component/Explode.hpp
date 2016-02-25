@@ -2,6 +2,8 @@
 
 #include <Component/SuperComponent.hpp>
 
+#include <glm/glm.hpp>
+
 namespace Component {
     /// %Component %Explode other entities.
     class Explode : public SuperComponent {
@@ -32,5 +34,11 @@ namespace Component {
              * Default: FIRE
              */
             int particleTextureIndex;
+
+            /// Offset
+            /**
+             * Default: 0.f, 0.f, 0.f
+             */
+            glm::vec3 offset;
     };
 }

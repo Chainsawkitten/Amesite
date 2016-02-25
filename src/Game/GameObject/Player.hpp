@@ -6,6 +6,8 @@
 
 class Scene;
 class Entity;
+class Texture2D;
+
 namespace Geometry {
     class OBJModel;
 }
@@ -37,8 +39,11 @@ namespace GameObject {
              */
             float GetHealth();
 
+            ///Returns true if the player is active.
             bool Active();
+            ///Activates the player.
             void Activate();
+            ///Deactivates the player.
             void Deactivate();
 
             /// Node of the %Player.
@@ -62,15 +67,24 @@ namespace GameObject {
             /// Light relative to body.
             Entity* light;
 
-            /// Turrent relative to body.
-            Entity* leftTurrent;
+            /// Turret relative to body.
+            Entity* leftTurret;
 
-            /// Turrent relative to body.
-            Entity* rightTurrent;
+            /// Turret relative to body.
+            Entity* rightTurret;
+
+            void UpdatePlayerTexture();
 
             float mRespawnTimer;
 
         private:
+            //The players current state.
+            enum PlayerState {
+                LIGHTDAMAGE = 0,
+                MEDIUMDAMAGE,
+                HEAVYDAMAGE
+            };
+
             Geometry::OBJModel* mShipBody;
             Geometry::OBJModel* mShipFrontEngineRight;
             Geometry::OBJModel* mShipFrontEngineLeft;
@@ -82,5 +96,11 @@ namespace GameObject {
             bool mActive;
 
             void AddEnginePartilces(Entity* entity);
+
+            PlayerState state;
+
+            Texture2D* healthyTexture;
+            Texture2D* heavyDamageTexture;
+            Texture2D* mediumDamageTexture;
     };
 }

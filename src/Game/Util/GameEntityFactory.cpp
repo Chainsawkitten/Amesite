@@ -24,6 +24,7 @@
 #include <Scene/Scene.hpp>
 
 #include <../Game/Util/ControlSchemes.hpp>
+#include "../Util/CaveGenerator.hpp"
 
 #include "../GameObject/Bullet.hpp"
 #include "../GameObject/Player.hpp"
@@ -32,6 +33,9 @@
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Dust.hpp"
 #include "../GameObject/Explosion.hpp"
+#include "../GameObject/Pylon.hpp"
+#include "../GameObject/Shield.hpp"
+#include "../GameObject/SpinBoss.hpp"
 
 using namespace GameObject;
 
@@ -51,18 +55,40 @@ Enemy* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
     return gameObject;
 }
 
+Pylon* GameEntityFactory::CreateEnemyPylon(const glm::vec3& origin) {
+    Pylon* gameObject = new Pylon(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::Shield* GameEntityFactory::CreateShield(Entity* parentEntity, glm::vec3 offset, float lifeTime, float health) {
+    Shield* gameObject = new Shield(mScene);
+    gameObject->node->GetComponent<Component::RelativeTransform>()->parentEntity = parentEntity;
+    gameObject->node->GetComponent<Component::RelativeTransform>()->Move(offset);
+    gameObject->body->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
+    gameObject->body->GetComponent<Component::Health>()->health = health;
+    gameObject->body->GetComponent<Component::Health>()->maxHealth = health;
+    return gameObject;
+}
+
 Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::Player player) {
     Player* gameObject = new Player(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     gameObject->node->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->leftTurrent->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->rightTurrent->GetComponent<Component::Controller>()->playerID = player;
+    gameObject->leftTurret->GetComponent<Component::Controller>()->playerID = player;
+    gameObject->rightTurret->GetComponent<Component::Controller>()->playerID = player;
     CreateDust(gameObject->node, Component::ParticleEmitter::DUST);
     if (player == InputHandler::PLAYER_ONE) {
         gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
     } else {
         gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::MouseRotate);
     }
+    return gameObject;
+}
+
+GameObject::SpinBoss* GameEntityFactory::CreateSpinBoss(const glm::vec3& origin) {
+    SpinBoss* gameObject = new SpinBoss(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }
 
@@ -117,8 +143,8 @@ void GameEntityFactory::SetScene(Scene* scene) {
     mScene = scene;
 }
 
-Cave* GameEntityFactory::CreateMap(int width, int height, int seed, int percent, int iterations, int threshold) {
-    Cave* gameObject = new Cave(mScene, width, height, seed, percent, iterations, threshold);
+Cave* GameEntityFactory::CreateMap(int width, int height, int seed, int percent, int iterations, int threshold, CaveGenerator::Coordinate playerPosition, std::vector<CaveGenerator::Coordinate> bossPositions) {
+    Cave* gameObject = new Cave(mScene, width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
     return gameObject;
 }
 

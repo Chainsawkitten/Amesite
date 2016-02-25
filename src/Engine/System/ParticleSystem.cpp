@@ -19,7 +19,7 @@ using namespace System;
 ParticleSystem* ParticleSystem::mActiveInstance = nullptr;
 
 ParticleSystem::ParticleSystem() {
-    mMaxParticleCount = 1000;
+    mMaxParticleCount = 10000;
     mParticleCount = 0;
 }
 

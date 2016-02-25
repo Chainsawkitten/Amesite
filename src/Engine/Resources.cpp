@@ -131,9 +131,9 @@ bool ResourceManager::ShaderProgramKey::operator<(const ShaderProgramKey& other)
     return false;
 }
 
-Geometry::Map* ResourceManager::CreateMap(bool **data, const float squareSize, glm::uvec2 dataDimensions) {
+Geometry::Map* ResourceManager::CreateMap(bool **data, glm::uvec2 dataDimensions, float wallHeight) {
     if (mMapCount == 0)
-        mMap = new Geometry::Map(data, squareSize, dataDimensions);
+        mMap = new Geometry::Map(data, dataDimensions, wallHeight);
 
     mMapCount++;
     return mMap;
