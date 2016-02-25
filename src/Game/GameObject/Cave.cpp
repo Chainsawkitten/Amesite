@@ -43,8 +43,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     caveMap->ConnectClosestRooms(true);
 
-    caveMap->PrintMapToLog();
-
     for (auto& bossPosition : bossPositions) {
         caveMap->CreateCircle(bossPosition, 7, false);
     }
