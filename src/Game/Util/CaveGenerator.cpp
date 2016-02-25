@@ -27,7 +27,6 @@ namespace CaveGenerator {
         }
 
         //Initialize Mersenne Twister RNG
-        //TODO: Actually seed the RNG with a proper seed.
         mRNG.seed(static_cast<uint32_t>(seed));
     }
 
@@ -51,6 +50,20 @@ namespace CaveGenerator {
         }
     }
 
+    void CaveMap::PrintMapToLog(bool** map, int rowCount, int columnCount) {
+        for (int i = 0; i < rowCount; ++i) {
+            for (int j = 0; j < columnCount; ++j) {
+                if (map[i][j] == true)
+                    Log() << "#";
+                else if (map[i][j] == false)
+                    Log() << ".";
+                else
+                    Log() << "o";
+            }
+            Log() << "\n";
+        }
+    }
+
     void CaveMap::ProcessCaveMap(const int& iterations) {
         std::vector<Coordinate> test = GetLine(Coordinate(0, 0), Coordinate(5, 5));
 
@@ -58,7 +71,6 @@ namespace CaveGenerator {
         //Rule: if a cell was a wall and has 4 or more wall neighbours, then it stays a wall.
         //Otherwise, if the cell wasn't a wall and there are 5 or more wall neighbours, then it becomes a wall.
         for (int i = 0; i < iterations; i++) {
-
             //Create temporary map.
             bool** tempMap = new bool*[mRowCount];
             for (int j = 0; j < mRowCount; ++j)
@@ -73,17 +85,16 @@ namespace CaveGenerator {
             //Add borders
             for (int j = 0; j < mRowCount; ++j) {
                 for (int k = 0; k < mColumnCount; ++k) {
-                    if (j == 0 || j == (mColumnCount - 1))
+                    if (j == 0 || j == (mRowCount - 1))
                         tempMap[j][k] = true;
-                    else if (k == 0 || k == (mRowCount - 1))
+                    else if (k == 0 || k == (mColumnCount - 1))
                         tempMap[j][k] = true;
                 }
             }
-            
             for (int j = 0; j < mRowCount; ++j) {
                 for (int k = 0; k < mColumnCount; ++k) {
                     //Do not iterate over the border columns and rows.
-                    if ((j != 0 && j != (mColumnCount - 1)) && (k != 0 && k != (mRowCount - 1))) {
+                    if ((j != 0 && j != (mRowCount - 1)) && (k != 0 && k != (mColumnCount - 1))) {
                         //Check number of wall neighbours.
                         int numberOfWallNeighbours = 0;
 
@@ -99,7 +110,7 @@ namespace CaveGenerator {
                                 numberOfWallNeighbours++;
 
                         //Top-right
-                        if (((j + 1) < mColumnCount) && ((k - 1) >= 0))
+                        if (((j + 1) < mRowCount) && ((k - 1) >= 0))
                             if (mMap[j + 1][k - 1])
                                 numberOfWallNeighbours++;
 
@@ -109,22 +120,22 @@ namespace CaveGenerator {
                                 numberOfWallNeighbours++;
 
                         //Middle-right
-                        if ((j + 1) < mColumnCount)
+                        if ((j + 1) < mRowCount)
                             if (mMap[j + 1][k - 0])
                                 numberOfWallNeighbours++;
 
                         //Bottom-left
-                        if (((j - 1) >= 0) && ((k + 1) < mRowCount))
+                        if (((j - 1) >= 0) && ((k + 1) < mColumnCount))
                             if (mMap[j - 1][k + 1])
                                 numberOfWallNeighbours++;
 
                         //Bottom-middle
-                        if (((k + 1) < mRowCount))
+                        if (((k + 1) < mColumnCount))
                             if (mMap[j - 0][k + 1])
                                 numberOfWallNeighbours++;
 
                         //Bottom-right
-                        if (((j + 1) < mColumnCount) && ((k + 1) < mRowCount))
+                        if (((j + 1) < mRowCount) && ((k + 1) < mColumnCount))
                             if (mMap[j + 1][k + 1])
                                 numberOfWallNeighbours++;
                     
@@ -137,20 +148,18 @@ namespace CaveGenerator {
 
                 }
             }
-
             //Copy results to map to prepare for another iteration.
             for (int j = 0; j < mRowCount; ++j) {
                 for (int k = 0; k < mColumnCount; ++k) {
                     mMap[j][k] = tempMap[j][k];
                 }
             }
-
             //Delete tempMap.
             for (int j = 0; j < mRowCount; ++j)
                 delete[] tempMap[j];
             delete[] tempMap;
         }
-
+        
         //Find which rooms we have left after processing.
         DetectRooms();
     }
@@ -280,7 +289,7 @@ namespace CaveGenerator {
     }
 
     bool CaveMap::IsWithinMapRange(const Coordinate & coordinate) {
-        return ((coordinate.x > 0) && (coordinate.x < (mColumnCount-1)) && (coordinate.y > 0) && (coordinate.y < (mRowCount-1)));
+        return ((coordinate.x > 0) && (coordinate.x < mColumnCount) && (coordinate.y > 0) && (coordinate.y < mRowCount));
     }
 
     bool ** CaveMap::GetMap(){
@@ -315,16 +324,15 @@ namespace CaveGenerator {
         //Seed walls with percent% probability.
         for (int i = 0; i < mRowCount; ++i) {
             for (int j = 0; j < mColumnCount; ++j) {
-                if (i == 0 || i == (mColumnCount - 1))
+                if (i == 0 || i == (mRowCount - 1))
                     mMap[i][j] = true;
-                else if (j == 0 || j == (mRowCount - 1))
+                else if (j == 0 || j == (mColumnCount - 1))
                     mMap[i][j] = true;
                 else if (hundredDistribution(mRNG) < percent)
                     mMap[i][j] = true;
 
             }
         }
-
         return;
     }
 

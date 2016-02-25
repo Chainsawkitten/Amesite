@@ -80,13 +80,13 @@ MainScene::MainScene() {
     GameEntityCreator().SetScene(this);
     
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 70.f, 0.f), glm::vec3(0.f, 45.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 70.f, 0.f), glm::vec3(0.f, 60.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
 
     // Create scene
     int width = 60;
-    int height = 40;
-    int seed = 1;
+    int height = 60;
+    int seed = 0;
     int percent = 50;
     int iterations = 10;
     int threshold = 100;

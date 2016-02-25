@@ -43,6 +43,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     caveMap->ConnectClosestRooms(true);
 
+    caveMap->PrintMapToLog();
+
     for (auto& bossPosition : bossPositions) {
         caveMap->CreateCircle(bossPosition, 7, false);
     }
@@ -92,10 +94,9 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 	heightMap->AddComponent<Component::Transform>();
 	heightMap->AddComponent<Component::Material>();
     heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f), -11.f, zScale*(static_cast<float>(height) / 2.f)));
-	//heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(5 * 30.f, -11.f, 5 * 30.f));
 	heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 5.f, (static_cast<float>(height) / 2.f) * 10);
 
-	heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, 60, 60, glm::vec2(5.f, 5.f));
+	heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, width, height, glm::vec2(xScale, zScale));
 
 	heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
 	heightMap->GetComponent<Component::Material>()->SetNormal("Resources/wall2_norm.png");

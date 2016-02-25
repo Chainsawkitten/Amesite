@@ -68,7 +68,7 @@ namespace Geometry {
 			}
 		}
 
-		//Filter3x3();
+		Filter3x3();
 		CalculateNormals();
 
 		GenerateVertices(textureRepeat);
