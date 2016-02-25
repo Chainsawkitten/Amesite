@@ -115,6 +115,14 @@ namespace CaveGenerator {
             ///Prints the current state of the map to the log.
             void PrintMapToLog();
 
+            ///Prints a boolmap to log.
+            /**
+             *@param map The bool map.
+             *@param rowCount The number of rows.
+             *@param columnCount The number of columns.
+             */
+            void PrintMapToLog(bool** map, int rowCount, int columnCount);
+
             ///Removes rooms smaller than a certain threshold.
             /**
              * @param threshold Rooms with less tiles than this will be removed.
@@ -223,8 +231,6 @@ namespace CaveGenerator {
              * @param second The second room.
              */
             void ConnectRooms(Room& first, Room& second);
-
-            void PrintMapToLog(bool** map, int rowCount, int columnCount);
 
             bool** mMap;
             int mRowCount; 

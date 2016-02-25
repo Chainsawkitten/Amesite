@@ -80,20 +80,20 @@ MainScene::MainScene() {
     GameEntityCreator().SetScene(this);
     
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 70.f, 0.f), glm::vec3(0.f, 60.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(300.f, 300.f, 300.f), glm::vec3(0.f, 60.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
 
     // Create scene
-    int width = 60;
-    int height = 60;
-    int seed = 0;
+    int width = 90;
+    int height = 90;
+    int seed = 1;
     int percent = 50;
     int iterations = 10;
     int threshold = 100;
 
     CaveGenerator::Coordinate playerPosition(width/2, height/2);
     std::vector<CaveGenerator::Coordinate> bossPositions;
-    bossPositions.push_back(CaveGenerator::Coordinate(45, 45));
+    //bossPositions.push_back(CaveGenerator::Coordinate(45, 45));
 
     // Create a map.
     mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
@@ -106,7 +106,7 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
     // Create boss
-    mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
+    //mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
     
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX,playerStartZ));
 
@@ -120,7 +120,7 @@ MainScene::MainScene() {
     dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
     dirLight->AddComponent<Component::DirectionalLight>();
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
-    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.04f;
+    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.24f;
     
     postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     fxaaFilter = new FXAAFilter();
@@ -128,22 +128,22 @@ MainScene::MainScene() {
     glowFilter = new GlowFilter();
     glowBlurFilter = new GlowBlurFilter();
 
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(80, 0, 25));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(160, 0, 65));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 85));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(110, 0, 55));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(50, 0, 105));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(115, 0, 135));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(175, 0, 135));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(195, 0, 145));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 245));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(225, 0, 235));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
+    //GameEntityCreator().CreateEnemyPylon(glm::vec3(80, 0, 25));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
+    //GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
+    //GameEntityCreator().CreateEnemyPylon(glm::vec3(160, 0, 65));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 85));
+    //GameEntityCreator().CreateEnemyPylon(glm::vec3(110, 0, 55));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(50, 0, 105));
+    //GameEntityCreator().CreateEnemyPylon(glm::vec3(115, 0, 135));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(175, 0, 135));
+    //GameEntityCreator().CreateEnemyPylon(glm::vec3(195, 0, 145));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 245));
+    //GameEntityCreator().CreateEnemyPylon(glm::vec3(225, 0, 235));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
+    //GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
+    //GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
 }
 
 MainScene::~MainScene() {
@@ -214,7 +214,7 @@ void MainScene::Update(float deltaTime) {
     System::SoundSystem::GetInstance()->Update(*this);
     
     // Update game logic
-    mMainCamera->UpdateRelativePosition(mPlayers);
+    //mMainCamera->UpdateRelativePosition(mPlayers);
 
     mCheckpointSystem.Update();
 
@@ -258,7 +258,7 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
     bool** map = cave->GetCaveData();
 
     //We check if we moved to another cell in the grid.
-    if (map[abs(newZ)][abs(newX)]) {
+    if (map[abs(newX)][abs(newZ)]) {
         //We collide in X
         if (X > Z) {
 

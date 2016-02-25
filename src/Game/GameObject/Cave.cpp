@@ -18,6 +18,7 @@
 #include <Engine/Component/SpotLight.hpp>
 #include <Engine/Geometry/Terrain.hpp>
 #include "../Util/CaveGenerator.hpp"
+#include <Util\Log.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 
@@ -31,7 +32,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     xScale = 5.f;
     zScale = 5.f;
 
-    caveMap = new CaveGenerator::CaveMap(width, height, seed);
+    caveMap = new CaveGenerator::CaveMap(height, width, seed);
 
     caveMap->GenerateCaveMap(percent);
 
@@ -46,39 +47,36 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     for (auto& bossPosition : bossPositions) {
         caveMap->CreateCircle(bossPosition, 7, false);
     }
+    Log() << "Map" << "\n";
+    caveMap->PrintMapToLog();
 
-    mMap = new bool*[width];
-    for (int i = 0; i < width; i++) {
-        mMap[i] = new bool[height];
-    }
 
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
-            mMap[i][j] = caveMap->GetMap()[i][j];
-        }
-    }
+    //int rowCount = height;
+    //int columnCount = width;
 
-    map = CreateEntity(scene);
-    map->AddComponent<Component::Mesh>();
-    map->AddComponent<Component::Transform>();
-    map->AddComponent<Component::Material>();
+    mMap = caveMap->GetMap();
 
-    map->GetComponent<Component::Mesh>()->geometry = Resources().CreateMap(mMap, glm::uvec2(mWidth, mHeight));
-    map->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
-    map->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*static_cast<float>(mWidth) / 2.f, 0.f, zScale*static_cast<float>(mWidth) / 2.f));
-    map->GetComponent<Component::Transform>()->scale = glm::vec3(xScale, 5.f, zScale);
-    map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
-    map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
+    //map = CreateEntity(scene);
+    //map->AddComponent<Component::Mesh>();
+    //map->AddComponent<Component::Transform>();
+    //map->AddComponent<Component::Material>();
+
+    //map->GetComponent<Component::Mesh>()->geometry = Resources().CreateMap(mMap, glm::uvec2(mWidth, mHeight));
+    //map->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
+    //map->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*static_cast<float>(mWidth) / 2.f, 0.f, zScale*static_cast<float>(mWidth) / 2.f));
+    //map->GetComponent<Component::Transform>()->scale = glm::vec3(xScale, 5.f, zScale);
+    //map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+    //map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
 
     heightMap = CreateEntity(scene);
 
-    float** floatMap = new float*[width];
-    for (int i = 0; i < width; i++) {
-        floatMap[i] = new float[height];
+    float** floatMap = new float*[height];
+    for (int i = 0; i < height; i++) {
+        floatMap[i] = new float[width];
     }
 
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
             if (mMap[i][j] == true)
                 floatMap[i][j] = 1.0f;
             else
@@ -92,20 +90,16 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->AddComponent<Component::Transform>();
     heightMap->AddComponent<Component::Material>();
     heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f), -11.f, zScale*(static_cast<float>(height) / 2.f)));
-    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
+    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 25.f, (static_cast<float>(height) / 2.f) * 10);
 
-    heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, width, height, glm::vec2(xScale, zScale));
+    heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, height, width, glm::vec2(xScale, zScale));
 
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
 
 }
 
 Cave::~Cave() {
-    for (int i = 0; i < 60; i++) {
-        delete[] mMap[i];
-    }
     delete caveMap;
-    delete[] mMap;
 }
 
 bool ** Cave::GetCaveData()
