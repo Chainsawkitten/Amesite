@@ -72,33 +72,33 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
     map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
 
-	heightMap = CreateEntity(scene);
+    heightMap = CreateEntity(scene);
 
-	float** floatMap = new float*[width];
-	for (int i = 0; i < width; i++) {
-		floatMap[i] = new float[height];
-	}
+    float** floatMap = new float*[width];
+    for (int i = 0; i < width; i++) {
+        floatMap[i] = new float[height];
+    }
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
-			if (mMap[i][j] == true)
-				floatMap[i][j] = 1.0f;
-			else
-				floatMap[i][j] = 0.0f;
-		}
-	}
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            if (mMap[i][j] == true)
+                floatMap[i][j] = 1.0f;
+            else
+                floatMap[i][j] = 0.0f;
+        }
+    }
 
-	heightMap = CreateEntity(scene);
-	
-	heightMap->AddComponent<Component::Mesh>();
-	heightMap->AddComponent<Component::Transform>();
-	heightMap->AddComponent<Component::Material>();
+    heightMap = CreateEntity(scene);
+    
+    heightMap->AddComponent<Component::Mesh>();
+    heightMap->AddComponent<Component::Transform>();
+    heightMap->AddComponent<Component::Material>();
     heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f), -11.f, zScale*(static_cast<float>(height) / 2.f)));
-	heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
+    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
 
-	heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, width, height, glm::vec2(xScale, zScale));
+    heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, width, height, glm::vec2(xScale, zScale));
 
-	heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+    heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
 
 }
 

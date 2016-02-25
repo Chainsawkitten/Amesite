@@ -37,7 +37,7 @@ namespace GameObject {
 
             /// Map of the %Cave
             Entity* map;
-			Entity* heightMap;
+            Entity* heightMap;
 
             /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;
