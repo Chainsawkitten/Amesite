@@ -42,12 +42,11 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     caveMap->CreateCircle(playerPosition, 7, false);
 
-    caveMap->ConnectClosestRooms(true);
-
     for (auto& bossPosition : bossPositions) {
         caveMap->CreateCircle(bossPosition, 7, false);
     }
-    Log() << "Map" << "\n";
+
+    caveMap->ConnectClosestRooms(true);
 
     mMap = new bool*[height];
     for (int i = 0; i < height; i++) {
