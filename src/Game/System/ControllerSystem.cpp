@@ -13,9 +13,9 @@ void ControllerSystem::Update(Scene& scene, float deltaTime) {
     controllerObjects = scene.GetAll<Component::Controller>();
     
     for (unsigned int i = 0; i < controllerObjects.size(); i++) {
-        for (unsigned int scheme = 0; scheme < controllerObjects[i]->controlSchemes.size(); scheme++) {
-            controllerObjects[i]->controlSchemes[scheme](controllerObjects[i], deltaTime);
-        }
+        for (unsigned int scheme = 0; scheme < controllerObjects[i]->controlSchemes.size(); scheme++)
+            if(controllerObjects[i]->enabled)
+                controllerObjects[i]->controlSchemes[scheme](controllerObjects[i], deltaTime);
     }
 
 }

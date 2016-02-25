@@ -124,6 +124,10 @@ namespace Component {
             // * Default: nullptr
             // */
             //Entity* follow;
+
+            ///If it isn't enabled it doesnt emit.
+            bool enabled;
+
     };
 }
 

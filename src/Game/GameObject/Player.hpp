@@ -39,6 +39,13 @@ namespace GameObject {
              */
             float GetHealth();
 
+            ///Returns true if the player is active.
+            bool Active();
+            ///Activates the player.
+            void Activate();
+            ///Deactivates the player.
+            void Deactivate();
+
             /// Node of the %Player.
             Entity* node;
 
@@ -68,6 +75,9 @@ namespace GameObject {
 
             void UpdatePlayerTexture();
 
+            ///How long the player has been respawning
+            float mRespawnTimer;
+
         private:
             //The players current state.
             enum PlayerState {
@@ -83,6 +93,8 @@ namespace GameObject {
             Geometry::OBJModel* mShipBackEngineLeft;
             
             Audio::SoundBuffer* mShootSound;
+
+            bool mActive;
 
             void AddEnginePartilces(Entity* entity);
 

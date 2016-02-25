@@ -101,6 +101,12 @@ class MainScene : public Scene {
         // Grid collision
         bool GridCollide(Entity* entity, float deltaTime, float gridScale);
 
+        /// Handles the player respawn
+        /**
+        *@param deltaTime Time since last frame.
+        */
+        void Respawn(float deltaTime);
+
         // Music.
         Audio::SoundBuffer* mMusicSoundBuffer;
         ALuint mSource;
