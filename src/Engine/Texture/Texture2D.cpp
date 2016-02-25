@@ -126,7 +126,6 @@ Texture2D::Texture2D(Font* font, const char* text) {
     
     glViewport(0, 0, mWidth, mHeight);
     glClear(GL_COLOR_BUFFER_BIT);
-    Log() << "Baseline: " << font->GetBaseline() << "\n";
     font->RenderText(text, glm::vec2(0.f, -static_cast<float>(font->GetBaseline())), 10000.f, glm::vec2(static_cast<float>(mWidth), static_cast<float>(mHeight)));
     
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
