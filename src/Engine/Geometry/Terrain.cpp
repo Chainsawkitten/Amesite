@@ -137,7 +137,7 @@ namespace Geometry {
         float zInTerrain = z * height;
 
         if (xInTerrain < 0.f || xInTerrain >= width - 1 || zInTerrain < 0.f || zInTerrain >= height - 1) {
-            return glm::vec3(0.f,0.f,0.f);
+            return glm::vec3(0.f, 0.f, 0.f);
         }
         int xFloor = static_cast<int>(xInTerrain);
         int zFloor = static_cast<int>(zInTerrain);
