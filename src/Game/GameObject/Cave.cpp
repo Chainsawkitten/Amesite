@@ -42,20 +42,23 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     caveMap->ConnectClosestRooms(true);
 
+    caveMap->PrintMapToLog();
+
     for (auto& bossPosition : bossPositions) {
         caveMap->CreateCircle(bossPosition, 7, false);
     }
 
-    mMap = new bool*[width];
-    for (int i = 0; i < width; i++) {
-        mMap[i] = new bool[height];
+    mMap = new bool*[height];
+    for (int i = 0; i < height; i++) {
+        mMap[i] = new bool[width];
     }
 
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
             mMap[i][j] = caveMap->GetMap()[i][j];
         }
     }
+    caveMap->PrintMapToLog(mMap, width, height);
 
     map = CreateEntity(scene);
     map->AddComponent<Component::Mesh>();
@@ -71,7 +74,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 }
 
 Cave::~Cave() {
-    for (int i = 0; i < 60; i++) {
+    for (int i = 0; i < mHeight; i++) {
         delete[] mMap[i];
     }
     delete caveMap;
