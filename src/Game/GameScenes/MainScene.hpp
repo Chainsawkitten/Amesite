@@ -101,7 +101,10 @@ class MainScene : public Scene {
         // Grid collision
         bool GridCollide(Entity* entity, float deltaTime, float gridScale);
 
-        //Respawn
+        /// Handles the player respawn
+        /**
+        *@param deltaTime Time since last frame.
+        */
         void Respawn(float deltaTime);
 
         // Music.

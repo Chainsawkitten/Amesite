@@ -75,6 +75,7 @@ namespace GameObject {
 
             void UpdatePlayerTexture();
 
+            ///How long the player has been respawning
             float mRespawnTimer;
 
         private:
