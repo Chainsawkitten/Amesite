@@ -3,6 +3,7 @@
 #include "Shader/ShaderProgram.hpp"
 #include "Shader/Shader.hpp"
 #include "Geometry/Cube.hpp"
+#include "Geometry/Plane.hpp"
 #include "Geometry/Square.hpp"
 #include "Geometry/OBJModel.hpp"
 #include "Geometry/Map.hpp"
@@ -154,6 +155,28 @@ Geometry::Cube* ResourceManager::CreateCube() {
     return mCube;
 }
 
+void ResourceManager::FreeCube() {
+    mCubeCount--;
+    
+    if (mCubeCount <= 0)
+        delete mCube;
+}
+
+Geometry::Plane* ResourceManager::CreatePlane() {
+    if (mPlaneCount == 0)
+        mPlane = new Geometry::Plane();
+    
+    mPlaneCount++;
+    return mPlane;
+}
+
+void ResourceManager::FreePlane() {
+    mPlaneCount--;
+    
+    if (mPlaneCount <= 0)
+        delete mPlane;
+}
+
 Geometry::OBJModel* ResourceManager::CreateOBJModel(std::string filename) {
     if (objModels.find(filename) == objModels.end()) {
         objModels[filename].model = new Geometry::OBJModel(filename.c_str());
@@ -176,13 +199,6 @@ void ResourceManager::FreeOBJModel(Geometry::OBJModel* model) {
         delete model;
         objModels.erase(filename);
     }
-}
-
-void ResourceManager::FreeCube() {
-    mCubeCount--;
-    
-    if (mCubeCount <= 0)
-        delete mCube;
 }
 
 Geometry::Square* ResourceManager::CreateSquare() {

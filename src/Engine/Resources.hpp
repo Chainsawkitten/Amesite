@@ -9,6 +9,7 @@ class ShaderProgram;
 namespace Geometry {
     class Map;
     class Cube;
+    class Plane;
     class Square;
     class Model;
     class OBJModel;
@@ -94,6 +95,18 @@ class ResourceManager {
          * Deletes the instance if no more references exist.
          */
         void FreeCube();
+        
+        /// Create a plane for rendering if it doesn't already exist.
+        /**
+         * @return The plane instance.
+         */
+        Geometry::Plane* CreatePlane();
+        
+        /// Free the reference to the plane.
+        /**
+         * Deletes the instance if no more references exist.
+         */
+        void FreePlane();
         
         /// Create a square for rendering if it doesn't already exist.
         /**
@@ -223,6 +236,10 @@ class ResourceManager {
         // Cube
         Geometry::Cube* mCube;
         int mCubeCount;
+        
+        // Plane
+        Geometry::Plane* mPlane;
+        int mPlaneCount;
         
         // Square
         Geometry::Square* mSquare;
