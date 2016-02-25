@@ -8,9 +8,11 @@ in VertexData {
 } vertexIn;
 
 uniform sampler2D baseImage;
+uniform float alpha;
 
 out vec4 fragmentColor;
 
 void main () {
-    fragmentColor = texture(baseImage, vertexIn.texCoords);
+	vec4 sampled = texture(baseImage, vertexIn.texCoords);
+    fragmentColor = vec4(sampled.rgb, sampled.a * alpha);
 }

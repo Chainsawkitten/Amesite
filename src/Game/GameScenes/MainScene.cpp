@@ -85,15 +85,15 @@ MainScene::MainScene() {
 
     // Create scene
     int width;
-    int height = width = 90;
-    int seed = 1;
+    int height = width = 60;
+    int seed = 0;
     int percent = 50;
     int iterations = 10;
     int threshold = 100;
 
     CaveGenerator::Coordinate playerPosition(width/2, height/2);
     std::vector<CaveGenerator::Coordinate> bossPositions;
-    //bossPositions.push_back(CaveGenerator::Coordinate(45, 45));
+    bossPositions.push_back(CaveGenerator::Coordinate(45, 45));
 
     // Create a map.
     mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
@@ -102,13 +102,13 @@ MainScene::MainScene() {
     float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
 
     // Create players 
-    //mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
     // Create boss
-    //mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
+    mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
     
-    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX,playerStartZ));
+    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
 
     // Add players to checkpoint system.
     for (auto& player : mPlayers) {
@@ -122,36 +122,35 @@ MainScene::MainScene() {
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
     dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.24f;
     
-    postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
-    fxaaFilter = new FXAAFilter();
-    gammaCorrectionFilter = new GammaCorrectionFilter();
-    glowFilter = new GlowFilter();
-    glowBlurFilter = new GlowBlurFilter();
+    mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
+    mFxaaFilter = new FXAAFilter();
+    mGammaCorrectionFilter = new GammaCorrectionFilter();
+    mGlowFilter = new GlowFilter();
+    mGlowBlurFilter = new GlowBlurFilter();
 
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(80, 0, 25));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(160, 0, 65));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 85));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(110, 0, 55));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(50, 0, 105));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(115, 0, 135));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(175, 0, 135));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(195, 0, 145));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 245));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(225, 0, 235));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(160, 0, 65));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 85));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(110, 0, 55));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(50, 0, 105));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(115, 0, 135));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(175, 0, 135));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(195, 0, 145));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 245));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(225, 0, 235));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
+    GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
 }
 
 MainScene::~MainScene() {
-    delete fxaaFilter;
-    delete gammaCorrectionFilter;
-    delete glowFilter;
-    delete glowBlurFilter;
-    delete postProcessing;
+    delete mFxaaFilter;
+    delete mGammaCorrectionFilter;
+    delete mGlowFilter;
+    delete mGlowBlurFilter;
+    delete mPostProcessing;
     
     alDeleteSources(1, &mSource);
     Resources().FreeSound(mMusicSoundBuffer);
@@ -164,9 +163,10 @@ void MainScene::Update(float deltaTime) {
     for (auto player : mPlayers) {
         player->UpdatePlayerTexture();
         GridCollide(player->node, deltaTime, 5);
-        if (player->GetHealth() < 0.01f) {
+        if (player->GetHealth() < 0.01f && player->Active()) {
             player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
-            player->node->GetComponent<Component::Health>()->health = player->node->GetComponent<Component::Health>()->maxHealth;
+            player->body->GetComponent<Component::ParticleEmitter>()->enabled = true;
+            player->Deactivate();
             GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
         }
     }
@@ -216,34 +216,37 @@ void MainScene::Update(float deltaTime) {
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
 
+    //Handles the respawning of the players
+    Respawn(deltaTime);
+
     mCheckpointSystem.Update();
 
     // Render.
-    mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
+    mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
     // Glow.
-    glowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+    mGlowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
     int blurAmount = 5;
     for (int i=0; i<blurAmount; ++i) {
-        glowBlurFilter->SetHorizontal(true);
-        postProcessing->ApplyFilter(glowBlurFilter);
-        glowBlurFilter->SetHorizontal(false);
-        postProcessing->ApplyFilter(glowBlurFilter);
+        mGlowBlurFilter->SetHorizontal(true);
+        mPostProcessing->ApplyFilter(mGlowBlurFilter);
+        mGlowBlurFilter->SetHorizontal(false);
+        mPostProcessing->ApplyFilter(mGlowBlurFilter);
     }
-    postProcessing->ApplyFilter(glowFilter);
+    mPostProcessing->ApplyFilter(mGlowFilter);
     
     // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
-        fxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
-        postProcessing->ApplyFilter(fxaaFilter);
+        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+        mPostProcessing->ApplyFilter(mFxaaFilter);
     }
     
     // Gamma correction.
-    gammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
-    postProcessing->ApplyFilter(gammaCorrectionFilter);
+    mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
+    mPostProcessing->ApplyFilter(mGammaCorrectionFilter);
     
     // Render to back buffer.
-    postProcessing->Render();
+    mPostProcessing->Render();
 }
 
 int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
@@ -360,4 +363,41 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
 
     return false;
 
+}
+
+void MainScene::Respawn(float deltaTime) {
+
+    if (!mPlayers[0]->Active() || !mPlayers[1]->Active())
+        if (glm::distance(mPlayers[0]->GetPosition(), mPlayers[1]->GetPosition()) < 15) {
+
+            mPlayers[0]->mRespawnTimer -= deltaTime;
+            mPlayers[1]->mRespawnTimer -= deltaTime;
+
+            if (mPlayers[0]->mRespawnTimer <= 0) {
+
+                mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+                mPlayers[0]->Activate();
+
+            }
+            if (mPlayers[1]->mRespawnTimer <= 0) {
+
+                mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+                mPlayers[1]->Activate();
+
+            }
+
+            mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
+            mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
+
+        }
+        else {
+
+            mPlayers[0]->mRespawnTimer = 5;
+            mPlayers[1]->mRespawnTimer = 5;
+
+            mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
+            mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
+
+        }
+        
 }

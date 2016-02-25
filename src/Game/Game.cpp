@@ -2,9 +2,10 @@
 
 #include <Scene/Scene.hpp>
 
-Game::Game() {
-    mActiveScene = nullptr;
-    mNextScene = nullptr;
+Game& Game::GetInstance() {
+    static Game instance;
+    
+    return instance;
 }
 
 void Game::SetScene(Scene *scene) {
@@ -32,4 +33,9 @@ void Game::Free() {
         delete mNextScene;
         mNextScene = nullptr;
     }
+}
+
+Game::Game() {
+    mActiveScene = nullptr;
+    mNextScene = nullptr;
 }
