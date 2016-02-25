@@ -367,7 +367,7 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
 
 void MainScene::Respawn(float deltaTime) {
 
-    if (!mPlayers[0]->Active() || !mPlayers[1]->Active()) 
+    if (!mPlayers[0]->Active() || !mPlayers[1]->Active())
         if (glm::distance(mPlayers[0]->GetPosition(), mPlayers[1]->GetPosition()) < 15) {
 
             mPlayers[0]->mRespawnTimer -= deltaTime;
