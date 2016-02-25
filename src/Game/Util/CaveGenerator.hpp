@@ -224,6 +224,8 @@ namespace CaveGenerator {
              */
             void ConnectRooms(Room& first, Room& second);
 
+            void PrintMapToLog(bool** map, int rowCount, int columnCount);
+
             bool** mMap;
             int mRowCount; 
             int mColumnCount;

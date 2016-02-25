@@ -226,6 +226,7 @@ set(ENGINE_SRCS
         src/Engine/Geometry/Geometry2D.cpp
         src/Engine/Geometry/Square.cpp
         src/Engine/Geometry/Geometry3D.cpp
+        src/Engine/Geometry/Terrain.cpp
         src/Engine/Geometry/Cube.cpp
         src/Engine/Geometry/Plane.cpp
         src/Engine/Geometry/OBJModel.cpp
@@ -287,6 +288,7 @@ set(ENGINE_HEADERS
         src/Engine/Geometry/Geometry2D.hpp
         src/Engine/Geometry/Square.hpp
         src/Engine/Geometry/Geometry3D.hpp
+        src/Engine/Geometry/Terrain.hpp
         src/Engine/Geometry/Cube.hpp
         src/Engine/Geometry/Plane.hpp
         src/Engine/Geometry/OBJModel.hpp
