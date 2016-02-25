@@ -97,7 +97,7 @@ Font::~Font() {
     Resources().FreeSquare();
 }
 
-void Font::RenderText(const char* text, const glm::vec2& position, float wrap, glm::vec2 screenSize) {
+void Font::RenderText(const char* text, const glm::vec2& position, float wrap, glm::vec2 screenSize, bool blending) {
     if (screenSize == glm::vec2(0.f, 0.f))
         screenSize = MainWindow::GetInstance()->GetSize();
     
@@ -109,8 +109,10 @@ void Font::RenderText(const char* text, const glm::vec2& position, float wrap, g
     
     // Blending enabled
     GLboolean blend = glIsEnabled(GL_BLEND);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    if (blending) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
     
     glBindVertexArray(mSquare->GetVertexArray());
     
