@@ -33,7 +33,7 @@ MenuScene::MenuScene() {
     GameEntityCreator().SetScene(this);
     
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 0.f, 10.f), glm::vec3(0.f, 0.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(-3.f, 1.4f, 5.f), glm::vec3(60.f, 10.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
     GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
@@ -52,7 +52,7 @@ MenuScene::MenuScene() {
     mGlowFilter = new GlowFilter();
     mGlowBlurFilter = new GlowBlurFilter();
     
-    mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 20.f);
+    mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 50.f);
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
     // 3D text.
@@ -64,7 +64,9 @@ MenuScene::MenuScene() {
     Resources().FreeShader(fragmentShader);
     
     // Define menu options.
-    mMenuOptions.push_back(new MenuOption(mFont, "Test 2", glm::vec3(0.f, 0.f, 3.f), glm::vec3(0.f, 300.f, 0.f), 1.f));
+    mMenuOptions.push_back(new MenuOption(mFont, "START GAME", glm::vec3(0.f, 1.0f, 2.3f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.8f, 2.4f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, 0.6f, 2.5f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
 }
 
 MenuScene::~MenuScene() {
@@ -123,10 +125,6 @@ void MenuScene::Update(float deltaTime) {
 }
 
 void MenuScene::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize) {
-    // Disable depth testing.
-    GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
-    glDisable(GL_DEPTH_TEST);
-    
     // Blending enabled.
     GLboolean blend = glIsEnabled(GL_BLEND);
     glEnable(GL_BLEND);
@@ -157,9 +155,7 @@ void MenuScene::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& 
     
     glUseProgram(0);
     
-    // Reset depth testing and blending.
-    if (depthTest)
-        glEnable(GL_DEPTH_TEST);
+    // Reset blending.
     if (!blend)
         glDisable(GL_BLEND);
 }
