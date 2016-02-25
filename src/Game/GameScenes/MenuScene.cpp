@@ -55,8 +55,6 @@ MenuScene::MenuScene() {
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 20.f);
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
-    mTestTexture = new Texture2D(mFont, "Pre rendgered test");
-    
     // 3D text.
     mPlane = Resources().CreatePlane();
     Shader* vertexShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
@@ -64,6 +62,9 @@ MenuScene::MenuScene() {
     mTextShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
     Resources().FreeShader(vertexShader);
     Resources().FreeShader(fragmentShader);
+    
+    // Define menu options.
+    mMenuOptions.push_back(new MenuOption(mFont, "Test 2"));
 }
 
 MenuScene::~MenuScene() {
@@ -77,7 +78,9 @@ MenuScene::~MenuScene() {
     Resources().FreePlane();
     Resources().FreeShaderProgram(mTextShaderProgram);
     
-    delete mTestTexture;
+    for (MenuOption* menuOption : mMenuOptions) {
+        delete menuOption;
+    }
 }
 
 void MenuScene::Update(float deltaTime) {
@@ -113,10 +116,13 @@ void MenuScene::Update(float deltaTime) {
     // Render to back buffer.
     mPostProcessing->Render();
     
-    Render3DText(screenSize);
+    // Render menu options.
+    for (MenuOption* menuOption : mMenuOptions) {
+        RenderMenuOption(menuOption, screenSize);
+    }
 }
 
-void MenuScene::Render3DText(const glm::vec2& screenSize) {
+void MenuScene::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize) {
     // Disable depth testing.
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
     glDisable(GL_DEPTH_TEST);
@@ -140,7 +146,7 @@ void MenuScene::Render3DText(const glm::vec2& screenSize) {
     // Texture.
     glUniform1i(mTextShaderProgram->GetUniformLocation("baseImage"), 0);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, mTestTexture->GetTextureID());
+    glBindTexture(GL_TEXTURE_2D, menuOption->prerenderedText->GetTextureID());
     
     glm::mat4 modelMat;
     glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
@@ -156,4 +162,12 @@ void MenuScene::Render3DText(const glm::vec2& screenSize) {
         glEnable(GL_DEPTH_TEST);
     if (!blend)
         glDisable(GL_BLEND);
+}
+
+MenuScene::MenuOption::MenuOption(Font* font, const char* text) {
+    prerenderedText = new Texture2D(font, text);
+}
+
+MenuScene::MenuOption::~MenuOption() {
+    delete prerenderedText;
 }

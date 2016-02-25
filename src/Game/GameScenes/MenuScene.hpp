@@ -50,12 +50,19 @@ class MenuScene : public Scene {
         // Text.
         Font* mFont;
         
-        // Pre-rendered text test.
-        Texture2D* mTestTexture;
-        
         // Used to render 3D text.
         Geometry::Plane* mPlane;
         ShaderProgram* mTextShaderProgram;
         
-        void Render3DText(const glm::vec2& screenSize);
+        // A menu option.
+        class MenuOption {
+            public:
+                Texture2D* prerenderedText;
+                
+                MenuOption(Font* font, const char* text);
+                ~MenuOption();
+        };
+        std::vector<MenuOption*> mMenuOptions;
+        
+        void RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize);
 };
