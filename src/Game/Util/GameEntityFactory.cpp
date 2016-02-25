@@ -36,6 +36,7 @@
 #include "../GameObject/Pylon.hpp"
 #include "../GameObject/Shield.hpp"
 #include "../GameObject/SpinBoss.hpp"
+#include "../GameObject/EnemySpawner.hpp"
 
 using namespace GameObject;
 
@@ -47,6 +48,13 @@ GameEntityFactory& GameEntityFactory::GetInstance() {
 
 GameEntityFactory::GameEntityFactory(){
     mScene = nullptr;
+}
+
+EnemySpawner * GameEntityFactory::CreateEnemySpawner(GameObject::Enemy::EnemyType type, float delay)
+{
+    EnemySpawner *gameObject = new EnemySpawner(mScene, type);
+    gameObject->body->GetComponent<Component::Spawner>()->delay = delay;
+    return gameObject;
 }
 
 Enemy* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {

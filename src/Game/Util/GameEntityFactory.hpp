@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <Util/Input.hpp>
+#include "../GameObject/Enemy.hpp"
 
 class Scene;
 class Entity;
@@ -21,6 +22,7 @@ namespace GameObject{
     class Pylon;
     class Shield;
     class SpinBoss;
+    class EnemySpawner;
 }
 
 /// Factory responsible for creating prefab entities.
@@ -37,6 +39,14 @@ class GameEntityFactory {
         
         /// Destructor.
         ~GameEntityFactory();
+
+        /// Create an enemy spawner.
+        /**
+         * @param type of enemy the spawner handles.
+         * @param delay for spawning a new enemy.
+         * @return The enemy spawner GameObject.
+         */
+        GameObject::EnemySpawner* CreateEnemySpawner(GameObject::Enemy::EnemyType type, float delay);
         
         /// Create a basic enemy.
         /**

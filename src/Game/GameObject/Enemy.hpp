@@ -4,6 +4,7 @@
 
 class Scene;
 class Entity;
+
 namespace Geometry {
     class OBJModel;
 }
@@ -34,6 +35,13 @@ namespace GameObject {
              * @return health of the enemy.
              */
             float GetHealth();
+
+            /// Different types of enemies.
+            enum EnemyType {
+                BASIC = 0,
+                PYLON,
+                ENEMIES,
+            };
 
         private:
             Geometry::OBJModel* mEnemyHead;

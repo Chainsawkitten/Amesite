@@ -357,6 +357,7 @@ set(GAME_SRCS
         src/Game/System/ReflectSystem.cpp
         src/Game/System/AISystem.cpp
         src/Game/System/CheckpointSystem.cpp
+        src/Game/System/EnemySpawnerSystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
@@ -384,6 +385,7 @@ set(GAME_SRCS
         src/Game/GameObject/Shield.cpp
         src/Game/GameObject/SpinBoss.cpp
         src/Game/GameObject/TurretBoss.cpp
+        src/Game/GameObject/EnemySpawner.cpp
     )
 
 set(GAME_HEADERS
@@ -401,6 +403,7 @@ set(GAME_HEADERS
         src/Game/System/ReflectSystem.hpp
         src/Game/System/AISystem.hpp
         src/Game/System/CheckpointSystem.hpp
+        src/Game/System/EnemySpawnerSystem.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
@@ -428,6 +431,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Shield.hpp
         src/Game/GameObject/SpinBoss.hpp
         src/Game/GameObject/TurretBoss.hpp
+        src/Game/GameObject/EnemySpawner.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
