@@ -30,24 +30,15 @@ class Font {
         /// Free allocated resources.
         ~Font();
         
-        /// Get quad for rendering a character.
-        /**
-         * The x and y positions will be updated to hold the position for the next character.
-         * @param character Character.
-         * @param x X-position to render at.
-         * @param y Y-position to render at.
-         * @return Baked quad.
-         */
-        stbtt_aligned_quad BakedQuad(char character, float& x, float& y);
-        
         /// Render a string to the screen.
         /**
          * @param text Text to render.
          * @param position Position to render the text at (in pixels).
          * @param wrap Width of text before wrapping.
-         * @param screenSize Size of the screen in pixels.
+         * @param screenSize Size of the rendering context in pixels.
+         * @param blending Whether to use blending when drawing the text.
          */
-        void RenderText(const char* text, const glm::vec2& position, float wrap);
+        void RenderText(const char* text, const glm::vec2& position, float wrap, glm::vec2 screenSize = glm::vec2(0.f, 0.f), bool blending = true);
         
         /// Get rendering color.
         /**
@@ -61,11 +52,24 @@ class Font {
          */
         void SetColor(const glm::vec3& color);
         
+        /// Get text width.
+        /**
+         * @param text Text to get the rendered width of.
+         * @return The width of the rendered text.
+         */
+        float GetWidth(const char* text);
+        
         /// Get character height.
         /**
          * @return The character height.
          */
         float GetHeight() const;
+        
+        /// Get baseline.
+        /**
+         * @return The baseline in pixels.
+         */
+        int GetBaseline() const;
         
         /// Get whether the font was created from file.
         /**
@@ -80,6 +84,7 @@ class Font {
         stbtt_bakedchar mCData[96]; // ASCII 32..126 is 95 glyphs
         
         float mHeight;
+        int mBaseline;
         glm::vec3 mColor;
         
         Geometry::Square* mSquare;
@@ -87,5 +92,6 @@ class Font {
         // Shaders
         ShaderProgram* mShaderProgram;
         
-        float RenderCharacter(char character, const glm::vec2& position);
+        float RenderCharacter(char character, const glm::vec2& position, const glm::vec2& screenSize);
+        stbtt_aligned_quad BakedQuad(char character, float& x, float& y);
 };
