@@ -13,6 +13,10 @@ namespace GameObject {
 }
 class Font;
 class Texture2D;
+namespace Geometry {
+    class Plane;
+}
+class ShaderProgram;
 
 /// Main menu.
 class MenuScene : public Scene {
@@ -48,4 +52,10 @@ class MenuScene : public Scene {
         
         // Pre-rendered text test.
         Texture2D* mTestTexture;
+        
+        // Used to render 3D text.
+        Geometry::Plane* mPlane;
+        ShaderProgram* mTextShaderProgram;
+        
+        void Render3DText(const glm::vec2& screenSize);
 };
