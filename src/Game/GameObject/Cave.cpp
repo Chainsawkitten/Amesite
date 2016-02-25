@@ -48,7 +48,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
         caveMap->CreateCircle(bossPosition, 7, false);
     }
     Log() << "Map" << "\n";
-    caveMap->PrintMapToLog();
 
     mMap = new bool*[height];
     for (int i = 0; i < height; i++) {
@@ -60,8 +59,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
             mMap[i][j] = caveMap->GetMap()[i][j];
         }
     }
-
-    caveMap->PrintMapToLog(mMap, height,width);
 
     map = CreateEntity(scene);
     map->AddComponent<Component::Mesh>();
