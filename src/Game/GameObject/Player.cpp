@@ -55,6 +55,26 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     body->GetComponent<Component::Material>()->SetGlow("Resources/ship_body_glow.png");
     body->AddComponent<Component::Animation>();
 
+    Component::ParticleEmitter* emitter = body->AddComponent<Component::ParticleEmitter>();
+    emitter->emitterType = Component::ParticleEmitter::POINT;
+    emitter->maxEmitTime = 0.02;
+    emitter->minEmitTime = 0.016;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 5.0;
+    emitter->enabled = false;
+    emitter->particleType.textureIndex = Component::ParticleEmitter::DUST;
+    emitter->particleType.minLifetime = 1.f;
+    emitter->particleType.maxLifetime = 2.f;
+    emitter->particleType.minVelocity = glm::vec3(-.6f, 1.f, -.6f);
+    emitter->particleType.maxVelocity = glm::vec3(.6f, 2.f, .6f);
+    emitter->particleType.minSize = glm::vec2(.5f, .5f) * 2.f;
+    emitter->particleType.maxSize = glm::vec2(.7f, .7f) * 2.f;
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::vec3(.2f, .8f, .2f);
+    emitter->particleType.startAlpha = 1.f;
+    emitter->particleType.midAlpha = 1.f;
+    emitter->particleType.endAlpha = 0.f;
+
     light = CreateEntity(scene);
     light->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
     light->GetComponent<Component::RelativeTransform>()->parentEntity = body;

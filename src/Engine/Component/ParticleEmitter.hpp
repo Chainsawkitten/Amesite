@@ -124,6 +124,9 @@ namespace Component {
             // * Default: nullptr
             // */
             //Entity* follow;
+
+            bool enabled;
+
     };
 }
 

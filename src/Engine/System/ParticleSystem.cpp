@@ -82,10 +82,12 @@ void ParticleSystem::Update(Scene& scene, double time) {
     particleEmitters = scene.GetAll<Component::ParticleEmitter>();
     for (unsigned int i = 0; i < particleEmitters.size(); i++) {
         Component::ParticleEmitter* emitter = particleEmitters[i];
-        emitter->timeToNext -= time;
-        while (emitter->timeToNext < 0.0) {
-            emitter->timeToNext += emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
-            EmitParticle(emitter);
+        if (emitter->enabled) {
+            emitter->timeToNext -= time;
+            while (emitter->timeToNext < 0.0) {
+                emitter->timeToNext += emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+                EmitParticle(emitter);
+            }
         }
     }
 }
