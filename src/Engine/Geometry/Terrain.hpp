@@ -3,10 +3,6 @@
 #include "../Geometry/Geometry3D.hpp"
 #include "../Texture/Texture2D.hpp"
 
-/** @ingroup Core
- * @{
- */
-
 namespace Geometry {
     /// A terrain mesh.
     class Terrain : public Geometry3D {
@@ -101,5 +97,3 @@ namespace Geometry {
             glm::vec2 textureRepeat;
     };
 }
-
-/** @} */
