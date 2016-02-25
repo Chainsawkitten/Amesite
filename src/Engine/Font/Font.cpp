@@ -97,12 +97,6 @@ Font::~Font() {
     Resources().FreeSquare();
 }
 
-stbtt_aligned_quad Font::BakedQuad(char character, float& x, float& y) {
-    stbtt_aligned_quad q;
-    stbtt_GetBakedQuad(mCData, 512, 512, character - 32, &x, &y, &q, 1);
-    return q;
-}
-
 void Font::RenderText(const char* text, const glm::vec2& position, float wrap, glm::vec2 screenSize) {
     if (screenSize == glm::vec2(0.f, 0.f))
         screenSize = MainWindow::GetInstance()->GetSize();
@@ -201,4 +195,10 @@ float Font::RenderCharacter(char character, const glm::vec2& position, const glm
     glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     
     return x;
+}
+
+stbtt_aligned_quad Font::BakedQuad(char character, float& x, float& y) {
+    stbtt_aligned_quad q;
+    stbtt_GetBakedQuad(mCData, 512, 512, character - 32, &x, &y, &q, 1);
+    return q;
 }
