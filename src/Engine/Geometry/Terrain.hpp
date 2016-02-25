@@ -17,8 +17,8 @@ namespace Geometry {
              */
             Terrain(const char* filename);
 
-			///TODO comment.
-			Terrain::Terrain(float** floatArray, int width, int height, glm::vec2 textureRepeat);
+            ///TODO comment.
+            Terrain::Terrain(float** floatArray, int width, int height, glm::vec2 textureRepeat);
     
             /// Destructor
             ~Terrain();
@@ -56,14 +56,14 @@ namespace Geometry {
              */
             float GetY(float x, float z) const;
     
-			/// Gets the normal at given location
-			/**
-			 * If the position is outside the terrain, 0.0, 0.0, 0.0 is returned.
-			 * @param x X-position in the world.
-			 * @param z Z-position in the world.
-			 * @return Normal at that point.
-			 */
-			glm::vec3 GetNormal(float x, float z) const;
+            /// Gets the normal at given location
+            /**
+             * If the position is outside the terrain, 0.0, 0.0, 0.0 is returned.
+             * @param x X-position in the world.
+             * @param z Z-position in the world.
+             * @return Normal at that point.
+             */
+            glm::vec3 GetNormal(float x, float z) const;
 
             /// Get how many times the texture should repeat.
             /**

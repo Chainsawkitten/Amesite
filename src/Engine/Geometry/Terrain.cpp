@@ -48,42 +48,42 @@ namespace Geometry {
         GenerateVertexArray();
     }
 
-	Terrain::Terrain(float** floatArray, int width, int height, glm::vec2 textureRepeat ) {
-		// Load height map from file
-		this->width = width;
-		this->height = height;
+    Terrain::Terrain(float** floatArray, int width, int height, glm::vec2 textureRepeat ) {
+        // Load height map from file
+        this->width = width;
+        this->height = height;
 
-		heightMap = new float*[width];
-		normals = new glm::vec3*[width];
-		tangents = new glm::vec3*[width];
-		for (int i = 0; i < width; i++) {
-			heightMap[i] = new float[height];
-			normals[i] = new glm::vec3[height];
-			tangents[i] = new glm::vec3[height];
-		}
+        heightMap = new float*[width];
+        normals = new glm::vec3*[width];
+        tangents = new glm::vec3*[width];
+        for (int i = 0; i < width; i++) {
+            heightMap[i] = new float[height];
+            normals[i] = new glm::vec3[height];
+            tangents[i] = new glm::vec3[height];
+        }
 
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				heightMap[i][j] = floatArray[i][j];
-			}
-		}
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                heightMap[i][j] = floatArray[i][j];
+            }
+        }
 
-		Filter3x3();
-		CalculateNormals();
+        Filter3x3();
+        CalculateNormals();
 
-		GenerateVertices(textureRepeat);
-		GenerateIndices();
+        GenerateVertices(textureRepeat);
+        GenerateIndices();
 
-		for (int i = 0; i < width; i++) {
-			delete[] normals[i];
-			delete[] tangents[i];
-		}
-		delete[] normals;
-		delete[] tangents;
+        for (int i = 0; i < width; i++) {
+            delete[] normals[i];
+            delete[] tangents[i];
+        }
+        delete[] normals;
+        delete[] tangents;
 
-		GenerateBuffers();
-		GenerateVertexArray();
-	}
+        GenerateBuffers();
+        GenerateVertexArray();
+    }
     
     Terrain::~Terrain() {
         delete[] vertexData;
@@ -133,26 +133,26 @@ namespace Geometry {
     }
 
     glm::vec3 Terrain::GetNormal(float x, float z) const {
-		float xInTerrain = x * width;
-		float zInTerrain = z * height;
+        float xInTerrain = x * width;
+        float zInTerrain = z * height;
 
-		if (xInTerrain < 0.f || xInTerrain >= width - 1 || zInTerrain < 0.f || zInTerrain >= height - 1) {
-			return glm::vec3(0.f,0.f,0.f);
-		}
-		int xFloor = static_cast<int>(xInTerrain);
-		int zFloor = static_cast<int>(zInTerrain);
+        if (xInTerrain < 0.f || xInTerrain >= width - 1 || zInTerrain < 0.f || zInTerrain >= height - 1) {
+            return glm::vec3(0.f,0.f,0.f);
+        }
+        int xFloor = static_cast<int>(xInTerrain);
+        int zFloor = static_cast<int>(zInTerrain);
         
         // Get triangle.
-		Vertex a, b, c;
-		if (zInTerrain - zFloor > xInTerrain - xFloor){
+        Vertex a, b, c;
+        if (zInTerrain - zFloor > xInTerrain - xFloor){
             a = vertexData[xFloor + zFloor*width];
             b = vertexData[(xFloor + 1) + (zFloor + 1)*width];
             c = vertexData[(xFloor + 1) + zFloor*width];
-		} else {
+        } else {
             a = vertexData[xFloor + zFloor*width];
             b = vertexData[xFloor + (zFloor + 1)*width];
             c = vertexData[(xFloor + 1) + (zFloor + 1)*width];
-		}
+        }
         
         // Interpolate triangle normal.
         glm::vec3 pos(x, GetY(x, z), z);
@@ -166,8 +166,8 @@ namespace Geometry {
         float a2 = glm::length(glm::cross(edge3, edge1)) / area; 
         float a3 = glm::length(glm::cross(edge1, edge2)) / area;
         
-		return glm::normalize(a1 * a.normal + a2 * b.normal + a3 * c.normal);
-	}
+        return glm::normalize(a1 * a.normal + a2 * b.normal + a3 * c.normal);
+    }
     
     glm::vec2 Terrain::GetTextureRepeat() const {
         return textureRepeat;
