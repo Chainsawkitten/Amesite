@@ -41,7 +41,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     caveMap->CreateCircle(playerPosition, 7, false);
 
-    caveMap->ConnectClosestRooms(true);
+    //caveMap->ConnectClosestRooms(true);
 
     caveMap->PrintMapToLog();
 
@@ -59,7 +59,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
             mMap[i][j] = caveMap->GetMap()[i][j];
         }
     }
-    caveMap->PrintMapToLog(mMap, width, height);
 
     map = CreateEntity(scene);
     map->AddComponent<Component::Mesh>();
@@ -89,17 +88,17 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
         }
     }
 
-    heightMap = CreateEntity(scene);
-    
-    heightMap->AddComponent<Component::Mesh>();
-    heightMap->AddComponent<Component::Transform>();
-    heightMap->AddComponent<Component::Material>();
-    heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f), -11.f, zScale*(static_cast<float>(height) / 2.f)));
-    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
+    //heightMap = CreateEntity(scene);
+    //
+    //heightMap->AddComponent<Component::Mesh>();
+    //heightMap->AddComponent<Component::Transform>();
+    //heightMap->AddComponent<Component::Material>();
+    //heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f), -11.f, zScale*(static_cast<float>(height) / 2.f)));
+    //heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
 
-    heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, width, height, glm::vec2(xScale, zScale));
+    //heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, width, height, glm::vec2(xScale, zScale));
 
-    heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+    //heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
 
 }
 
