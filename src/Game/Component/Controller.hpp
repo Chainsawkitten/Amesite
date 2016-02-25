@@ -29,6 +29,7 @@ namespace Component {
              */
             float speed;
 
+            ///If the controller isn't enabled you don't use any control schemes
             bool enabled;
 
             /// Stores the control scheme functions for this controller.

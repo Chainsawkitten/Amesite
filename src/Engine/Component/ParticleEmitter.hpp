@@ -125,6 +125,7 @@ namespace Component {
             // */
             //Entity* follow;
 
+            ///If it isn't enabled it doesnt emit.
             bool enabled;
 
     };
