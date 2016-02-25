@@ -64,7 +64,7 @@ MenuScene::MenuScene() {
     Resources().FreeShader(fragmentShader);
     
     // Define menu options.
-    mMenuOptions.push_back(new MenuOption(mFont, "Test 2", glm::vec3(0.f, 0.f, 3.f), glm::vec3(0.f, 300.f, 0.f)));
+    mMenuOptions.push_back(new MenuOption(mFont, "Test 2", glm::vec3(0.f, 0.f, 3.f), glm::vec3(0.f, 300.f, 0.f), 1.f));
 }
 
 MenuScene::~MenuScene() {
@@ -164,10 +164,11 @@ void MenuScene::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& 
         glDisable(GL_BLEND);
 }
 
-MenuScene::MenuOption::MenuOption(Font* font, const char* text, const glm::vec3& position, const glm::vec3& rotation) {
+MenuScene::MenuOption::MenuOption(Font* font, const char* text, const glm::vec3& position, const glm::vec3& rotation, float height) {
     prerenderedText = new Texture2D(font, text);
     this->position = position;
     this->rotation = rotation;
+    scale = glm::vec2(height * static_cast<float>(prerenderedText->GetWidth()) / static_cast<float>(prerenderedText->GetHeight()), height);
 }
 
 MenuScene::MenuOption::~MenuOption() {
@@ -180,5 +181,5 @@ glm::mat4 MenuScene::MenuOption::GetModelMatrix() const {
     orientation = glm::rotate(orientation, glm::radians(rotation.y), glm::vec3(1.f, 0.f, 0.f));
     orientation = glm::rotate(orientation, glm::radians(rotation.z), glm::vec3(0.f, 0.f, 1.f));
     
-    return glm::translate(glm::mat4(), position) * orientation * glm::scale(glm::mat4(), glm::vec3(1.f, 1.f, 1.f));
+    return glm::translate(glm::mat4(), position) * orientation * glm::scale(glm::mat4(), glm::vec3(scale.x, scale.y, 1.f));
 }
