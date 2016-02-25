@@ -43,8 +43,7 @@ Shader* ResourceManager::CreateShader(const char* source, int sourceLength, GLen
 void ResourceManager::FreeShader(Shader* shader) {
     const char* source = mShadersInverse[shader];
     
-    mShaders[source].count--;
-    if (mShaders[source].count <= 0) {
+    if (mShaders[source].count-- <= 1) {
         mShadersInverse.erase(shader);
         delete shader;
         mShaders.erase(source);
@@ -92,9 +91,8 @@ ShaderProgram* ResourceManager::CreateShaderProgram(std::initializer_list<const 
 
 void ResourceManager::FreeShaderProgram(ShaderProgram* shaderProgram) {
     ShaderProgramKey key = mShaderProgramsInverse[shaderProgram];
-    mShaderPrograms[key].count--;
     
-    if (mShaderPrograms[key].count <= 0) {
+    if (mShaderPrograms[key].count-- <= 1) {
         mShaderProgramsInverse.erase(shaderProgram);
         delete shaderProgram;
         mShaderPrograms.erase(key);
@@ -133,47 +131,38 @@ bool ResourceManager::ShaderProgramKey::operator<(const ShaderProgramKey& other)
 }
 
 Geometry::Map* ResourceManager::CreateMap(bool **data, glm::uvec2 dataDimensions, float wallHeight) {
-    if (mMapCount == 0)
+    if (mMapCount++ == 0)
         mMap = new Geometry::Map(data, dataDimensions, wallHeight);
-
-    mMapCount++;
+    
     return mMap;
 }
 
 void ResourceManager::FreeMap() {
-    mMapCount--;
-
-    if (mMapCount <= 0)
+    if (mMapCount-- <= 1)
         delete mMap;
 }
 
 Geometry::Cube* ResourceManager::CreateCube() {
-    if (mCubeCount == 0)
+    if (mCubeCount++ == 0)
         mCube = new Geometry::Cube();
     
-    mCubeCount++;
     return mCube;
 }
 
 void ResourceManager::FreeCube() {
-    mCubeCount--;
-    
-    if (mCubeCount <= 0)
+    if (mCubeCount-- <= 1)
         delete mCube;
 }
 
 Geometry::Plane* ResourceManager::CreatePlane() {
-    if (mPlaneCount == 0)
+    if (mPlaneCount++ == 0)
         mPlane = new Geometry::Plane();
     
-    mPlaneCount++;
     return mPlane;
 }
 
 void ResourceManager::FreePlane() {
-    mPlaneCount--;
-    
-    if (mPlaneCount <= 0)
+    if (mPlaneCount-- <= 1)
         delete mPlane;
 }
 
@@ -182,8 +171,7 @@ Geometry::OBJModel* ResourceManager::CreateOBJModel(std::string filename) {
         objModels[filename].model = new Geometry::OBJModel(filename.c_str());
         objModelsInverse[objModels[filename].model] = filename;
         objModels[filename].count = 1;
-    }
-    else {
+    } else {
         objModels[filename].count++;
     }
 
@@ -192,9 +180,8 @@ Geometry::OBJModel* ResourceManager::CreateOBJModel(std::string filename) {
 
 void ResourceManager::FreeOBJModel(Geometry::OBJModel* model) {
     string filename = objModelsInverse[model];
-
-    objModels[filename].count--;
-    if (objModels[filename].count <= 0) {
+    
+    if (objModels[filename].count-- <= 1) {
         objModelsInverse.erase(model);
         delete model;
         objModels.erase(filename);
@@ -202,17 +189,14 @@ void ResourceManager::FreeOBJModel(Geometry::OBJModel* model) {
 }
 
 Geometry::Square* ResourceManager::CreateSquare() {
-    if (mSquareCount == 0)
+    if (mSquareCount++ == 0)
         mSquare = new Geometry::Square();
     
-    mSquareCount++;
     return mSquare;
 }
 
 void ResourceManager::FreeSquare() {
-    mSquareCount--;
-    
-    if (mSquareCount <= 0)
+    if (mSquareCount-- <= 1)
         delete mSquare;
 }
 
@@ -244,8 +228,7 @@ void ResourceManager::FreeTexture2D(Texture2D* texture) {
     if (texture->IsFromFile()) {
         string filename = mTexturesFromFileInverse[texture];
         
-        mTexturesFromFile[filename].count--;
-        if (mTexturesFromFile[filename].count <= 0) {
+        if (mTexturesFromFile[filename].count-- <= 1) {
             mTexturesFromFileInverse.erase(texture);
             delete texture;
             mTexturesFromFile.erase(filename);
@@ -253,8 +236,7 @@ void ResourceManager::FreeTexture2D(Texture2D* texture) {
     } else {
         const char* data = mTexturesInverse[texture];
         
-        mTextures[data].count--;
-        if (mTextures[data].count <= 0) {
+        if (mTextures[data].count-- <= 1) {
             mTexturesInverse.erase(texture);
             delete texture;
             mTextures.erase(data);
@@ -283,8 +265,7 @@ Audio::SoundBuffer* ResourceManager::CreateSound(string filename) {
 void ResourceManager::FreeSound(Audio::SoundBuffer* soundBuffer) {
     string filename = mSoundsInverse[soundBuffer];
     
-    mSounds[filename].count--;
-    if (mSounds[filename].count <= 0) {
+    if (mSounds[filename].count-- <= 1) {
         mSoundsInverse.erase(soundBuffer);
         delete soundBuffer;
         mSounds.erase(filename);
@@ -357,8 +338,7 @@ void ResourceManager::FreeFont(Font* font) {
     if (font->IsFromFile()) {
         FontFromFileKey key = mFontsFromFileInverse[font];
         
-        mFontsFromFile[key].count--;
-        if (mFontsFromFile[key].count <= 0) {
+        if (mFontsFromFile[key].count-- <= 1) {
             mFontsFromFileInverse.erase(font);
             delete font;
             mFontsFromFile.erase(key);
@@ -366,8 +346,7 @@ void ResourceManager::FreeFont(Font* font) {
     } else {
         FontKey key = mFontsInverse[font];
         
-        mFonts[key].count--;
-        if (mFonts[key].count <= 0) {
+        if (mFonts[key].count-- <= 1) {
             mFontsInverse.erase(font);
             delete font;
             mFonts.erase(key);
