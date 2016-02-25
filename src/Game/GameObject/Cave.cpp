@@ -16,6 +16,7 @@
 #include <Engine/Component/Physics.hpp>
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/SpotLight.hpp>
+#include <Engine/Geometry/Terrain.hpp>
 #include "../Util/CaveGenerator.hpp"
 
 #include "../Util/ControlSchemes.hpp"
@@ -68,6 +69,35 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     map->GetComponent<Component::Transform>()->scale = glm::vec3(xScale, 5.f, zScale);
     map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
     map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
+
+    heightMap = CreateEntity(scene);
+
+    float** floatMap = new float*[width];
+    for (int i = 0; i < width; i++) {
+        floatMap[i] = new float[height];
+    }
+
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            if (mMap[i][j] == true)
+                floatMap[i][j] = 1.0f;
+            else
+                floatMap[i][j] = 0.0f;
+        }
+    }
+
+    heightMap = CreateEntity(scene);
+    
+    heightMap->AddComponent<Component::Mesh>();
+    heightMap->AddComponent<Component::Transform>();
+    heightMap->AddComponent<Component::Material>();
+    heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f), -11.f, zScale*(static_cast<float>(height) / 2.f)));
+    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
+
+    heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, width, height, glm::vec2(xScale, zScale));
+
+    heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+
 }
 
 Cave::~Cave() {
