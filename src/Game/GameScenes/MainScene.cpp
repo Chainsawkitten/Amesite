@@ -84,7 +84,7 @@ MainScene::MainScene() {
     MainCameraInstance().SetMainCamera(mMainCamera->body);
 
     // Create scene
-    int width = 90;
+    int width = 30;
     int height = 90;
     int seed = 1;
     int percent = 50;
@@ -214,7 +214,7 @@ void MainScene::Update(float deltaTime) {
     System::SoundSystem::GetInstance()->Update(*this);
     
     // Update game logic
-    //mMainCamera->UpdateRelativePosition(mPlayers);
+    mMainCamera->UpdateRelativePosition(mPlayers);
 
     mCheckpointSystem.Update();
 
