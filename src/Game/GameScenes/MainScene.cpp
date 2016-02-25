@@ -84,8 +84,8 @@ MainScene::MainScene() {
     MainCameraInstance().SetMainCamera(mMainCamera->body);
 
     // Create scene
-    int width = 30;
-    int height = 90;
+    int width;
+    int height = width = 90;
     int seed = 1;
     int percent = 50;
     int iterations = 10;
@@ -102,7 +102,7 @@ MainScene::MainScene() {
     float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
 
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
+    //mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
     // Create boss
@@ -258,7 +258,7 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
     bool** map = cave->GetCaveData();
 
     //We check if we moved to another cell in the grid.
-    if (map[abs(newX)][abs(newZ)]) {
+    if (map[abs(newZ)][abs(newX)]) {
         //We collide in X
         if (X > Z) {
 
