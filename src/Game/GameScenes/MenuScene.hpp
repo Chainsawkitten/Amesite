@@ -58,9 +58,13 @@ class MenuScene : public Scene {
         class MenuOption {
             public:
                 Texture2D* prerenderedText;
+                glm::vec3 position;
+                glm::vec3 rotation;
                 
-                MenuOption(Font* font, const char* text);
+                MenuOption(Font* font, const char* text, const glm::vec3& position, const glm::vec3& rotation);
                 ~MenuOption();
+                
+                glm::mat4 GetModelMatrix() const;
         };
         std::vector<MenuOption*> mMenuOptions;
         
