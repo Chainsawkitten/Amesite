@@ -163,7 +163,7 @@ namespace Geometry {
         // Calculate the areas and factors (order of parameters doesn't matter).
         float area = glm::length(glm::cross(a.position-b.position, a.position-c.position));
         float a1 = glm::length(glm::cross(edge2, edge3)) / area;
-        float a2 = glm::length(glm::cross(edge3, edge1)) / area; 
+        float a2 = glm::length(glm::cross(edge3, edge1)) / area;
         float a3 = glm::length(glm::cross(edge1, edge2)) / area;
         
         return glm::normalize(a1 * a.normal + a2 * b.normal + a3 * c.normal);
