@@ -14,7 +14,7 @@ namespace Geometry {
             Terrain(const char* filename);
 
             ///TODO comment.
-            Terrain::Terrain(float** floatArray, int width, int height, glm::vec2 textureRepeat);
+            Terrain(float** floatArray, int width, int height, glm::vec2 textureRepeat);
     
             /// Destructor
             ~Terrain();
