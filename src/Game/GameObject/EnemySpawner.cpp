@@ -8,9 +8,10 @@
 
 using namespace GameObject;
 
-EnemySpawner::EnemySpawner(Scene* scene, Enemy::EnemyType type) : SuperGameObject(scene) {
+EnemySpawner::EnemySpawner(Scene* scene, EnemyType type) : SuperGameObject(scene) {
     body = CreateEntity(scene);
     body->AddComponent<Component::Spawner>();
+    body->GetComponent<Component::Spawner>()->type = Component::Spawner::SpawnerType::ENEMY;
     mType = type;
 }
 

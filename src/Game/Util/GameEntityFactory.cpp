@@ -50,7 +50,7 @@ GameEntityFactory::GameEntityFactory(){
     mScene = nullptr;
 }
 
-EnemySpawner * GameEntityFactory::CreateEnemySpawner(GameObject::Enemy::EnemyType type, float delay)
+EnemySpawner * GameEntityFactory::CreateEnemySpawner(EnemySpawner::EnemyType type, float delay)
 {
     EnemySpawner *gameObject = new EnemySpawner(mScene, type);
     gameObject->body->GetComponent<Component::Spawner>()->delay = delay;

@@ -1,25 +1,27 @@
 #pragma once
 
 #include <Engine/GameObject/SuperGameObject.hpp>
-#include "../GameObject/Enemy.hpp"
 
 class Scene;
 class Entity;
-
-namespace GameObject {
-    class Enemy;
-}
 
 
 namespace GameObject {
     /// A Enemy
     class EnemySpawner : public SuperGameObject {
     public:
+        /// Different types of enemies.
+        enum EnemyType {
+            BASIC = 0,
+            PYLON,
+            ENEMIES,
+        };
+
         /// Create %Enemy
         /**
         * @param scene Pointer to which Scene %Enemy Enities' are contained.
         */
-        EnemySpawner(Scene* scene, Enemy::EnemyType type);
+        EnemySpawner(Scene* scene, EnemyType type);
 
         ~EnemySpawner();
 
@@ -28,6 +30,6 @@ namespace GameObject {
 
     private:
         // Type of enemies to spawn.
-        Enemy::EnemyType mType;
+        EnemyType mType;
     };
 }

@@ -27,9 +27,6 @@ namespace System {
             */
             void Update(Scene& scene, float deltaTime);
         private:
-            // Keeps track of enemy spawners.
-            std::vector<GameObject::EnemySpawner> mEnemySpawners;
-
             // Enemy count.
             unsigned int mMaxEnemyCount;
             unsigned int mEnemyCount;

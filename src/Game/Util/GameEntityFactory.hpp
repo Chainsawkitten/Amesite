@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <Util/Input.hpp>
-#include "../GameObject/Enemy.hpp"
+#include "../GameObject/EnemySpawner.hpp"
 
 class Scene;
 class Entity;
@@ -46,7 +46,7 @@ class GameEntityFactory {
          * @param delay for spawning a new enemy.
          * @return The enemy spawner GameObject.
          */
-        GameObject::EnemySpawner* CreateEnemySpawner(GameObject::Enemy::EnemyType type, float delay);
+        GameObject::EnemySpawner* CreateEnemySpawner(GameObject::EnemySpawner::EnemyType type, float delay);
         
         /// Create a basic enemy.
         /**

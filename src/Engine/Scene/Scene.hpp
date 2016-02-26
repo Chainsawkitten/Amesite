@@ -15,6 +15,7 @@ namespace Component {
 
 namespace GameObject {
     class SuperGameObject;
+    class Enemy;
 }
 
 /// Contains a bunch of entities.
@@ -101,6 +102,9 @@ class Scene {
 
         // List of all collisons in this scene.
         std::vector<Collision*> mCollisionVector;
+
+        // List of all enemies in the scene.
+        std::vector<GameObject::Enemy*> mEnemyVector;
 
         // List of all game objects in this scene.
         std::vector<GameObject::SuperGameObject*> mGameObjectVector;

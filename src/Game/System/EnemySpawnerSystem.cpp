@@ -6,6 +6,8 @@
 
 #include "../Util/GameEntityFactory.hpp"
 
+#include "../Component/Spawner.hpp"
+
 #include <vector>
 #include <Util/Log.hpp>
 
@@ -13,20 +15,36 @@ using namespace System;
 
 System::EnemySpawnerSystem::EnemySpawnerSystem() {
     mMaxEnemyCount = 10;
-
-  /*  if (mEnemySpawners.empty()) {
-    }*/
 }
 
 System::EnemySpawnerSystem::~EnemySpawnerSystem() {
 }
 
 void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime) {
+    //std::vector<GameObject::Enemy*>* gameObjects = scene.GetVector<GameObject::Enemy>();
+    //for (auto object : *gameObjects) {
+
+    //}
+
+
 
     if (mEnemyCount < mMaxEnemyCount) {
-        glm::vec3 position = FindValidPosition();
+        std::vector<Component::Spawner*> spawners;
+        spawners = scene.GetAll<Component::Spawner>();
 
-        GameEntityCreator().CreateBasicEnemy(position);
+        for (auto spawner : spawners) {
+            if (spawner->type == Component::Spawner::ENEMY) {
+                glm::vec3 position = FindValidPosition();
+                if (spawner->enemyType == Component::Spawner::BASIC) {
+                    GameEntityCreator().CreateBasicEnemy(position);
+                } else if (spawner->enemyType == Component::Spawner::PYLON) {
+                    GameEntityCreator().CreateEnemyPylon(position);
+                }
+                
+            }
+        }
+
+
     }
 }
 
