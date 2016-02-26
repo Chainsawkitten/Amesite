@@ -10,13 +10,6 @@ namespace GameObject {
     /// A Enemy
     class EnemySpawner : public SuperGameObject {
     public:
-        /// Different types of enemies.
-        enum EnemyType {
-            BASIC = 0,
-            PYLON,
-            ENEMIES,
-        };
-
         /// Create %Enemy
         /**
         * @param scene Pointer to which Scene %Enemy Enities' are contained.
