@@ -81,7 +81,7 @@ void SpinBoss::Update() {
         for (int i = 0; i < 4; i++)
             if (armArr[i] != nullptr)
                 if (armArr[i]->GetComponent<Component::Health>()->health < 0.01f) {
-                    armArr[i]->Clear();
+                    armArr[i]->Kill();
                     armArr[i] = nullptr;
                     if (--mNrOfArms <= 0)
                         ChangePhase(BossPhase::TWO);
@@ -108,6 +108,28 @@ void SpinBoss::CreateArm(Entity* entity, glm::vec3 direction) {
     entity->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::AlwaysShoot);
     entity->AddComponent<Component::Spawner>()->faction = 1;
     entity->GetComponent<Component::Spawner>()->delay = 0.2f;
+    entity->AddComponent<Component::Explode>()->size = 50.f;
+    entity->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
+    entity->GetComponent<Component::Explode>()->lifeTime = 0.5f;
+    entity->GetComponent<Component::Explode>()->offset.y = 5.0f;
+    Component::ParticleEmitter* emitter = entity->AddComponent<Component::ParticleEmitter>();
+    emitter->emitterType = Component::ParticleEmitter::POINT;
+    emitter->maxEmitTime = 0.02;
+    emitter->minEmitTime = 0.016;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 0.0;
+    emitter->particleType.textureIndex = Component::ParticleEmitter::PURPLE;
+    emitter->particleType.minLifetime = .01f * 60.f;
+    emitter->particleType.maxLifetime = .02f * 60.f;
+    emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -.2f);
+    emitter->particleType.maxVelocity = glm::vec3(.3f, 0.f, .2f);
+    emitter->particleType.minSize = glm::vec2(.5f, .5f) * 10.f;
+    emitter->particleType.maxSize = glm::vec2(.7f, .7f) * 10.f;
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::vec3(.8f, .8f, .8f);
+    emitter->particleType.startAlpha = 0.f;
+    emitter->particleType.midAlpha = 1.f;
+    emitter->particleType.endAlpha = 0.f;
 }
 
 void SpinBoss::ChangePhase(BossPhase phase) {

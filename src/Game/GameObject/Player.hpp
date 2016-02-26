@@ -2,6 +2,8 @@
 
 #include <Engine/GameObject/SuperGameObject.hpp>
 
+#include <Util/Input.hpp>
+
 #include <glm/glm.hpp>
 
 class Scene;
@@ -22,8 +24,9 @@ namespace GameObject {
             /// Create %Player
             /**
              * @param scene Pointer to which Scene %Player Enities' are contained.
+             * @param id Id of the player.
              */
-            Player(Scene* scene);
+            Player(Scene* scene, InputHandler::Player id);
            
             ~Player();
 

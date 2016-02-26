@@ -25,13 +25,19 @@
 
 using namespace GameObject;
 
-Player::Player(Scene* scene) : SuperGameObject(scene) {
+Player::Player(Scene* scene, InputHandler::Player id) : SuperGameObject(scene) {
     mActive = true;
     mRespawnTimer = 5;
 
-    mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_healthy.png");
-    mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_medium_damage.png");
-    mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_heavy_damage.png");
+    if (id == InputHandler::Player::PLAYER_ONE) {
+        mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/ship1_body_diff_healthy.png");
+        mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship1_body_diff_medium_damage.png");
+        mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship1_body_diff_heavy_damage.png");
+    } else {
+        mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/ship2_body_diff_healthy.png");
+        mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship2_body_diff_medium_damage.png");
+        mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship2_body_diff_heavy_damage.png");
+    }
     
     state = LIGHTDAMAGE;
 
@@ -88,7 +94,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     light->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     light->AddComponent<Component::Animation>();
     light->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
-    light->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
+    light->GetComponent<Component::SpotLight>()->attenuation = 0.05f;
 
     leftTurret = CreateEntity();
     leftTurret->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
