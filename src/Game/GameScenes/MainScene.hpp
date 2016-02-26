@@ -96,14 +96,20 @@ class MainScene : public Scene {
         GameObject::Cave* mCave;
 
         // Post processing.
-        PostProcessing* postProcessing;
-        FXAAFilter* fxaaFilter;
-        GammaCorrectionFilter* gammaCorrectionFilter;
-        GlowFilter* glowFilter;
-        GlowBlurFilter* glowBlurFilter;
+        PostProcessing* mPostProcessing;
+        FXAAFilter* mFxaaFilter;
+        GammaCorrectionFilter* mGammaCorrectionFilter;
+        GlowFilter* mGlowFilter;
+        GlowBlurFilter* mGlowBlurFilter;
         
         // Grid collision
         bool GridCollide(Entity* entity, float deltaTime, float gridScale);
+
+        /// Handles the player respawn
+        /**
+        *@param deltaTime Time since last frame.
+        */
+        void Respawn(float deltaTime);
 
         // Music.
         Audio::SoundBuffer* mMusicSoundBuffer;

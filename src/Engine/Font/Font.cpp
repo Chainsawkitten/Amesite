@@ -32,6 +32,14 @@ Font::Font(const char* filename, float height) {
     
     stbtt_BakeFontBitmap(ttfBuffer, 0, height, tempBitmap, 512, 512, 32, 96, mCData);
     
+    // Get baseline.
+    stbtt_fontinfo fontInfo;
+    stbtt_InitFont(&fontInfo, ttfBuffer, 0);
+    float scale = stbtt_ScaleForPixelHeight(&fontInfo, mHeight);
+    int ascent;
+    stbtt_GetFontVMetrics(&fontInfo, &ascent, 0, 0);
+    mBaseline = static_cast<int>(mHeight - ascent * scale);
+    
     delete[] ttfBuffer;
     
     glGenTextures(1, &mTexture);
@@ -89,13 +97,10 @@ Font::~Font() {
     Resources().FreeSquare();
 }
 
-stbtt_aligned_quad Font::BakedQuad(char character, float& x, float& y) {
-    stbtt_aligned_quad q;
-    stbtt_GetBakedQuad(mCData, 512, 512, character - 32, &x, &y, &q, 1);
-    return q;
-}
-
-void Font::RenderText(const char* text, const glm::vec2& position, float wrap) {
+void Font::RenderText(const char* text, const glm::vec2& position, float wrap, glm::vec2 screenSize, bool blending) {
+    if (screenSize == glm::vec2(0.f, 0.f))
+        screenSize = MainWindow::GetInstance()->GetSize();
+    
     // Disable depth testing
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
     glDisable(GL_DEPTH_TEST);
@@ -104,8 +109,10 @@ void Font::RenderText(const char* text, const glm::vec2& position, float wrap) {
     
     // Blending enabled
     GLboolean blend = glIsEnabled(GL_BLEND);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    if (blending) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
     
     glBindVertexArray(mSquare->GetVertexArray());
     
@@ -120,7 +127,7 @@ void Font::RenderText(const char* text, const glm::vec2& position, float wrap) {
     pos.y += mHeight;
     while (*text) {
         if (*text >= 32 && *text < 128)
-            pos.x = RenderCharacter(*text, pos);
+            pos.x = RenderCharacter(*text, pos, screenSize);
         
         if (pos.x > position.x + wrap || *text == '\n') {
             pos.x = position.x;
@@ -143,15 +150,32 @@ void Font::SetColor(const glm::vec3& color) {
     mColor = color;
 }
 
+float Font::GetWidth(const char* text) {
+    float x = 0.f;
+    float y = 0.f;
+    
+    stbtt_aligned_quad q;
+    while (*text) {
+        q = BakedQuad(*text, x, y);
+        ++text;
+    }
+    
+    return q.x1;
+}
+
 float Font::GetHeight() const {
     return mHeight;
+}
+
+int Font::GetBaseline() const {
+    return mBaseline;
 }
 
 bool Font::IsFromFile() const {
     return mIsFromFile;
 }
 
-float Font::RenderCharacter(char character, const glm::vec2& position) {
+float Font::RenderCharacter(char character, const glm::vec2& position, const glm::vec2& screenSize) {
     stbtt_aligned_quad q;
     float x = position.x;
     float y = position.y;
@@ -160,7 +184,6 @@ float Font::RenderCharacter(char character, const glm::vec2& position) {
     glm::vec2 pos = glm::vec2(q.x0, q.y0);
     glm::vec2 siz = glm::vec2(q.x1, q.y1) - glm::vec2(q.x0, q.y0);
     
-    glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
     glUniform2fv(mShaderProgram->GetUniformLocation("position"), 1, &(pos / screenSize)[0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("size"), 1, &(siz / screenSize)[0]);
     
@@ -174,4 +197,10 @@ float Font::RenderCharacter(char character, const glm::vec2& position) {
     glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     
     return x;
+}
+
+stbtt_aligned_quad Font::BakedQuad(char character, float& x, float& y) {
+    stbtt_aligned_quad q;
+    stbtt_GetBakedQuad(mCData, 512, 512, character - 32, &x, &y, &q, 1);
+    return q;
 }

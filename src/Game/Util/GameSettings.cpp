@@ -24,6 +24,8 @@ GameSettings::GameSettings() {
     
     AddDoubleSetting("Aim Deadzone", "Controller", "Aim Deadzone", 0.3);
     AddDoubleSetting("Move Deadzone", "Controller", "Move Deadzone", 0.3);
+    
+    AddBoolSetting("Show Splash Screen", "Game", "Show Splash Screen", true);
 }
 
 GameSettings& GameSettings::GetInstance() {
