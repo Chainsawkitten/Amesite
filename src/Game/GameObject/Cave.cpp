@@ -18,7 +18,6 @@
 #include <Engine/Component/SpotLight.hpp>
 #include <Engine/Geometry/Terrain.hpp>
 #include "../Util/CaveGenerator.hpp"
-#include <Util\Log.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 
