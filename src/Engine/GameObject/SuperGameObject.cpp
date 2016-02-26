@@ -24,11 +24,17 @@ void SuperGameObject::Clear() {
 }
 
 void SuperGameObject::Kill() {
-    mScene->AddKilledGameObject(this);
+    for (auto entity : mEntityVector) {
+        entity->Kill();
+        entity->gameObject = nullptr;
+    }
+    std::vector<GameObject::SuperGameObject*>* gameObjectVector = mScene->GetVector<SuperGameObject>();
+    gameObjectVector->erase(std::remove(gameObjectVector->begin(), gameObjectVector->end(), this), gameObjectVector->end());
+    delete this;
 }
 
-Entity* SuperGameObject::CreateEntity(Scene* scene) {
-    Entity* entity = scene->CreateEntity();
+Entity* SuperGameObject::CreateEntity() {
+    Entity* entity = mScene->CreateEntity();
     entity->gameObject = this;
     mEntityVector.push_back(entity);
     return entity;

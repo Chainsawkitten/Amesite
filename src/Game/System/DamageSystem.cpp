@@ -43,14 +43,11 @@ void DamageSystem::Update(Scene& scene) {
                         // Reduce health by damage.
                         HealthX->health -= damageY->damageAmount;
                         // Remove damage entity if it should be removed on impact
-                        if (damageY->removeOnImpact) {
-                            // Create Explosion
-                            Component::Explode* explodeComp = collisionY->GetComponent<Component::Explode>();
-                            if (explodeComp != nullptr)
-                                GameEntityCreator().CreateExplosion(collisionY->GetComponent<Component::Transform>()->GetWorldPosition() + explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex);
-                            //Kill game object
-                            damageY->entity->gameObject->Kill();
-                        }
+                        if (damageY->removeOnImpact)
+                            if (damageY->entity->gameObject != nullptr)
+                                damageY->entity->gameObject->Kill();
+                            else
+                                damageY->entity->Kill();
                     }
                 }
             }

@@ -106,7 +106,7 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
     // Create boss
-    mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
+    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y));
     
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX,playerStartZ));
 
@@ -171,9 +171,9 @@ void MainScene::Update(float deltaTime) {
         }
     }
 
-    for (auto boss : mBosses)
-        boss->Update();
-
+    // Update boss
+    if (mSpinBoss != nullptr)
+        mSpinBoss->Update();
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
@@ -207,8 +207,11 @@ void MainScene::Update(float deltaTime) {
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
 
-    // Remove killed game objects
-    ClearKilledGameObjects();
+    // Update explotion system
+    mExplodeSystem.Update(*this);
+
+    // Remove killed entities
+    ClearKilledEntities();
 
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
@@ -217,6 +220,12 @@ void MainScene::Update(float deltaTime) {
     mMainCamera->UpdateRelativePosition(mPlayers);
 
     mCheckpointSystem.Update();
+
+    if (mSpinBoss != nullptr)
+        if (mSpinBoss->GetHealth() < 0.01f) {
+            mSpinBoss->Kill();
+            mSpinBoss = nullptr;
+        }
 
     // Render.
     mRenderSystem.Render(*this, postProcessing->GetRenderTarget());

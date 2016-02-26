@@ -352,6 +352,7 @@ set(GAME_SRCS
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
         src/Game/System/LifeTimeSystem.cpp
+        src/Game/System/ExplodeSystem.cpp
         src/Game/System/ReflectSystem.cpp
         src/Game/System/AISystem.cpp
         src/Game/System/CheckpointSystem.cpp
@@ -396,6 +397,7 @@ set(GAME_HEADERS
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/System/LifeTimeSystem.hpp
+        src/Game/System/ExplodeSystem.hpp
         src/Game/System/ReflectSystem.hpp
         src/Game/System/AISystem.hpp
         src/Game/System/CheckpointSystem.hpp

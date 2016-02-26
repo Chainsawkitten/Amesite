@@ -39,11 +39,8 @@ class Scene {
         /// Updates all model matrices in %Scene.
         void UpdateModelMatrices();
 
-        /// Removes all killed objects in %Scene.
-        void ClearKilledGameObjects();
-
-        /// Add killed game object.
-        void AddKilledGameObject(GameObject::SuperGameObject* gameObject);
+        /// Removes all killed entites in %Scene.
+        void ClearKilledEntities();
 
         /// Gets all components of a specific type.
         /**
@@ -63,25 +60,19 @@ class Scene {
          */
         template <typename T> std::vector<T>* GetVectorContents();
 
+        virtual void Update(float deltaTime) = 0;
+
+        /// Gets a read-only vector of killed entites.
+        /**
+         * @return A pointer to a vector of pointers to all killed entites.
+         */
+        const std::vector<Entity*>& GetKilledEntitesVector() const;
+
         /// Contains data about which entities in the scene this entity intersects with.
         struct Collision {
             Entity* entity = nullptr;
             std::vector<Entity*> intersect;
         };
-
-        /// Removes Entity from %Scene
-        /**
-         * @param entity Entity to be removed.
-         */
-        void RemoveEntity(Entity* entity);
-
-        /// Removes GameObject from %Scene
-        /**
-         *@param entity Game object to be removed.
-         */
-        void RemoveGameObject(GameObject::SuperGameObject* gameObject);
-
-        virtual void Update(float deltaTime) = 0;
 
     private:
         // Adds component to list internally.
@@ -105,8 +96,8 @@ class Scene {
         // List of all game objects in this scene.
         std::vector<GameObject::SuperGameObject*> mGameObjectVector;
 
-        // List of game objects to be removed.
-        std::vector<GameObject::SuperGameObject*> mKilledGameObjectVector;
+        // List of entites to be removed.
+        std::vector<Entity*> mKilledEntitesVector;
 };
 
 // GetAll<T>

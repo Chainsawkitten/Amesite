@@ -85,7 +85,7 @@ AlbinScene::AlbinScene() {
 }
 
 AlbinScene::~AlbinScene() {
-    RemoveEntity(s1);
+    s1->Clear();
     
     Resources().FreeSound(mTestSoundBuffer);
     

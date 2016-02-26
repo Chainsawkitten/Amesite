@@ -10,7 +10,7 @@
 using namespace GameObject;
 
 Explosion::Explosion(Scene* scene) : SuperGameObject(scene) {
-    node = CreateEntity(scene);
+    node = CreateEntity();
     node->AddComponent<Component::Transform>()->Move(0.f, 2.f, 0.f);
     node->AddComponent<Component::LifeTime>();
     Component::ParticleEmitter* emitter = node->AddComponent<Component::ParticleEmitter>();

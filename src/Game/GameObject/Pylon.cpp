@@ -24,7 +24,7 @@
 using namespace GameObject;
 
 Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
-    node = CreateEntity(scene);
+    node = CreateEntity();
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
     node->AddComponent<Component::Collider2DCircle>()->radius = 9.f;
     node->AddComponent<Component::Health>()->faction = 1;
@@ -33,7 +33,7 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
     node->GetComponent<Component::Explode>()->size = 8.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
 
-    body = CreateEntity(scene);
+    body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     body->AddComponent<Component::Mesh>()->geometry = mBody = Resources().CreateOBJModel("Resources/Crystal_01.obj");
     body->AddComponent<Component::Material>();
@@ -47,7 +47,7 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
     idleBody->CreateKeyFrame(glm::vec3(-0.3f, 0.3f, 0.3f), 0.f, 0.f, 0.f, 1.5f, false, true);
     body->GetComponent<Component::Animation>()->Start("idle");
 
-    pylon1 = CreateEntity(scene);
+    pylon1 = CreateEntity();
     pylon1->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     pylon1->GetComponent<Component::RelativeTransform>()->scale *= 0.8f;
     pylon1->AddComponent<Component::Mesh>()->geometry = mPylon1 = Resources().CreateOBJModel("Resources/Pylon_01.obj");
@@ -66,7 +66,7 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
     pylon1->GetComponent<Component::Spawner>()->faction = 1;
     AddPylonPartilces(pylon1);
 
-    pylon2 = CreateEntity(scene);
+    pylon2 = CreateEntity();
     pylon2->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     pylon2->GetComponent<Component::RelativeTransform>()->scale *= 0.8f;
     pylon2->AddComponent<Component::Mesh>()->geometry = mPylon2 = Resources().CreateOBJModel("Resources/Pylon_01.obj");
@@ -85,7 +85,7 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
     pylon2->GetComponent<Component::Spawner>()->faction = 1;
     AddPylonPartilces(pylon2);
 
-    turret = CreateEntity(scene);
+    turret = CreateEntity();
     turret->AddComponent<Component::RelativeTransform>()->parentEntity = body;
     turret->GetComponent<Component::RelativeTransform>()->Move(0, 5.f, 0.f);
     turret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShoot);

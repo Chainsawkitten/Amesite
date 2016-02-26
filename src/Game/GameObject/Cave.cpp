@@ -57,7 +57,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
         }
     }
 
-    map = CreateEntity(scene);
+    map = CreateEntity();
     map->AddComponent<Component::Mesh>();
     map->AddComponent<Component::Transform>();
     map->AddComponent<Component::Material>();

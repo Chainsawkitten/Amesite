@@ -25,3 +25,7 @@ void Entity::Clear() {
     entityVector->erase(std::remove(entityVector->begin(), entityVector->end(), this), entityVector->end());
     delete this;
 }
+
+void Entity::Kill() {
+    mScene->mKilledEntitesVector.push_back(this);
+}
