@@ -89,7 +89,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     }
 
 	PerlinNoiseGenerator pn(seed);
-	unsigned int kk = 0;
 	float factor = 100.f;
 	float floatMapFactor = (6.f / 10.f);
 	float perlinNoiseFactor = (4.f / 10.f);
