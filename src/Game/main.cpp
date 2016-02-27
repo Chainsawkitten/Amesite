@@ -10,6 +10,7 @@
 #include "Game.hpp"
 #include "GameScenes/SplashScene.hpp"
 #include "GameScenes/MenuScene.hpp"
+#include "GameScenes/MainScene.hpp"
 //#include "GameScenes/PontusScene.hpp"
 //#include "GameScenes/AlbinScene.hpp"
 //#include "GameScenes/EmptyScene.hpp"
@@ -48,7 +49,7 @@ int main() {
     System::SoundSystem* soundSystem = new System::SoundSystem();
     
     if (GameSettings::GetInstance().GetBool("Show Splash Screen"))
-        Game::GetInstance().SetScene(new SplashScene());
+        Game::GetInstance().SetScene(new MainScene());
     else
         Game::GetInstance().SetScene(new MenuScene());
 

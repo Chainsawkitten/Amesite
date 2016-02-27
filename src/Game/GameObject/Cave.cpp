@@ -18,6 +18,8 @@
 #include <Engine/Component/SpotLight.hpp>
 #include <Engine/Geometry/Terrain.hpp>
 #include "../Util/CaveGenerator.hpp"
+#include "../Util/PerlinNoise.hpp"
+#include <Util/Log.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 
@@ -80,11 +82,27 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             if (mMap[i][j] == true)
-                floatMap[i][j] = 1.0f;
+                floatMap[j][i] = 1.0f;
             else
-                floatMap[i][j] = 0.0f;
+                floatMap[j][i] = 0.0f;
         }
     }
+
+	PerlinNoiseGenerator pn(seed);
+	unsigned int kk = 0;
+	float factor = 100.f;
+	float floatMapFactor = (6.f / 10.f);
+	float perlinNoiseFactor = (4.f / 10.f);
+	for (int i = 0; i < width; i++) {
+		for (int j = 0; j < height; j++) {
+			float x = (float)j / ((float)width);
+			float y = (float)i / ((float)height);
+			
+			float n = pn.Noise(factor*x, factor*y, 0.8);
+
+			floatMap[i][j] = floatMapFactor*(floatMap[i][j]) + perlinNoiseFactor*glm::abs(n);
+		}
+	}
 
     heightMap = CreateEntity(scene);
     
@@ -92,7 +110,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->AddComponent<Component::Transform>();
     heightMap->AddComponent<Component::Material>();
     heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f), -11.f, zScale*(static_cast<float>(height) / 2.f)));
-    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
+    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 11.f, (static_cast<float>(height) / 2.f) * 10);
 
     heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, width, height, glm::vec2(xScale, zScale));
 
