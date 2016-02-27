@@ -97,7 +97,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 			float x = (float)j / ((float)width);
 			float y = (float)i / ((float)height);
 			
-			float n = pn.Noise(factor*x, factor*y, 0.8);
+			float n = pn.Noise(factor*x, factor*y, 1.f);
 
 			floatMap[i][j] = floatMapFactor*(floatMap[i][j]) + perlinNoiseFactor*glm::abs(n);
 		}
