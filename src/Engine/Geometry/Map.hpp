@@ -12,12 +12,10 @@ namespace Geometry {
     public:
         /// Create a map mesh from a set of data.
         /**
-        * @param data to analyze.
-        * @param squareSize of a square in the grid.
-        * @param dataDimensions of array of data.
-        * @param wallHeight sets the height of wall mesh.
-        * @return vector contraining the isolines.
-        */
+         * @param data Data to analyze.
+         * @param dataDimensions Dimensions of the array of data.
+         * @param wallHeight Height of the wall mesh.
+         */
         Map(bool **data, glm::uvec2 dataDimensions, float wallHeight);
 
         /// Destructor
@@ -25,26 +23,26 @@ namespace Geometry {
 
         /// Get all the vertices.
         /**
-        * @return Array of vertices
-        */
+         * @return Array of vertices
+         */
         Vertex* GetVertices() const;
 
         /// Get the number of vertices.
         /**
-        * @return The number of vertices
-        */
+         * @return The number of vertices
+         */
         unsigned int GetVertexCount() const;
 
         /// Get all the vertex indices.
         /**
-        * @return Array of vertex indices
-        */
+         * @return Array of vertex indices
+         */
         unsigned int* GetIndices() const;
 
         /// Get the number of indicies.
         /**
-        * @return The number of vertex indices.
-        */
+         * @return The number of vertex indices.
+         */
         unsigned int GetIndexCount() const;
 
         /// Get amount of times texture should repeat
@@ -58,6 +56,7 @@ namespace Geometry {
          * @param repeat the amount of times to repeat in x and y.
          */
         void SetTextureRepeat(const glm::vec2 repeat);
+        
     private:
         // The node that is used to create mesh.
         struct MeshNode {
