@@ -127,7 +127,9 @@ set(RESOURCES
         assets/Ship/Ship_Glow.png
         assets/Ship/Ship_NM.png
         assets/Ship/Ship_Spec.png
-        assets/Ship/Ship.obj
+        assets/Ship/Ship_body.obj
+        assets/Ship/Ship_engine.obj
+        assets/Ship/Ship_propeller.obj
         assets/GolfBall.obj
         assets/MusicAction.ogg
         assets/MusicCalm.ogg
