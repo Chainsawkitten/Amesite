@@ -10,7 +10,7 @@ namespace Picking {
      * @param projectionMatrix The projection matrix.
      * @return Ray direction in world space.
      */
-    glm::vec4 createWorldRay(const glm::vec2& mouseCoordinates, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+    glm::vec4 CreateWorldRay(const glm::vec2& mouseCoordinates, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
 
     ///Creates a vector representing the players aim direction
     /**
@@ -19,5 +19,5 @@ namespace Picking {
      *@param cameraPosition Camera position in world space.
      *@return Vector from player to mouse aimpoint in world space.
      */
-    glm::vec4 createPlayerAimDirection(const glm::vec4& worldRay, const glm::vec4& playerPosition, const glm::vec4& cameraPosition);
+    glm::vec4 CreatePlayerAimDirection(const glm::vec4& worldRay, const glm::vec4& playerPosition, const glm::vec4& cameraPosition);
 }
