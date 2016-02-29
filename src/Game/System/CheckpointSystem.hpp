@@ -3,7 +3,7 @@
 #include <vector>
 
 namespace GameObject {
-    class Player;
+    class SuperPlayer;
 }
 
 namespace System {
@@ -15,20 +15,19 @@ namespace System {
 
             ///Moves checkpoint to designated location.
             /**
-            * @param position New position for the checkpoint.
-            */
+             * @param position New position for the checkpoint.
+             */
             void MoveCheckpoint(glm::vec2 position);
 
             ///Adds player to mPlayers. 
             /**
-            * @param player Player to add.
-            */
-            void AddPlayer(GameObject::Player* player);
+             * @param player Player to add.
+             */
+            void AddPlayer(GameObject::SuperPlayer* player);
 
         private:
             void RespawnPlayers();
-            std::vector<GameObject::Player*> mPlayers;
+            std::vector<GameObject::SuperPlayer*> mPlayers;
             glm::vec2 mPosition;
-
     };
 }

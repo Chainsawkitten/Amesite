@@ -40,7 +40,7 @@ MenuScene::MenuScene() {
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(-3.f, 1.4f, 5.f), glm::vec3(60.f, 10.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
-    GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
+    GameEntityCreator().CreatePlayer1(glm::vec3(0.f, 0.f, 0.f));
     
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);

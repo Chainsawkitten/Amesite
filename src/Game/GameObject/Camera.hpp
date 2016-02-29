@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace GameObject {
-    class Player;
+    class SuperPlayer;
     class Camera;
 }
 
@@ -23,7 +23,7 @@ namespace GameObject {
            
             ~Camera();
 
-            void UpdateRelativePosition(const std::vector<GameObject::Player*>& players);
+            void UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>& players);
 
             /// Body of camera
             Entity* body;

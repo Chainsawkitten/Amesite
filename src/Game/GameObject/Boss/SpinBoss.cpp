@@ -7,12 +7,12 @@
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/OBJModel.hpp>
 
-#include "../Component/Health.hpp"
-#include "../Component/Explode.hpp"
-#include "../Component/LifeTime.hpp"
-#include "../Component/Reflect.hpp"
-#include "../Component/Controller.hpp"
-#include "../Component/Spawner.hpp"
+#include "../../Component/Health.hpp"
+#include "../../Component/Explode.hpp"
+#include "../../Component/LifeTime.hpp"
+#include "../../Component/Reflect.hpp"
+#include "../../Component/Controller.hpp"
+#include "../../Component/Spawner.hpp"
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/RelativeTransform.hpp>
 #include <Engine/Component/Mesh.hpp>
@@ -22,7 +22,7 @@
 #include <Engine/Component/ParticleEmitter.hpp>
 #include <Engine/Component/Physics.hpp>
 
-#include "../Util/ControlSchemes.hpp"
+#include "../../Util/ControlSchemes.hpp"
 
 using namespace GameObject;
 

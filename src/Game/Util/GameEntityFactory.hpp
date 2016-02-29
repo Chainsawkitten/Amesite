@@ -12,7 +12,8 @@ namespace CaveGenerator {
 
 namespace GameObject{
     class Bullet;
-    class Player;
+    class Player1;
+    class Player2;
     class Camera;
     class Enemy;
     class Cave;
@@ -62,13 +63,19 @@ class GameEntityFactory {
          */
         GameObject::Shield* CreateShield(Entity* parentEntity, glm::vec3 offset, float lifeTime, float health);
 
-        /// Create a player.
+        /// Create player1.
         /**
          * @param origin The player's starting position.
-         * @param player Who controls the player.
-         * @return The player GameObject.
+         * @return The player1 GameObject.
          */
-        GameObject::Player* CreatePlayer(const glm::vec3& origin, InputHandler::Player player);
+        GameObject::Player1* CreatePlayer1(const glm::vec3& origin);
+
+        /// Create player2.
+        /**
+        * @param origin The player's starting position.
+        * @return The player2 GameObject.
+        */
+        GameObject::Player2* CreatePlayer2(const glm::vec3& origin);
 
         /// Create SpinBoss.
         /**

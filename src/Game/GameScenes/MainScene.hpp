@@ -27,7 +27,7 @@ class Entity;
 namespace GameObject {
     class Cave;
     class Camera;
-    class Player;
+    class SuperPlayer;
     class SpinBoss;
 }
 namespace Audio {
@@ -84,7 +84,7 @@ class MainScene : public Scene {
         System::CheckpointSystem mCheckpointSystem;
 
         // Vector containing players
-        std::vector<GameObject::Player*> mPlayers;
+        std::vector<GameObject::SuperPlayer*> mPlayers;
 
         // Spin boss
         GameObject::SpinBoss* mSpinBoss;

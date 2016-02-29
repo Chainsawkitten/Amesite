@@ -162,9 +162,9 @@ void ControlScheme::RandomMove(Component::Controller* controller, float deltaTim
 }
 
 void ControlScheme::Aim(Component::Controller* controller, float deltaTime) {
-    
+
     Entity* entity = controller->entity;
-    
+
     // Move the player
     float x = Input()->ButtonValue(controller->playerID, InputHandler::AIM_X);
     float z = Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z);
