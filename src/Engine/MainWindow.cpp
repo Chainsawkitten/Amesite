@@ -34,6 +34,8 @@ MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, 
     
     mSize = glm::vec2(width, height);
     mInstance = this;
+    
+    mShouldClose = false;
 }
 
 MainWindow::~MainWindow() {
@@ -60,6 +62,9 @@ void MainWindow::SetVsync(bool vsync) {
 void MainWindow::Update() {
     mInput->Update();
     mInput->SetActive();
+    
+    if (glfwWindowShouldClose(mWindow) != GL_FALSE)
+        mShouldClose = true;
 }
 
 const glm::vec2& MainWindow::GetSize() const {
@@ -71,7 +76,11 @@ void MainWindow::SetTitle(const char *title) {
 }
 
 bool MainWindow::ShouldClose() const {
-    return glfwWindowShouldClose(mWindow) != GL_FALSE;
+    return mShouldClose;
+}
+
+void MainWindow::Close() {
+    mShouldClose = true;
 }
 
 void MainWindow::SwapBuffers() {
