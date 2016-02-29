@@ -13,14 +13,14 @@ uniform mat4 view;
 uniform mat3 normalMatrix;
 
 out VertexData {
-	vec3 normal;
-	vec3 tangent;
-	vec2 texCoords;
+    vec3 normal;
+    vec3 tangent;
+    vec2 texCoords;
 } vertexOut;
 
 void main () {
     gl_Position = projection * (view * (model * vec4(vertexPosition, 1.0)));
-	vertexOut.normal = normalize(normalMatrix * vertexNormal);
-	vertexOut.tangent = vertexTangent;
-	vertexOut.texCoords = vertexTexture;
+    vertexOut.normal = normalize(normalMatrix * vertexNormal);
+    vertexOut.tangent = vertexTangent;
+    vertexOut.texCoords = vertexTexture;
 }
