@@ -157,10 +157,9 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mFrontEngineLeft->AddComponent<Component::Mesh>()->geometry = mFrontEngineModel = Resources().CreateOBJModel("Resources/player1_frontEngine.obj");
     mFrontEngineLeft->AddComponent<Component::Material>();
     mFrontEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
-    Entity* frontEngineLeftParticles = CreateEntity();
-    frontEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
-    frontEngineLeftParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
-    AddEnginePartilces(frontEngineLeftParticles);
+    mFrontEngineLeftParticles = CreateEntity();
+    mFrontEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
+    AddEnginePartilces(mFrontEngineLeftParticles);
 
     mFrontEngineRight = CreateEntity();
     mFrontEngineRight->AddComponent<Component::RelativeTransform>()->Move(-8.5f, 0.f, 8.3f);
@@ -171,10 +170,9 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mFrontEngineRight->AddComponent<Component::Mesh>()->geometry = mFrontEngineModel;
     mFrontEngineRight->AddComponent<Component::Material>();
     mFrontEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
-    Entity* frontEngineRightParticles = CreateEntity();
-    frontEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineRight;
-    frontEngineRightParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
-    AddEnginePartilces(frontEngineRightParticles);
+    mFrontEngineRightParticles = CreateEntity();
+    mFrontEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineRight;
+    AddEnginePartilces(mFrontEngineRightParticles);
 
     mBackEngineLeft = CreateEntity();
     mBackEngineLeft->AddComponent<Component::RelativeTransform>()->Move(10.5f, 0.f, 0.f);
@@ -184,10 +182,9 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mBackEngineLeft->AddComponent<Component::Mesh>()->geometry = mBackEngineModel = Resources().CreateOBJModel("Resources/player1_backEngine.obj");
     mBackEngineLeft->AddComponent<Component::Material>();
     mBackEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
-    Entity* backEngineLeftParticles = CreateEntity();
-    backEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineLeft;
-    backEngineLeftParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
-    AddEnginePartilces(backEngineLeftParticles);
+    mBackEngineLeftParticles = CreateEntity();
+    mBackEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineLeft;
+    AddEnginePartilces(mBackEngineLeftParticles);
 
     mBackEngineRight = CreateEntity();
     mBackEngineRight->AddComponent<Component::RelativeTransform>()->Move(-10.5f, 0.f, 0.f);
@@ -198,10 +195,9 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mBackEngineRight->AddComponent<Component::Mesh>()->geometry = mBackEngineModel;
     mBackEngineRight->AddComponent<Component::Material>();
     mBackEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
-    Entity* backEngineRightParticles = CreateEntity();
-    backEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineRight;
-    backEngineRightParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
-    AddEnginePartilces(backEngineRightParticles);
+    mBackEngineRightParticles = CreateEntity();
+    mBackEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineRight;
+    AddEnginePartilces(mBackEngineRightParticles);
 }
 
 Player1::~Player1() {
@@ -292,6 +288,14 @@ void Player1::Update() {
     mBackEngineLeft->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
     mFrontEngineRight->GetComponent<Component::Transform>()->roll = rollFactor * -15.f * velocityFactor;
     mFrontEngineLeft->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
+    mBackEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
+    mBackEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
+    mBackEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
+    mBackEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
+    mFrontEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
+    mFrontEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
+    mFrontEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
+    mFrontEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
 
     // Update body
     mBody->GetComponent<Component::Transform>()->pitch = pitchFactor * 10.f * velocityFactor;
@@ -307,6 +311,7 @@ void Player1::Update() {
 }
 
 void Player1::AddEnginePartilces(Entity* entity) {
+    entity->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
     Component::ParticleEmitter* emitter = entity->AddComponent<Component::ParticleEmitter>();
     emitter->emitterType = Component::ParticleEmitter::POINT;
     emitter->maxEmitTime = 0.02 / 10.f;
@@ -314,8 +319,8 @@ void Player1::AddEnginePartilces(Entity* entity) {
     emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
     emitter->lifetime = 0.0;
     emitter->particleType.textureIndex = Component::ParticleEmitter::BLUE;
-    emitter->particleType.minLifetime = .01f * 4.f;
-    emitter->particleType.maxLifetime = .02f * 4.f;
+    emitter->particleType.minLifetime = .04f;
+    emitter->particleType.maxLifetime = .08f;
     emitter->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f);
     emitter->particleType.maxVelocity = glm::vec3(.3f, -15.f, .3f);
     emitter->particleType.minSize = glm::vec2(.5f, .5f) * 2.f;

@@ -87,6 +87,18 @@ namespace GameObject {
             /// Engine relative to body.
             Entity* mBackEngineRight;
 
+            /// Particles relative to engine.
+            Entity* mFrontEngineLeftParticles;
+
+            /// Particles relative to engine.
+            Entity* mFrontEngineRightParticles;
+
+            /// Particles relative to engine.
+            Entity* mBackEngineLeftParticles;
+
+            /// Particles relative to engine.
+            Entity* mBackEngineRightParticles;
+
             /// Light relative to body.
             Entity* mLight;
 
