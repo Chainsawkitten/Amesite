@@ -42,6 +42,10 @@ namespace GameObject {
              */
             int GetHeight();
 
+            /// Gets bool grid of cave.
+            /**
+             * @return 2D bool array of the cave grid.
+             */
             bool** GetCaveData();
 
             /// Map of all walls in the cave system.
