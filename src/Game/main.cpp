@@ -10,10 +10,12 @@
 #include "Game.hpp"
 #include "GameScenes/SplashScene.hpp"
 #include "GameScenes/MenuScene.hpp"
+#include "GameScenes/MainScene.hpp"
 //#include "GameScenes/PontusScene.hpp"
 //#include "GameScenes/AlbinScene.hpp"
 //#include "GameScenes/EmptyScene.hpp"
 //#include "GameScenes/DanielScene.hpp"
+#include "GameScenes/JonathanScene.hpp"
 //#include "GameScenes/IvarScene.hpp"
 
 //#define _CRTDBG_MAP_ALLOC
@@ -50,7 +52,7 @@ int main() {
     if (GameSettings::GetInstance().GetBool("Show Splash Screen"))
         Game::GetInstance().SetScene(new SplashScene());
     else
-        Game::GetInstance().SetScene(new MenuScene());
+        Game::GetInstance().SetScene(new JonathanScene());
 
     // Main game loop.
     double lastTime = glfwGetTime();

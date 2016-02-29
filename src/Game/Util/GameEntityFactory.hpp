@@ -2,7 +2,6 @@
 
 #include <glm/glm.hpp>
 #include <Util/Input.hpp>
-#include "../GameObject/EnemySpawner.hpp"
 
 class Scene;
 class Entity;
@@ -46,7 +45,7 @@ class GameEntityFactory {
          * @param delay for spawning a new enemy.
          * @return The enemy spawner GameObject.
          */
-        GameObject::EnemySpawner* CreateEnemySpawner(GameObject::EnemySpawner::EnemyType type, float delay);
+        GameObject::EnemySpawner* CreateEnemySpawner(unsigned int type, float delay);
         
         /// Create a basic enemy.
         /**
@@ -123,7 +122,9 @@ class GameEntityFactory {
         /// Creates a point fire particle emitter and bind it to an Entity.
         /**
          * @param position Position of the explosion.
-         * @param position Life time of the explosion.
+         * @param lifeTime Life time of the explosion.
+         * @param size of the explosion.
+         * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
          */
         GameObject::Explosion* CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex);
 

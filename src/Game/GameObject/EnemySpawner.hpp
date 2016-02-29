@@ -5,6 +5,10 @@
 class Scene;
 class Entity;
 
+namespace Component {
+    class Spawner;
+}
+
 
 namespace GameObject {
     /// A Enemy
@@ -14,7 +18,7 @@ namespace GameObject {
         /**
         * @param scene Pointer to which Scene %Enemy Enities' are contained.
         */
-        EnemySpawner(Scene* scene, EnemyType type);
+        EnemySpawner(Scene* scene, unsigned int type);
 
         ~EnemySpawner();
 
@@ -23,6 +27,6 @@ namespace GameObject {
 
     private:
         // Type of enemies to spawn.
-        EnemyType mType;
+        unsigned int mType;
     };
 }

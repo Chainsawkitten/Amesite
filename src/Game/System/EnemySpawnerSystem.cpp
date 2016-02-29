@@ -8,6 +8,8 @@
 
 #include "../Component/Spawner.hpp"
 
+#include "../GameObject/Cave.hpp"
+
 #include <vector>
 #include <Util/Log.hpp>
 
@@ -20,13 +22,9 @@ System::EnemySpawnerSystem::EnemySpawnerSystem() {
 System::EnemySpawnerSystem::~EnemySpawnerSystem() {
 }
 
-void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime) {
-    //std::vector<GameObject::Enemy*>* gameObjects = scene.GetVector<GameObject::Enemy>();
-    //for (auto object : *gameObjects) {
-
-    //}
-
-
+void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime, GameObject::Cave* cave) {
+    /*std::vector<GameObject::Enemy*>* gameObjects = scene.GetVector<GameObject::Enemy>();
+    mEnemyCount = gameObjects->size();*/
 
     if (mEnemyCount < mMaxEnemyCount) {
         std::vector<Component::Spawner*> spawners;
@@ -34,11 +32,13 @@ void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime) {
 
         for (auto spawner : spawners) {
             if (spawner->type == Component::Spawner::ENEMY) {
-                glm::vec3 position = FindValidPosition();
+                glm::vec3 position = FindValidPosition(cave);
                 if (spawner->enemyType == Component::Spawner::BASIC) {
                     GameEntityCreator().CreateBasicEnemy(position);
+                    mEnemyCount++;
                 } else if (spawner->enemyType == Component::Spawner::PYLON) {
                     GameEntityCreator().CreateEnemyPylon(position);
+                    mEnemyCount++;
                 }
                 
             }
@@ -48,6 +48,7 @@ void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime) {
     }
 }
 
-glm::vec3 System::EnemySpawnerSystem::FindValidPosition() {
-    return glm::vec3();
+glm::vec3 System::EnemySpawnerSystem::FindValidPosition(GameObject::Cave* cave) {
+
+    return glm::vec3(0.f, 0.f, 0.f);
 }

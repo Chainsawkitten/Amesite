@@ -7,13 +7,13 @@ namespace Component {
     class Spawner : public SuperComponent {
         public:
             /// Different types of spawners
-            enum SpawnerType {
+            enum SpawnerType : unsigned int {
                 ENEMY = 0,
                 BULLET,
             };
 
             /// Different types of enemy spawners.
-            enum EnemyType {
+            enum EnemyType : unsigned int {
                 BASIC = 0,
                 PYLON,
                 ENEMIES,
