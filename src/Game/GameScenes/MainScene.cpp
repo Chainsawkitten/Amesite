@@ -387,21 +387,14 @@ void MainScene::Respawn(float deltaTime) {
             mPlayers[0]->mRespawnTimer -= deltaTime;
             mPlayers[1]->mRespawnTimer -= deltaTime;
 
-            if (mPlayers[0]->mRespawnTimer <= 0) {
-
-                //mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            if (mPlayers[0]->mRespawnTimer <= 0)
                 mPlayers[0]->Activate();
 
-            }
-            if (mPlayers[1]->mRespawnTimer <= 0) {
-
-                //mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            if (mPlayers[1]->mRespawnTimer <= 0)
                 mPlayers[1]->Activate();
 
-            }
-
-            //mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
-            //mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
+            mPlayers[0]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
+            mPlayers[1]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
 
         }
         else {
@@ -409,8 +402,8 @@ void MainScene::Respawn(float deltaTime) {
             mPlayers[0]->mRespawnTimer = 5;
             mPlayers[1]->mRespawnTimer = 5;
 
-            //mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
-            //mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
+            mPlayers[0]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
+            mPlayers[1]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
 
         }
         

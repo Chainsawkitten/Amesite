@@ -55,19 +55,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     idleNode->CreateKeyFrame(glm::vec3(0.1f, 0.1f, -0.1f), 0.f, 0.f, 0.f, 1.5f, false, true);
     idleNode->CreateKeyFrame(glm::vec3(-0.1f, 0.1f, 0.1f), 0.f, 0.f, 0.f, 1.5f, false, true);
     mNode->GetComponent<Component::Animation>()->Start("idle");
-
-    mBody = CreateEntity();
-    mBody->AddComponent<Component::RelativeTransform>()->parentEntity = mNode;
-    mBody->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/player1_body.obj");
-    mBody->AddComponent<Component::Material>();
-
-    Resources().FreeTexture2D(mBody->GetComponent<Component::Material>()->diffuse);
-    mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
-    mBody->GetComponent<Component::Material>()->SetSpecular("Resources/player1_body_spec.png");
-    mBody->GetComponent<Component::Material>()->SetGlow("Resources/player1_body_glow.png");
-    mBody->AddComponent<Component::Animation>();
-
-    Component::ParticleEmitter* emitter = mBody->AddComponent<Component::ParticleEmitter>();
+    Component::ParticleEmitter* emitter = mNode->AddComponent<Component::ParticleEmitter>();
     emitter->emitterType = Component::ParticleEmitter::POINT;
     emitter->maxEmitTime = 0.02;
     emitter->minEmitTime = 0.016;
@@ -86,6 +74,17 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     emitter->particleType.startAlpha = 1.f;
     emitter->particleType.midAlpha = 1.f;
     emitter->particleType.endAlpha = 0.f;
+
+    mBody = CreateEntity();
+    mBody->AddComponent<Component::RelativeTransform>()->parentEntity = mNode;
+    mBody->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/player1_body.obj");
+    mBody->AddComponent<Component::Material>();
+
+    Resources().FreeTexture2D(mBody->GetComponent<Component::Material>()->diffuse);
+    mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
+    mBody->GetComponent<Component::Material>()->SetSpecular("Resources/player1_body_spec.png");
+    mBody->GetComponent<Component::Material>()->SetGlow("Resources/player1_body_glow.png");
+    mBody->AddComponent<Component::Animation>();
 
     mLight = CreateEntity();
     mLight->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
@@ -207,6 +206,7 @@ void Player1::Activate() {
     mLeftTurret->GetComponent<Component::Controller>()->enabled = true;
     mRightTurret->GetComponent<Component::Controller>()->enabled = true;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth;
+    mNode->GetComponent<Component::ParticleEmitter>()->enabled = false;
 
 }
 
@@ -216,6 +216,7 @@ void Player1::Deactivate() {
     mNode->GetComponent<Component::Controller>()->enabled = false;
     mLeftTurret->GetComponent<Component::Controller>()->enabled = false;
     mRightTurret->GetComponent<Component::Controller>()->enabled = false;
+    mNode->GetComponent<Component::ParticleEmitter>()->enabled = true;
 
 }
 
