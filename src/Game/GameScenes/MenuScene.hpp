@@ -2,6 +2,7 @@
 
 #include <Scene/Scene.hpp>
 #include <System/RenderSystem.hpp>
+#include <functional>
 
 class PostProcessing;
 class FXAAFilter;
@@ -63,10 +64,14 @@ class MenuScene : public Scene {
                 glm::vec3 rotation;
                 glm::vec2 scale;
                 
+                std::function<void()> callback;
+                
                 MenuOption(Font* font, const char* text, const glm::vec3& position, const glm::vec3& rotation, float height);
                 ~MenuOption();
                 
                 glm::mat4 GetModelMatrix() const;
+                
+                void EmptyCallback() const;
         };
         std::vector<MenuOption*> mMenuOptions;
         

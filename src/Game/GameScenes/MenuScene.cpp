@@ -27,6 +27,8 @@
 #include <Component/DirectionalLight.hpp>
 #include <Component/Lens.hpp>
 
+#include <Util/Log.hpp>
+
 #include <glm/gtc/matrix_transform.hpp>
 
 MenuScene::MenuScene() {
@@ -119,6 +121,10 @@ void MenuScene::Update(float deltaTime) {
     int movement = Input()->Triggered(InputHandler::ANYONE, InputHandler::DOWN) - Input()->Triggered(InputHandler::ANYONE, InputHandler::UP);
     if (mSelected + movement >= 0 && mSelected + movement < mMenuOptions.size())
         mSelected += movement;
+    
+    // Handle pressed menu option.
+    if (Input()->Triggered(InputHandler::ANYONE, InputHandler::SHOOT))
+        mMenuOptions[mSelected]->callback();
     
     // Render.
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
@@ -238,6 +244,7 @@ MenuScene::MenuOption::MenuOption(Font* font, const char* text, const glm::vec3&
     this->position = position;
     this->rotation = rotation;
     scale = glm::vec2(height * static_cast<float>(prerenderedText->GetWidth()) / static_cast<float>(prerenderedText->GetHeight()), height);
+    callback = std::bind(&MenuScene::MenuOption::EmptyCallback, this);
 }
 
 MenuScene::MenuOption::~MenuOption() {
@@ -251,4 +258,8 @@ glm::mat4 MenuScene::MenuOption::GetModelMatrix() const {
     orientation = glm::rotate(orientation, glm::radians(rotation.z), glm::vec3(0.f, 0.f, 1.f));
     
     return glm::translate(glm::mat4(), position) * orientation * glm::scale(glm::mat4(), glm::vec3(scale.x, scale.y, 1.f));
+}
+
+void MenuScene::MenuOption::EmptyCallback() const {
+    
 }
