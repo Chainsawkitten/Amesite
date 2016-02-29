@@ -124,10 +124,44 @@ void MenuScene::Update(float deltaTime) {
     // Render to back buffer.
     mPostProcessing->Render();
     
+    RenderSelectedMenuOption(mMenuOptions[0], screenSize);
     // Render menu options.
     for (MenuOption* menuOption : mMenuOptions) {
         RenderMenuOption(menuOption, screenSize);
     }
+}
+
+void MenuScene::RenderSelectedMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize) {
+    // Blending enabled.
+    GLboolean blend = glIsEnabled(GL_BLEND);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    mSelectedShaderProgram->Use();
+    
+    Entity* camera = mMainCamera->body;
+    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
+    
+    glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
+    glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
+    
+    glBindVertexArray(mPlane->GetVertexArray());
+    
+    glm::mat4 modelMat = menuOption->GetModelMatrix();
+    glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
+    glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
+    glUniformMatrix3fv(mSelectedShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
+    
+    glUniform4fv(mSelectedShaderProgram->GetUniformLocation("color"), 1, &glm::vec4(0.f, 0.f, 0.f, 1.f)[0]);
+    
+    glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+    
+    glUseProgram(0);
+    
+    // Reset blending.
+    if (!blend)
+        glDisable(GL_BLEND);
 }
 
 void MenuScene::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize) {
