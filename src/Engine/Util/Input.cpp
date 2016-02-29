@@ -124,6 +124,12 @@ void InputHandler::Update() {
             values[binding.player][binding.button] = value;
     }
     
+    // Clear anyone buttons.
+    for (int button=0; button<BUTTONS; button++) {
+        mButtonData[ANYONE][button].triggered = false;
+        mButtonData[ANYONE][button].value = 0.0;
+    }
+    
     // Update triggered and released.
     for (int player=0; player<PLAYERS-1; player++) {
         for (int button=0; button<BUTTONS; button++) {

@@ -60,9 +60,8 @@ class Scene {
          */
         template <typename T> std::vector<T>* GetVectorContents();
 
-        /// Updates scene by calling systems
         /**
-         * @param deltaTime Time since last frame (in seconds)..
+         * @param deltaTime Time since last frame (in seconds).
          */
         virtual void Update(float deltaTime) = 0;
 
@@ -74,7 +73,10 @@ class Scene {
 
         /// Contains data about which entities in the scene this entity intersects with.
         struct Collision {
+            /// The entity in question.
             Entity* entity = nullptr;
+
+            /// Instersecting entities.
             std::vector<Entity*> intersect;
         };
 

@@ -219,16 +219,28 @@ class InputHandler {
          */
         void SetLastValidAimDirection(Player player, glm::vec2 direction);
 
-        /// Get the deadzone for axis on the controller
+        /// Get the deadzone for the aiming axis on the controller
+        /**
+         * @return The deadzone for aiming.
+         */
         double AimDeadzone() const;
 
-        /// Get the deadzone for axis on the controller
+        /// Get the deadzone for the moving axis on the controller
+        /**
+         * @return The deadzone for moving.
+         */
         double MoveDeadzone() const;
 
-        /// Set the deadzone for axis on the controller
+        /// Set the deadzone for the aiming axis on the controller
+        /**
+         * @param aimDeadzone The deadzone for aiming.
+         */
         void SetAimDeadzone(double aimDeadzone);
 
-        /// Set the deadzone for axis on the controller
+        /// Set the deadzone for the moving axis on the controller
+        /**
+         * @param moveDeadzone The deadzone for moving.
+         */
         void SetMoveDeadzone(double moveDeadzone);
         
     private:
