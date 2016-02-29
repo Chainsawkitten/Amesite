@@ -12,6 +12,7 @@
 #include "Game/System/ControllerSystem.hpp"
 #include "Game/System/LifeTimeSystem.hpp"
 #include "Game/System/ReflectSystem.hpp"
+#include "Game/System/ExplodeSystem.hpp"
 
 #include <AL/al.h>
 
@@ -73,6 +74,9 @@ class MainScene : public Scene {
         // The reflect system
         System::ReflectSystem mReflectSystem;
 
+        // The explode system
+        System::ExplodeSystem mExplodeSystem;
+
         // The animation system
         System::AnimationSystem mAnimationSystem;
 
@@ -82,8 +86,8 @@ class MainScene : public Scene {
         // Vector containing players
         std::vector<GameObject::Player*> mPlayers;
 
-        // Vector containing bosses
-        std::vector<GameObject::SpinBoss*> mBosses;
+        // Spin boss
+        GameObject::SpinBoss* mSpinBoss;
 
         // The main camera
         GameObject::Camera* mMainCamera;

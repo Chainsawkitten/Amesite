@@ -20,7 +20,7 @@
 using namespace GameObject;
 
 Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
-    node = CreateEntity(scene);
+    node = CreateEntity();
     node->AddComponent<Component::Damage>()->damageAmount = 10.f;
     node->AddComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
     node->AddComponent<Component::Explode>()->lifeTime = 0.15f;
@@ -50,7 +50,7 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
 
 
     // Second emitter - blue
-    tail = CreateEntity(scene);
+    tail = CreateEntity();
     tail->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     emitter = tail->AddComponent<Component::ParticleEmitter>();
     emitter->emitterType = Component::ParticleEmitter::POINT;
