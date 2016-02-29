@@ -53,6 +53,7 @@ class MenuScene : public Scene {
         // Used to render 3D text.
         Geometry::Plane* mPlane;
         ShaderProgram* mTextShaderProgram;
+        ShaderProgram* mSelectedShaderProgram;
         
         // A menu option.
         class MenuOption {
