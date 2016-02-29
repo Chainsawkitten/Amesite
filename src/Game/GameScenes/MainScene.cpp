@@ -267,6 +267,9 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
     float X = (newX - oldX) / velocity.x;
     float Z = (newZ - oldZ) / velocity.z;
 
+    if (newX >= cave->GetWidth() || newX < 0 || newZ >= cave->GetHeight() || newZ < 0)
+        return -2;
+
     bool** map = cave->GetCaveData();
 
     //We check if we moved to another cell in the grid.
@@ -367,8 +370,13 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
 
     }
 
+    if (c0 == -2 || c1 == -2 || c2 == -2 || c3 == -2)
+        if (entity->GetComponent<Component::LifeTime>() != nullptr)
+            entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
+
     if (c0 != -1 || c1 != -1 || c2 != -1 || c3 != -1)
         return true;
+
 
     return false;
 

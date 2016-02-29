@@ -22,8 +22,8 @@ Explosion::Explosion(Scene* scene) : SuperGameObject(scene) {
     emitter->particleType.textureIndex = Component::ParticleEmitter::FIRE;
     emitter->particleType.minLifetime = .01f * 20.f;
     emitter->particleType.maxLifetime = .02f * 20.f;
-    emitter->particleType.minVelocity = glm::vec3(-1.f, -1.f, -1.f);
-    emitter->particleType.maxVelocity = glm::vec3(1.f, 1.f, 1.f);
+    emitter->particleType.minVelocity = glm::vec3(0.f, 1.f, 0.f);
+    emitter->particleType.maxVelocity = glm::vec3(0.f, 1.f, 0.f);
     emitter->particleType.minSize = glm::vec2(.5f, .5f);
     emitter->particleType.maxSize = glm::vec2(.7f, .7f);
     emitter->particleType.uniformScaling = true;

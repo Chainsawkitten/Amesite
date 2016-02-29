@@ -37,6 +37,9 @@ Player::Player(Scene* scene, InputHandler::Player id) : SuperGameObject(scene) {
         mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/ship2_body_diff_healthy.png");
         mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship2_body_diff_medium_damage.png");
         mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship2_body_diff_heavy_damage.png");
+        //mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/Ship_Dif.png");
+        //mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/Ship_Dif.png");
+        //mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/Ship_Dif.png");
     }
     
     state = LIGHTDAMAGE;
@@ -48,6 +51,8 @@ Player::Player(Scene* scene, InputHandler::Player id) : SuperGameObject(scene) {
     node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     node->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     node->AddComponent<Component::Health>()->removeOnLowHealth = false;
+    node->GetComponent<Component::Health>()->health = 30.f;
+    node->GetComponent<Component::Health>()->maxHealth = 30.f;
     node->GetComponent<Component::Health>()->faction = 0;
     node->AddComponent<Component::Collider2DCircle>()->radius = 10.f;
     node->AddComponent<Component::Animation>();
@@ -61,12 +66,15 @@ Player::Player(Scene* scene, InputHandler::Player id) : SuperGameObject(scene) {
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     body->AddComponent<Component::Mesh>()->geometry = mShipBody = Resources().CreateOBJModel("Resources/ship_body.obj");
+    //body->AddComponent<Component::Mesh>()->geometry = mShipBody = Resources().CreateOBJModel("Resources/ship.obj");
     body->AddComponent<Component::Material>();
 
     Resources().FreeTexture2D(body->GetComponent<Component::Material>()->diffuse);
     body->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
     body->GetComponent<Component::Material>()->SetSpecular("Resources/ship_body_spec.png");
     body->GetComponent<Component::Material>()->SetGlow("Resources/ship_body_glow.png");
+    //body->GetComponent<Component::Material>()->SetSpecular("Resources/Ship_Spec.png");
+    //body->GetComponent<Component::Material>()->SetNormal("Resources/Ship_NM.png");
     body->AddComponent<Component::Animation>();
 
     Component::ParticleEmitter* emitter = body->AddComponent<Component::ParticleEmitter>();

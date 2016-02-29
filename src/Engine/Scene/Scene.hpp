@@ -60,6 +60,10 @@ class Scene {
          */
         template <typename T> std::vector<T>* GetVectorContents();
 
+        /// Updates scene by calling systems
+        /**
+         * @param deltaTime Time since last frame (in seconds)..
+         */
         virtual void Update(float deltaTime) = 0;
 
         /// Gets a read-only vector of killed entites.

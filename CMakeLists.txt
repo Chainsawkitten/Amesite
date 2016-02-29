@@ -125,9 +125,9 @@ set(RESOURCES
         assets/wall2_norm.png
         assets/Ship/Ship_Dif.png
         assets/Ship/Ship_Glow.png
+        assets/Ship/Ship_NM.png
         assets/Ship/Ship_Spec.png
-        assets/Ship/Ship_01.obj
-        assets/Ship/Ship_01.mtl
+        assets/Ship/Ship.obj
         assets/GolfBall.obj
         assets/MusicAction.ogg
         assets/MusicCalm.ogg

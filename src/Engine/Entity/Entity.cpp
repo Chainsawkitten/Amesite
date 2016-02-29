@@ -1,5 +1,7 @@
 #include "Entity.hpp"
 
+#include <algorithm>
+
 #include "../GameObject/SuperGameObject.hpp"
 
 Entity::Entity(Scene* scene) {
@@ -27,5 +29,6 @@ void Entity::Clear() {
 }
 
 void Entity::Kill() {
-    mScene->mKilledEntitesVector.push_back(this);
+    if (std::find(mScene->mKilledEntitesVector.begin(), mScene->mKilledEntitesVector.end(), this) == mScene->mKilledEntitesVector.end())
+        mScene->mKilledEntitesVector.push_back(this);
 }

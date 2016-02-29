@@ -30,6 +30,18 @@ namespace GameObject {
             /// Destructor
             ~Cave();
 
+            /// Gets width of the cave.
+            /**
+             * @return Width of the cave.
+             */
+            int GetWidth();
+
+            /// Gets height of the cave.
+            /**
+             * @return Height of the cave.
+             */
+            int GetHeight();
+
             bool** GetCaveData();
 
             /// Map of all walls in the cave system.

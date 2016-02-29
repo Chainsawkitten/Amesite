@@ -108,7 +108,14 @@ Cave::~Cave() {
     delete[] mMap;
 }
 
-bool ** Cave::GetCaveData()
-{
+int Cave::GetWidth() {
+    return mWidth;
+}
+
+int Cave::GetHeight() {
+    return mHeight;
+}
+
+bool ** Cave::GetCaveData() {
     return mMap;
 }
