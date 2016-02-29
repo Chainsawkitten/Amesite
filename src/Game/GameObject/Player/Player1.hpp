@@ -60,6 +60,8 @@ namespace GameObject {
             Geometry::OBJModel* mBodyModel;
             Geometry::OBJModel* mFrontEngineModel;
             Geometry::OBJModel* mBackEngineModel;
+            Geometry::OBJModel* mTurretBodyModel;
+            Geometry::OBJModel* mTurretBarrelModel;
 
             Audio::SoundBuffer* mShootSound;
 
@@ -89,11 +91,23 @@ namespace GameObject {
             Entity* mLight;
 
             /// Turret relative to body.
-            Entity* mLeftTurret;
+            Entity* mLeftTurretBody;
 
             /// Turret relative to body.
-            Entity* mRightTurret;
-            
+            Entity* mRightTurretBody;
+
+            /// Barrel relative to turret.
+            Entity* mLeftTurretBarrel;
+
+            /// Barrel relative to turret.
+            Entity* mRightTurretBarrel;
+
+            /// SpawnNode relative to barrel.
+            Entity* mLeftSpawnNode;
+
+            /// SpawnNode relative to barrel.
+            Entity* mRightSpawnNode;
+
             void AddEnginePartilces(Entity* entity);
     };
 }

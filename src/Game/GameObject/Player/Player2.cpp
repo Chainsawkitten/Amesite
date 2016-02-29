@@ -36,7 +36,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff.png");
 
     mNode = CreateEntity();
-    mNode->AddComponent<Component::Transform>()->scale *= 0.3f;
+    mNode->AddComponent<Component::Transform>()->scale *= 0.35f;
     mNode->AddComponent<Component::Controller>()->speed = 5000.f;
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
@@ -195,18 +195,49 @@ void Player2::Deactivate() {
 }
 
 void Player2::Update() {
+    //Update health texture
     if (GetHealth() >= 2.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = LIGHTDAMAGE;
         mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
-    }
-    else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
+    } else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = MEDIUMDAMAGE;
         mBody->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;
-    }
-    else {
+    } else {
         mState = HEAVYDAMAGE;
         mBody->GetComponent<Component::Material>()->diffuse = mHeavyDamageTexture;
     }
+
+    glm::vec3 velocity = mNode->GetComponent<Component::Physics>()->velocity;
+
+    //Update factors
+    float velocityFactor = glm::length(mNode->GetComponent<Component::Physics>()->velocity) / mNode->GetComponent<Component::Physics>()->maxVelocity;
+    float pitchFactor = 0.f;
+    float rollFactor = 0.f;
+    if (glm::length(velocity) > 0.01f) {
+        pitchFactor = glm::dot(glm::normalize(velocity), mNode->GetComponent<Component::Transform>()->GetWorldDirection());
+        rollFactor = glm::dot(glm::normalize(velocity), glm::cross(mNode->GetComponent<Component::Transform>()->GetWorldDirection(), glm::vec3(0.f, 1.f, 0.f)));
+    }
+
+    //Update propeller
+    mBackPropellerRight->GetComponent<Component::Physics>()->angularVelocity.y = velocityFactor * 2.f + 0.2f;
+    mBackPropellerLeft->GetComponent<Component::Physics>()->angularVelocity.y = velocityFactor * 2.f + 0.2f;
+    mFrontPropellerRight->GetComponent<Component::Physics>()->angularVelocity.y = velocityFactor * 2.f + 0.2f;
+    mFrontPropellerLeft->GetComponent<Component::Physics>()->angularVelocity.y = velocityFactor * 2.f + 0.2f;
+
+    //Update engine
+    mBackEngineRight->GetComponent<Component::Transform>()->pitch = pitchFactor * 35.f * velocityFactor;
+    mBackEngineLeft->GetComponent<Component::Transform>()->pitch = pitchFactor * 35.f * velocityFactor;
+    mFrontEngineRight->GetComponent<Component::Transform>()->pitch = pitchFactor * 30.f * velocityFactor;
+    mFrontEngineLeft->GetComponent<Component::Transform>()->pitch = pitchFactor * 30.f * velocityFactor;
+    mBackEngineRight->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
+    mBackEngineLeft->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
+    mFrontEngineRight->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
+    mFrontEngineLeft->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
+
+
+    //Update body
+    mBody->GetComponent<Component::Transform>()->pitch = pitchFactor * 10.f * velocityFactor;
+    mBody->GetComponent<Component::Transform>()->roll = rollFactor * 25.f * velocityFactor;
 }
 
 void Player2::AddEngine(Entity* entity, glm::vec3 position, glm::vec3 scale) {

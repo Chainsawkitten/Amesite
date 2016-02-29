@@ -100,6 +100,8 @@ set(RESOURCES
         assets/player1/player1_body.obj
         assets/player1/player1_frontEngine.obj
         assets/player1/player1_backEngine.obj
+        assets/player1/player1_turret_barrel.obj
+        assets/player1/player1_turret_body.obj
         assets/player2/player2_diff.png
         assets/player2/player2_glow.png
         assets/player2/player2_norm.png
