@@ -95,6 +95,7 @@ MenuScene::MenuScene() {
     mMenuOptions[0]->callback = std::bind(&MenuScene::StartGame, this);
     mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.8f, 2.4f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
     mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, 0.6f, 2.5f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mMenuOptions[2]->callback = std::bind(&MenuScene::Quit, this);
     mSelected = 0;
 }
 
@@ -268,4 +269,8 @@ void MenuScene::MenuOption::EmptyCallback() const {
 
 void MenuScene::StartGame() {
     Game::GetInstance().SetScene(new MainScene());
+}
+
+void MenuScene::Quit() {
+    MainWindow::GetInstance()->Close();
 }
