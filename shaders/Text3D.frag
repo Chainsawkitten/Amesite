@@ -15,4 +15,7 @@ out vec4 fragmentColor;
 
 void main() {
 	fragmentColor = texture(baseImage, vertexIn.texCoords);
+	
+	if (fragmentColor.a < 0.05)
+		discard;
 }

@@ -1,49 +1,48 @@
 #pragma once
 
 #include <Component/SuperComponent.hpp>
-#include <Util/Input.hpp>
 #include <vector>
 #include <glm/glm.hpp>
 
 namespace Component {
-    /// %Component providing player control.
+    /// %Component providing AI which walks between a set path.
     class WalkerAI : public SuperComponent {
         public:
-            /// Create new %Controller.
+            /// Create new walking AI.
             /**
-             * @param entity Pointer to which Entity this %Component corresponds.
+             * @param entity Pointer to which entity this component corresponds.
              */
             WalkerAI(Entity* entity);
             
             /// Destructor.
             ~WalkerAI();
 
-            ///How close is close enough.
+            /// How close is close enough.
             float mThreshold;
 
-            ///How fast do we move.
+            /// How fast do we move.
             float mSpeed;
 
             /// Updates the walker AI.
             /**
-            * @param The delta time
-            */
-            void Update(float timeDelta);
+             * @param deltaTime Time since last frame (in seconds).
+             */
+            void Update(float deltaTime);
 
-            ///Adds a point to the path.
+            /// Adds a point to the path.
             /**
-             * @param The point to add.
+             * @param point The point to add.
              */
             void AddPoint(glm::vec3 point);
 
         private:
-            //The index of the point we're targeting.
+            // The index of the point we're targeting.
             int mTarget;
 
-            //The points to travel through.
+            // The points to travel through.
             std::vector<glm::vec3> mPoints;
 
-            //The direction we are moving through the points.
+            // The direction we are moving through the points.
             bool mForward;
 
     };

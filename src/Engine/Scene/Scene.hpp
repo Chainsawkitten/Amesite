@@ -65,7 +65,10 @@ class Scene {
 
         /// Contains data about which entities in the scene this entity intersects with.
         struct Collision {
+            /// The entity in question.
             Entity* entity = nullptr;
+            
+            /// Instersecting entities.
             std::vector<Entity*> intersect;
         };
 

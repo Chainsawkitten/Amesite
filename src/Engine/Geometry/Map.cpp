@@ -34,7 +34,7 @@ unsigned int Map::GetIndexCount() const {
     return mIndexNr;
 }
 
-glm::vec2 Geometry::Map::TextureRepeat() const {
+glm::vec2 Geometry::Map::GetTextureRepeat() const {
     return mTextureRepeat;
 }
 
