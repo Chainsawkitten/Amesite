@@ -21,7 +21,7 @@ namespace Component {
 
             /// Updates the looker AI.
             /**
-             * @param deltaTime Time since last frame in seconds.
+             * @param deltaTime Time since last frame (in seconds).
              */
             void Update(float deltaTime);
 
