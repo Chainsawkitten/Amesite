@@ -1,7 +1,7 @@
 #include "WalkerAI.hpp"
 
 #include <Entity/Entity.hpp>
-#include <Component\Physics.hpp>
+#include <Component/Physics.hpp>
 
 using namespace Component;
 
@@ -12,7 +12,6 @@ WalkerAI::WalkerAI(Entity* entity) : SuperComponent(entity) {
     mForward = true;
 }
 
-/// Destructor.
 WalkerAI::~WalkerAI(){
     mPoints.clear();
 }
