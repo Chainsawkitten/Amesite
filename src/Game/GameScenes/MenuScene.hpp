@@ -79,4 +79,6 @@ class MenuScene : public Scene {
         
         void RenderSelectedMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize);
         void RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize);
+        
+        void StartGame();
 };

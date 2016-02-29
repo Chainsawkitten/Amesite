@@ -27,7 +27,8 @@
 #include <Component/DirectionalLight.hpp>
 #include <Component/Lens.hpp>
 
-#include <Util/Log.hpp>
+#include "../Game.hpp"
+#include "MainScene.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -91,6 +92,7 @@ MenuScene::MenuScene() {
     
     // Define menu options.
     mMenuOptions.push_back(new MenuOption(mFont, "START GAME", glm::vec3(0.f, 1.0f, 2.3f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mMenuOptions[0]->callback = std::bind(&MenuScene::StartGame, this);
     mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.8f, 2.4f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
     mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, 0.6f, 2.5f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
     mSelected = 0;
@@ -262,4 +264,8 @@ glm::mat4 MenuScene::MenuOption::GetModelMatrix() const {
 
 void MenuScene::MenuOption::EmptyCallback() const {
     
+}
+
+void MenuScene::StartGame() {
+    Game::GetInstance().SetScene(new MainScene());
 }
