@@ -11,7 +11,6 @@ LookerAI::LookerAI(Entity* entity) : SuperComponent(entity) {
     mTarget = -1;
 }
 
-/// Destructor.
 LookerAI::~LookerAI(){
     mTargets.clear();
 }

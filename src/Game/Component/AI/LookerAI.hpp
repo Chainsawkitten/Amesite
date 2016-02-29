@@ -1,9 +1,7 @@
 #pragma once
 
 #include <Component/SuperComponent.hpp>
-#include <Util/Input.hpp>
 #include <vector>
-#include <glm/glm.hpp>
 
 namespace Component {
     /// %Component providing player control.
