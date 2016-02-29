@@ -159,6 +159,7 @@ set(EMBEDDED_INPUT
         shaders/Font.vert
         shaders/Font.frag
         shaders/Text3D.frag
+        shaders/SingleColor3D.frag
         shaders/Post.vert
         shaders/PostCopy.frag
         shaders/PostColor.frag
