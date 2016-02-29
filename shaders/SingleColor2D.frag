@@ -4,7 +4,7 @@ Render each fragment as a single color.
 #version 400
 
 in VertexData {
-	vec2 texCoords;
+    vec2 texCoords;
 } vertexIn;
 
 uniform vec3 color;
