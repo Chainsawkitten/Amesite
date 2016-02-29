@@ -60,6 +60,7 @@ class Scene {
          */
         template <typename T> std::vector<T>* GetVectorContents();
 
+        /// Updates %Scene by calling systems.
         /**
          * @param deltaTime Time since last frame (in seconds).
          */
