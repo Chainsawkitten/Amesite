@@ -39,6 +39,25 @@ MenuScene::MenuScene() {
     
     GameEntityCreator().CreatePlayer(glm::vec3(0.f, 0.f, 0.f), InputHandler::PLAYER_ONE);
     
+    // Assign input
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
+    
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
+    
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
+    
     // Directional light.
     Entity* dirLight = CreateEntity();
     dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
@@ -72,6 +91,7 @@ MenuScene::MenuScene() {
     mMenuOptions.push_back(new MenuOption(mFont, "START GAME", glm::vec3(0.f, 1.0f, 2.3f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
     mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.8f, 2.4f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
     mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, 0.6f, 2.5f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mSelected = 0;
 }
 
 MenuScene::~MenuScene() {
@@ -95,6 +115,11 @@ void MenuScene::Update(float deltaTime) {
     // Updates model matrices for this frame.
     UpdateModelMatrices();
     
+    // Update menu selection.
+    int movement = Input()->Triggered(InputHandler::ANYONE, InputHandler::DOWN) - Input()->Triggered(InputHandler::ANYONE, InputHandler::UP);
+    if (mSelected + movement >= 0 && mSelected + movement < mMenuOptions.size())
+        mSelected += movement;
+    
     // Render.
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     glViewport(0, 0, screenSize.x, screenSize.y);
@@ -111,7 +136,7 @@ void MenuScene::Update(float deltaTime) {
     }
     mPostProcessing->ApplyFilter(mGlowFilter);
     
-    RenderSelectedMenuOption(mMenuOptions[0], screenSize);
+    RenderSelectedMenuOption(mMenuOptions[mSelected], screenSize);
     
     // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
