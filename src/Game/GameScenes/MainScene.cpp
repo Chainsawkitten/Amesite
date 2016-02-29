@@ -140,6 +140,8 @@ MainScene::MainScene() {
     GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
     GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
+
+    GameEntityCreator().CreateSpawn(glm::vec3(playerStartX + 1.f, -12.f, playerStartZ - 25.f));
 }
 
 MainScene::~MainScene() {

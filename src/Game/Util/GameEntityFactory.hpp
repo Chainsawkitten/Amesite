@@ -22,6 +22,7 @@ namespace GameObject{
     class Pylon;
     class Shield;
     class SpinBoss;
+    class Spawn;
 }
 
 /// Factory responsible for creating prefab entities.
@@ -84,6 +85,13 @@ class GameEntityFactory {
          */
         GameObject::SpinBoss* CreateSpinBoss(const glm::vec3& origin);
         
+        /// Create Spawn.
+        /**
+         * @param origin The Spawn's starting position.
+         * @return The Spawn GameObject.
+         */
+        GameObject::Spawn* CreateSpawn(const glm::vec3& origin);
+
         /// Create player bullet.
         /**
          * @param position The bullet's starting position.

@@ -37,6 +37,7 @@
 #include "../GameObject/Pylon.hpp"
 #include "../GameObject/Shield.hpp"
 #include "../GameObject/Boss/SpinBoss.hpp"
+#include "../GameObject/Spawn.hpp"
 
 using namespace GameObject;
 
@@ -88,6 +89,12 @@ Player2* GameEntityFactory::CreatePlayer2(const glm::vec3& origin) {
 
 GameObject::SpinBoss* GameEntityFactory::CreateSpinBoss(const glm::vec3& origin) {
     SpinBoss* gameObject = new SpinBoss(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::Spawn* GameEntityFactory::CreateSpawn(const glm::vec3& origin) {
+    Spawn* gameObject = new Spawn(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }

@@ -125,6 +125,13 @@ set(RESOURCES
         assets/circle/Circle_red_diff.png
         assets/circle/Circle_green_diff.png
         assets/circle/Circle_blue_diff.png
+        assets/spawn/altar/altar_diff.png
+        assets/spawn/altar/altar_glow.png
+        assets/spawn/altar/altar.obj
+        assets/spawn/pillar/pillar_diff.png
+        assets/spawn/pillar/pillar_glow.png
+        assets/spawn/pillar/pillar.obj
+        assets/spawn/portal/portal.obj
         assets/wall_diff.png
         assets/wall_norm.png
         assets/wall2_diff.png
@@ -398,6 +405,7 @@ set(GAME_SRCS
         src/Game/GameObject/Shield.cpp
         src/Game/GameObject/Boss/SpinBoss.cpp
         src/Game/GameObject/Boss/TurretBoss.cpp
+        src/Game/GameObject/Spawn.cpp
     )
 
 set(GAME_HEADERS
@@ -447,6 +455,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Shield.hpp
         src/Game/GameObject/Boss/SpinBoss.hpp
         src/Game/GameObject/Boss/TurretBoss.hpp
+        src/Game/GameObject/Spawn.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
