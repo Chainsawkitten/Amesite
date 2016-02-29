@@ -51,7 +51,7 @@ int main() {
     if (GameSettings::GetInstance().GetBool("Show Splash Screen"))
         Game::GetInstance().SetScene(new SplashScene());
     else
-        Game::GetInstance().SetScene(new MainScene());
+        Game::GetInstance().SetScene(new MenuScene());
 
     // Main game loop.
     double lastTime = glfwGetTime();
