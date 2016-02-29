@@ -111,6 +111,8 @@ void MenuScene::Update(float deltaTime) {
     }
     mPostProcessing->ApplyFilter(mGlowFilter);
     
+    RenderSelectedMenuOption(mMenuOptions[0], screenSize);
+    
     // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
         mFxaaFilter->SetScreenSize(screenSize);
@@ -124,7 +126,6 @@ void MenuScene::Update(float deltaTime) {
     // Render to back buffer.
     mPostProcessing->Render();
     
-    RenderSelectedMenuOption(mMenuOptions[0], screenSize);
     // Render menu options.
     for (MenuOption* menuOption : mMenuOptions) {
         RenderMenuOption(menuOption, screenSize);
@@ -136,6 +137,11 @@ void MenuScene::RenderSelectedMenuOption(const MenuOption* menuOption, const glm
     GLboolean blend = glIsEnabled(GL_BLEND);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    // Don't write to the depth buffer.
+    GLboolean depthMask;
+    glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
+    glDepthMask(GL_FALSE);
     
     mSelectedShaderProgram->Use();
     
@@ -159,9 +165,11 @@ void MenuScene::RenderSelectedMenuOption(const MenuOption* menuOption, const glm
     
     glUseProgram(0);
     
-    // Reset blending.
+    // Reset depth and blending.
     if (!blend)
         glDisable(GL_BLEND);
+    if (depthMask)
+        glDepthMask(GL_TRUE);
 }
 
 void MenuScene::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize) {
