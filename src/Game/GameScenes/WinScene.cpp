@@ -66,6 +66,7 @@ WinScene::WinScene(float totalTime, int enemiesKilled) {
 
 WinScene::~WinScene() {
     Resources().FreeTexture2D(mPortalTexture);
+    Resources().FreeFont(mFont);
 }
 
 void WinScene::Update(float deltaTime) {
