@@ -30,6 +30,7 @@ namespace GameObject {
             /// Destructor
             ~Cave();
 
+            /// Retrieve the cave data.
             bool** GetCaveData();
 
             /// Map of all walls in the cave system.
@@ -48,8 +49,10 @@ namespace GameObject {
             /// cave Z scale.
             float zScale;
 
-        private:
+            /// cave X size.
             int mWidth;
+
+            /// cave Z size.
             int mHeight;
     };
 }
