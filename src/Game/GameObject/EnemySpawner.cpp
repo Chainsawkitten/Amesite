@@ -12,7 +12,7 @@ EnemySpawner::EnemySpawner(Scene* scene, unsigned int type) : SuperGameObject(sc
     body = CreateEntity(scene);
     body->AddComponent<Component::Spawner>();
     body->GetComponent<Component::Spawner>()->type = Component::Spawner::SpawnerType::ENEMY;
-    mType = type;
+    body->GetComponent<Component::Spawner>()->enemyType = (Component::Spawner::EnemyType)type;
 }
 
 EnemySpawner::~EnemySpawner() {

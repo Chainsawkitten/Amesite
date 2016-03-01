@@ -22,6 +22,7 @@
 #include "Game/Component/Health.hpp"
 #include "Game/Component/Damage.hpp"
 #include "Game/Component/LifeTime.hpp"
+#include "Game/Component/Spawner.hpp"
 
 #include "../GameObject/Player.hpp"
 #include "../GameObject/Cave.hpp"
@@ -49,6 +50,7 @@
 #include "../GameObject/Camera.hpp"
 #include "../GameObject/SpinBoss.hpp"
 #include "../GameObject/Bullet.hpp"
+#include "../GameObject/EnemySpawner.hpp"
 
 using namespace GameObject;
 
@@ -80,7 +82,7 @@ JonathanScene::JonathanScene() {
     GameEntityCreator().SetScene(this);
 
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 70.f, 0.f), glm::vec3(0.f, 60.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(130.f, 400.f, 130.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
 
     // Create scene
@@ -128,21 +130,9 @@ JonathanScene::JonathanScene() {
     mGlowFilter = new GlowFilter();
     mGlowBlurFilter = new GlowBlurFilter();
 
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(160, 0, 65));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 85));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(110, 0, 55));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(50, 0, 105));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(115, 0, 135));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(175, 0, 135));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(195, 0, 145));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 245));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(225, 0, 235));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
-    //GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
-    //GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
+    GameEntityCreator().CreateEnemySpawner(Component::Spawner::PYLON, 2);
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(115, 0, 135));
+
 }
 
 JonathanScene::~JonathanScene() {
@@ -193,9 +183,10 @@ void JonathanScene::Update(float deltaTime) {
     mCollisionSystem.Update(*this);
 
     std::vector<Component::Damage*> bulletVector = this->GetAll<Component::Damage>();
-    for (auto bullet : bulletVector)
+    for (auto bullet : bulletVector) {
         if (JonathanSceneGridCollide(bullet->entity, deltaTime, 5.f))
             bullet->entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
+    }
 
     // Update health
     mHealthSystem.Update(*this, deltaTime);
@@ -216,7 +207,7 @@ void JonathanScene::Update(float deltaTime) {
     System::SoundSystem::GetInstance()->Update(*this);
 
     // Update game logic
-    mMainCamera->UpdateRelativePosition(mPlayers);
+    //mMainCamera->UpdateRelativePosition(mPlayers);
 
     //Handles the respawning of the players
     JonathanSceneRespawn(deltaTime);
@@ -263,24 +254,26 @@ int JonathanScenePointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTi
     bool** map = cave->GetCaveData();
 
     //We check if we moved to another cell in the grid.
-    if (map[abs(newZ)][abs(newX)]) {
-        //We collide in X
-        if (X > Z) {
+    if (abs(newZ) < cave->mHeight && abs(newX) < cave->mWidth) {
+        if (map[abs(newZ)][abs(newX)]) {
+            //We collide in X
+            if (X > Z) {
 
-            if (oldX != newX) {
-                return 0;
+                if (oldX != newX) {
+                    return 0;
+                }
+                else if (oldZ != newZ) {
+                    return 1;
+                }
             }
-            else if (oldZ != newZ) {
-                return 1;
-            }
-        }
-        //We collide in Z
-        else {
-            if (oldZ != newZ) {
-                return 1;
-            }
-            else if (oldX != newX) {
-                return 0;
+            //We collide in Z
+            else {
+                if (oldZ != newZ) {
+                    return 1;
+                }
+                else if (oldX != newX) {
+                    return 0;
+                }
             }
         }
     }

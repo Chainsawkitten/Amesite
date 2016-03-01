@@ -16,7 +16,6 @@ namespace Component {
             enum EnemyType : unsigned int {
                 BASIC = 0,
                 PYLON,
-                ENEMIES,
             };
 
             /// Create new spawner.
