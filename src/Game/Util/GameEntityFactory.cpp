@@ -72,7 +72,7 @@ GameObject::Shield* GameEntityFactory::CreateShield(Entity* parentEntity, glm::v
 }
 
 Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::Player player) {
-    Player* gameObject = new Player(mScene);
+    Player* gameObject = new Player(mScene, player);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     gameObject->node->GetComponent<Component::Controller>()->playerID = player;
     gameObject->leftTurret->GetComponent<Component::Controller>()->playerID = player;

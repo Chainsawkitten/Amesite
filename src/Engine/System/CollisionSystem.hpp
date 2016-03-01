@@ -16,10 +16,10 @@ namespace System {
 
             /// Destructor.
             ~CollisionSystem();
-
+            
+            /// Update the collisions in a scene.
             /**
              * @param scene Contains a bunch of entities.
-             * @param deltaTime Time since last frame (in seconds).
              */
             void Update(Scene& scene);
 

@@ -73,7 +73,7 @@ class ResourceManager {
         /**
         * @param data from which to generate the map.
         * @param dataDimensions height and width of the data.
-        * @param wallheight height of wall mesh. Default = 5.0
+        * @param wallHeight height of wall mesh. Default = 5.0
         * @return The map instance.
         */
         Geometry::Map* CreateMap(bool **data, glm::uvec2 dataDimensions, float wallHeight = 5.f);

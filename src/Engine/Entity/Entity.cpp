@@ -1,5 +1,7 @@
 #include "Entity.hpp"
 
+#include <algorithm>
+
 #include "../GameObject/SuperGameObject.hpp"
 
 Entity::Entity(Scene* scene) {
@@ -24,4 +26,9 @@ void Entity::Clear() {
     std::vector<Entity*>* entityVector = mScene->GetVector<Entity>();
     entityVector->erase(std::remove(entityVector->begin(), entityVector->end(), this), entityVector->end());
     delete this;
+}
+
+void Entity::Kill() {
+    if (std::find(mScene->mKilledEntitesVector.begin(), mScene->mKilledEntitesVector.end(), this) == mScene->mKilledEntitesVector.end())
+        mScene->mKilledEntitesVector.push_back(this);
 }

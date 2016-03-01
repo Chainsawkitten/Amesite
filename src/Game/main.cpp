@@ -10,6 +10,7 @@
 #include "Game.hpp"
 #include "GameScenes/SplashScene.hpp"
 #include "GameScenes/MenuScene.hpp"
+#include "GameScenes/MainScene.hpp"
 //#include "GameScenes/PontusScene.hpp"
 //#include "GameScenes/AlbinScene.hpp"
 //#include "GameScenes/EmptyScene.hpp"

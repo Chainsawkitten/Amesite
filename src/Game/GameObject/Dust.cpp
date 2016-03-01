@@ -10,7 +10,7 @@
 using namespace GameObject;
 
 Dust::Dust(Scene* scene) : SuperGameObject(scene) {
-    body = CreateEntity(scene);
+    body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>();
     body->AddComponent<Component::ParticleEmitter>();
 

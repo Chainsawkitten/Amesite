@@ -4,9 +4,9 @@ Geometry pass fragment shader (first pass)
 #version 400
 
 in VertexData {
-	vec3 normal;
-	vec3 tangent;
-	vec2 texCoords;
+    vec3 normal;
+    vec3 tangent;
+    vec2 texCoords;
 } vertexIn;
 
 uniform sampler2D baseImage;
@@ -34,8 +34,8 @@ vec3 calculateNormal(in vec3 normal, in vec3 tangent, in vec3 mapNormal) {
 }
 
 void main() {
-	diffuseOut = texture(baseImage, vertexIn.texCoords).rgb;
-	normalsOut = calculateNormal(vertexIn.normal, vertexIn.tangent, texture(normalMap, vertexIn.texCoords).rgb);
-	specularOut = texture(specularMap, vertexIn.texCoords).rgb;
-	glowOut = texture(glowMap, vertexIn.texCoords).rgb * diffuseOut;
+    diffuseOut = texture(baseImage, vertexIn.texCoords).rgb;
+    normalsOut = calculateNormal(vertexIn.normal, vertexIn.tangent, texture(normalMap, vertexIn.texCoords).rgb);
+    specularOut = texture(specularMap, vertexIn.texCoords).rgb;
+    glowOut = texture(glowMap, vertexIn.texCoords).rgb * diffuseOut;
 }

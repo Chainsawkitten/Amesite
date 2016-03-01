@@ -23,11 +23,11 @@
 using namespace GameObject;
 
 Shield::Shield(Scene* scene) : SuperGameObject(scene) {
-    node = CreateEntity(scene);
+    node = CreateEntity();
     node->AddComponent<Component::RelativeTransform>()->scale *= 2.f;
     node->AddComponent<Component::Animation>();
 
-    body = CreateEntity(scene);
+    body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     body->AddComponent<Component::Animation>();
     body->AddComponent<Component::Collider2DCircle>()->radius = 9.f;

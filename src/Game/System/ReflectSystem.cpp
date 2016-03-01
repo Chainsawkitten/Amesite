@@ -18,8 +18,8 @@ ReflectSystem::~ReflectSystem() {
 
 void ReflectSystem::Update(Scene& scene, float deltaTime) {
     std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
-    for (auto collisionX : *collisionVector) {
-        if (collisionX->entity->GetComponent<Component::Reflect>() != nullptr) {
+    for (auto collisionX : *collisionVector)
+        if (collisionX->entity->GetComponent<Component::Reflect>() != nullptr)
             for (auto collisionY : collisionX->intersect) {
                 Component::Physics* physicsY = collisionY->GetComponent<Component::Physics>();
                 if (physicsY != nullptr) {
@@ -27,6 +27,4 @@ void ReflectSystem::Update(Scene& scene, float deltaTime) {
                     physicsY->velocity -= 2.f*(glm::dot(physicsY->velocity, normal)*normal);
                 }
             }
-        }
-    }
 }

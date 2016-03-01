@@ -79,9 +79,9 @@ void ControlScheme::MouseRotate(Component::Controller* controller, float deltaTi
     glm::mat4 projectionMatrix = mainCamera.GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
     glm::mat4 viewMatrix = mainCamera.GetComponent<Component::Transform>()->GetWorldOrientation()*glm::translate(glm::mat4(), -mainCamera.GetComponent<Component::Transform>()->GetWorldPosition());
     
-    glm::vec4 worldRay = Picking::createWorldRay(mouseCoordinates, viewMatrix, projectionMatrix);
+    glm::vec4 worldRay = Picking::CreateWorldRay(mouseCoordinates, viewMatrix, projectionMatrix);
     
-    glm::vec4 directionInPlane = Picking::createPlayerAimDirection(worldRay, playerPosition, glm::vec4(mainCamera.GetComponent<Component::Transform>()->position, 1.f));
+    glm::vec4 directionInPlane = Picking::CreatePlayerAimDirection(worldRay, playerPosition, glm::vec4(mainCamera.GetComponent<Component::Transform>()->position, 1.f));
     glm::vec2 direction(directionInPlane.x, directionInPlane.z);
     
     if (direction.y >= 0)
