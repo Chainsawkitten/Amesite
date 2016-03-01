@@ -11,6 +11,7 @@
 #include "../Util/GameEntityFactory.hpp"
 #include <Resources.hpp>
 #include <Audio/SoundBuffer.hpp>
+#include <ctime>
 
 using namespace System;
 
@@ -20,6 +21,8 @@ ExplodeSystem::ExplodeSystem() {
     mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion03.ogg"));
     mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion04.ogg"));
     mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion05.ogg"));
+    
+    mRNG.seed(time(0));
 }
 
 ExplodeSystem::~ExplodeSystem() {
@@ -42,7 +45,10 @@ void ExplodeSystem::Update(Scene& scene) {
                 Component::Transform* transform = explosionSound->AddComponent<Component::Transform>();
                 transform->position = explosion->node->GetComponent<Component::Transform>()->position;
                 Component::SoundSource* soundSource = explosionSound->AddComponent<Component::SoundSource>();
-                soundSource->soundBuffer = mExplosionSounds[0];
+                
+                // Use random explosion sound.
+                std::uniform_int_distribution<uint32_t> distribution(0, mExplosionSounds.size()-1);
+                soundSource->soundBuffer = mExplosionSounds[distribution(mRNG)];
                 soundSource->gain = 15.f;
                 soundSource->Play();
             }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <random>
 
 class Scene;
 namespace Audio {
@@ -25,5 +26,6 @@ namespace System {
             
         private:
             std::vector<Audio::SoundBuffer*> mExplosionSounds;
+            std::mt19937 mRNG;
     };
 }
