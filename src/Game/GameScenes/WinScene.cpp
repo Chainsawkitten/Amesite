@@ -94,11 +94,9 @@ void WinScene::Update(float deltaTime) {
     float alpha = 0.5f;
     if (mElapsedTime > 3.5f) {
         alpha = 4.f - mElapsedTime;
-    }
-    else if (mElapsedTime > 0.5f) {
+    } else if (mElapsedTime > 0.5f) {
         alpha = 1.f;
-    }
-    else {
+    } else {
         alpha = mElapsedTime * 2.f;
     }
 
