@@ -31,7 +31,7 @@ namespace GameObject {
             ~Cave();
 
             /// Retrieve the cave data.
-            bool** GetCaveData();
+            bool** GetCaveData() const;
 
             /// Map of all walls in the cave system.
             bool** mMap;

@@ -110,7 +110,7 @@ Cave::~Cave() {
     delete[] mMap;
 }
 
-bool ** Cave::GetCaveData()
+bool ** Cave::GetCaveData() const
 {
     return mMap;
 }
