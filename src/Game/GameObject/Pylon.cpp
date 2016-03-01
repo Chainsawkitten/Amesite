@@ -32,6 +32,7 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::Explode>()->lifeTime = 0.25f;
     node->GetComponent<Component::Explode>()->size = 8.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
+    node->GetComponent<Component::Explode>()->sound = true;
 
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;

@@ -135,6 +135,11 @@ set(RESOURCES
         assets/MusicCalm.ogg
         assets/Laser.ogg
         assets/SwirlingPortal.png
+        assets/Explosion01.ogg
+        assets/Explosion02.ogg
+        assets/Explosion03.ogg
+        assets/Explosion04.ogg
+        assets/Explosion05.ogg
     )
 
 add_custom_target(ResourceTarget ALL)
