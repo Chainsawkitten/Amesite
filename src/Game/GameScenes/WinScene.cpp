@@ -51,13 +51,16 @@ WinScene::WinScene(float totalTime, int enemiesKilled) {
     int intTime = totalTime;
     int minutes = intTime / 60;
     int seconds = intTime % 60;
-    mWinMessage = introString + "\nYou have won!\nYou completed the game in:\n" +
+    mWinMessage = 
+        introString + 
+        "\nYou have won!\nYou completed the game in:\n" +
         std::to_string(minutes) +
         " minutes and " +
         std::to_string(seconds) +
         " seconds.\nYou killed " +
         std::to_string(enemiesKilled) +
-        " enemies.\n\nAnd so you left, " + outroString;
+        " enemies.\n\nAnd so you left, " + 
+        outroString;
 
 }
 
