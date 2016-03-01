@@ -134,6 +134,7 @@ set(RESOURCES
         assets/MusicAction.ogg
         assets/MusicCalm.ogg
         assets/Laser.ogg
+        assets/SwirlingPortal.png
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -386,6 +387,7 @@ set(GAME_SRCS
         src/Game/GameScenes/IvarScene.cpp
         src/Game/GameScenes/JonathanScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
+        src/Game/GameScenes/WinScene.cpp
         src/Game/GameObject/Bullet.cpp
         src/Game/GameObject/Player.cpp
         src/Game/GameObject/Camera.cpp
@@ -433,6 +435,7 @@ set(GAME_HEADERS
         src/Game/GameScenes/IvarScene.hpp
         src/Game/GameScenes/JonathanScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
+        src/Game/GameScenes/WinScene.hpp
         src/Game/GameObject/Bullet.hpp
         src/Game/GameObject/Player.hpp
         src/Game/GameObject/Camera.hpp
