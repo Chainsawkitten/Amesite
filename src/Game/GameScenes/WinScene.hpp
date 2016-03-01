@@ -6,13 +6,13 @@
 class Texture2D;
 class Font;
 
-/// Splash screen shown when starting the game.
+/// Splash screen shown when winning the game.
 /**
-* Shows logos and then continues to main scene.
+* Shows statistics and then continues to main scene.
 */
 class WinScene : public Scene {
 public:
-    /// Create splash scene.
+    /// Create win scene.
     WinScene(float totalTime, int enemiesKilled);
 
     /// Destructor
