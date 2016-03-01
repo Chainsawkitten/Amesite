@@ -7,6 +7,7 @@
 #include <Component/Transform.hpp>
 #include <Component/SoundSource.hpp>
 #include "../GameObject/Explosion.hpp"
+#include "../Component/LifeTime.hpp"
 
 #include "../Util/GameEntityFactory.hpp"
 #include <Resources.hpp>
@@ -51,6 +52,9 @@ void ExplodeSystem::Update(Scene& scene) {
                 soundSource->soundBuffer = mExplosionSounds[distribution(mRNG)];
                 soundSource->gain = 15.f;
                 soundSource->Play();
+                
+                Component::LifeTime* lifetime = explosionSound->AddComponent<Component::LifeTime>();
+                lifetime->lifeTime = 6.f;
             }
         }
     }
