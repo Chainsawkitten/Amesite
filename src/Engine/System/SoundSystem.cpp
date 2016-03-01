@@ -17,7 +17,7 @@ using namespace System;
 SoundSystem* SoundSystem::mInstance = nullptr;
 
 // Scaling constant. Used to convert from our units to sound system units.
-const float soundScale = 0.4f;
+const float soundScale = 0.2f;
 
 SoundSystem::SoundSystem() {
     // Open default audio device.
