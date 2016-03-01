@@ -17,35 +17,35 @@ namespace GameObject {
     public:
         /// Create %Player2
         /**
-        * @param scene Pointer to which Scene %Player Enities' are contained.
-        * @param id Id of the player.
-        */
+         * @param scene Pointer to which Scene %Player Enities' are contained.
+         * @param id Id of the player.
+         */
         Player2(Scene* scene);
 
         ~Player2();
 
         /// Gets position of player
         /**
-        * @return Position of the player.
-        */
+         * @return Position of the player.
+         */
         glm::vec3 GetPosition();
 
         /// Sets position of player
         /**
-        * @param Position of the player.
-        */
+         * @param Position of the player.
+         */
         void SetPosition(glm::vec3 position);
 
         /// Gets node Entity
         /**
-        * @return Main Entity contaning tranform and physics components.
-        */
+         * @return Main Entity contaning tranform and physics components.
+         */
         Entity* GetNodeEntity();
 
         /// Gets health of the player.
         /**
-        * @return Health of the player.
-        */
+         * @return Health of the player.
+         */
         float GetHealth();
 
         /// Activates the player.
