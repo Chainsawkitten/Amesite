@@ -18,7 +18,6 @@ namespace GameObject {
         /// Create %Player2
         /**
          * @param scene Pointer to which Scene %Player Enities' are contained.
-         * @param id Id of the player.
          */
         Player2(Scene* scene);
 
@@ -32,7 +31,7 @@ namespace GameObject {
 
         /// Sets position of player
         /**
-         * @param Position of the player.
+         * @param position Position of the player.
          */
         void SetPosition(glm::vec3 position);
 

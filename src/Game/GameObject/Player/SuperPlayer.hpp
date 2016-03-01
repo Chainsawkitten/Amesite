@@ -11,7 +11,6 @@ namespace GameObject {
             /// Create %SuperPlayer
             /**
              * @param scene Pointer to which Scene %Player Enities' are contained.
-             * @param id Id of the player.
              */
             SuperPlayer(Scene* scene);
            
@@ -25,7 +24,7 @@ namespace GameObject {
 
             /// Sets position of player
             /**
-             * @param Position of the player.
+             * @param position Position of the player.
              */
             virtual void SetPosition(glm::vec3 position) = 0;
 
