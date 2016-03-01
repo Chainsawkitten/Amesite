@@ -66,43 +66,43 @@ namespace GameObject {
         Texture2D* mHeavyDamageTexture;
         Texture2D* mMediumDamageTexture;
 
-        /// Node of %Player1.
+        // Node of %Player1.
         Entity* mNode;
 
-        /// Body relative to node.
+        // Body relative to node.
         Entity* mBody;
 
-        /// Engine relative to body.
+        // Engine relative to body.
         Entity* mFrontEngineLeft;
 
-        /// Engine relative to body.
+        // Engine relative to body.
         Entity* mFrontEngineRight;
 
-        /// Engine relative to body.
+        // Engine relative to body.
         Entity* mBackEngineLeft;
 
-        /// Engine relative to body.
+        // Engine relative to body.
         Entity* mBackEngineRight;
 
-        /// Propeller relative to engine.
+        // Propeller relative to engine.
         Entity* mFrontPropellerLeft;
 
-        /// Propeller relative to engine.
+        // Propeller relative to engine.
         Entity* mFrontPropellerRight;
 
-        /// Propeller relative to engine.
+        // Propeller relative to engine.
         Entity* mBackPropellerLeft;
 
-        /// Propeller relative to engine.
+        // Propeller relative to engine.
         Entity* mBackPropellerRight;
 
-        /// Light relative to body.
+        // Light relative to body.
         Entity* mLight;
 
-        /// Turret relative to body.
+        // Turret relative to body.
         Entity* mLeftTurret;
 
-        /// Turret relative to body.
+        // Turret relative to body.
         Entity* mRightTurret;
 
         void AddEngine(Entity* entity, glm::vec3 position, glm::vec3 scale);

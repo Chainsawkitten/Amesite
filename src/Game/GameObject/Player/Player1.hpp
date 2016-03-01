@@ -68,55 +68,55 @@ namespace GameObject {
             Texture2D* mHeavyDamageTexture;
             Texture2D* mMediumDamageTexture;
 
-            /// Node of %Player1.
+            // Node of %Player1.
             Entity* mNode;
 
-            /// Body relative to node.
+            // Body relative to node.
             Entity* mBody;
 
-            /// Engine relative to body.
+            // Engine relative to body.
             Entity* mFrontEngineLeft;
 
-            /// Engine relative to body.
+            // Engine relative to body.
             Entity* mFrontEngineRight;
 
-            /// Engine relative to body.
+            // Engine relative to body.
             Entity* mBackEngineLeft;
 
-            /// Engine relative to body.
+            // Engine relative to body.
             Entity* mBackEngineRight;
 
-            /// Particles relative to engine.
+            // Particles relative to engine.
             Entity* mFrontEngineLeftParticles;
 
-            /// Particles relative to engine.
+            // Particles relative to engine.
             Entity* mFrontEngineRightParticles;
 
-            /// Particles relative to engine.
+            // Particles relative to engine.
             Entity* mBackEngineLeftParticles;
 
-            /// Particles relative to engine.
+            // Particles relative to engine.
             Entity* mBackEngineRightParticles;
 
-            /// Light relative to body.
+            // Light relative to body.
             Entity* mLight;
 
-            /// Turret relative to body.
+            // Turret relative to body.
             Entity* mLeftTurretBody;
 
-            /// Turret relative to body.
+            // Turret relative to body.
             Entity* mRightTurretBody;
 
-            /// Barrel relative to turret.
+            // Barrel relative to turret.
             Entity* mLeftTurretBarrel;
 
-            /// Barrel relative to turret.
+            // Barrel relative to turret.
             Entity* mRightTurretBarrel;
 
-            /// SpawnNode relative to barrel.
+            // SpawnNode relative to barrel.
             Entity* mLeftSpawnNode;
 
-            /// SpawnNode relative to barrel.
+            // SpawnNode relative to barrel.
             Entity* mRightSpawnNode;
 
             void AddEnginePartilces(Entity* entity);

@@ -23,6 +23,10 @@ namespace GameObject {
            
             ~Camera();
 
+            /// Update position of the camera
+            /**
+             * @param players Vector of SuperPlayer's which the camera will be relative to.
+             */
             void UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>& players);
 
             /// Body of camera
