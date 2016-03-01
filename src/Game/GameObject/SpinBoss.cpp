@@ -49,6 +49,7 @@ SpinBoss::SpinBoss(Scene* scene) : SuperGameObject(scene) {
     body->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     body->GetComponent<Component::Explode>()->lifeTime = 1.5f;
     body->GetComponent<Component::Explode>()->offset.y = 5.0f;
+    body->GetComponent<Component::Explode>()->sound = true;
     body->AddComponent<Component::Health>()->faction = 1;
     body->GetComponent<Component::Health>()->removeOnLowHealth = false;
 
@@ -112,6 +113,7 @@ void SpinBoss::CreateArm(Entity* entity, glm::vec3 direction) {
     entity->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
     entity->GetComponent<Component::Explode>()->lifeTime = 0.5f;
     entity->GetComponent<Component::Explode>()->offset.y = 5.0f;
+    entity->GetComponent<Component::Explode>()->sound = true;
     Component::ParticleEmitter* emitter = entity->AddComponent<Component::ParticleEmitter>();
     emitter->emitterType = Component::ParticleEmitter::POINT;
     emitter->maxEmitTime = 0.02;
