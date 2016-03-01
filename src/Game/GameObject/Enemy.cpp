@@ -34,6 +34,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::Explode>()->lifeTime = 0.25f;
     node->GetComponent<Component::Explode>()->size = 8.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
+    node->GetComponent<Component::Explode>()->sound = true;
 
     head = CreateEntity();
     head->AddComponent<Component::RelativeTransform>()->Move(0, 0, 5.5f);
