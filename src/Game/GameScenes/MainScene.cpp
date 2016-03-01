@@ -50,6 +50,8 @@
 #include "../GameObject/SpinBoss.hpp"
 #include "../GameObject/Bullet.hpp"
 
+bool CellCollide(float xPos, float yPos, int x, int y, GameObject::Cave* cave);
+
 using namespace GameObject;
 
 MainScene::MainScene() {
@@ -174,7 +176,6 @@ void MainScene::Update(float deltaTime) {
     for (auto boss : mBosses)
         boss->Update();
 
-
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
 
@@ -247,9 +248,20 @@ void MainScene::Update(float deltaTime) {
     
     // Render to back buffer.
     postProcessing->Render();
+
 }
 
-int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
+bool PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
+
+    unsigned int x = glm::floor((point + velocity * deltaTime).x / gridScale);
+    unsigned int z = glm::floor((point + velocity * deltaTime).z / gridScale);
+
+    return CellCollide(((point + velocity * deltaTime).x) / gridScale - x, ((point + velocity * deltaTime).z) / gridScale - z, x, z, cave);
+
+
+}
+
+int PointCollide2(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
     int oldX = glm::floor(point.x / gridScale);
     int oldZ = glm::floor(point.z / gridScale);
     int newX = glm::floor((point + velocity * deltaTime).x / gridScale);
@@ -285,6 +297,69 @@ int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gri
     return -1;
 }
 
+bool CellCollide(float xPos, float yPos, int x, int y, Cave* cave) {
+
+    switch (cave->mTypeMap[x][y]) {
+
+    case 1:
+        if (yPos <= 0.5f - xPos)
+            return true;
+        break;
+    case 2:
+        if (xPos >= 0.5f + yPos)
+            return true;
+        break;
+    case 3:
+        if (yPos <= 0.5f)
+            return true;
+        break;
+    case 4:
+        if (!(yPos <= 1.5f - xPos))
+            return true;
+        break;
+    case 6:
+        if (xPos >= 0.5f)
+            return true;
+        break;
+    case 7:
+        if (yPos <= xPos + 0.5f)
+            return true;
+        break;
+    case 8:
+        if (!(yPos <= xPos + 0.5f))
+            return true;
+        break;
+    case 9:
+        if (xPos <= 0.5f)
+            return true;
+        break;
+    case 11:
+        if (yPos <= 1.5f - xPos)
+            return true;
+        break;
+    case 12:
+        if (yPos >= 0.5f)
+            return true;
+        break;
+    case 13:
+        if (!(xPos >= 0.5f + yPos))
+            return true;
+        break;
+    case 14:
+        if (!(yPos <= 0.5f - xPos))
+            return true;
+        break;
+    case 15:
+        if (yPos <= xPos + 0.5f)
+            return true;
+        break;
+
+    }
+
+    return false;
+
+}
+
 bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
 
     Component::Transform* transform = entity->GetComponent<Component::Transform>();
@@ -297,69 +372,18 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
     glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
     glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
 
-    //glm::vec3 width = glm::vec3(2.9f, 0.f, 0.f);
-    //glm::vec3 height = glm::vec3(0.f, 0.f, 2.9f);
+    bool c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale, mCave);
+    bool c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale, mCave);
+    bool c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime, gridScale, mCave);
+    bool c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime, gridScale, mCave);
 
-    int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale, mCave);
-    int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale, mCave);
-    int c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime, gridScale, mCave);
-    int c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime, gridScale, mCave);
+    if (c0 || c1 || c2 || c3) {
 
-    switch (c0) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-    switch (c1) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-    switch (c2) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-    switch (c3) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-
-    if (c0 != -1 || c1 != -1 || c2 != -1 || c3 != -1)
+        physics->velocity *= glm::vec3(0, 0, 0);
+        physics->acceleration *= glm::vec3(0, 0, 0);
         return true;
+
+    }
 
     return false;
 

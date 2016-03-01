@@ -47,6 +47,12 @@ namespace Geometry {
         */
         unsigned int GetIndexCount() const;
 
+        /// Get the type map
+        /**
+         * @return the two dimensional map containing information about marching cubes.
+         */
+        int** GetTypeMap() const;
+
         /// Get amount of times texture should repeat
         /**
          * @return number of times the texture repeats in x and y.
@@ -140,5 +146,8 @@ namespace Geometry {
 
         unsigned int* mIndexData = nullptr;
         unsigned int mIndexNr = 0;
+
+        int** mTypeMap;
+
     };
 }

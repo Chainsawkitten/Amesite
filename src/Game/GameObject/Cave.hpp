@@ -34,6 +34,9 @@ namespace GameObject {
 
             /// Map of all walls in the cave system.
             bool** mMap;
+            
+            /// Map that contains marching cube info.
+            int** mTypeMap;
 
             /// Map of the %Cave
             Entity* map;

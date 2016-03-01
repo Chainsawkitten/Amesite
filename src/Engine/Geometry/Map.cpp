@@ -34,6 +34,10 @@ unsigned int Map::GetIndexCount() const {
     return mIndexNr;
 }
 
+int** Map::GetTypeMap() const {
+    return mTypeMap;
+}
+
 glm::vec2 Geometry::Map::TextureRepeat() const {
     return mTextureRepeat;
 }
@@ -58,11 +62,15 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
         }
     }
 
+    mTypeMap = new int*[mDataDimensions.x - 1];
+
     // Node creation for marching squares
     for (unsigned int x = 0; x < mDataDimensions.x - 1; x++) {
         mSquares[x] = new MSquare[mDataDimensions.y - 1];
+        mTypeMap[x] = new int[mDataDimensions.y - 1];
         for (unsigned int y = 0; y < mDataDimensions.y - 1; y++) {
             mSquares[x][y] = CreateMSquare(controlNodes[x][y + 1], controlNodes[x + 1][y + 1], controlNodes[x + 1][y], controlNodes[x][y]);
+            mTypeMap[x][y] = mSquares[x][y].mType;
         }
     }
 
@@ -91,7 +99,6 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
     delete[] controlNodes[mDataDimensions.x-1];
     delete[] controlNodes;
     delete[] mSquares;
-    
 }
 
 Map::MSquare Map::CreateMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft) {

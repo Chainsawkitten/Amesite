@@ -63,7 +63,11 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     map->AddComponent<Component::Transform>();
     map->AddComponent<Component::Material>();
 
-    map->GetComponent<Component::Mesh>()->geometry = Resources().CreateMap(mMap, glm::uvec2(mWidth, mHeight));
+    Geometry::Map* mapGeometry = Resources().CreateMap(mMap, glm::uvec2(mWidth, mHeight));
+
+    mTypeMap = mapGeometry->GetTypeMap();
+
+    map->GetComponent<Component::Mesh>()->geometry = mapGeometry;
     map->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
     map->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*static_cast<float>(mWidth) / 2.f, 0.f, zScale*static_cast<float>(mWidth) / 2.f));
     map->GetComponent<Component::Transform>()->scale = glm::vec3(xScale, 5.f, zScale);
