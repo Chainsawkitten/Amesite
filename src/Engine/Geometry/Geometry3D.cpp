@@ -14,6 +14,7 @@ namespace Geometry {
     }
     
     void Geometry3D::GenerateBuffers() {
+        glBindVertexArray(0);
         // Vertex buffer
         glGenBuffers(1, &mVertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
