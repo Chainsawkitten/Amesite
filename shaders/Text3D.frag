@@ -11,10 +11,12 @@ in VertexData {
 
 uniform sampler2D baseImage;
 
+uniform vec3 color;
+
 out vec4 fragmentColor;
 
 void main() {
-    fragmentColor = texture(baseImage, vertexIn.texCoords);
+    fragmentColor = vec4(color, texture(baseImage, vertexIn.texCoords).a);
     
     if (fragmentColor.a < 0.05)
         discard;

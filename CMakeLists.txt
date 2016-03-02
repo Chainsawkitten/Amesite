@@ -6,9 +6,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if(UNIX OR MINGW)
+    set(CMAKE_CXX_FLAGS "-g -gdwarf-2 -static-libstdc++")
+endif()
+
 # GLFW
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Don't build GLFW examples" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "Don't build GLFW tests" FORCE)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "Don't build GLFW docs" FORCE)
 add_subdirectory(externals/glfw)
 include_directories(externals/glfw/include)
 

@@ -77,7 +77,8 @@ MenuScene::MenuScene() {
     mGlowFilter = new GlowFilter();
     mGlowBlurFilter = new GlowBlurFilter();
     
-    mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 50.f);
+    float fontHeight = glm::ceil(MainWindow::GetInstance()->GetSize().y * 0.07f);
+    mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", fontHeight);
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
     // Initialize shaders.
@@ -270,6 +271,8 @@ void MenuScene::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& 
     glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
     glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
     glUniformMatrix3fv(mTextShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
+    
+    glUniform3fv(mTextShaderProgram->GetUniformLocation("color"), 1, &glm::vec3(1.f, 1.f, 1.f)[0]);
     
     glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     
