@@ -23,16 +23,16 @@
 
 using namespace System;
 
-System::EnemySpawnerSystem::EnemySpawnerSystem() {
-    mMaxEnemyCount = 5;
+EnemySpawnerSystem::EnemySpawnerSystem() {
+    mMaxEnemyCount = 10;
     mEnemyCount = 0;
     mSpawnerRadius = 100.f;
 }
 
-System::EnemySpawnerSystem::~EnemySpawnerSystem() {
+EnemySpawnerSystem::~EnemySpawnerSystem() {
 }
 
-void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<GameObject::SpinBoss*>* bosses) {
+void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) {
     // Ugly hardcode until we have a proper SuperEnemy to inherit from.
     for (unsigned int i = 0; i < mPylons.size(); i++) {
         if (mPylons[i]->node->GetComponent<Component::Health>()->health < 0.01f) {
@@ -70,7 +70,7 @@ void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const Gam
             if (spawner->type == Component::Spawner::ENEMY) {
                 spawner->timeSinceSpawn += deltaTime;
                 if (spawner->delay <= spawner->timeSinceSpawn) {
-                    glm::vec3 position = FindValidPosition(cave, players, bosses);       
+                    glm::vec3 position = FindValidPosition(cave, players, noSpawnRooms);       
                     if (position.x > 0.f) {
                         spawner->timeSinceSpawn = 0.0;
                         if (spawner->enemyType == Component::Spawner::BASIC) {
@@ -86,10 +86,10 @@ void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const Gam
     }
 }
 
-glm::vec3 System::EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<GameObject::SpinBoss*>* bosses) const {
+glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) const {
 
     glm::vec3 mMapScale = cave->map->GetComponent<Component::Transform>()->GetWorldScale();
-    glm::uvec3 size = glm::vec3(cave->mWidth, 0.f, cave->mHeight);
+    glm::uvec3 size = glm::vec3(cave->GetWidth(), 0.f, cave->GetHeight());
     glm::uvec3 position;
 
     int bossRadius = cave->GetBossRoomRadius();
@@ -122,16 +122,16 @@ glm::vec3 System::EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* 
                 || map[position.z - 1][position.x + 1]
                 || map[position.z + 1][position.x - 1]
                 || map[position.z + 1][position.x + 1])
-            && ProximityToBosses(position, bosses, bossRadius) )
+            && ProximityToBosses(position, noSpawnRooms, bossRadius) )
             return glm::vec3(position) * mMapScale;
     }
     return glm::vec3(-1.f, -1.f, -1.f);
 }
 
-bool System::EnemySpawnerSystem::ProximityToBosses(const glm::vec3 position, const std::vector<GameObject::SpinBoss*>* bosses, int bossRadius) const
-{
-    for (auto boss : *bosses) {
-        if (glm::length(position - boss->node->GetComponent<Component::Transform>()->CalculateWorldPosition() / mMapScale) < bossRadius)
+bool EnemySpawnerSystem::ProximityToBosses(const glm::vec3 position, const std::vector<glm::vec3> noSpawnRooms, int bossRadius) const {
+    for (auto room : noSpawnRooms) {
+        if (glm::length(position - room) > (float)bossRadius + 1.f)
             return true;
     }
+    return false;
 }

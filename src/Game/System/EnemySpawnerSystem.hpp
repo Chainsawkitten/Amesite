@@ -32,7 +32,7 @@ namespace System {
             * @param players list of players to access their positions.
             * @param bosses list of bosses to avoid spawning enemies in boss room.
             */
-            void Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<GameObject::SpinBoss*>* bosses);
+            void Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms);
         private:
             // Enemy count.
             unsigned int mMaxEnemyCount;
@@ -41,10 +41,10 @@ namespace System {
             glm::vec3 mMapScale;
 
             // Retrieves a valid random spawn position from the map.
-            glm::vec3 FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<GameObject::SpinBoss*>* bosses) const;
+            glm::vec3 FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) const;
 
             // Check if far away enough from all bosses.
-            bool ProximityToBosses(const glm::vec3 position, const std::vector<GameObject::SpinBoss*> *bosses, int bossRadius) const;
+            bool ProximityToBosses(const glm::vec3 position, const std::vector<glm::vec3> noSpawnRooms, int bossRadius) const;
 
             // Keeps track of the active enemies in the scene.
             std::vector<GameObject::Enemy*> mEnemies;

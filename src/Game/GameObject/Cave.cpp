@@ -28,8 +28,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mHeight = height;
     mMap = nullptr;
 
-    xScale = 5.f;
-    zScale = 5.f;
     mBossRadius = 7;
 
     scaleFactor = 5.f;
@@ -112,6 +110,9 @@ int Cave::GetWidth() const {
 
 int Cave::GetHeight() const {
     return mHeight;
+}
+int Cave::GetBossRoomRadius() const {
+    return mBossRadius;
 }
 
 bool ** Cave::GetCaveData() const {
