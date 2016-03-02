@@ -405,18 +405,18 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
 void MainScene::Respawn(float deltaTime) {
 
     if (!mPlayers[0]->Active() || !mPlayers[1]->Active())
-        if (glm::distance(mPlayers[0]->GetPosition(), mPlayers[1]->GetPosition()) < 15) {
+        if (glm::distance(mPlayers[0]->GetPosition(), mPlayers[1]->GetPosition()) < 15.f) {
 
             mPlayers[0]->mRespawnTimer -= deltaTime;
             mPlayers[1]->mRespawnTimer -= deltaTime;
 
-            if (mPlayers[0]->mRespawnTimer <= 0) {
+            if (mPlayers[0]->mRespawnTimer < 0.001f) {
 
                 mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
                 mPlayers[0]->Activate();
 
             }
-            if (mPlayers[1]->mRespawnTimer <= 0) {
+            if (mPlayers[1]->mRespawnTimer < 0.001f) {
 
                 mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
                 mPlayers[1]->Activate();
