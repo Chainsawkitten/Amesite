@@ -51,12 +51,6 @@ class Scene {
         
         /// Gets all item of a specific type.
         /**
-         * @return A pointer to a vector of pointers to all items of the specified scene.
-         */
-        template <typename T> std::vector<T*>* GetVector() { return nullptr; }
-        
-        /// Gets all item of a specific type.
-        /**
          * @return A pointer to a list of pointers to all items of the specified scene.
          */
         template <typename T> std::list<T*>* GetList() { return nullptr; }
@@ -108,7 +102,7 @@ class Scene {
         void RemoveComponentFromList(Component::SuperComponent* component, const std::type_info* componentType);
         
         // List of all entities created in this scene.
-        std::vector<Entity*> mEntities;
+        std::list<Entity*> mEntities;
         
         // All particles in the scene.
         System::ParticleSystem::Particle* mParticles;
@@ -132,12 +126,11 @@ template <typename T> inline std::vector<T*>& Scene::GetAll() {
     return reinterpret_cast<std::vector<T*>&>(mComponents[&typeid(T*)]);
 }
 
-// GetVector<T>
-template<> inline std::vector<Entity*>* Scene::GetVector() {
+// GetList<T>
+template<> inline std::list<Entity*>* Scene::GetList() {
     return &mEntities;
 }
 
-// GetList<T>
 template<> inline std::list<GameObject::SuperGameObject*>* Scene::GetList() {
     return &mGameObjects;
 }

@@ -35,7 +35,6 @@ void Scene::ClearAll() {
     for (Entity* entity : mEntities)
         delete entity;
     mEntities.clear();
-    mEntities.shrink_to_fit();
     
     for (Collision* collision : mCollisions)
         delete collision;
