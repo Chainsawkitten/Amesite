@@ -33,8 +33,8 @@ ExplodeSystem::~ExplodeSystem() {
 }
 
 void ExplodeSystem::Update(Scene& scene) {
-    std::vector<Entity*> killedEntitiesVector = scene.GetKilledEntitesVector();
-    for (auto entity : killedEntitiesVector) {
+    std::list<Entity*> killedEntities = scene.GetKilledEntitesVector();
+    for (auto entity : killedEntities) {
         Component::Explode* explodeComp = entity->GetComponent<Component::Explode>();
         if (explodeComp != nullptr) {
             GameEntityCreator().SetScene(&scene);

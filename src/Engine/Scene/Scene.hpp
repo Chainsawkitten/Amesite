@@ -69,9 +69,9 @@ class Scene {
         
         /// Gets a read-only vector of killed entites.
         /**
-         * @return A pointer to a vector of pointers to all killed entites.
+         * @return A pointer to a list of pointers to all killed entites.
          */
-        const std::vector<Entity*>& GetKilledEntitesVector() const;
+        const std::list<Entity*>& GetKilledEntitesVector() const;
         
         /// Get all the particles in the scene.
         /**
@@ -124,7 +124,7 @@ class Scene {
         std::vector<GameObject::SuperGameObject*> mGameObjects;
         
         // List of entites to be removed.
-        std::vector<Entity*> mKilledEntites;
+        std::list<Entity*> mKilledEntites;
 };
 
 // GetAll<T>

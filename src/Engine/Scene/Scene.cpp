@@ -84,7 +84,7 @@ void Scene::ClearKilledEntities() {
     mKilledEntites.clear();
 }
 
-const std::vector<Entity*>& Scene::GetKilledEntitesVector() const {
+const std::list<Entity*>& Scene::GetKilledEntitesVector() const {
     return mKilledEntites;
 }
 
