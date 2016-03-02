@@ -57,7 +57,10 @@ int main() {
     
     // Profiling variables.
     bool profiling = false;
-    unsigned int profileFrames = 0;
+    unsigned int profileFrames;
+    float minFrameTime;
+    float averageFrameTime;
+    float maxFrameTime;
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -78,13 +81,26 @@ int main() {
         
         // Profiling.
         if (profiling) {
+            if (frameTime < minFrameTime)
+                minFrameTime = frameTime;
+            if (frameTime > maxFrameTime)
+                maxFrameTime = frameTime;
+            averageFrameTime += frameTime / 300.f;
+            
             if (++profileFrames >= 300) {
                 Log() << "Profiling ended - " << time(nullptr) << "\n";
+                Log() << "Results:\n"
+                      << "Min: " << minFrameTime << "\n"
+                      << "Average: " << averageFrameTime << "\n"
+                      << "Max: " << maxFrameTime << "\n";
                 profiling = false;
             }
         } else if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE)) {
             profiling = true;
             profileFrames = 0;
+            minFrameTime = std::numeric_limits<float>::max();
+            averageFrameTime = 0.f;
+            maxFrameTime = 0.f;
             
             Log() << "Profiling started - " << time(nullptr) << "\n";
         }
