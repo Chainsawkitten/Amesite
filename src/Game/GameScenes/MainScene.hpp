@@ -12,6 +12,7 @@
 #include "Game/System/LifeTimeSystem.hpp"
 #include "Game/System/ReflectSystem.hpp"
 #include "Game/System/ExplodeSystem.hpp"
+#include "Game/System/GridCollideSystem.hpp"
 
 #include <AL/al.h>
 
@@ -82,6 +83,9 @@ class MainScene : public Scene {
         // checkpoint system
         System::CheckpointSystem mCheckpointSystem;
 
+        // The grid collide system
+        System::GridCollideSystem mGridCollideSystem;
+
         // Vector containing players
         std::vector<GameObject::SuperPlayer*> mPlayers;
 
@@ -103,14 +107,8 @@ class MainScene : public Scene {
         int mBossCounter;
         float mTimer;
         glm::vec2 mPortalPosition;
-        
-        // Grid collision
-        bool GridCollide(Entity* entity, float deltaTime, float gridScale);
 
-        /// Handles the player respawn
-        /**
-        *@param deltaTime Time since last frame.
-        */
+        // Handles the player respawn
         void Respawn(float deltaTime);
 
         // Music.

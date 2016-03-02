@@ -391,6 +391,7 @@ set(GAME_SRCS
         src/Game/System/ReflectSystem.cpp
         src/Game/System/AISystem.cpp
         src/Game/System/CheckpointSystem.cpp
+        src/Game/System/GridCollideSystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
@@ -398,6 +399,7 @@ set(GAME_SRCS
         src/Game/Component/LifeTime.cpp
         src/Game/Component/Explode.cpp
         src/Game/Component/Reflect.cpp
+        src/Game/Component/GridCollide.cpp
         src/Game/Component/AI/WalkerAI.cpp
         src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
@@ -442,6 +444,7 @@ set(GAME_HEADERS
         src/Game/System/ReflectSystem.hpp
         src/Game/System/AISystem.hpp
         src/Game/System/CheckpointSystem.hpp
+        src/Game/System/GridCollideSystem.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
@@ -449,6 +452,7 @@ set(GAME_HEADERS
         src/Game/Component/LifeTime.hpp
         src/Game/Component/Explode.hpp
         src/Game/Component/Reflect.hpp
+        src/Game/Component/GridCollide.hpp
         src/Game/Component/AI/WalkerAI.hpp
         src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp

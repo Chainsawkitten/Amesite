@@ -9,6 +9,7 @@
 #include "../Component/Damage.hpp"
 #include "../Component/LifeTime.hpp"
 #include "../Component/Explode.hpp"
+#include "../Component/GridCollide.hpp"
 #include <Engine/Component/ParticleEmitter.hpp>
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Physics.hpp>
@@ -27,6 +28,7 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     node->GetComponent<Component::Explode>()->size = 1.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
     node->AddComponent<Component::Collider2DCircle>()->radius = 0.25f;
+    node->AddComponent<Component::GridCollide>();
     node->AddComponent<Component::Physics>();
     node->AddComponent<Component::LifeTime>()->lifeTime = 15.f;
     Component::ParticleEmitter* emitter = node->AddComponent<Component::ParticleEmitter>();
