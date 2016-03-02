@@ -123,13 +123,10 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
     // Create boss
-    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y));
-    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[1].x, 0.f, mCave->zScale*bossPositions[1].y));
-    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[3].x, 0.f, mCave->zScale*bossPositions[3].y));
-    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[4].x, 0.f, mCave->zScale*bossPositions[4].y));
+    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[2].x, 0.f, mCave->zScale*bossPositions[2].y));
     
     //Stores how many bosses exist
-    mBossCounter = 4;
+    mBossCounter = 1;
 
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
 
