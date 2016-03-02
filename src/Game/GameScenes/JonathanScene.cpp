@@ -24,10 +24,6 @@
 #include "Game/Component/LifeTime.hpp"
 #include "Game/Component/Spawner.hpp"
 
-#include "../GameObject/Player.hpp"
-#include "../GameObject/Cave.hpp"
-#include "../GameObject/Camera.hpp"
-
 #include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
 
@@ -45,10 +41,11 @@
 #include "../Util/CaveGenerator.hpp"
 #include <Util/Log.hpp>
 
-#include "../GameObject/Player.hpp"
+#include "../GameObject/Player/Player1.hpp"
+#include "../GameObject/Player/Player2.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
-#include "../GameObject/SpinBoss.hpp"
+#include "../GameObject/Boss/SpinBoss.hpp"
 #include "../GameObject/Bullet.hpp"
 #include "../GameObject/EnemySpawner.hpp"
 

@@ -29,7 +29,7 @@ class Entity;
 namespace GameObject {
     class Cave;
     class Camera;
-    class Player;
+    class SuperPlayer;
     class SpinBoss;
 }
 namespace Audio {
@@ -89,7 +89,7 @@ private:
     System::EnemySpawnerSystem mEnemySpawnerSystem;
 
     // Vector containing players
-    std::vector<GameObject::Player*> mPlayers;
+    std::vector<GameObject::SuperPlayer*> mPlayers;
 
     // Spin boss
     GameObject::SpinBoss* mSpinBoss;

@@ -12,7 +12,8 @@
 #include "../Component/Explode.hpp"
 
 #include "../GameObject/Cave.hpp"
-#include "../GameObject/Player.hpp"
+#include "../GameObject/Player/Player1.hpp"
+#include "../GameObject/Player/Player2.hpp"
 #include "../GameObject/Pylon.hpp"
 #include "../GameObject/Enemy.hpp"
 
@@ -30,7 +31,7 @@ System::EnemySpawnerSystem::EnemySpawnerSystem() {
 System::EnemySpawnerSystem::~EnemySpawnerSystem() {
 }
 
-void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::Player*> *players) {
+void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players) {
     // Ugly hardcode until we have a proper SuperEnemy to inherit from.
     for (unsigned int i = 0; i < mPylons.size(); i++) {
         if (mPylons[i]->node->GetComponent<Component::Health>()->health < 0.01f) {
@@ -84,7 +85,7 @@ void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const Gam
     }
 }
 
-glm::vec3 System::EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::Player*> *players) const {
+glm::vec3 System::EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players) const {
 
     glm::vec3 scale = cave->map->GetComponent<Component::Transform>()->GetWorldScale();
     glm::uvec3 size = glm::vec3(cave->mWidth, 0.f, cave->mHeight);
