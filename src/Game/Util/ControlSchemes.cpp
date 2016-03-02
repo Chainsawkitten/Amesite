@@ -20,7 +20,7 @@
 #include <MainWindow.hpp>
 #include <Util/Log.hpp>
 
-#include <Game\GameObject\Bullet.hpp>
+#include <Game/GameObject/Bullet.hpp>
 
 void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
 
