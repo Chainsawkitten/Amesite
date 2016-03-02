@@ -50,6 +50,9 @@
 #include "../GameObject/SpinBoss.hpp"
 #include "../GameObject/Bullet.hpp"
 
+#include "../Game.hpp"
+#include "WinScene.hpp"
+
 using namespace GameObject;
 
 MainScene::MainScene() {
@@ -78,6 +81,9 @@ MainScene::MainScene() {
     
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
+
+    // Set timer to 0
+    mTimer = 0.f;
     
     // Create main camera
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(300.f, 300.f, 300.f), glm::vec3(0.f, 60.f, 0.f));
@@ -101,6 +107,9 @@ MainScene::MainScene() {
     float playerStartX = mCave->xScale*(static_cast<float>(width) / 2.f);
     float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
 
+    //Stores where the portal is located
+    mPortalPosition = glm::vec2(playerStartX, playerStartZ);
+
     // Create players 
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
@@ -108,6 +117,9 @@ MainScene::MainScene() {
     // Create boss
     mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y));
     
+    //Stores how many bosses exist
+    mBossCounter = 1;
+
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
 
     // Add players to checkpoint system.
@@ -169,6 +181,11 @@ void MainScene::Update(float deltaTime) {
             player->Deactivate();
             GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
         }
+        glm::vec2 playerPosition(player->GetPosition().x, player->GetPosition().z);
+
+        if (mBossCounter == 0 && glm::distance(playerPosition, mPortalPosition) < 10.f) {
+            Game::GetInstance().SetScene(new WinScene(mTimer, 10));
+        }
     }
 
     // Update boss
@@ -228,6 +245,7 @@ void MainScene::Update(float deltaTime) {
         if (mSpinBoss->GetHealth() < 0.01f) {
             mSpinBoss->Kill();
             mSpinBoss = nullptr;
+            mBossCounter--;
         }
 
     // Render.
@@ -256,6 +274,8 @@ void MainScene::Update(float deltaTime) {
     
     // Render to back buffer.
     mPostProcessing->Render();
+
+    mTimer += deltaTime;
 }
 
 int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {

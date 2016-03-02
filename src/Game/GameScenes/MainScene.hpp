@@ -101,6 +101,9 @@ class MainScene : public Scene {
         GammaCorrectionFilter* mGammaCorrectionFilter;
         GlowFilter* mGlowFilter;
         GlowBlurFilter* mGlowBlurFilter;
+        int mBossCounter;
+        float mTimer;
+        glm::vec2 mPortalPosition;
         
         // Grid collision
         bool GridCollide(Entity* entity, float deltaTime, float gridScale);
