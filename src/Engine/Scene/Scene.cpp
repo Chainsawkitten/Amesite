@@ -7,11 +7,14 @@
 #include <algorithm>
 
 Scene::Scene() {
-
+    mParticles = new System::ParticleSystem::Particle[System::ParticleSystem::GetActiveInstance().MaxParticleCount()];
+    mParticleCount = 0;
 }
 
 Scene::~Scene() {
     ClearAll();
+    
+    delete[] mParticles;
 }
 
 Entity* Scene::CreateEntity() {
@@ -50,8 +53,7 @@ void Scene::ClearAll() {
     }
     mComponents.clear();
 
-    mParticlesVector.clear();
-    mParticlesVector.shrink_to_fit();
+    mParticleCount = 0;
 }
 
 void Scene::UpdateModelMatrices() {
@@ -85,4 +87,16 @@ void Scene::ClearKilledEntities() {
 
 const std::vector<Entity*>& Scene::GetKilledEntitesVector() const {
     return mKilledEntitesVector;
+}
+
+System::ParticleSystem::Particle* Scene::GetParticles() const {
+    return mParticles;
+}
+
+unsigned int Scene::GetParticleCount() const {
+    return mParticleCount;
+}
+
+void Scene::SetParticleCount(unsigned int particleCount) {
+    mParticleCount = particleCount;
 }
