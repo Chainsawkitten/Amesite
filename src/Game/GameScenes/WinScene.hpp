@@ -13,6 +13,10 @@ class Font;
 class WinScene : public Scene {
     public:
         /// Create win scene.
+        /**
+        * @param totalTime The total time played.
+        * @param enemiesKilled The amount of enemies killed.
+        */
         WinScene(float totalTime, int enemiesKilled);
 
         /// Destructor
