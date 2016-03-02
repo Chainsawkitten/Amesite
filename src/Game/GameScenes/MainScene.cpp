@@ -192,10 +192,7 @@ void MainScene::Update(float deltaTime) {
     // Check collisions.
     mCollisionSystem.Update(*this);
     
-    //std::vector<Component::Damage*> bulletVector = this->GetAll<Component::Damage>();
-    //for (auto bullet : bulletVector)
-    //    if (GridCollide(bullet->entity, deltaTime, 5.f))
-    //        bullet->entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
+    // Check grid collisions.
     mGridCollideSystem.Update(*this, deltaTime, *mCave);
 
     // Update health
