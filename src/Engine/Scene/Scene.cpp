@@ -19,7 +19,7 @@ Scene::~Scene() {
 
 Entity* Scene::CreateEntity() {
     Entity* entity = new Entity(this);
-    mEntityVector.push_back(entity);
+    mEntities.push_back(entity);
     return entity;
 }
 
@@ -32,20 +32,20 @@ void Scene::RemoveComponentFromList(Component::SuperComponent* component, const 
 }
 
 void Scene::ClearAll() {
-    for (Entity* entity : mEntityVector)
+    for (Entity* entity : mEntities)
         delete entity;
-    mEntityVector.clear();
-    mEntityVector.shrink_to_fit();
+    mEntities.clear();
+    mEntities.shrink_to_fit();
 
-    for (Collision* collision : mCollisionVector)
+    for (Collision* collision : mCollisions)
         delete collision;
-    mCollisionVector.clear();
-    mCollisionVector.shrink_to_fit();
+    mCollisions.clear();
+    mCollisions.shrink_to_fit();
 
-    for (GameObject::SuperGameObject* gameObject : mGameObjectVector)
+    for (GameObject::SuperGameObject* gameObject : mGameObjects)
         delete gameObject;
-    mGameObjectVector.clear();
-    mGameObjectVector.shrink_to_fit();
+    mGameObjects.clear();
+    mGameObjects.shrink_to_fit();
 
     for (auto& it : mComponents) {
         for (Component::SuperComponent* component : it.second)
@@ -79,14 +79,14 @@ void Scene::UpdateModelMatrices() {
 }
 
 void Scene::ClearKilledEntities() {
-    for (auto entity : mKilledEntitesVector) {
+    for (auto entity : mKilledEntites) {
         entity->Clear();
     }
-    mKilledEntitesVector.clear();
+    mKilledEntites.clear();
 }
 
 const std::vector<Entity*>& Scene::GetKilledEntitesVector() const {
-    return mKilledEntitesVector;
+    return mKilledEntites;
 }
 
 System::ParticleSystem::Particle* Scene::GetParticles() const {

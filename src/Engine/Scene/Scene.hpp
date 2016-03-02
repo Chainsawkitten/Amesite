@@ -101,7 +101,7 @@ class Scene {
         void RemoveComponentFromList(Component::SuperComponent* component, const std::type_info* componentType);
         
         // List of all entities created in this scene.
-        std::vector<Entity*> mEntityVector;
+        std::vector<Entity*> mEntities;
         
         // All particles in the scene.
         System::ParticleSystem::Particle* mParticles;
@@ -111,13 +111,13 @@ class Scene {
         std::map<const std::type_info*, std::vector<Component::SuperComponent*>> mComponents;
         
         // List of all collisons in this scene.
-        std::vector<Collision*> mCollisionVector;
+        std::vector<Collision*> mCollisions;
         
         // List of all game objects in this scene.
-        std::vector<GameObject::SuperGameObject*> mGameObjectVector;
+        std::vector<GameObject::SuperGameObject*> mGameObjects;
         
         // List of entites to be removed.
-        std::vector<Entity*> mKilledEntitesVector;
+        std::vector<Entity*> mKilledEntites;
 };
 
 // GetAll<T>
@@ -127,13 +127,13 @@ template <typename T> inline std::vector<T*>& Scene::GetAll() {
 
 // GetVector<T>
 template<> inline std::vector<Entity*>* Scene::GetVector() {
-    return &mEntityVector;
+    return &mEntities;
 }
 
 template<> inline std::vector<GameObject::SuperGameObject*>* Scene::GetVector() {
-    return &mGameObjectVector;
+    return &mGameObjects;
 }
 
 template<> inline std::vector<Scene::Collision*>* Scene::GetVector() {
-    return &mCollisionVector;
+    return &mCollisions;
 }

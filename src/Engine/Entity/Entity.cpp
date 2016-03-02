@@ -29,6 +29,6 @@ void Entity::Clear() {
 }
 
 void Entity::Kill() {
-    if (std::find(mScene->mKilledEntitesVector.begin(), mScene->mKilledEntitesVector.end(), this) == mScene->mKilledEntitesVector.end())
-        mScene->mKilledEntitesVector.push_back(this);
+    if (std::find(mScene->mKilledEntites.begin(), mScene->mKilledEntites.end(), this) == mScene->mKilledEntites.end())
+        mScene->mKilledEntites.push_back(this);
 }
