@@ -27,8 +27,10 @@ namespace GameObject {
             /// Node of %SpinBoss
             Entity* node;
 
+            /// Body relative to node
             Entity* body;
 
+            /// Arms relative to body
             Entity* armArr[4];
 
             /// Update boss.

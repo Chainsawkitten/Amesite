@@ -100,7 +100,7 @@ int main() {
         } else if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE)) {
             profiling = true;
             profileFrames = 0;
-            minFrameTime = std::numeric_limits<float>::max();
+            minFrameTime = (std::numeric_limits<float>::max)();
             averageFrameTime = 0.f;
             maxFrameTime = 0.f;
             
