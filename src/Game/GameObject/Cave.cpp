@@ -37,6 +37,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     caveMap->ProcessCaveMap(iterations);
 
+    caveMap->DetectRooms();
+
     caveMap->RemoveSmallRooms(threshold);
 
     caveMap->CreateCircle(playerPosition, 7, false);
@@ -44,6 +46,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     for (auto& bossPosition : bossPositions) {
         caveMap->CreateCircle(bossPosition, 7, false);
     }
+
+    caveMap->DetectRooms();
 
     caveMap->ConnectClosestRooms(true);
 
