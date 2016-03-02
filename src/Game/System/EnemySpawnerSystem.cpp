@@ -96,12 +96,12 @@ glm::vec3 System::EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* 
         glm::vec3 playerPos = player->GetPosition();
 
         averagePlayerPosition.x += playerPos.x;
-        averagePlayerPosition.y += playerPos.y;
+        averagePlayerPosition.z += playerPos.z;
     }
     float factor = 1.f / static_cast<float>(players->size());
 
     averagePlayerPosition.x *= factor;
-    averagePlayerPosition.y *= factor;  
+    averagePlayerPosition.z *= factor;  
   
     bool** map = cave->GetCaveData();
 

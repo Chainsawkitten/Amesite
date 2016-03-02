@@ -142,7 +142,6 @@ JonathanScene::JonathanScene() {
     mGlowFilter = new GlowFilter();
     mGlowBlurFilter = new GlowBlurFilter();
 
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
     GameEntityCreator().CreateEnemySpawner(Component::Spawner::PYLON, 5.f);
     GameEntityCreator().CreateEnemySpawner(Component::Spawner::BASIC, 10.f);
 }
