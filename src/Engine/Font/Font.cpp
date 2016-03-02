@@ -29,7 +29,8 @@ Font::Font(const char* filename, float height) {
     fontFile.close();
     
     mBitmapWidth = static_cast<unsigned int>((ceil(sqrt(96.f)) + 1.f) * height + 0.05f);
-    mBitmapWidth += mBitmapWidth % 4;
+    // Textures must be divisible by 4.
+    mBitmapWidth += 4 - (mBitmapWidth % 4);
     unsigned char* tempBitmap = new unsigned char[mBitmapWidth * mBitmapWidth];
     
     stbtt_BakeFontBitmap(ttfBuffer, 0, height, tempBitmap, mBitmapWidth, mBitmapWidth, 32, 96, mCData);
