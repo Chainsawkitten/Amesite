@@ -283,13 +283,11 @@ void Player1::mUpdateFunction() {
     // Update health texture
     if (GetHealth() >= 2.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = LIGHTDAMAGE;
-        mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
-    }
-    else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
+        mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture; 
+    } else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = MEDIUMDAMAGE;
         mBody->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;
-    }
-    else {
+    } else {
         mState = HEAVYDAMAGE;
         mBody->GetComponent<Component::Material>()->diffuse = mHeavyDamageTexture;
     }
