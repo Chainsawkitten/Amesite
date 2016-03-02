@@ -8,7 +8,6 @@
 #include "../Component/Transform.hpp"
 
 #include <glm/glm.hpp>
-
 #include <vector>
 #include <algorithm>
 
@@ -31,15 +30,14 @@ bool myfunction(Node& i, Node& j) { return (i.min.x<j.min.x); }
 
 void CollisionSystem::Update(Scene& scene) {
     // Get vectors from scene
-    std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
+    std::list<Scene::Collision*>* collisions = scene.GetList<Scene::Collision>();
     std::vector<Component::Collider2DCircle*> collider2DCircle = scene.GetAll<Component::Collider2DCircle>();
     
     // Clear vector
-    for (Scene::Collision* collision : *collisionVector) {
+    for (Scene::Collision* collision : *collisions) {
         delete collision;
     }
-    collisionVector->clear();
-    collisionVector->shrink_to_fit();
+    collisions->clear();
  
     Node node;
     glm::vec3 pos;
@@ -84,20 +82,20 @@ void CollisionSystem::Update(Scene& scene) {
                     if (collisionX == nullptr) {
                         collisionX = new Scene::Collision();
                         collisionX->entity = nodes[x].collider->entity;
-                        collisionVector->push_back(collisionX);
+                        collisions->push_back(collisionX);
                     }
 
-                    // check if collisionY is in mCollisonVec
+                    // Check if collisionY is in mCollisonVec
                     Scene::Collision* collisionY = nullptr;
-                    for (unsigned int m = 0; m < collisionVector->size() && collisionY == nullptr; m++)
-                        if (collisionVector->at(m)->entity == nodes[i].collider->entity)
-                            collisionY = collisionVector->at(m);
-
-                    // if collisionY isn't in vector;
+                    for (Scene::Collision* collision : *collisions)
+                        if (collision->entity == nodes[i].collider->entity)
+                            collisionY = collision;
+                    
+                    // If collisionY isn't in vector;
                     if (collisionY == nullptr) {
                         collisionY = new Scene::Collision();
                         collisionY->entity = nodes[i].collider->entity;
-                        collisionVector->push_back(collisionY);
+                        collisions->push_back(collisionY);
                     }
                     collisionX->intersect.push_back(nodes[i].collider->entity);
                     collisionY->intersect.push_back(nodes[x].collider->entity);

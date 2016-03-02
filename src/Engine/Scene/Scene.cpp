@@ -40,7 +40,6 @@ void Scene::ClearAll() {
     for (Collision* collision : mCollisions)
         delete collision;
     mCollisions.clear();
-    mCollisions.shrink_to_fit();
 
     for (GameObject::SuperGameObject* gameObject : mGameObjects)
         delete gameObject;

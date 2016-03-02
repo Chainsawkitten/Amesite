@@ -55,6 +55,12 @@ class Scene {
          */
         template <typename T> std::vector<T*>* GetVector() { return nullptr; }
         
+        /// Gets all item of a specific type.
+        /**
+         * @return A pointer to a list of pointers to all items of the specified scene.
+         */
+        template <typename T> std::list<T*>* GetList() { return nullptr; }
+        
         /// Updates %Scene by calling systems.
         /**
          * @param deltaTime Time since last frame (in seconds).
@@ -112,7 +118,7 @@ class Scene {
         std::map<const std::type_info*, std::vector<Component::SuperComponent*>> mComponents;
         
         // List of all collisons in this scene.
-        std::vector<Collision*> mCollisions;
+        std::list<Collision*> mCollisions;
         
         // List of all game objects in this scene.
         std::vector<GameObject::SuperGameObject*> mGameObjects;
@@ -135,6 +141,7 @@ template<> inline std::vector<GameObject::SuperGameObject*>* Scene::GetVector() 
     return &mGameObjects;
 }
 
-template<> inline std::vector<Scene::Collision*>* Scene::GetVector() {
+// GetList<T>
+template<> inline std::list<Scene::Collision*>* Scene::GetList() {
     return &mCollisions;
 }
