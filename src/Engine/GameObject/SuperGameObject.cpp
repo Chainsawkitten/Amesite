@@ -8,7 +8,7 @@ using namespace GameObject;
 
 SuperGameObject::SuperGameObject(Scene* scene) {
     mScene = scene;
-    mScene->GetVector<SuperGameObject>()->push_back(this);
+    mScene->GetList<SuperGameObject>()->push_back(this);
 }
 
 SuperGameObject::~SuperGameObject() {
@@ -18,8 +18,8 @@ void SuperGameObject::Clear() {
     for (auto& entity : mEntityVector)
         entity->Clear();
     mEntityVector.clear();
-    std::vector<GameObject::SuperGameObject*>* gameObjectVector = mScene->GetVector<SuperGameObject>();
-    gameObjectVector->erase(std::remove(gameObjectVector->begin(), gameObjectVector->end(), this), gameObjectVector->end());
+    std::list<SuperGameObject*>* gameObjects = mScene->GetList<SuperGameObject>();
+    gameObjects->erase(std::remove(gameObjects->begin(), gameObjects->end(), this), gameObjects->end());
     delete this;
 }
 
@@ -28,8 +28,8 @@ void SuperGameObject::Kill() {
         entity->Kill();
         entity->gameObject = nullptr;
     }
-    std::vector<GameObject::SuperGameObject*>* gameObjectVector = mScene->GetVector<SuperGameObject>();
-    gameObjectVector->erase(std::remove(gameObjectVector->begin(), gameObjectVector->end(), this), gameObjectVector->end());
+    std::list<SuperGameObject*>* gameObjects = mScene->GetList<SuperGameObject>();
+    gameObjects->erase(std::remove(gameObjects->begin(), gameObjects->end(), this), gameObjects->end());
     delete this;
 }
 

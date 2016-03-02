@@ -36,22 +36,21 @@ void Scene::ClearAll() {
         delete entity;
     mEntities.clear();
     mEntities.shrink_to_fit();
-
+    
     for (Collision* collision : mCollisions)
         delete collision;
     mCollisions.clear();
-
+    
     for (GameObject::SuperGameObject* gameObject : mGameObjects)
         delete gameObject;
     mGameObjects.clear();
-    mGameObjects.shrink_to_fit();
-
+    
     for (auto& it : mComponents) {
         for (Component::SuperComponent* component : it.second)
             delete component;
     }
     mComponents.clear();
-
+    
     mParticleCount = 0;
 }
 

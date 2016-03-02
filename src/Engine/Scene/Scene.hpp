@@ -121,7 +121,7 @@ class Scene {
         std::list<Collision*> mCollisions;
         
         // List of all game objects in this scene.
-        std::vector<GameObject::SuperGameObject*> mGameObjects;
+        std::list<GameObject::SuperGameObject*> mGameObjects;
         
         // List of entites to be removed.
         std::list<Entity*> mKilledEntites;
@@ -137,11 +137,11 @@ template<> inline std::vector<Entity*>* Scene::GetVector() {
     return &mEntities;
 }
 
-template<> inline std::vector<GameObject::SuperGameObject*>* Scene::GetVector() {
+// GetList<T>
+template<> inline std::list<GameObject::SuperGameObject*>* Scene::GetList() {
     return &mGameObjects;
 }
 
-// GetList<T>
 template<> inline std::list<Scene::Collision*>* Scene::GetList() {
     return &mCollisions;
 }
