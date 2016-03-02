@@ -4,7 +4,6 @@
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
-#include <System/ParticleSystem.hpp>
 #include <System/AnimationSystem.hpp>
 #include "Game/System/CheckpointSystem.hpp"
 #include "Game/System/HealthSystem.hpp"

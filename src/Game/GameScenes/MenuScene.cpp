@@ -124,7 +124,7 @@ void MenuScene::Update(float deltaTime) {
     
     // Update menu selection.
     int movement = Input()->Triggered(InputHandler::ANYONE, InputHandler::DOWN) - Input()->Triggered(InputHandler::ANYONE, InputHandler::UP);
-    if (mSelected + movement >= 0 && mSelected + movement < mMenuOptions.size())
+    if (mSelected + movement >= 0 && mSelected + movement < static_cast<int>(mMenuOptions.size()))
         mSelected += movement;
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
@@ -137,7 +137,7 @@ void MenuScene::Update(float deltaTime) {
     glm::vec3 cameraPosition = camera->GetComponent<Component::Transform>()->position;
     glm::vec3 ray(Picking::CreateWorldRay(mouseCoordinates, viewMat, projectionMat));
     
-    for (int i=0; i<mMenuOptions.size(); ++i) {
+    for (int i=0; i< static_cast<int>(mMenuOptions.size()); ++i) {
         // Plane vectors.
         glm::mat3 invModelMat(glm::transpose(glm::inverse(mMenuOptions[i]->GetModelMatrix())));
         glm::vec3 normal = glm::normalize(invModelMat * glm::vec3(0.f, 0.f, 1.f));
@@ -169,7 +169,7 @@ void MenuScene::Update(float deltaTime) {
         mMenuOptions[mSelected]->callback();
     
     // Render.
-    glViewport(0, 0, screenSize.x, screenSize.y);
+    glViewport(0, 0, static_cast<int>(screenSize.x), static_cast<int>(screenSize.y));
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
     // Glow.

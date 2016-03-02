@@ -56,7 +56,7 @@
 using namespace GameObject;
 
 MainScene::MainScene() {
-    System::SoundSystem::GetInstance()->SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    System::SoundSystem::GetInstance()->SetVolume(static_cast<float>(GameSettings::GetInstance().GetDouble("Audio Volume")));
     
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -279,10 +279,10 @@ void MainScene::Update(float deltaTime) {
 }
 
 int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
-    int oldX = glm::floor(point.x / gridScale);
-    int oldZ = glm::floor(point.z / gridScale);
-    int newX = glm::floor((point + velocity * deltaTime).x / gridScale);
-    int newZ = glm::floor((point + velocity * deltaTime).z / gridScale);
+    int oldX = static_cast<int>(point.x / gridScale );
+    int oldZ = static_cast<int>(point.z / gridScale );
+    int newX = static_cast<int>((point + velocity * deltaTime).x / gridScale );
+    int newZ = static_cast<int>((point + velocity * deltaTime).z / gridScale );
 
     float X = (newX - oldX) / velocity.x;
     float Z = (newZ - oldZ) / velocity.z;
