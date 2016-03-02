@@ -46,6 +46,7 @@ int main() {
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
     Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
+    Input()->AssignButton(InputHandler::ANYONE, InputHandler::PROFILE, InputHandler::KEYBOARD, GLFW_KEY_F2);
     
     System::SoundSystem* soundSystem = new System::SoundSystem();
     
