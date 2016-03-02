@@ -42,6 +42,12 @@ namespace GameObject {
              */
             int GetHeight() const;
 
+            /// Gets radius of the boss room.
+            /**
+            * @return Radius of the boss room.
+            */
+            int GetBossRoomRadius() const;
+
             /// Gets bool grid of cave.
             /**
              * @return 2D bool array of the cave grid.
@@ -69,5 +75,8 @@ namespace GameObject {
 
             /// cave Z size.
             int mHeight;
+
+            /// radius of a boss room.
+            int mBossRadius;
     };
 }

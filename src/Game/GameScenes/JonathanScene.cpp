@@ -110,8 +110,8 @@ JonathanScene::JonathanScene() {
     mPortalPosition = glm::vec2(playerStartX, playerStartZ);
 
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f), InputHandler::PLAYER_ONE));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f), InputHandler::PLAYER_TWO));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f)));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f)));
 
     // Create boss
     mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y));
@@ -159,11 +159,10 @@ void JonathanScene::Update(float deltaTime) {
     mControllerSystem.Update(*this, deltaTime);
 
     for (auto player : mPlayers) {
-        player->UpdatePlayerTexture();
-        JonathanSceneGridCollide(player->node, deltaTime, 5);
+        player->Update();
+        JonathanSceneGridCollide(player->GetNodeEntity(), deltaTime, 5);
         if (player->GetHealth() < 0.01f && player->Active()) {
-            player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
-            player->body->GetComponent<Component::ParticleEmitter>()->enabled = true;
+            player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
             player->Deactivate();
             GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
         }
@@ -397,21 +396,14 @@ void JonathanScene::JonathanSceneRespawn(float deltaTime) {
             mPlayers[0]->mRespawnTimer -= deltaTime;
             mPlayers[1]->mRespawnTimer -= deltaTime;
 
-            if (mPlayers[0]->mRespawnTimer <= 0) {
-
-                mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            if (mPlayers[0]->mRespawnTimer <= 0)
                 mPlayers[0]->Activate();
 
-            }
-            if (mPlayers[1]->mRespawnTimer <= 0) {
-
-                mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            if (mPlayers[1]->mRespawnTimer <= 0)
                 mPlayers[1]->Activate();
 
-            }
-
-            mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
-            mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
+            mPlayers[0]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
+            mPlayers[1]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
 
         }
         else {
@@ -419,9 +411,8 @@ void JonathanScene::JonathanSceneRespawn(float deltaTime) {
             mPlayers[0]->mRespawnTimer = 5;
             mPlayers[1]->mRespawnTimer = 5;
 
-            mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
-            mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
+            mPlayers[0]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
+            mPlayers[1]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
 
         }
-
 }

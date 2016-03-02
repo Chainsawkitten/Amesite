@@ -30,6 +30,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     xScale = 5.f;
     zScale = 5.f;
+    mBossRadius = 7;
 
     caveMap = new CaveGenerator::CaveMap(height, width, seed);
 
@@ -39,10 +40,10 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     caveMap->RemoveSmallRooms(threshold);
 
-    caveMap->CreateCircle(playerPosition, 7, false);
+    caveMap->CreateCircle(playerPosition, mBossRadius, false);
 
     for (auto& bossPosition : bossPositions) {
-        caveMap->CreateCircle(bossPosition, 7, false);
+        caveMap->CreateCircle(bossPosition, mBossRadius, false);
     }
 
     caveMap->ConnectClosestRooms(true);
