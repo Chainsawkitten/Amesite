@@ -39,6 +39,9 @@ class Entity {
         /// Remove %Entity from scene.
         void Clear();
 
+        /// Kill entity, will be removed at end of frame by scene.
+        void Kill();
+
         // Pointer to which GameObject %Entity is contained.
         /**
          * Default: nullptr
@@ -88,8 +91,10 @@ template <> inline Component::RelativeTransform* Entity::AddComponent<Component:
 }
 
 template <typename T> T* Entity::AddComponent() {
+    const std::type_info* componentType = &typeid(T*);
+    if (components.find(componentType) != components.end())
+        return nullptr;
     T* component = new T(this);
-    const std::type_info* componentType = &typeid(component);
     AddComponent(component, componentType);
     mScene->AddComponentToList(component, componentType);
     return component;

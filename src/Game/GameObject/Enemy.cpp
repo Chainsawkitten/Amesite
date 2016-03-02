@@ -25,7 +25,7 @@
 using namespace GameObject;
 
 Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
-    node = CreateEntity(scene);
+    node = CreateEntity();
     node->AddComponent<Component::Transform>()->scale *= 0.28f;
     node->AddComponent<Component::Collider2DCircle>()->radius = 9.f;
     node->AddComponent<Component::Physics>();
@@ -35,8 +35,9 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::Explode>()->lifeTime = 0.25f;
     node->GetComponent<Component::Explode>()->size = 8.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
+    node->GetComponent<Component::Explode>()->sound = true;
 
-    head = CreateEntity(scene);
+    head = CreateEntity();
     head->AddComponent<Component::RelativeTransform>()->Move(0, 0, 5.5f);
     head->GetComponent<Component::RelativeTransform>()->parentEntity = node;
     head->AddComponent<Component::Mesh>()->geometry = mEnemyHead = Resources().CreateOBJModel("Resources/enemy_head_crystal.obj");
@@ -49,7 +50,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     idleHead->CreateKeyFrame(glm::vec3(0.15f, 0.f, 0.f), 0.f, 0.f, 0.f, 3.f, false, true);
     head->GetComponent<Component::Animation>()->Start("idle");
 
-    tail = CreateEntity(scene);
+    tail = CreateEntity();
     tail->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     tail->GetComponent<Component::RelativeTransform>()->Move(0, 0, -5.5f);
     tail->AddComponent<Component::Mesh>()->geometry = mEnemyTail = Resources().CreateOBJModel("Resources/enemy_tail_crystal.obj");
@@ -62,7 +63,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     idleTail->CreateKeyFrame(glm::vec3(0.1f, 0.f, 0.f), 0.f, 0.f, 0.f, 2.f, false, true);
     tail->GetComponent<Component::Animation>()->Start("idle");
 
-    turret = CreateEntity(scene);
+    turret = CreateEntity();
     turret->AddComponent<Component::RelativeTransform>()->parentEntity = head;
     turret->GetComponent<Component::RelativeTransform>()->Move(0, 0, 8.f);
     turret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShoot);

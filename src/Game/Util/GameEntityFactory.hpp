@@ -61,13 +61,13 @@ class GameEntityFactory {
          */
         GameObject::Pylon* CreateEnemyPylon(const glm::vec3& origin);
        
-        /// Create Shield.
+        /// Create shield.
         /**
-         * @param parent Entity The shield's parent entity
-         * @param offset Offset of the shield to the parent entity
-         * @param lifeTime Life time of the sheild
-         * @param health Health of the shield
-         * @return The shield GameObject.
+         * @param parentEntity The shield's parent entity.
+         * @param offset Offset of the shield to the parent entity.
+         * @param lifeTime Life time of the shield.
+         * @param health Health of the shield.
+         * @return The created shield GameObject.
          */
         GameObject::Shield* CreateShield(Entity* parentEntity, glm::vec3 offset, float lifeTime, float health);
 
@@ -123,7 +123,7 @@ class GameEntityFactory {
         /**
          * @param position Position of the explosion.
          * @param lifeTime Life time of the explosion.
-         * @param size of the explosion.
+         * @param size Size of the explosion.
          * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
          */
         GameObject::Explosion* CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex);

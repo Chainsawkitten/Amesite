@@ -31,7 +31,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     xScale = 5.f;
     zScale = 5.f;
 
-    caveMap = new CaveGenerator::CaveMap(width, height, seed);
+    caveMap = new CaveGenerator::CaveMap(height, width, seed);
 
     caveMap->GenerateCaveMap(percent);
 
@@ -41,13 +41,11 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     caveMap->CreateCircle(playerPosition, 7, false);
 
-    //caveMap->ConnectClosestRooms(true);
-
-    caveMap->PrintMapToLog();
-
     for (auto& bossPosition : bossPositions) {
         caveMap->CreateCircle(bossPosition, 7, false);
     }
+
+    caveMap->ConnectClosestRooms(true);
 
     mMap = new bool*[height];
     for (int i = 0; i < height; i++) {
@@ -60,7 +58,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
         }
     }
 
-    map = CreateEntity(scene);
+    map = CreateEntity();
     map->AddComponent<Component::Mesh>();
     map->AddComponent<Component::Transform>();
     map->AddComponent<Component::Material>();
@@ -72,45 +70,47 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
     map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
 
-    heightMap = CreateEntity(scene);
+    heightMap = CreateEntity();
 
-    float** floatMap = new float*[width];
-    for (int i = 0; i < width; i++) {
-        floatMap[i] = new float[height];
+    float** floatMap = new float*[height];
+    for (int i = 0; i < height; i++) {
+        floatMap[i] = new float[width];
     }
 
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
             if (mMap[i][j] == true)
-                floatMap[i][j] = 1.0f;
+                floatMap[j][i] = 1.0f;
             else
-                floatMap[i][j] = 0.0f;
+                floatMap[j][i] = 0.0f;
         }
     }
 
-    //heightMap = CreateEntity(scene);
-    //
-    //heightMap->AddComponent<Component::Mesh>();
-    //heightMap->AddComponent<Component::Transform>();
-    //heightMap->AddComponent<Component::Material>();
-    //heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f), -11.f, zScale*(static_cast<float>(height) / 2.f)));
-    //heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
+    heightMap = CreateEntity();
+    
+    heightMap->AddComponent<Component::Mesh>();
+    heightMap->AddComponent<Component::Transform>();
+    heightMap->AddComponent<Component::Material>();
+    heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f)+1.f, -11.f, zScale*(static_cast<float>(height) / 2.f) + 1.f));
+    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
 
-    //heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, width, height, glm::vec2(xScale, zScale));
-
+    heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, height, width, glm::vec2(xScale, zScale));
     //heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
 
 }
 
 Cave::~Cave() {
-    for (int i = 0; i < mHeight; i++) {
-        delete[] mMap[i];
-    }
     delete caveMap;
-    delete[] mMap;
 }
 
-bool ** Cave::GetCaveData() const
-{
+int Cave::GetWidth() {
+    return mWidth;
+}
+
+int Cave::GetHeight() {
+    return mHeight;
+}
+
+bool ** Cave::GetCaveData() {
     return mMap;
 }

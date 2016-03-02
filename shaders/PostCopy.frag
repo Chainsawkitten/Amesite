@@ -11,7 +11,7 @@ in vec2 texCoords;
 out vec4 fragmentColor;
 
 void main () {
-	fragmentColor = texture(tDiffuse, texCoords);
-	float depth = texture(tDepth, texCoords).r;
-	gl_FragDepth = depth;
+    fragmentColor = texture(tDiffuse, texCoords);
+    float depth = texture(tDepth, texCoords).r;
+    gl_FragDepth = depth;
 }

@@ -6,9 +6,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if(UNIX OR MINGW)
+    set(CMAKE_CXX_FLAGS "-g -gdwarf-2 -static-libstdc++")
+endif()
+
 # GLFW
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Don't build GLFW examples" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "Don't build GLFW tests" FORCE)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "Don't build GLFW docs" FORCE)
 add_subdirectory(externals/glfw)
 include_directories(externals/glfw/include)
 
@@ -91,9 +96,12 @@ set(RESOURCES
         assets/enemy_tail_crystal_glow.png
         assets/enemy_head_crystal.obj
         assets/enemy_tail_crystal.obj
-        assets/player/ship_body_diff_healthy.png
-        assets/player/ship_body_diff_heavy_damage.png
-        assets/player/ship_body_diff_medium_damage.png
+        assets/player/ship1_body_diff_healthy.png
+        assets/player/ship1_body_diff_heavy_damage.png
+        assets/player/ship1_body_diff_medium_damage.png
+        assets/player/ship2_body_diff_healthy.png
+        assets/player/ship2_body_diff_heavy_damage.png
+        assets/player/ship2_body_diff_medium_damage.png
         assets/player/ship_body_spec.png
         assets/player/ship_body_glow.png
         assets/player/ship_engine_diff.png
@@ -122,13 +130,21 @@ set(RESOURCES
         assets/wall2_norm.png
         assets/Ship/Ship_Dif.png
         assets/Ship/Ship_Glow.png
+        assets/Ship/Ship_NM.png
         assets/Ship/Ship_Spec.png
-        assets/Ship/Ship_01.obj
-        assets/Ship/Ship_01.mtl
+        assets/Ship/Ship_body.obj
+        assets/Ship/Ship_engine.obj
+        assets/Ship/Ship_propeller.obj
         assets/GolfBall.obj
         assets/MusicAction.ogg
         assets/MusicCalm.ogg
         assets/Laser.ogg
+        assets/SwirlingPortal.png
+        assets/Explosion01.ogg
+        assets/Explosion02.ogg
+        assets/Explosion03.ogg
+        assets/Explosion04.ogg
+        assets/Explosion05.ogg
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -159,6 +175,7 @@ set(EMBEDDED_INPUT
         shaders/Font.vert
         shaders/Font.frag
         shaders/Text3D.frag
+        shaders/SingleColor3D.frag
         shaders/Post.vert
         shaders/PostCopy.frag
         shaders/PostColor.frag
@@ -358,6 +375,7 @@ set(GAME_SRCS
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
         src/Game/System/LifeTimeSystem.cpp
+        src/Game/System/ExplodeSystem.cpp
         src/Game/System/ReflectSystem.cpp
         src/Game/System/AISystem.cpp
         src/Game/System/CheckpointSystem.cpp
@@ -380,6 +398,7 @@ set(GAME_SRCS
         src/Game/GameScenes/IvarScene.cpp
         src/Game/GameScenes/JonathanScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
+        src/Game/GameScenes/WinScene.cpp
         src/Game/GameObject/Bullet.cpp
         src/Game/GameObject/Player.cpp
         src/Game/GameObject/Camera.cpp
@@ -406,6 +425,7 @@ set(GAME_HEADERS
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/System/LifeTimeSystem.hpp
+        src/Game/System/ExplodeSystem.hpp
         src/Game/System/ReflectSystem.hpp
         src/Game/System/AISystem.hpp
         src/Game/System/CheckpointSystem.hpp
@@ -428,6 +448,7 @@ set(GAME_HEADERS
         src/Game/GameScenes/IvarScene.hpp
         src/Game/GameScenes/JonathanScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
+        src/Game/GameScenes/WinScene.hpp
         src/Game/GameObject/Bullet.hpp
         src/Game/GameObject/Player.hpp
         src/Game/GameObject/Camera.hpp

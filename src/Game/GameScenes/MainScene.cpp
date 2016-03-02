@@ -50,10 +50,13 @@
 #include "../GameObject/SpinBoss.hpp"
 #include "../GameObject/Bullet.hpp"
 
+#include "../Game.hpp"
+#include "WinScene.hpp"
+
 using namespace GameObject;
 
 MainScene::MainScene() {
-    System::SoundSystem::GetInstance()->SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    System::SoundSystem::GetInstance()->SetVolume(static_cast<float>(GameSettings::GetInstance().GetDouble("Audio Volume")));
     
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -78,14 +81,17 @@ MainScene::MainScene() {
     
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
+
+    // Set timer to 0
+    mTimer = 0.f;
     
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(0.f, 70.f, 0.f), glm::vec3(0.f, 60.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(300.f, 300.f, 300.f), glm::vec3(0.f, 60.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
 
     // Create scene
-    int width = 60;
-    int height = 60;
+    int width;
+    int height = width = 60;
     int seed = 0;
     int percent = 50;
     int iterations = 10;
@@ -101,13 +107,19 @@ MainScene::MainScene() {
     float playerStartX = mCave->xScale*(static_cast<float>(width) / 2.f);
     float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
 
+    //Stores where the portal is located
+    mPortalPosition = glm::vec2(playerStartX, playerStartZ);
+
     // Create players 
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
     // Create boss
-    mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
+    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y));
     
+    //Stores how many bosses exist
+    mBossCounter = 1;
+
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
 
     // Add players to checkpoint system.
@@ -120,7 +132,7 @@ MainScene::MainScene() {
     dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
     dirLight->AddComponent<Component::DirectionalLight>();
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
-    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.04f;
+    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.24f;
     
     mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     mFxaaFilter = new FXAAFilter();
@@ -169,11 +181,16 @@ void MainScene::Update(float deltaTime) {
             player->Deactivate();
             GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
         }
+        glm::vec2 playerPosition(player->GetPosition().x, player->GetPosition().z);
+
+        if (mBossCounter == 0 && glm::distance(playerPosition, mPortalPosition) < 10.f) {
+            Game::GetInstance().SetScene(new WinScene(mTimer, 10));
+        }
     }
 
-    for (auto boss : mBosses)
-        boss->Update();
-
+    // Update boss
+    if (mSpinBoss != nullptr)
+        mSpinBoss->Update();
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
@@ -208,8 +225,11 @@ void MainScene::Update(float deltaTime) {
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
 
-    // Remove killed game objects
-    ClearKilledGameObjects();
+    // Update explotion system
+    mExplodeSystem.Update(*this);
+
+    // Remove killed entities
+    ClearKilledEntities();
 
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
@@ -221,6 +241,13 @@ void MainScene::Update(float deltaTime) {
     Respawn(deltaTime);
 
     mCheckpointSystem.Update();
+
+    if (mSpinBoss != nullptr)
+        if (mSpinBoss->GetHealth() < 0.01f) {
+            mSpinBoss->Kill();
+            mSpinBoss = nullptr;
+            mBossCounter--;
+        }
 
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
@@ -248,16 +275,21 @@ void MainScene::Update(float deltaTime) {
     
     // Render to back buffer.
     mPostProcessing->Render();
+
+    mTimer += deltaTime;
 }
 
 int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
-    int oldX = glm::floor(point.x / gridScale);
-    int oldZ = glm::floor(point.z / gridScale);
-    int newX = glm::floor((point + velocity * deltaTime).x / gridScale);
-    int newZ = glm::floor((point + velocity * deltaTime).z / gridScale);
+    int oldX = static_cast<int>(point.x / gridScale );
+    int oldZ = static_cast<int>(point.z / gridScale );
+    int newX = static_cast<int>((point + velocity * deltaTime).x / gridScale );
+    int newZ = static_cast<int>((point + velocity * deltaTime).z / gridScale );
 
     float X = (newX - oldX) / velocity.x;
     float Z = (newZ - oldZ) / velocity.z;
+
+    if (newX >= cave->GetWidth() || newX < 0 || newZ >= cave->GetHeight() || newZ < 0)
+        return -2;
 
     bool** map = cave->GetCaveData();
 
@@ -359,8 +391,13 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
 
     }
 
+    if (c0 == -2 || c1 == -2 || c2 == -2 || c3 == -2)
+        if (entity->GetComponent<Component::LifeTime>() != nullptr)
+            entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
+
     if (c0 != -1 || c1 != -1 || c2 != -1 || c3 != -1)
         return true;
+
 
     return false;
 

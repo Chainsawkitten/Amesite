@@ -91,6 +91,7 @@ namespace CaveGenerator {
                         tempMap[j][k] = true;
                 }
             }
+
             for (int j = 0; j < mRowCount; ++j) {
                 for (int k = 0; k < mColumnCount; ++k) {
                     //Do not iterate over the border columns and rows.
@@ -289,7 +290,7 @@ namespace CaveGenerator {
     }
 
     bool CaveMap::IsWithinMapRange(const Coordinate & coordinate) {
-        return ((coordinate.x > 0) && (coordinate.x < mColumnCount) && (coordinate.y > 0) && (coordinate.y < mRowCount));
+        return ((coordinate.x > 0) && (coordinate.x < mRowCount) && (coordinate.y > 0) && (coordinate.y < mColumnCount));
     }
 
     bool ** CaveMap::GetMap(){
@@ -558,12 +559,4 @@ namespace CaveGenerator {
     Coordinate::Coordinate() {
 
     }
-
-    //bool operator==(const Coordinate& lhs, const Coordinate& rhs) {
-    //    return (lhs.x == rhs.x && lhs.y == rhs.y);
-    //}
-
-//    bool operator==(const Room& lhs, const Room& rhs) {
-//        return(lhs == rhs);
-//    }
 }

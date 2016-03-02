@@ -248,7 +248,7 @@ void CollisionSystem::Update(Scene& scene) {
 //    glm::vec3 thisOrigin = aTransform->GetWorldPosition();
 //    glm::vec3 otherOrigin = bTransform->GetWorldPosition();
 //
-//    // <<-------------------------- TODO SCALE ---------------------------------->> ugauoaghijafgioh suiogh sughy sbgyshiughsuiogh u<g ushpig hs8gh sugh uishgå 
+//    // <<-------------------------- TODO SCALE ---------------------------------->>
 //    glm::vec3 aScale = aTransform->GetWorldScale();
 //    glm::vec3 bScale = bTransform->GetWorldScale();
 //
@@ -287,7 +287,7 @@ void CollisionSystem::Update(Scene& scene) {
 //    glm::vec3 rectangleOrigin = rectangleTransform->GetWorldPosition();
 //    glm::vec3 circleOrigin = circleTransform->GetWorldPosition();
 //
-//    // <<-------------------------- TODO SCALE ---------------------------------->> ugauoaghijafgioh suiogh sughy sbgyshiughsuiogh u<g ushpig hs8gh sugh uishgå 
+//    // <<-------------------------- TODO SCALE ---------------------------------->> 
 //
 //    //Is the origin of the circle inside the rectangle?
 //    if ((circleOrigin.x < (rectangleOrigin.x + (rectangle->width / 2))) &&

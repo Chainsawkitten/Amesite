@@ -27,15 +27,11 @@ void HealthSystem::Update(Scene& scene, float deltaTime) {
         // Update hp
         if (healthComponent->cooldown < 0.01f)
             healthComponent->health = std::fminf(healthComponent->health + healthComponent->regenAmount * deltaTime, healthComponent->maxHealth);
-        if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth) {
-            if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth) {
-                Component::Explode* explodeComp = healthComponent->entity->GetComponent<Component::Explode>();
-                // Create Explosion    
-                if (explodeComp != nullptr)
-                    GameEntityCreator().CreateExplosion(healthComponent->entity->GetComponent<Component::Transform>()->GetWorldPosition()+explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex);                                                                                                                                                                                              //Kill game object
-                //Kill game object
-                healthComponent->entity->gameObject->Kill();
-            }
+        if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth)
+            if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth)
+                if (healthComponent->entity->gameObject != nullptr)
+                    healthComponent->entity->gameObject->Kill();
+                else
+                    healthComponent->entity->Kill();
         }
-    }
 }

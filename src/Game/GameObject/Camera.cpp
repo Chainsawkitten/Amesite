@@ -14,7 +14,7 @@
 using namespace GameObject;
 
 Camera::Camera(Scene* scene) : SuperGameObject(scene) {
-    body = CreateEntity(scene);
+    body = CreateEntity();
     body->AddComponent<Component::Transform>();
     body->AddComponent<Component::Physics>();
     body->AddComponent<Component::Lens>();

@@ -28,9 +28,11 @@ Font::Font(const char* filename, float height) {
     fontFile.read(reinterpret_cast<char*>(ttfBuffer), size);
     fontFile.close();
     
-    unsigned char* tempBitmap = new unsigned char[512 * 512];
+    mBitmapWidth = static_cast<unsigned int>((ceil(sqrt(96.f)) + 1.f) * height + 0.05f);
+    mBitmapWidth += mBitmapWidth % 4;
+    unsigned char* tempBitmap = new unsigned char[mBitmapWidth * mBitmapWidth];
     
-    stbtt_BakeFontBitmap(ttfBuffer, 0, height, tempBitmap, 512, 512, 32, 96, mCData);
+    stbtt_BakeFontBitmap(ttfBuffer, 0, height, tempBitmap, mBitmapWidth, mBitmapWidth, 32, 96, mCData);
     
     // Get baseline.
     stbtt_fontinfo fontInfo;
@@ -44,7 +46,7 @@ Font::Font(const char* filename, float height) {
     
     glGenTextures(1, &mTexture);
     glBindTexture(GL_TEXTURE_2D, mTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, 512, 512, 0, GL_ALPHA, GL_UNSIGNED_BYTE, tempBitmap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, mBitmapWidth, mBitmapWidth, 0, GL_ALPHA, GL_UNSIGNED_BYTE, tempBitmap);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     
     delete[] tempBitmap;
@@ -65,13 +67,15 @@ Font::Font(const char* filename, float height) {
 Font::Font(const char* source, int sourceLength, float height) {
     mHeight = height;
     
-    unsigned char* tempBitmap = new unsigned char[512 * 512];
+    mBitmapWidth = static_cast<unsigned int>((ceil(sqrt(96.f)) + 1.f) * height + 0.05f);
+    mBitmapWidth += mBitmapWidth % 4;
+    unsigned char* tempBitmap = new unsigned char[mBitmapWidth * mBitmapWidth];
     
-    stbtt_BakeFontBitmap(reinterpret_cast<const unsigned char*>(source), 0, height, tempBitmap, 512, 512, 32, 96, mCData);
+    stbtt_BakeFontBitmap(reinterpret_cast<const unsigned char*>(source), 0, height, tempBitmap, mBitmapWidth, mBitmapWidth, 32, 96, mCData);
     
     glGenTextures(1, &mTexture);
     glBindTexture(GL_TEXTURE_2D, mTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, 512, 512, 0, GL_ALPHA, GL_UNSIGNED_BYTE, tempBitmap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, mBitmapWidth, mBitmapWidth, 0, GL_ALPHA, GL_UNSIGNED_BYTE, tempBitmap);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     
     delete[] tempBitmap;
@@ -201,6 +205,6 @@ float Font::RenderCharacter(char character, const glm::vec2& position, const glm
 
 stbtt_aligned_quad Font::BakedQuad(char character, float& x, float& y) {
     stbtt_aligned_quad q;
-    stbtt_GetBakedQuad(mCData, 512, 512, character - 32, &x, &y, &q, 1);
+    stbtt_GetBakedQuad(mCData, mBitmapWidth, mBitmapWidth, character - 32, &x, &y, &q, 1);
     return q;
 }
