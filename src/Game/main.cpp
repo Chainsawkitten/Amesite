@@ -46,7 +46,7 @@ int main() {
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
     Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
-    Input()->AssignButton(InputHandler::ANYONE, InputHandler::PROFILE, InputHandler::KEYBOARD, GLFW_KEY_F2);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::PROFILE, InputHandler::KEYBOARD, GLFW_KEY_F2);
     
     System::SoundSystem* soundSystem = new System::SoundSystem();
     
@@ -54,6 +54,10 @@ int main() {
         Game::GetInstance().SetScene(new SplashScene());
     else
         Game::GetInstance().SetScene(new MenuScene());
+    
+    // Profiling variables.
+    bool profiling = false;
+    unsigned int profileFrames = 0;
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -66,10 +70,24 @@ int main() {
         Game::GetInstance().Update(static_cast<float>(deltaTime));
         
         // Set window title to reflect screen update and render times.
+        float frameTime = (glfwGetTime() - lastTime) * 1000.0f;
         std::string title = "Modership";
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))
-            title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0f) + " ms";
+            title += " - " + std::to_string(frameTime) + " ms";
         window->SetTitle(title.c_str());
+        
+        // Profiling.
+        if (profiling) {
+            if (++profileFrames >= 300) {
+                Log() << "Profiling ended - " << time(nullptr) << "\n";
+                profiling = false;
+            }
+        } else if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE)) {
+            profiling = true;
+            profileFrames = 0;
+            
+            Log() << "Profiling started - " << time(nullptr) << "\n";
+        }
         
         // Swap buffers and wait until next frame.
         window->SwapBuffers();
