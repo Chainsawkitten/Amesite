@@ -107,7 +107,7 @@ class Scene {
         System::ParticleSystem::Particle* mParticles;
         unsigned int mParticleCount;
         
-        // Map containing vectors of components.
+        // Map containing list of components.
         std::map<const std::type_info*, std::list<Component::SuperComponent*>> mComponents;
         
         // List of all collisons in this scene.
