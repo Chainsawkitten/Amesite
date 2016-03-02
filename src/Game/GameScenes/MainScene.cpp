@@ -23,10 +23,6 @@
 #include "Game/Component/Damage.hpp"
 #include "Game/Component/LifeTime.hpp"
 
-#include "../GameObject/Player.hpp"
-#include "../GameObject/Cave.hpp"
-#include "../GameObject/Camera.hpp"
-
 #include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
 
@@ -44,10 +40,11 @@
 #include "../Util/CaveGenerator.hpp"
 #include <Util/Log.hpp>
 
-#include "../GameObject/Player.hpp"
+#include "../GameObject/Player/Player1.hpp"
+#include "../GameObject/Player/Player2.hpp"
+#include "../GameObject/Boss/SpinBoss.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
-#include "../GameObject/SpinBoss.hpp"
 #include "../GameObject/Bullet.hpp"
 
 #include "../Game.hpp"
@@ -57,20 +54,6 @@ using namespace GameObject;
 
 MainScene::MainScene() {
     System::SoundSystem::GetInstance()->SetVolume(static_cast<float>(GameSettings::GetInstance().GetDouble("Audio Volume")));
-    
-    // Assign input
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::BOOST, InputHandler::JOYSTICK, InputHandler::LEFT_BUMPER);
-
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
     
     // Music
     mMusicSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
@@ -111,8 +94,8 @@ MainScene::MainScene() {
     mPortalPosition = glm::vec2(playerStartX, playerStartZ);
 
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f)));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f)));
     
     // Create boss
     mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y));
@@ -155,6 +138,8 @@ MainScene::MainScene() {
     GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
     GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
+
+    GameEntityCreator().CreateSpawn(glm::vec3(playerStartX + 1.f, -12.f, playerStartZ - 25.f));
 }
 
 MainScene::~MainScene() {
@@ -173,11 +158,10 @@ void MainScene::Update(float deltaTime) {
     mControllerSystem.Update(*this, deltaTime);
 
     for (auto player : mPlayers) {
-        player->UpdatePlayerTexture();
-        GridCollide(player->node, deltaTime, 5);
+        player->Update();
+        GridCollide(player->GetNodeEntity(), deltaTime, 5);
         if (player->GetHealth() < 0.01f && player->Active()) {
-            player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
-            player->body->GetComponent<Component::ParticleEmitter>()->enabled = true;
+            player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
             player->Deactivate();
             GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
         }
@@ -411,21 +395,14 @@ void MainScene::Respawn(float deltaTime) {
             mPlayers[0]->mRespawnTimer -= deltaTime;
             mPlayers[1]->mRespawnTimer -= deltaTime;
 
-            if (mPlayers[0]->mRespawnTimer <= 0) {
-
-                mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            if (mPlayers[0]->mRespawnTimer <= 0)
                 mPlayers[0]->Activate();
 
-            }
-            if (mPlayers[1]->mRespawnTimer <= 0) {
-
-                mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            if (mPlayers[1]->mRespawnTimer <= 0)
                 mPlayers[1]->Activate();
 
-            }
-
-            mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
-            mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
+            mPlayers[0]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
+            mPlayers[1]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
 
         }
         else {
@@ -433,8 +410,8 @@ void MainScene::Respawn(float deltaTime) {
             mPlayers[0]->mRespawnTimer = 5;
             mPlayers[1]->mRespawnTimer = 5;
 
-            mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
-            mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
+            mPlayers[0]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
+            mPlayers[1]->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
 
         }
         

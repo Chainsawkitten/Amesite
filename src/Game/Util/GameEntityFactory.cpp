@@ -27,7 +27,8 @@
 #include "../Util/CaveGenerator.hpp"
 
 #include "../GameObject/Bullet.hpp"
-#include "../GameObject/Player.hpp"
+#include "../GameObject/Player/Player1.hpp"
+#include "../GameObject/Player/Player2.hpp"
 #include "../GameObject/Camera.hpp"
 #include "../GameObject/Enemy.hpp"
 #include "../GameObject/Cave.hpp"
@@ -35,8 +36,9 @@
 #include "../GameObject/Explosion.hpp"
 #include "../GameObject/Pylon.hpp"
 #include "../GameObject/Shield.hpp"
-#include "../GameObject/SpinBoss.hpp"
 #include "../GameObject/EnemySpawner.hpp"
+#include "../GameObject/Boss/SpinBoss.hpp"
+#include "../GameObject/Spawn.hpp"
 
 using namespace GameObject;
 
@@ -79,23 +81,28 @@ GameObject::Shield* GameEntityFactory::CreateShield(Entity* parentEntity, glm::v
     return gameObject;
 }
 
-Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::Player player) {
-    Player* gameObject = new Player(mScene, player);
-    gameObject->node->GetComponent<Component::Transform>()->position = origin;
-    gameObject->node->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->leftTurret->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->rightTurret->GetComponent<Component::Controller>()->playerID = player;
-    CreateDust(gameObject->node, Component::ParticleEmitter::DUST);
-    if (player == InputHandler::PLAYER_ONE) {
-        gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
-    } else {
-        gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::MouseRotate);
-    }
+Player1* GameEntityFactory::CreatePlayer1(const glm::vec3& origin) {
+    Player1* gameObject = new Player1(mScene);
+    gameObject->SetPosition(origin);
+    CreateDust(gameObject->GetNodeEntity(), Component::ParticleEmitter::DUST);
+    return gameObject;
+}
+
+Player2* GameEntityFactory::CreatePlayer2(const glm::vec3& origin) {
+    Player2* gameObject = new Player2(mScene);
+    gameObject->SetPosition(origin);
+    CreateDust(gameObject->GetNodeEntity(), Component::ParticleEmitter::DUST);
     return gameObject;
 }
 
 GameObject::SpinBoss* GameEntityFactory::CreateSpinBoss(const glm::vec3& origin) {
     SpinBoss* gameObject = new SpinBoss(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::Spawn* GameEntityFactory::CreateSpawn(const glm::vec3& origin) {
+    Spawn* gameObject = new Spawn(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }
