@@ -20,15 +20,10 @@ ParticleSystem* ParticleSystem::mActiveInstance = nullptr;
 
 ParticleSystem::ParticleSystem() {
     mMaxParticleCount = 10000;
-    mParticleCount = 0;
 }
 
 ParticleSystem::~ParticleSystem() {
     delete mActiveInstance;
-}
-
-unsigned int ParticleSystem::ParticleCount() const {
-    return mParticleCount;
 }
 
 unsigned int ParticleSystem::MaxParticleCount() const {
@@ -36,7 +31,7 @@ unsigned int ParticleSystem::MaxParticleCount() const {
 }
 
 void ParticleSystem::EmitParticle(glm::vec3 position, Component::ParticleEmitter* emitter) {
-    if (mParticleCount < mMaxParticleCount) {
+    if (mScene->GetVectorContents<ParticleSystem::Particle>()->size() < mMaxParticleCount) {
         Particle particle;
         
         particle.worldPos = position;
@@ -61,7 +56,6 @@ void ParticleSystem::EmitParticle(glm::vec3 position, Component::ParticleEmitter
         
         std::vector<Particle>* particleVector = mScene->GetVectorContents<Particle>();
         particleVector->push_back(particle);
-        mParticleCount++;
     }
 }
 
@@ -73,7 +67,6 @@ void ParticleSystem::Update(Scene& scene, double time) {
             particleVector->at(i).life += static_cast<float>(time);
             if (particleVector->at(i).life >= particleVector->at(i).lifetime) {
                 particleVector->erase(particleVector->begin() + i);
-                mParticleCount--;
                 i--;
             }
         }

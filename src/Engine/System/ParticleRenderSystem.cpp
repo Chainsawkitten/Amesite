@@ -78,10 +78,10 @@ ParticleRenderSystem::~ParticleRenderSystem() {
 }
 
 void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2& screenSize) {
-    if (Particle().ParticleCount() > 0) {
+    if (scene.GetVectorContents<ParticleSystem::Particle>()->size() > 0) {
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         std::vector<ParticleSystem::Particle>* particles = scene.GetVectorContents<ParticleSystem::Particle>();
-        glBufferSubData(GL_ARRAY_BUFFER, 0, Particle().ParticleCount() *sizeof(ParticleSystem::Particle), particles->data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, scene.GetVectorContents<ParticleSystem::Particle>()->size()*sizeof(ParticleSystem::Particle), particles->data());
 
         // Don't write to depth buffer.
         GLboolean depthWriting;
@@ -115,11 +115,13 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
         glUniform1fv(mParticleShaderProgram->GetUniformLocation("textureAtlasRows"), 1, &mTextureAtlasNumRows);
 
         // Draw the triangles
-        glDrawArrays(GL_POINTS, 0, Particle().ParticleCount());
+        glDrawArrays(GL_POINTS, 0, scene.GetVectorContents<ParticleSystem::Particle>()->size());
 
         // Reset state values we've changed.
         glDepthMask(depthWriting);
         glDisablei(GL_BLEND, 0);
         glDisablei(GL_BLEND, 1);
+
+        glBindVertexArray(0);
     }
 }
