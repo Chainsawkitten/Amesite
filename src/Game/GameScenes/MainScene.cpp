@@ -400,6 +400,7 @@ void MainScene::Respawn(float deltaTime) {
                 }
             }
         }
+        //If the players respawn timer is < 0, then the player should be activated.
         if (thisPlayer->mRespawnTimer < 0.001f) {
             thisPlayer->Activate();
         }

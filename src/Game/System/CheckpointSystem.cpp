@@ -28,6 +28,5 @@ void System::CheckpointSystem::RespawnPlayers() {
         player->SetPosition(glm::vec3(mPosition.x, 0.f, mPosition.y));
         player->GetNodeEntity()->GetComponent<Component::Health>()->health = player->GetNodeEntity()->GetComponent<Component::Health>()->maxHealth;
         player->Activate();
-        //player->GetNodeEntity.GetComponent<Component::Health>()->health = player->GetNodeEntity.GetComponent<Component::Health>()->maxHealth;
     }
 }
