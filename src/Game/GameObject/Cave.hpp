@@ -2,6 +2,8 @@
 
 #include <Engine/GameObject/SuperGameObject.hpp>
 
+#include <glm/glm.hpp>
+
 class Scene;
 class Entity;
 namespace CaveGenerator {
@@ -48,6 +50,14 @@ namespace GameObject {
             */
             int GetBossRoomRadius() const;
 
+            /// Grid collision
+            /**
+             * @param entity The minimum room size in tiles.
+             * @param deltaTime Where the players start.
+             * @return Returns true if collision with map, else false.
+             */
+            bool GridCollide(Entity* entity, float deltaTime);
+
             /// Gets bool grid of cave.
             /**
              * @return 2D bool array of the cave grid.
@@ -64,11 +74,15 @@ namespace GameObject {
             /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;
 
-            /// cave X scale.
-            float xScale;
+            /// Scale factor.
+            /**
+             * Default: 5.f
+             */
+            float scaleFactor;
 
-            /// cave Z scale.
-            float zScale;
+        private:
+
+            int Cave::PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime);
 
             /// cave X size.
             int mWidth;

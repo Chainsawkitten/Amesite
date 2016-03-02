@@ -87,8 +87,8 @@ MainScene::MainScene() {
     // Create a map.
     mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
 
-    float playerStartX = mCave->xScale*(static_cast<float>(width) / 2.f);
-    float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
+    float playerStartX = mCave->scaleFactor*(static_cast<float>(width) / 2.f);
+    float playerStartZ = mCave->scaleFactor*(static_cast<float>(height) / 2.f);
 
     //Stores where the portal is located
     mPortalPosition = glm::vec2(playerStartX, playerStartZ);
@@ -98,7 +98,7 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f)));
     
     // Create boss
-    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y));
+    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y));
     
     //Stores how many bosses exist
     mBossCounter = 1;
@@ -159,7 +159,8 @@ void MainScene::Update(float deltaTime) {
 
     for (auto player : mPlayers) {
         player->Update();
-        GridCollide(player->GetNodeEntity(), deltaTime, 5);
+        mCave->GridCollide(player->GetNodeEntity(), deltaTime);
+        //GridCollide(player->GetNodeEntity(), deltaTime, 5);
         if (player->GetHealth() < 0.01f && player->Active()) {
             player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
             player->Deactivate();
@@ -191,11 +192,8 @@ void MainScene::Update(float deltaTime) {
     // Check collisions.
     mCollisionSystem.Update(*this);
     
-    std::vector<Component::Damage*> bulletVector = this->GetAll<Component::Damage>();
-    for (auto bullet : bulletVector) {
-        if (GridCollide(bullet->entity, deltaTime, 5.f))
-            bullet->entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
-    }
+    // Check grid collisions.
+    mGridCollideSystem.Update(*this, deltaTime, *mCave);
 
     // Update health
     mHealthSystem.Update(*this, deltaTime);
@@ -261,130 +259,6 @@ void MainScene::Update(float deltaTime) {
     mPostProcessing->Render();
 
     mTimer += deltaTime;
-}
-
-int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
-    int oldX = static_cast<int>(point.x / gridScale );
-    int oldZ = static_cast<int>(point.z / gridScale );
-    int newX = static_cast<int>((point + velocity * deltaTime).x / gridScale );
-    int newZ = static_cast<int>((point + velocity * deltaTime).z / gridScale );
-
-    float X = (newX - oldX) / velocity.x;
-    float Z = (newZ - oldZ) / velocity.z;
-
-    if (newX >= cave->GetWidth() || newX < 0 || newZ >= cave->GetHeight() || newZ < 0)
-        return -2;
-
-    bool** map = cave->GetCaveData();
-
-    //We check if we moved to another cell in the grid.
-    if (map[abs(newZ)][abs(newX)]) {
-        //We collide in X
-        if (X > Z) {
-
-            if (oldX != newX) {
-                return 0;
-            }
-            else if (oldZ != newZ) {
-                return 1;
-            }
-        }
-        //We collide in Z
-        else {
-            if (oldZ != newZ) {
-                return 1;
-            }
-            else if (oldX != newX) {
-                return 0;
-            }
-        }
-    }
-    return -1;
-}
-
-bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
-
-    Component::Transform* transform = entity->GetComponent<Component::Transform>();
-    Component::Physics* physics = entity->GetComponent<Component::Physics>();
-
-    glm::vec3 velocity = physics->velocity;
-    velocity += physics->acceleration * deltaTime;
-    velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
-
-    glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
-    glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
-
-    //glm::vec3 width = glm::vec3(2.9f, 0.f, 0.f);
-    //glm::vec3 height = glm::vec3(0.f, 0.f, 2.9f);
-
-    int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale, mCave);
-    int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale, mCave);
-    int c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime, gridScale, mCave);
-    int c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime, gridScale, mCave);
-
-    switch (c0) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-    switch (c1) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-    switch (c2) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-    switch (c3) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-
-    if (c0 == -2 || c1 == -2 || c2 == -2 || c3 == -2)
-        if (entity->GetComponent<Component::LifeTime>() != nullptr)
-            entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
-
-    if (c0 != -1 || c1 != -1 || c2 != -1 || c3 != -1)
-        return true;
-
-
-    return false;
-
 }
 
 void MainScene::Respawn(float deltaTime) {
