@@ -39,9 +39,8 @@ void ParticleSystem::Update(Scene& scene, double time) {
         }
     }
     
-    std::vector<Component::ParticleEmitter*> particleEmitters = scene.GetAll<Component::ParticleEmitter>();
-    for (unsigned int i = 0; i < particleEmitters.size(); ++i) {
-        Component::ParticleEmitter* emitter = particleEmitters[i];
+    std::list<Component::ParticleEmitter*> particleEmitters = scene.GetAll<Component::ParticleEmitter>();
+    for (Component::ParticleEmitter* emitter : particleEmitters) {
         if (emitter->enabled) {
             emitter->timeToNext -= time;
             while (emitter->timeToNext < 0.0) {

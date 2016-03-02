@@ -29,11 +29,11 @@ struct Node {
 bool myfunction(Node& i, Node& j) { return (i.min.x<j.min.x); }
 
 void CollisionSystem::Update(Scene& scene) {
-    // Get vectors from scene
+    // Get components from scene.
     std::list<Scene::Collision*>* collisions = scene.GetList<Scene::Collision>();
-    std::vector<Component::Collider2DCircle*> collider2DCircle = scene.GetAll<Component::Collider2DCircle>();
+    std::list<Component::Collider2DCircle*> collider2DCircle = scene.GetAll<Component::Collider2DCircle>();
     
-    // Clear vector
+    // Clear collisions.
     for (Scene::Collision* collision : *collisions) {
         delete collision;
     }

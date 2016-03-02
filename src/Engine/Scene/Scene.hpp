@@ -2,7 +2,6 @@
 
 #include <map>
 #include <typeinfo>
-#include <vector>
 #include <list>
 #include <algorithm>
 #include <iterator>
@@ -45,9 +44,9 @@ class Scene {
         
         /// Gets all components of a specific type.
         /**
-         * @return A vector of pointers to all components of the specified scene.
+         * @return A list of pointers to all components of the specified scene.
          */
-        template <typename T> std::vector<T*>& GetAll();
+        template <typename T> std::list<T*>& GetAll();
         
         /// Gets all item of a specific type.
         /**
@@ -109,7 +108,7 @@ class Scene {
         unsigned int mParticleCount;
         
         // Map containing vectors of components.
-        std::map<const std::type_info*, std::vector<Component::SuperComponent*>> mComponents;
+        std::map<const std::type_info*, std::list<Component::SuperComponent*>> mComponents;
         
         // List of all collisons in this scene.
         std::list<Collision*> mCollisions;
@@ -122,8 +121,8 @@ class Scene {
 };
 
 // GetAll<T>
-template <typename T> inline std::vector<T*>& Scene::GetAll() {
-    return reinterpret_cast<std::vector<T*>&>(mComponents[&typeid(T*)]);
+template <typename T> inline std::list<T*>& Scene::GetAll() {
+    return reinterpret_cast<std::list<T*>&>(mComponents[&typeid(T*)]);
 }
 
 // GetList<T>

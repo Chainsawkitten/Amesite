@@ -184,8 +184,8 @@ void JonathanScene::Update(float deltaTime) {
     // Check collisions.
     mCollisionSystem.Update(*this);
 
-    std::vector<Component::Damage*> bulletVector = this->GetAll<Component::Damage>();
-    for (auto bullet : bulletVector)
+    std::list<Component::Damage*> bullets = this->GetAll<Component::Damage>();
+    for (auto bullet : bullets)
         if (GridCollide(bullet->entity, deltaTime, 5.f))
             bullet->entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
 

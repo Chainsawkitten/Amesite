@@ -54,11 +54,12 @@ void Scene::ClearAll() {
 }
 
 void Scene::UpdateModelMatrices() {
-    std::vector<Component::Transform*> transforms = GetAll<Component::Transform>();
-    for (unsigned int i = 0; i < transforms.size(); i++)
-        transforms[i]->UpdateModelMatrix();
-    std::vector<Component::Animation*> animationVector = GetAll<Component::Animation>();
-    for (auto animationComponent : animationVector) {
+    std::list<Component::Transform*> transforms = GetAll<Component::Transform>();
+    for (Component::Transform* transform : transforms)
+        transform->UpdateModelMatrix();
+    
+    std::list<Component::Animation*> animations = GetAll<Component::Animation>();
+    for (auto animationComponent : animations) {
         Component::RelativeTransform* relativeTranform = animationComponent->entity->GetComponent<Component::RelativeTransform>();
         if (relativeTranform != nullptr && relativeTranform->parentEntity->GetComponent<Component::Animation>() != nullptr) {
             Component::Animation* relativeAnimation = relativeTranform->parentEntity->GetComponent<Component::Animation>();
