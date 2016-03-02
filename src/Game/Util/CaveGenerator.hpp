@@ -5,7 +5,7 @@
 namespace CaveGenerator {
 
     /// A 2D coordinate in a cave.
-    struct Coordinate {
+    class Coordinate {
         public:
             /// X coordinate.
             int x;

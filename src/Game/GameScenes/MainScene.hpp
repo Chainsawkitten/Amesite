@@ -4,7 +4,6 @@
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
-#include <System/ParticleSystem.hpp>
 #include <System/AnimationSystem.hpp>
 #include "Game/System/CheckpointSystem.hpp"
 #include "Game/System/HealthSystem.hpp"
@@ -101,6 +100,9 @@ class MainScene : public Scene {
         GammaCorrectionFilter* mGammaCorrectionFilter;
         GlowFilter* mGlowFilter;
         GlowBlurFilter* mGlowBlurFilter;
+        int mBossCounter;
+        float mTimer;
+        glm::vec2 mPortalPosition;
         
         // Grid collision
         bool GridCollide(Entity* entity, float deltaTime, float gridScale);
