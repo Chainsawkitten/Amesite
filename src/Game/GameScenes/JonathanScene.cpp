@@ -165,7 +165,7 @@ void JonathanScene::Update(float deltaTime) {
         boss->Update();
 
     //EnemySpawnerSystem.
-    mEnemySpawnerSystem.Update(*this, deltaTime, mCave);
+    mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers);
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);

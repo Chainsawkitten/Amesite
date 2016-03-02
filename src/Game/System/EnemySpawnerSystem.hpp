@@ -6,6 +6,7 @@
 class Scene;
 
 namespace GameObject {
+    class Player;
     class Enemy;
     class Pylon;
     class EnemySpawner;
@@ -27,14 +28,15 @@ namespace System {
             * @param scene The scene to update.
             * @param deltaTime Time since last frame (in seconds).
             */
-            void Update(Scene& scene, float deltaTime, const GameObject::Cave* cave);
+            void Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::Player*> *players);
         private:
             // Enemy count.
             unsigned int mMaxEnemyCount;
             unsigned int mEnemyCount;
+            float mSpawnerRadius;
 
             // Retrieves a valid random spawn position from the map.
-            glm::vec3 FindValidPosition(const GameObject::Cave* cave) const;
+            glm::vec3 FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::Player*> *players) const;
 
             // Keeps track of the active enemies in the scene.
             std::vector<GameObject::Enemy*> mEnemies;
