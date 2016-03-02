@@ -40,13 +40,14 @@ namespace System {
                 /// Texture index (for the texture atlas, left to right, top to bottom indexing)
                 float textureIndex;
             };
+            
             /// Destructor.
             ~ParticleSystem();
 
             /// Get currently active ParticleSystem.
             /**
-            * @return The currently active input handler or creates one.
-            */
+             * @return The currently active input handler or creates one.
+             */
             static ParticleSystem& GetActiveInstance();
 
             /// Get the maximum amount of particles.
@@ -54,19 +55,6 @@ namespace System {
              * @return Maximum amount of particles.
              */
             unsigned int MaxParticleCount() const;
-
-            /// Emit a particle at the given position.
-            /**
-             * @param position Position to emit particle at.
-             * @param emitter The emitter that emits the particle.
-             */
-            void EmitParticle(glm::vec3 position, Component::ParticleEmitter* emitter);
-
-            /// Decide where the emitter should emit before rendering.
-            /**
-             * @param emitter for which to calculate emission
-             */
-            void EmitParticle(Component::ParticleEmitter* emitter);
 
             /// Update all the system's particles, spawn new particles etc.
             /**
@@ -76,19 +64,25 @@ namespace System {
              void Update(Scene& scene, double time);
              
         private:
-            /// Create a new particle system.
-            ParticleSystem();
-
-            Scene* mScene; 
             static ParticleSystem* mActiveInstance;
+            
             // System properties
             unsigned int mMaxParticleCount;
+            
+            // Create a new particle system.
+            ParticleSystem();
+            
+            // Decide where the emitter should emit before rendering.
+            void EmitParticle(Scene& scene, Component::ParticleEmitter* emitter);
+            
+            // Emit a particle at the given position.
+            void EmitParticle(Scene& scene, glm::vec3 position, Component::ParticleEmitter* emitter);
     };
-
+    
     /// Get currently active ParticleSystem.
     /**
-    * @return The currently active ParticleSystem or nullptr.
-    */
+     * @return The currently active ParticleSystem or nullptr.
+     */
     ParticleSystem& Particle();
 }
 

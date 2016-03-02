@@ -6,9 +6,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if(UNIX OR MINGW)
+    set(CMAKE_CXX_FLAGS "-g -gdwarf-2 -static-libstdc++")
+endif()
+
 # GLFW
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Don't build GLFW examples" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "Don't build GLFW tests" FORCE)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "Don't build GLFW docs" FORCE)
 add_subdirectory(externals/glfw)
 include_directories(externals/glfw/include)
 
@@ -91,18 +96,24 @@ set(RESOURCES
         assets/enemy_tail_crystal_glow.png
         assets/enemy_head_crystal.obj
         assets/enemy_tail_crystal.obj
-        assets/player/ship1_body_diff_healthy.png
-        assets/player/ship1_body_diff_heavy_damage.png
-        assets/player/ship1_body_diff_medium_damage.png
-        assets/player/ship2_body_diff_healthy.png
-        assets/player/ship2_body_diff_heavy_damage.png
-        assets/player/ship2_body_diff_medium_damage.png
-        assets/player/ship_body_spec.png
-        assets/player/ship_body_glow.png
-        assets/player/ship_engine_diff.png
-        assets/player/ship_body.obj
-        assets/player/ship_frontEngine.obj
-        assets/player/ship_backEngine.obj
+        assets/player1/player1_body_diff_healthy.png
+        assets/player1/player1_body_diff_heavy_damage.png
+        assets/player1/player1_body_diff_medium_damage.png
+        assets/player1/player1_body_spec.png
+        assets/player1/player1_body_glow.png
+        assets/player1/player1_engine_diff.png
+        assets/player1/player1_body.obj
+        assets/player1/player1_frontEngine.obj
+        assets/player1/player1_backEngine.obj
+        assets/player1/player1_turret_barrel.obj
+        assets/player1/player1_turret_body.obj
+        assets/player2/player2_diff.png
+        assets/player2/player2_glow.png
+        assets/player2/player2_norm.png
+        assets/player2/player2_spec.png
+        assets/player2/player2_body.obj
+        assets/player2/player2_engine.obj
+        assets/player2/player2_propeller.obj
         assets/pylon/Pylon_01_spec.png
         assets/pylon/Pylon_01_glow.png
         assets/pylon/Pylon_01_diff.png
@@ -119,17 +130,23 @@ set(RESOURCES
         assets/circle/Circle_red_diff.png
         assets/circle/Circle_green_diff.png
         assets/circle/Circle_blue_diff.png
+        assets/spawn/altar/altar_diff.png
+        assets/spawn/altar/altar_glow.png
+        assets/spawn/altar/altar.obj
+        assets/spawn/pillar/pillar_diff.png
+        assets/spawn/pillar/pillar_glow.png
+        assets/spawn/pillar/pillar.obj
+        assets/spawn/portal/portal.obj
+        assets/diamond/diamond_body.obj
+        assets/nest/nest_body.obj
+        assets/ring/ring_body.obj
+        assets/ringSegment/ring_segment.obj
+        assets/rocket/rocket_body.obj
         assets/wall_diff.png
         assets/wall_norm.png
         assets/wall2_diff.png
         assets/wall2_norm.png
-        assets/Ship/Ship_Dif.png
-        assets/Ship/Ship_Glow.png
-        assets/Ship/Ship_NM.png
-        assets/Ship/Ship_Spec.png
-        assets/Ship/Ship_body.obj
-        assets/Ship/Ship_engine.obj
-        assets/Ship/Ship_propeller.obj
+        assets/wall2_spec.png
         assets/GolfBall.obj
         assets/MusicAction.ogg
         assets/MusicCalm.ogg
@@ -374,6 +391,7 @@ set(GAME_SRCS
         src/Game/System/ReflectSystem.cpp
         src/Game/System/AISystem.cpp
         src/Game/System/CheckpointSystem.cpp
+        src/Game/System/GridCollideSystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
@@ -381,6 +399,7 @@ set(GAME_SRCS
         src/Game/Component/LifeTime.cpp
         src/Game/Component/Explode.cpp
         src/Game/Component/Reflect.cpp
+        src/Game/Component/GridCollide.cpp
         src/Game/Component/AI/WalkerAI.cpp
         src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
@@ -394,7 +413,9 @@ set(GAME_SRCS
         src/Game/GameScenes/EmptyScene.cpp
         src/Game/GameScenes/WinScene.cpp
         src/Game/GameObject/Bullet.cpp
-        src/Game/GameObject/Player.cpp
+        src/Game/GameObject/Player/SuperPlayer.cpp
+        src/Game/GameObject/Player/Player1.cpp
+        src/Game/GameObject/Player/Player2.cpp
         src/Game/GameObject/Camera.cpp
         src/Game/GameObject/Enemy.cpp
         src/Game/GameObject/Cave.cpp
@@ -402,8 +423,9 @@ set(GAME_SRCS
         src/Game/GameObject/Explosion.cpp
         src/Game/GameObject/Pylon.cpp
         src/Game/GameObject/Shield.cpp
-        src/Game/GameObject/SpinBoss.cpp
-        src/Game/GameObject/TurretBoss.cpp
+        src/Game/GameObject/Boss/SpinBoss.cpp
+        src/Game/GameObject/Boss/TurretBoss.cpp
+        src/Game/GameObject/Spawn.cpp
     )
 
 set(GAME_HEADERS
@@ -422,6 +444,7 @@ set(GAME_HEADERS
         src/Game/System/ReflectSystem.hpp
         src/Game/System/AISystem.hpp
         src/Game/System/CheckpointSystem.hpp
+        src/Game/System/GridCollideSystem.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
@@ -429,6 +452,7 @@ set(GAME_HEADERS
         src/Game/Component/LifeTime.hpp
         src/Game/Component/Explode.hpp
         src/Game/Component/Reflect.hpp
+        src/Game/Component/GridCollide.hpp
         src/Game/Component/AI/WalkerAI.hpp
         src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
@@ -442,7 +466,9 @@ set(GAME_HEADERS
         src/Game/GameScenes/EmptyScene.hpp
         src/Game/GameScenes/WinScene.hpp
         src/Game/GameObject/Bullet.hpp
-        src/Game/GameObject/Player.hpp
+        src/Game/GameObject/Player/SuperPlayer.hpp
+        src/Game/GameObject/Player/Player1.hpp
+        src/Game/GameObject/Player/Player2.hpp
         src/Game/GameObject/Camera.hpp
         src/Game/GameObject/Enemy.hpp
         src/Game/GameObject/Cave.hpp
@@ -450,8 +476,9 @@ set(GAME_HEADERS
         src/Game/GameObject/Explosion.hpp
         src/Game/GameObject/Pylon.hpp
         src/Game/GameObject/Shield.hpp
-        src/Game/GameObject/SpinBoss.hpp
-        src/Game/GameObject/TurretBoss.hpp
+        src/Game/GameObject/Boss/SpinBoss.hpp
+        src/Game/GameObject/Boss/TurretBoss.hpp
+        src/Game/GameObject/Spawn.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

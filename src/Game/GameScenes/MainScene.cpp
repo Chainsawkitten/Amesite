@@ -23,10 +23,6 @@
 #include "Game/Component/Damage.hpp"
 #include "Game/Component/LifeTime.hpp"
 
-#include "../GameObject/Player.hpp"
-#include "../GameObject/Cave.hpp"
-#include "../GameObject/Camera.hpp"
-
 #include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
 
@@ -44,10 +40,11 @@
 #include "../Util/CaveGenerator.hpp"
 #include <Util/Log.hpp>
 
-#include "../GameObject/Player.hpp"
+#include "../GameObject/Player/Player1.hpp"
+#include "../GameObject/Player/Player2.hpp"
+#include "../GameObject/Boss/SpinBoss.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
-#include "../GameObject/SpinBoss.hpp"
 #include "../GameObject/Bullet.hpp"
 
 #include "../Game.hpp"
@@ -57,20 +54,6 @@ using namespace GameObject;
 
 MainScene::MainScene() {
     System::SoundSystem::GetInstance()->SetVolume(static_cast<float>(GameSettings::GetInstance().GetDouble("Audio Volume")));
-    
-    // Assign input
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
-    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::BOOST, InputHandler::JOYSTICK, InputHandler::LEFT_BUMPER);
-
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
     
     // Music
     mMusicSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
@@ -112,19 +95,19 @@ MainScene::MainScene() {
     // Create a map.
     mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
 
-    float playerStartX = mCave->xScale*(static_cast<float>(width) / 2.f);
-    float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
+    float playerStartX = mCave->scaleFactor*(static_cast<float>(width) / 2.f);
+    float playerStartZ = mCave->scaleFactor*(static_cast<float>(height) / 2.f);
 
     //Stores where the portal is located
     mPortalPosition = glm::vec2(playerStartX, playerStartZ);
 
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f), InputHandler::PLAYER_ONE));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f)));
+    mPlayers.push_back(GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f)));
     
     // Create boss
-    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[2].x, 0.f, mCave->zScale*bossPositions[2].y));
-    
+    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[2].x, 0.f, mCave->scaleFactor*bossPositions[2].y));
+
     //Stores how many bosses exist
     mBossCounter = 1;
 
@@ -163,6 +146,8 @@ MainScene::MainScene() {
     GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
     GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
+
+    GameEntityCreator().CreateSpawn(glm::vec3(playerStartX + 1.f, -12.f, playerStartZ - 25.f));
 }
 
 MainScene::~MainScene() {
@@ -181,11 +166,11 @@ void MainScene::Update(float deltaTime) {
     mControllerSystem.Update(*this, deltaTime);
 
     for (auto player : mPlayers) {
-        player->UpdatePlayerTexture();
-        GridCollide(player->node, deltaTime, 5);
+        player->Update();
+        mCave->GridCollide(player->GetNodeEntity(), deltaTime);
+        //GridCollide(player->GetNodeEntity(), deltaTime, 5);
         if (player->GetHealth() < 0.01f && player->Active()) {
-            player->node->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
-            player->body->GetComponent<Component::ParticleEmitter>()->enabled = true;
+            player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
             player->Deactivate();
             GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
         }
@@ -215,10 +200,8 @@ void MainScene::Update(float deltaTime) {
     // Check collisions.
     mCollisionSystem.Update(*this);
     
-    std::vector<Component::Damage*> bulletVector = this->GetAll<Component::Damage>();
-    for (auto bullet : bulletVector)
-        if (GridCollide(bullet->entity, deltaTime, 5.f))
-            bullet->entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
+    // Check grid collisions.
+    mGridCollideSystem.Update(*this, deltaTime, *mCave);
 
     // Update health
     mHealthSystem.Update(*this, deltaTime);
@@ -286,163 +269,24 @@ void MainScene::Update(float deltaTime) {
     mTimer += deltaTime;
 }
 
-int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
-    int oldX = static_cast<int>(point.x / gridScale );
-    int oldZ = static_cast<int>(point.z / gridScale );
-    int newX = static_cast<int>((point + velocity * deltaTime).x / gridScale );
-    int newZ = static_cast<int>((point + velocity * deltaTime).z / gridScale );
-
-    float X = (newX - oldX) / velocity.x;
-    float Z = (newZ - oldZ) / velocity.z;
-
-    if (newX >= cave->GetWidth() || newX < 0 || newZ >= cave->GetHeight() || newZ < 0)
-        return -2;
-
-    bool** map = cave->GetCaveData();
-
-    //We check if we moved to another cell in the grid.
-    if (map[abs(newZ)][abs(newX)]) {
-        //We collide in X
-        if (X > Z) {
-
-            if (oldX != newX) {
-                return 0;
-            }
-            else if (oldZ != newZ) {
-                return 1;
-            }
-        }
-        //We collide in Z
-        else {
-            if (oldZ != newZ) {
-                return 1;
-            }
-            else if (oldX != newX) {
-                return 0;
-            }
-        }
-    }
-    return -1;
-}
-
-bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
-
-    Component::Transform* transform = entity->GetComponent<Component::Transform>();
-    Component::Physics* physics = entity->GetComponent<Component::Physics>();
-
-    glm::vec3 velocity = physics->velocity;
-    velocity += physics->acceleration * deltaTime;
-    velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
-
-    glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
-    glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
-
-    //glm::vec3 width = glm::vec3(2.9f, 0.f, 0.f);
-    //glm::vec3 height = glm::vec3(0.f, 0.f, 2.9f);
-
-    int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale, mCave);
-    int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale, mCave);
-    int c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime, gridScale, mCave);
-    int c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime, gridScale, mCave);
-
-    switch (c0) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-    switch (c1) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-    switch (c2) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-    switch (c3) {
-
-    case 0:
-        physics->velocity *= glm::vec3(0, 0, 1);
-        physics->acceleration *= glm::vec3(0, 0, 1);
-        break;
-
-    case 1:
-        physics->velocity *= glm::vec3(1, 0, 0);
-        physics->acceleration *= glm::vec3(1, 0, 0);
-        break;
-
-    }
-
-    if (c0 == -2 || c1 == -2 || c2 == -2 || c3 == -2)
-        if (entity->GetComponent<Component::LifeTime>() != nullptr)
-            entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
-
-    if (c0 != -1 || c1 != -1 || c2 != -1 || c3 != -1)
-        return true;
-
-
-    return false;
-
-}
-
 void MainScene::Respawn(float deltaTime) {
-
-    if (!mPlayers[0]->Active() || !mPlayers[1]->Active())
-        if (glm::distance(mPlayers[0]->GetPosition(), mPlayers[1]->GetPosition()) < 15) {
-
-            mPlayers[0]->mRespawnTimer -= deltaTime;
-            mPlayers[1]->mRespawnTimer -= deltaTime;
-
-            if (mPlayers[0]->mRespawnTimer <= 0) {
-
-                mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
-                mPlayers[0]->Activate();
-
+    for (auto& thisPlayer : mPlayers) {
+        for (auto& otherPlayer : mPlayers) {
+            //If the other player isn't this player and isn't active, and the players are close enough, start healing.
+            if (thisPlayer != otherPlayer) {
+                if(!otherPlayer->Active() && glm::distance(thisPlayer->GetPosition(), otherPlayer->GetPosition()) < 15.f){
+                    otherPlayer->mRespawnTimer -= deltaTime;
+                    otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
+                } else {
+                    otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
+                    otherPlayer->mRespawnTimer = 5;
+                }
             }
-            if (mPlayers[1]->mRespawnTimer <= 0) {
-
-                mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
-                mPlayers[1]->Activate();
-
-            }
-
-            mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
-            mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
-
         }
-        else {
-
-            mPlayers[0]->mRespawnTimer = 5;
-            mPlayers[1]->mRespawnTimer = 5;
-
-            mPlayers[0]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
-            mPlayers[1]->body->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
-
+        //If the players respawn timer is < 0, then the player should be activated.
+        if (thisPlayer->mRespawnTimer < 0.001f) {
+            thisPlayer->Activate();
         }
-        
+    }
+
 }

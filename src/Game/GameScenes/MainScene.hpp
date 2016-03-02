@@ -12,6 +12,7 @@
 #include "Game/System/LifeTimeSystem.hpp"
 #include "Game/System/ReflectSystem.hpp"
 #include "Game/System/ExplodeSystem.hpp"
+#include "Game/System/GridCollideSystem.hpp"
 
 #include <AL/al.h>
 
@@ -26,7 +27,7 @@ class Entity;
 namespace GameObject {
     class Cave;
     class Camera;
-    class Player;
+    class SuperPlayer;
     class SpinBoss;
 }
 namespace Audio {
@@ -82,8 +83,11 @@ class MainScene : public Scene {
         // checkpoint system
         System::CheckpointSystem mCheckpointSystem;
 
+        // The grid collide system
+        System::GridCollideSystem mGridCollideSystem;
+
         // Vector containing players
-        std::vector<GameObject::Player*> mPlayers;
+        std::vector<GameObject::SuperPlayer*> mPlayers;
 
         // Spin boss
         GameObject::SpinBoss* mSpinBoss;
@@ -103,14 +107,8 @@ class MainScene : public Scene {
         int mBossCounter;
         float mTimer;
         glm::vec2 mPortalPosition;
-        
-        // Grid collision
-        bool GridCollide(Entity* entity, float deltaTime, float gridScale);
 
-        /// Handles the player respawn
-        /**
-        *@param deltaTime Time since last frame.
-        */
+        // Handles the player respawn
         void Respawn(float deltaTime);
 
         // Music.

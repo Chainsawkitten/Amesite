@@ -84,6 +84,7 @@ class Font {
         stbtt_bakedchar mCData[96]; // ASCII 32..126 is 95 glyphs
         
         float mHeight;
+        unsigned int mBitmapWidth;
         int mBaseline;
         glm::vec3 mColor;
         
