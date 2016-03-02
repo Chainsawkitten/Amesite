@@ -113,6 +113,8 @@ private:
     float mTimer;
     glm::vec2 mPortalPosition;
 
+    std::vector<glm::vec3> mNoSpawnRooms;
+
     // Grid collision
     bool JonathanSceneGridCollide(Entity* entity, float deltaTime, float gridScale);
 

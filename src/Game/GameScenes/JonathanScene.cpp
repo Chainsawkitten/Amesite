@@ -111,6 +111,9 @@ JonathanScene::JonathanScene() {
 
     float playerStartX = mCave->scaleFactor*(static_cast<float>(width) / 2.f);
     float playerStartZ = mCave->scaleFactor*(static_cast<float>(height) / 2.f);
+    
+    // Temporary add 'noSpawnRoom'.
+    mNoSpawnRooms.push_back(glm::vec3(30.f, 0.f, 30.f));
 
     //Stores where the portal is located
     mPortalPosition = glm::vec2(playerStartX, playerStartZ);
@@ -210,11 +213,8 @@ void JonathanScene::Update(float deltaTime) {
     // Update reflection
     mReflectSystem.Update(*this, deltaTime);
 
-    std::vector<glm::vec3> rooms;
-    rooms.push_back(glm::vec3(30.f, 0.f, 30.f));
-
     // Update enemy spawning
-    mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, rooms);
+    mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);
 
     // Update damage
     mDamageSystem.Update(*this);
