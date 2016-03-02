@@ -158,9 +158,7 @@ void MainScene::Update(float deltaTime) {
     mControllerSystem.Update(*this, deltaTime);
 
     for (auto player : mPlayers) {
-        player->Update();
         mCave->GridCollide(player->GetNodeEntity(), deltaTime);
-        //GridCollide(player->GetNodeEntity(), deltaTime, 5);
         if (player->GetHealth() < 0.01f && player->Active()) {
             player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
             player->Deactivate();
@@ -206,6 +204,9 @@ void MainScene::Update(float deltaTime) {
     
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
+
+    // UpdateSystem.
+    mUpdateSystem.Update(*this, deltaTime);
 
     // Update explotion system
     mExplodeSystem.Update(*this);

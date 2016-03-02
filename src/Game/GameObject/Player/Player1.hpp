@@ -52,9 +52,6 @@ namespace GameObject {
             /// Deactivates the player.
             void Deactivate();
 
-            /// Update player.
-            void Update();
-
         private:
             Geometry::OBJModel* mBodyModel;
             Geometry::OBJModel* mFrontEngineModel;
@@ -120,5 +117,7 @@ namespace GameObject {
             Entity* mRightSpawnNode;
 
             void AddEnginePartilces(Entity* entity);
+
+            void mUpdateFunction();
     };
 }

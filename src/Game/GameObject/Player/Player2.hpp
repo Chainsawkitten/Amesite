@@ -52,9 +52,6 @@ namespace GameObject {
         /// Deactivates the player.
         void Deactivate();
 
-        /// Update player.
-        void Update();
-
     private:
         Geometry::OBJModel* mBodyModel;
         Geometry::OBJModel* mEngineModel;
@@ -108,5 +105,7 @@ namespace GameObject {
         void AddEngine(Entity* entity, glm::vec3 position, glm::vec3 scale);
 
         void AddPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale);
+
+        void mUpdateFunction();
     };
 }

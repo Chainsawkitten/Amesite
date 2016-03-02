@@ -10,6 +10,7 @@
 #include "../../Component/Controller.hpp"
 #include "../../Component/Health.hpp"
 #include "../../Component/Spawner.hpp"
+#include "../../Component/Update.hpp"
 #include <Component/Transform.hpp>
 #include <Component/Mesh.hpp>
 #include <Component/Material.hpp>
@@ -74,6 +75,8 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     emitter->particleType.startAlpha = 1.f;
     emitter->particleType.midAlpha = 1.f;
     emitter->particleType.endAlpha = 0.f;
+
+    mNode->AddComponent<Component::Update>()->updateFunction = std::bind(&Player1::mUpdateFunction, this);
 
     mBody = CreateEntity();
     mBody->AddComponent<Component::RelativeTransform>()->parentEntity = mNode;
@@ -254,15 +257,39 @@ void Player1::Deactivate() {
 
 }
 
-void Player1::Update() {
+void Player1::AddEnginePartilces(Entity* entity) {
+    entity->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
+    Component::ParticleEmitter* emitter = entity->AddComponent<Component::ParticleEmitter>();
+    emitter->emitterType = Component::ParticleEmitter::POINT;
+    emitter->maxEmitTime = 0.02 / 10.f;
+    emitter->minEmitTime = 0.016 / 10.f;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 0.0;
+    emitter->particleType.textureIndex = Component::ParticleEmitter::BLUE;
+    emitter->particleType.minLifetime = .04f;
+    emitter->particleType.maxLifetime = .08f;
+    emitter->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f);
+    emitter->particleType.maxVelocity = glm::vec3(.3f, -15.f, .3f);
+    emitter->particleType.minSize = glm::vec2(.5f, .5f) * 2.f;
+    emitter->particleType.maxSize = glm::vec2(.7f, .7f) * 2.f;
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::vec3(.8f, .8f, .8f);
+    emitter->particleType.startAlpha = 1.f;
+    emitter->particleType.midAlpha = 1.f;
+    emitter->particleType.endAlpha = 0.f;
+}
+
+void Player1::mUpdateFunction() {
     // Update health texture
     if (GetHealth() >= 2.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = LIGHTDAMAGE;
         mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
-    } else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
+    }
+    else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = MEDIUMDAMAGE;
         mBody->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;
-    } else {
+    }
+    else {
         mState = HEAVYDAMAGE;
         mBody->GetComponent<Component::Material>()->diffuse = mHeavyDamageTexture;
     }
@@ -307,27 +334,4 @@ void Player1::Update() {
     mLeftTurretBarrel->GetComponent<Component::Transform>()->position.z = recoilFactor * 3.f - 3.f;
     recoilFactor = glm::min(1.f, mRightSpawnNode->GetComponent<Component::Spawner>()->timeSinceSpawn / mRightSpawnNode->GetComponent<Component::Spawner>()->delay);
     mRightTurretBarrel->GetComponent<Component::Transform>()->position.z = recoilFactor * 3.f - 3.f;
-
-}
-
-void Player1::AddEnginePartilces(Entity* entity) {
-    entity->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
-    Component::ParticleEmitter* emitter = entity->AddComponent<Component::ParticleEmitter>();
-    emitter->emitterType = Component::ParticleEmitter::POINT;
-    emitter->maxEmitTime = 0.02 / 10.f;
-    emitter->minEmitTime = 0.016 / 10.f;
-    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
-    emitter->lifetime = 0.0;
-    emitter->particleType.textureIndex = Component::ParticleEmitter::BLUE;
-    emitter->particleType.minLifetime = .04f;
-    emitter->particleType.maxLifetime = .08f;
-    emitter->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f);
-    emitter->particleType.maxVelocity = glm::vec3(.3f, -15.f, .3f);
-    emitter->particleType.minSize = glm::vec2(.5f, .5f) * 2.f;
-    emitter->particleType.maxSize = glm::vec2(.7f, .7f) * 2.f;
-    emitter->particleType.uniformScaling = true;
-    emitter->particleType.color = glm::vec3(.8f, .8f, .8f);
-    emitter->particleType.startAlpha = 1.f;
-    emitter->particleType.midAlpha = 1.f;
-    emitter->particleType.endAlpha = 0.f;
 }
