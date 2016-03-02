@@ -3,6 +3,7 @@
 #include <map>
 #include <typeinfo>
 #include <vector>
+#include <list>
 #include <algorithm>
 #include <iterator>
 #include "../System/ParticleSystem.hpp"
@@ -90,7 +91,7 @@ class Scene {
             Entity* entity = nullptr;
 
             /// Instersecting entities.
-            std::vector<Entity*> intersect;
+            std::list<Entity*> intersect;
         };
         
     private:
