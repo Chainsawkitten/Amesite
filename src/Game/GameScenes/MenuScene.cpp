@@ -77,7 +77,8 @@ MenuScene::MenuScene() {
     mGlowFilter = new GlowFilter();
     mGlowBlurFilter = new GlowBlurFilter();
     
-    mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 50.f);
+    float fontHeight = glm::ceil(MainWindow::GetInstance()->GetSize().y * 0.07f);
+    mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", fontHeight);
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
     // Initialize shaders.
