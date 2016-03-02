@@ -24,14 +24,15 @@ using namespace System;
 System::EnemySpawnerSystem::EnemySpawnerSystem() {
     mMaxEnemyCount = 5;
     mEnemyCount = 0;
-    mSpawnerRadius = 200.f;
+    mSpawnerRadius = 100.f;
 }
 
 System::EnemySpawnerSystem::~EnemySpawnerSystem() {
 }
 
 void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::Player*> *players) {
-    for (int i = 0; i < mPylons.size(); i++) {
+    // Ugly hardcode until we have a proper SuperEnemy to inherit from.
+    for (unsigned int i = 0; i < mPylons.size(); i++) {
         if (mPylons[i]->node->GetComponent<Component::Health>()->health < 0.01f) {
             Component::Explode* explodeComp = mPylons[i]->node->GetComponent<Component::Explode>();
             // Create Explosion    
@@ -41,6 +42,19 @@ void System::EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const Gam
             //Kill game object
             mPylons[i]->Kill();
             mPylons.erase(mPylons.begin() + i);
+        }
+    }
+
+    for (unsigned int i = 0; i < mEnemies.size(); i++) {
+        if (mEnemies[i]->node->GetComponent<Component::Health>()->health < 0.01f) {
+            Component::Explode* explodeComp = mEnemies[i]->node->GetComponent<Component::Explode>();
+            // Create Explosion    
+            if (explodeComp != nullptr)
+                GameEntityCreator().CreateExplosion(mEnemies[i]->node->GetComponent<Component::Transform>()->GetWorldPosition() + explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex);
+
+            //Kill game object
+            mEnemies[i]->Kill();
+            mEnemies.erase(mEnemies.begin() + i);
         }
     }
 

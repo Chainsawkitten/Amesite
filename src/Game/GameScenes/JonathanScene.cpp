@@ -52,10 +52,13 @@
 #include "../GameObject/Bullet.hpp"
 #include "../GameObject/EnemySpawner.hpp"
 
+#include "../Game.hpp"
+#include "WinScene.hpp"
+
 using namespace GameObject;
 
 JonathanScene::JonathanScene() {
-    System::SoundSystem::GetInstance()->SetVolume(GameSettings::GetInstance().GetDouble("Audio Volume"));
+    System::SoundSystem::GetInstance()->SetVolume(static_cast<float>(GameSettings::GetInstance().GetDouble("Audio Volume")));
 
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
@@ -81,13 +84,16 @@ JonathanScene::JonathanScene() {
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
 
+    // Set timer to 0
+    mTimer = 0.f;
+
     // Create main camera
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(130.f, 400.f, 130.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
 
     // Create scene
-    int width = 60;
-    int height = 60;
+    int width;
+    int height = width = 60;
     int seed = 0;
     int percent = 50;
     int iterations = 10;
@@ -103,12 +109,18 @@ JonathanScene::JonathanScene() {
     float playerStartX = mCave->xScale*(static_cast<float>(width) / 2.f);
     float playerStartZ = mCave->zScale*(static_cast<float>(height) / 2.f);
 
+    //Stores where the portal is located
+    mPortalPosition = glm::vec2(playerStartX, playerStartZ);
+
     // Create players 
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f), InputHandler::PLAYER_ONE));
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f), InputHandler::PLAYER_TWO));
 
     // Create boss
-    mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
+    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y));
+
+    //Stores how many bosses exist
+    mBossCounter = 1;
 
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
 
@@ -122,7 +134,7 @@ JonathanScene::JonathanScene() {
     dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
     dirLight->AddComponent<Component::DirectionalLight>();
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
-    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.04f;
+    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.24f;
 
     mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     mFxaaFilter = new FXAAFilter();
@@ -130,9 +142,9 @@ JonathanScene::JonathanScene() {
     mGlowFilter = new GlowFilter();
     mGlowBlurFilter = new GlowBlurFilter();
 
-    GameEntityCreator().CreateEnemySpawner(Component::Spawner::PYLON, 2);
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(115, 0, 135));
-
+    GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
+    GameEntityCreator().CreateEnemySpawner(Component::Spawner::PYLON, 5.f);
+    GameEntityCreator().CreateEnemySpawner(Component::Spawner::BASIC, 10.f);
 }
 
 JonathanScene::~JonathanScene() {
@@ -159,13 +171,16 @@ void JonathanScene::Update(float deltaTime) {
             player->Deactivate();
             GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
         }
+        glm::vec2 playerPosition(player->GetPosition().x, player->GetPosition().z);
+
+        if (mBossCounter == 0 && glm::distance(playerPosition, mPortalPosition) < 10.f) {
+            Game::GetInstance().SetScene(new WinScene(mTimer, 10));
+        }
     }
 
-    for (auto boss : mBosses)
-        boss->Update();
-
-    //EnemySpawnerSystem.
-    mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers);
+    // Update boss
+    if (mSpinBoss != nullptr)
+        mSpinBoss->Update();
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
@@ -194,14 +209,20 @@ void JonathanScene::Update(float deltaTime) {
     // Update reflection
     mReflectSystem.Update(*this, deltaTime);
 
+    // Update enemy spawning
+    mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers);
+
     // Update damage
     mDamageSystem.Update(*this);
 
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
 
-    // Remove killed game objects
-    ClearKilledGameObjects();
+    // Update explotion system
+    mExplodeSystem.Update(*this);
+
+    // Remove killed entities
+    ClearKilledEntities();
 
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
@@ -213,6 +234,13 @@ void JonathanScene::Update(float deltaTime) {
     JonathanSceneRespawn(deltaTime);
 
     mCheckpointSystem.Update();
+
+    if (mSpinBoss != nullptr)
+        if (mSpinBoss->GetHealth() < 0.01f) {
+            mSpinBoss->Kill();
+            mSpinBoss = nullptr;
+            mBossCounter--;
+        }
 
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
@@ -240,40 +268,43 @@ void JonathanScene::Update(float deltaTime) {
 
     // Render to back buffer.
     mPostProcessing->Render();
+
+    mTimer += deltaTime;
 }
 
 int JonathanScenePointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
-    int oldX = glm::floor(point.x / gridScale);
-    int oldZ = glm::floor(point.z / gridScale);
-    int newX = glm::floor((point + velocity * deltaTime).x / gridScale);
-    int newZ = glm::floor((point + velocity * deltaTime).z / gridScale);
+    int oldX = static_cast<int>(point.x / gridScale);
+    int oldZ = static_cast<int>(point.z / gridScale);
+    int newX = static_cast<int>((point + velocity * deltaTime).x / gridScale);
+    int newZ = static_cast<int>((point + velocity * deltaTime).z / gridScale);
 
     float X = (newX - oldX) / velocity.x;
     float Z = (newZ - oldZ) / velocity.z;
 
+    if (newX >= cave->GetWidth() || newX < 0 || newZ >= cave->GetHeight() || newZ < 0)
+        return -2;
+
     bool** map = cave->GetCaveData();
 
     //We check if we moved to another cell in the grid.
-    if (abs(newZ) < cave->mHeight && abs(newX) < cave->mWidth) {
-        if (map[abs(newZ)][abs(newX)]) {
-            //We collide in X
-            if (X > Z) {
+    if (map[abs(newZ)][abs(newX)]) {
+        //We collide in X
+        if (X > Z) {
 
-                if (oldX != newX) {
-                    return 0;
-                }
-                else if (oldZ != newZ) {
-                    return 1;
-                }
+            if (oldX != newX) {
+                return 0;
             }
-            //We collide in Z
-            else {
-                if (oldZ != newZ) {
-                    return 1;
-                }
-                else if (oldX != newX) {
-                    return 0;
-                }
+            else if (oldZ != newZ) {
+                return 1;
+            }
+        }
+        //We collide in Z
+        else {
+            if (oldZ != newZ) {
+                return 1;
+            }
+            else if (oldX != newX) {
+                return 0;
             }
         }
     }
@@ -291,9 +322,6 @@ bool JonathanScene::JonathanSceneGridCollide(Entity* entity, float deltaTime, fl
 
     glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
     glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
-
-    //glm::vec3 width = glm::vec3(2.9f, 0.f, 0.f);
-    //glm::vec3 height = glm::vec3(0.f, 0.f, 2.9f);
 
     int c0 = JonathanScenePointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime, gridScale, mCave);
     int c1 = JonathanScenePointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime, gridScale, mCave);
@@ -353,8 +381,13 @@ bool JonathanScene::JonathanSceneGridCollide(Entity* entity, float deltaTime, fl
 
     }
 
+    if (c0 == -2 || c1 == -2 || c2 == -2 || c3 == -2)
+        if (entity->GetComponent<Component::LifeTime>() != nullptr)
+            entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
+
     if (c0 != -1 || c1 != -1 || c2 != -1 || c3 != -1)
         return true;
+
 
     return false;
 

@@ -13,6 +13,7 @@
 #include "Game/System/LifeTimeSystem.hpp"
 #include "Game/System/ReflectSystem.hpp"
 #include "Game/System/EnemySpawnerSystem.hpp"
+#include "Game/System/ExplodeSystem.hpp"
 
 #include <AL/al.h>
 
@@ -75,16 +76,23 @@ private:
     // The reflect system
     System::ReflectSystem mReflectSystem;
 
+    // The explode system
+    System::ExplodeSystem mExplodeSystem;
+
     // The animation system
     System::AnimationSystem mAnimationSystem;
 
     // checkpoint system
     System::CheckpointSystem mCheckpointSystem;
 
+    // The enemy spawner system
     System::EnemySpawnerSystem mEnemySpawnerSystem;
 
     // Vector containing players
     std::vector<GameObject::Player*> mPlayers;
+
+    // Spin boss
+    GameObject::SpinBoss* mSpinBoss;
 
     // Vector containing bosses
     std::vector<GameObject::SpinBoss*> mBosses;
@@ -101,6 +109,9 @@ private:
     GammaCorrectionFilter* mGammaCorrectionFilter;
     GlowFilter* mGlowFilter;
     GlowBlurFilter* mGlowBlurFilter;
+    int mBossCounter;
+    float mTimer;
+    glm::vec2 mPortalPosition;
 
     // Grid collision
     bool JonathanSceneGridCollide(Entity* entity, float deltaTime, float gridScale);
