@@ -49,12 +49,6 @@ namespace System {
             */
             static ParticleSystem& GetActiveInstance();
 
-            /// Get the amount of particles.
-            /**
-             * @return How many particles currently exist.
-             */
-            unsigned int ParticleCount() const;
-
             /// Get the maximum amount of particles.
             /**
              * @return Maximum amount of particles.
@@ -88,7 +82,6 @@ namespace System {
             Scene* mScene; 
             static ParticleSystem* mActiveInstance;
             // System properties
-            unsigned int mParticleCount;
             unsigned int mMaxParticleCount;
     };
 

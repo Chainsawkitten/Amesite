@@ -95,11 +95,14 @@ Texture2D::Texture2D(const char *source, int sourceLength, bool srgb) {
 }
 
 Texture2D::Texture2D(Font* font, const char* text) {
+    mWidth = static_cast<int>(glm::ceil(font->GetWidth(text)));
+    mHeight = static_cast<int>(glm::ceil(font->GetHeight()));
+    
+    // Texture dimensions must be divisible by 4.
+    mWidth += 4 - (mWidth % 4);
+    mHeight += 4 - (mHeight % 4);
+    
     // Create texture.
-    mWidth = static_cast<int>(font->GetWidth(text));
-    mWidth += mWidth % 4;
-    mHeight = static_cast<int>(font->GetHeight());
-    mHeight += mHeight % 4;
     glGenTextures(1, &mTexID);
     glBindTexture(GL_TEXTURE_2D, mTexID);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
