@@ -8,7 +8,7 @@
 #include <Engine/Component/Lens.hpp>
 #include <Engine/Component/Listener.hpp>
 
-#include "../GameObject/Player.hpp"
+#include "../GameObject/Player/SuperPlayer.hpp"
 #include "../GameObject/Camera.hpp"
 
 using namespace GameObject;
@@ -24,7 +24,7 @@ Camera::Camera(Scene* scene) : SuperGameObject(scene) {
 Camera::~Camera() {
 }
 
-void Camera::UpdateRelativePosition(const std::vector<GameObject::Player*>& players) {
+void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>& players) {
     int numberOfPlayers = players.size();
     glm::vec3 cameraPos = glm::vec3(0.f, 0.f, 0.f);
     glm::vec3 min = glm::vec3(std::numeric_limits<float>::max(), 0.f, std::numeric_limits<float>::max());
