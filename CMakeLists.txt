@@ -137,7 +137,7 @@ set(RESOURCES
         assets/spawn/pillar/pillar_glow.png
         assets/spawn/pillar/pillar.obj
         assets/spawn/portal/portal.obj
-        assets/diamoned/pillar/diamond_body.obj
+        assets/diamond/diamond_body.obj
         assets/nest/nest_body.obj
         assets/ring/ring_body.obj
         assets/ringSegment/ring_segment.obj
