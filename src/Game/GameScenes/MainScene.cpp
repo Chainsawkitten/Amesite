@@ -91,7 +91,7 @@ MainScene::MainScene() {
 
     // Create scene
     int width;
-    int height = width = 60;
+    int height = width = 90;
     int seed = 0;
     int percent = 50;
     int iterations = 10;
