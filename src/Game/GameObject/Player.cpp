@@ -25,24 +25,34 @@
 
 using namespace GameObject;
 
-Player::Player(Scene* scene) : SuperGameObject(scene) {
-
+Player::Player(Scene* scene, InputHandler::Player id) : SuperGameObject(scene) {
     mActive = true;
     mRespawnTimer = 5;
 
-    healthyTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_healthy.png");
-    mediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_medium_damage.png");
-    heavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship_body_diff_heavy_damage.png");
+    if (id == InputHandler::Player::PLAYER_ONE) {
+        mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/ship1_body_diff_healthy.png");
+        mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship1_body_diff_medium_damage.png");
+        mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship1_body_diff_heavy_damage.png");
+    } else {
+        mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/ship2_body_diff_healthy.png");
+        mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship2_body_diff_medium_damage.png");
+        mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/ship2_body_diff_heavy_damage.png");
+        //mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/Ship_Dif.png");
+        //mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/Ship_Dif.png");
+        //mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/Ship_Dif.png");
+    }
     
     state = LIGHTDAMAGE;
 
-    node = CreateEntity(scene);
+    node = CreateEntity();
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
     node->AddComponent<Component::Controller>()->speed = 5000.f;
     node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     node->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     node->AddComponent<Component::Health>()->removeOnLowHealth = false;
+    node->GetComponent<Component::Health>()->health = 30.f;
+    node->GetComponent<Component::Health>()->maxHealth = 30.f;
     node->GetComponent<Component::Health>()->faction = 0;
     node->AddComponent<Component::Collider2DCircle>()->radius = 10.f;
     node->AddComponent<Component::Animation>();
@@ -53,15 +63,18 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     idleNode->CreateKeyFrame(glm::vec3(-0.1f, 0.1f, 0.1f), 0.f, 0.f, 0.f, 1.5f, false, true);
     node->GetComponent<Component::Animation>()->Start("idle");
 
-    body = CreateEntity(scene);
+    body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     body->AddComponent<Component::Mesh>()->geometry = mShipBody = Resources().CreateOBJModel("Resources/ship_body.obj");
+    //body->AddComponent<Component::Mesh>()->geometry = mShipBody = Resources().CreateOBJModel("Resources/ship.obj");
     body->AddComponent<Component::Material>();
 
     Resources().FreeTexture2D(body->GetComponent<Component::Material>()->diffuse);
-    body->GetComponent<Component::Material>()->diffuse = healthyTexture;
+    body->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
     body->GetComponent<Component::Material>()->SetSpecular("Resources/ship_body_spec.png");
     body->GetComponent<Component::Material>()->SetGlow("Resources/ship_body_glow.png");
+    //body->GetComponent<Component::Material>()->SetSpecular("Resources/Ship_Spec.png");
+    //body->GetComponent<Component::Material>()->SetNormal("Resources/Ship_NM.png");
     body->AddComponent<Component::Animation>();
 
     Component::ParticleEmitter* emitter = body->AddComponent<Component::ParticleEmitter>();
@@ -84,16 +97,14 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     emitter->particleType.midAlpha = 1.f;
     emitter->particleType.endAlpha = 0.f;
 
-    light = CreateEntity(scene);
+    light = CreateEntity();
     light->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
     light->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     light->AddComponent<Component::Animation>();
     light->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
-    light->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
-    light->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
-    light->GetComponent<Component::SpotLight>()->attenuation = 0.01f;
+    light->GetComponent<Component::SpotLight>()->attenuation = 0.05f;
 
-    leftTurret = CreateEntity(scene);
+    leftTurret = CreateEntity();
     leftTurret->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
     leftTurret->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     leftTurret->AddComponent<Component::Animation>();
@@ -104,14 +115,14 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     sound->soundBuffer = mShootSound;
     sound->gain = 2.f;
 
-    rightTurret = CreateEntity(scene);
+    rightTurret = CreateEntity();
     rightTurret->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 13);
     rightTurret->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     rightTurret->AddComponent<Component::Animation>();
     rightTurret->AddComponent<Component::Spawner>()->delay = 0.25f;
     rightTurret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
 
-    frontEngineLeft = CreateEntity(scene);
+    frontEngineLeft = CreateEntity();
     frontEngineLeft->AddComponent<Component::RelativeTransform>()->Move(8.5f, 0.f, 8.3f);
     frontEngineLeft->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     frontEngineLeft->GetComponent<Component::RelativeTransform>()->scale *= 1.1f;
@@ -119,12 +130,12 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     frontEngineLeft->AddComponent<Component::Mesh>()->geometry = mShipFrontEngineLeft = Resources().CreateOBJModel("Resources/ship_frontEngine.obj");
     frontEngineLeft->AddComponent<Component::Material>();
     frontEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_engine_diff.png");
-    Entity* frontEngineLeftParticles = CreateEntity(scene);
+    Entity* frontEngineLeftParticles = CreateEntity();
     frontEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = frontEngineLeft;
     frontEngineLeftParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
     AddEnginePartilces(frontEngineLeftParticles);
 
-    frontEngineRight = CreateEntity(scene);
+    frontEngineRight = CreateEntity();
     frontEngineRight->AddComponent<Component::RelativeTransform>()->Move(-8.5f, 0.f, 8.3f);
     frontEngineRight->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     frontEngineRight->GetComponent<Component::RelativeTransform>()->scale *= 1.1f;
@@ -133,12 +144,12 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     frontEngineRight->AddComponent<Component::Mesh>()->geometry = mShipFrontEngineRight = Resources().CreateOBJModel("Resources/ship_frontEngine.obj");
     frontEngineRight->AddComponent<Component::Material>();
     frontEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_engine_diff.png");
-    Entity* frontEngineRightParticles = CreateEntity(scene);
+    Entity* frontEngineRightParticles = CreateEntity();
     frontEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = frontEngineRight;
     frontEngineRightParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
     AddEnginePartilces(frontEngineRightParticles);
 
-    backEngineLeft = CreateEntity(scene);
+    backEngineLeft = CreateEntity();
     backEngineLeft->AddComponent<Component::RelativeTransform>()->Move(10.5f, 0.f, 0.f);
     backEngineLeft->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     backEngineLeft->GetComponent<Component::RelativeTransform>()->scale *= 1.2f;
@@ -146,12 +157,12 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     backEngineLeft->AddComponent<Component::Mesh>()->geometry = mShipBackEngineLeft = Resources().CreateOBJModel("Resources/ship_backEngine.obj");
     backEngineLeft->AddComponent<Component::Material>();
     backEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_engine_diff.png");
-    Entity* backEngineLeftParticles = CreateEntity(scene);
+    Entity* backEngineLeftParticles = CreateEntity();
     backEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = backEngineLeft;
     backEngineLeftParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
     AddEnginePartilces(backEngineLeftParticles);
 
-    backEngineRight = CreateEntity(scene);
+    backEngineRight = CreateEntity();
     backEngineRight->AddComponent<Component::RelativeTransform>()->Move(-10.5f, 0.f, 0.f);
     backEngineRight->GetComponent<Component::RelativeTransform>()->parentEntity = body;
     backEngineRight->GetComponent<Component::RelativeTransform>()->scale *= 1.2f;
@@ -160,7 +171,7 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
     backEngineRight->AddComponent<Component::Mesh>()->geometry = mShipBackEngineRight = Resources().CreateOBJModel("Resources/ship_backEngine.obj");
     backEngineRight->AddComponent<Component::Material>();
     backEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/ship_engine_diff.png");
-    Entity* backEngineRightParticles = CreateEntity(scene);
+    Entity* backEngineRightParticles = CreateEntity();
     backEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = backEngineRight;
     backEngineRightParticles->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
     AddEnginePartilces(backEngineRightParticles);
@@ -169,13 +180,12 @@ Player::Player(Scene* scene) : SuperGameObject(scene) {
 }
 
 Player::~Player() {
-    if(state != LIGHTDAMAGE)
-        Resources().FreeTexture2D(healthyTexture);
+    if (state != LIGHTDAMAGE)
+        Resources().FreeTexture2D(mHealthyTexture);
     if (state != MEDIUMDAMAGE)
-        Resources().FreeTexture2D(mediumDamageTexture);
-    if(state != HEAVYDAMAGE)
-        Resources().FreeTexture2D(heavyDamageTexture);
-
+        Resources().FreeTexture2D(mMediumDamageTexture);
+    if (state != HEAVYDAMAGE)
+        Resources().FreeTexture2D(mHeavyDamageTexture);
     Resources().FreeOBJModel(mShipBody);
     Resources().FreeOBJModel(mShipFrontEngineLeft);
     Resources().FreeOBJModel(mShipFrontEngineRight);
@@ -221,13 +231,13 @@ void Player::Deactivate() {
 void GameObject::Player::UpdatePlayerTexture() {
     if (GetHealth() >= 2.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         state = LIGHTDAMAGE;
-        body->GetComponent<Component::Material>()->diffuse = healthyTexture;
+        body->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
     } else if (GetHealth() >= 1.f*(node->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         state = MEDIUMDAMAGE;
-        body->GetComponent<Component::Material>()->diffuse = mediumDamageTexture;
+        body->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;
     } else {
         state = HEAVYDAMAGE;
-        body->GetComponent<Component::Material>()->diffuse = heavyDamageTexture;
+        body->GetComponent<Component::Material>()->diffuse = mHeavyDamageTexture;
     }
 }
 

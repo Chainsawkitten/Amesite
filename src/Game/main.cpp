@@ -8,6 +8,8 @@
 #include <System/SoundSystem.hpp>
 
 #include "Game.hpp"
+#include "GameScenes/SplashScene.hpp"
+#include "GameScenes/MenuScene.hpp"
 #include "GameScenes/MainScene.hpp"
 //#include "GameScenes/PontusScene.hpp"
 //#include "GameScenes/AlbinScene.hpp"
@@ -46,8 +48,10 @@ int main() {
     
     System::SoundSystem* soundSystem = new System::SoundSystem();
     
-    Game game;
-    game.SetScene(new MainScene());
+    if (GameSettings::GetInstance().GetBool("Show Splash Screen"))
+        Game::GetInstance().SetScene(new SplashScene());
+    else
+        Game::GetInstance().SetScene(new MenuScene());
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -57,7 +61,7 @@ int main() {
         lastTime = glfwGetTime();
 
         window->Update();
-        game.Update(static_cast<float>(deltaTime));
+        Game::GetInstance().Update(static_cast<float>(deltaTime));
         
         // Set window title to reflect screen update and render times.
         std::string title = "Modership";
@@ -77,7 +81,7 @@ int main() {
         glfwPollEvents();
     }
     
-    game.Free();
+    Game::GetInstance().Free();
     delete soundSystem;
     delete window;
     

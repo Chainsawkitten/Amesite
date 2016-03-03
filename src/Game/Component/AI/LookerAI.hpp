@@ -1,43 +1,41 @@
 #pragma once
 
 #include <Component/SuperComponent.hpp>
-#include <Util/Input.hpp>
 #include <vector>
-#include <glm/glm.hpp>
 
 namespace Component {
-    /// %Component providing player control.
+    /// %Component providing AI which looks at the closest entity.
     class LookerAI : public SuperComponent {
         public:
-            /// Create new %Controller.
+            /// Create new looker AI.
             /**
-             * @param entity Pointer to which Entity this %Component corresponds.
+             * @param entity Pointer to which entity this component corresponds.
              */
             LookerAI(Entity* entity);
             
             /// Destructor.
             ~LookerAI();
 
-            ///How far it will look.
+            /// How far it will look.
             float mDistance;
 
-            /// Updates the walker AI.
+            /// Updates the looker AI.
             /**
-            * @param The delta time
-            */
-            void Update(float timeDelta);
+             * @param deltaTime Time since last frame (in seconds).
+             */
+            void Update(float deltaTime);
 
-            ///Adds a point to the path.
+            /// Add entity to look for.
             /**
-             * @param The point to add.
+             * @param entity %Entity to look for.
              */
             void AddEntity(Entity* entity);
 
         private:
-            //The index of the point we're targeting.
+            // The index of the point we're targeting.
             int mTarget;
 
-            //The points to travel through.
+            // The points to travel through.
             std::vector<Entity*> mTargets;
 
     };

@@ -108,9 +108,9 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f), InputHandler::PLAYER_TWO));
     
     // Create boss
-    mBosses.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y)));
+    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->xScale*bossPositions[0].x, 0.f, mCave->zScale*bossPositions[0].y));
     
-    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX,playerStartZ));
+    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
 
     // Add players to checkpoint system.
     for (auto& player : mPlayers) {
@@ -124,11 +124,11 @@ MainScene::MainScene() {
     dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
     dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.04f;
     
-    postProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
-    fxaaFilter = new FXAAFilter();
-    gammaCorrectionFilter = new GammaCorrectionFilter();
-    glowFilter = new GlowFilter();
-    glowBlurFilter = new GlowBlurFilter();
+    mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
+    mFxaaFilter = new FXAAFilter();
+    mGammaCorrectionFilter = new GammaCorrectionFilter();
+    mGlowFilter = new GlowFilter();
+    mGlowBlurFilter = new GlowBlurFilter();
 
     GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
     GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
@@ -148,11 +148,11 @@ MainScene::MainScene() {
 }
 
 MainScene::~MainScene() {
-    delete fxaaFilter;
-    delete gammaCorrectionFilter;
-    delete glowFilter;
-    delete glowBlurFilter;
-    delete postProcessing;
+    delete mFxaaFilter;
+    delete mGammaCorrectionFilter;
+    delete mGlowFilter;
+    delete mGlowBlurFilter;
+    delete mPostProcessing;
     
     alDeleteSources(1, &mSource);
     Resources().FreeSound(mMusicSoundBuffer);
@@ -173,8 +173,9 @@ void MainScene::Update(float deltaTime) {
         }
     }
 
-    for (auto boss : mBosses)
-        boss->Update();
+    // Update boss
+    if (mSpinBoss != nullptr)
+        mSpinBoss->Update();
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
@@ -208,8 +209,11 @@ void MainScene::Update(float deltaTime) {
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
 
-    // Remove killed game objects
-    ClearKilledGameObjects();
+    // Update explotion system
+    mExplodeSystem.Update(*this);
+
+    // Remove killed entities
+    ClearKilledEntities();
 
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
@@ -222,43 +226,46 @@ void MainScene::Update(float deltaTime) {
 
     mCheckpointSystem.Update();
 
+    if (mSpinBoss != nullptr)
+        if (mSpinBoss->GetHealth() < 0.01f) {
+            mSpinBoss->Kill();
+            mSpinBoss = nullptr;
+        }
+
     // Render.
-    mRenderSystem.Render(*this, postProcessing->GetRenderTarget());
+    mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
     // Glow.
-    glowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+    mGlowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
     int blurAmount = 5;
     for (int i=0; i<blurAmount; ++i) {
-        glowBlurFilter->SetHorizontal(true);
-        postProcessing->ApplyFilter(glowBlurFilter);
-        glowBlurFilter->SetHorizontal(false);
-        postProcessing->ApplyFilter(glowBlurFilter);
+        mGlowBlurFilter->SetHorizontal(true);
+        mPostProcessing->ApplyFilter(mGlowBlurFilter);
+        mGlowBlurFilter->SetHorizontal(false);
+        mPostProcessing->ApplyFilter(mGlowBlurFilter);
     }
-    postProcessing->ApplyFilter(glowFilter);
+    mPostProcessing->ApplyFilter(mGlowFilter);
     
     // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
-        fxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
-        postProcessing->ApplyFilter(fxaaFilter);
+        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+        mPostProcessing->ApplyFilter(mFxaaFilter);
     }
     
     // Gamma correction.
-    gammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
-    postProcessing->ApplyFilter(gammaCorrectionFilter);
+    mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
+    mPostProcessing->ApplyFilter(mGammaCorrectionFilter);
     
     // Render to back buffer.
-    postProcessing->Render();
+    mPostProcessing->Render();
 
 }
 
 bool PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
-
     unsigned int x = glm::floor((point + velocity * deltaTime).x / gridScale);
     unsigned int z = glm::floor((point + velocity * deltaTime).z / gridScale);
 
     return CellCollide(((point + velocity * deltaTime).x) / gridScale - x, ((point + velocity * deltaTime).z) / gridScale - z, x, z, cave);
-
-
 }
 
 int PointCollide2(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gridScale, Cave* cave) {
@@ -269,6 +276,9 @@ int PointCollide2(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gr
 
     float X = (newX - oldX) / velocity.x;
     float Z = (newZ - oldZ) / velocity.z;
+
+    if (newX >= cave->GetWidth() || newX < 0 || newZ >= cave->GetHeight() || newZ < 0)
+        return -2;
 
     bool** map = cave->GetCaveData();
 
@@ -299,62 +309,63 @@ int PointCollide2(glm::vec3 point, glm::vec3 velocity, float deltaTime, float gr
 
 bool CellCollide(float xPos, float yPos, int x, int y, Cave* cave) {
 
-    switch (cave->mTypeMap[x][y]) {
+    if(x >= 0 && y >= 0)
+        switch (cave->mTypeMap[x][y]) {
 
-    case 1:
-        if (yPos <= 0.5f - xPos)
-            return true;
-        break;
-    case 2:
-        if (xPos >= 0.5f + yPos)
-            return true;
-        break;
-    case 3:
-        if (yPos <= 0.5f)
-            return true;
-        break;
-    case 4:
-        if (!(yPos <= 1.5f - xPos))
-            return true;
-        break;
-    case 6:
-        if (xPos >= 0.5f)
-            return true;
-        break;
-    case 7:
-        if (yPos <= xPos + 0.5f)
-            return true;
-        break;
-    case 8:
-        if (!(yPos <= xPos + 0.5f))
-            return true;
-        break;
-    case 9:
-        if (xPos <= 0.5f)
-            return true;
-        break;
-    case 11:
-        if (yPos <= 1.5f - xPos)
-            return true;
-        break;
-    case 12:
-        if (yPos >= 0.5f)
-            return true;
-        break;
-    case 13:
-        if (!(xPos >= 0.5f + yPos))
-            return true;
-        break;
-    case 14:
-        if (!(yPos <= 0.5f - xPos))
-            return true;
-        break;
-    case 15:
-        if (yPos <= xPos + 0.5f)
-            return true;
-        break;
+        case 1:
+            if (yPos <= 0.5f - xPos)
+                return true;
+            break;
+        case 2:
+            if (xPos >= 0.5f + yPos)
+                return true;
+            break;
+        case 3:
+            if (yPos <= 0.5f)
+                return true;
+            break;
+        case 4:
+            if (!(yPos <= 1.5f - xPos))
+                return true;
+            break;
+        case 6:
+            if (xPos >= 0.5f)
+                return true;
+            break;
+        case 7:
+            if (yPos <= xPos + 0.5f)
+                return true;
+            break;
+        case 8:
+            if (!(yPos <= xPos + 0.5f))
+                return true;
+            break;
+        case 9:
+            if (xPos <= 0.5f)
+                return true;
+            break;
+        case 11:
+            if (yPos <= 1.5f - xPos)
+                return true;
+            break;
+        case 12:
+            if (yPos >= 0.5f)
+                return true;
+            break;
+        case 13:
+            if (!(xPos >= 0.5f + yPos))
+                return true;
+            break;
+        case 14:
+            if (!(yPos <= 0.5f - xPos))
+                return true;
+            break;
+        case 15:
+            if (yPos <= xPos + 0.5f)
+                return true;
+            break;
 
-    }
+        }
 
     return false;
 
@@ -391,7 +402,7 @@ bool MainScene::GridCollide(Entity* entity, float deltaTime, float gridScale) {
 
 void MainScene::Respawn(float deltaTime) {
 
-    if (!mPlayers[0]->Active() || !mPlayers[1]->Active()) 
+    if (!mPlayers[0]->Active() || !mPlayers[1]->Active())
         if (glm::distance(mPlayers[0]->GetPosition(), mPlayers[1]->GetPosition()) < 15) {
 
             mPlayers[0]->mRespawnTimer -= deltaTime;

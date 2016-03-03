@@ -76,25 +76,13 @@ void Scene::UpdateModelMatrices() {
     }
 }
 
-void Scene::ClearKilledGameObjects() {
-    for (auto gameObject : mKilledGameObjectVector) {
-        gameObject->Clear();
+void Scene::ClearKilledEntities() {
+    for (auto entity : mKilledEntitesVector) {
+        entity->Clear();
     }
-    mKilledGameObjectVector.clear();
+    mKilledEntitesVector.clear();
 }
 
-void Scene::AddKilledGameObject(GameObject::SuperGameObject* gameObject) {
-    mKilledGameObjectVector.push_back(gameObject);
-}
-
-void Scene::RemoveEntity(Entity* entity) {
-    entity->Clear();
-    mEntityVector.erase(std::remove(mEntityVector.begin(), mEntityVector.end(), entity), mEntityVector.end());
-    delete entity;
-}
-
-void Scene::RemoveGameObject(GameObject::SuperGameObject* gameObject) {
-    gameObject->Clear();
-    mGameObjectVector.erase(std::remove(mGameObjectVector.begin(), mGameObjectVector.end(), gameObject), mGameObjectVector.end());
-    delete gameObject;
+const std::vector<Entity*>& Scene::GetKilledEntitesVector() const {
+    return mKilledEntitesVector;
 }

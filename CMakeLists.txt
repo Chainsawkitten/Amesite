@@ -72,6 +72,7 @@ endif()
 # Copy resources
 set(RESOURCES
         assets/ABeeZee.ttf
+        assets/Mugglorna.png
         assets/TestTexture.png
         assets/DefaultDiffuse.png
         assets/DefaultNormal.png
@@ -90,9 +91,12 @@ set(RESOURCES
         assets/enemy_tail_crystal_glow.png
         assets/enemy_head_crystal.obj
         assets/enemy_tail_crystal.obj
-        assets/player/ship_body_diff_healthy.png
-        assets/player/ship_body_diff_heavy_damage.png
-        assets/player/ship_body_diff_medium_damage.png
+        assets/player/ship1_body_diff_healthy.png
+        assets/player/ship1_body_diff_heavy_damage.png
+        assets/player/ship1_body_diff_medium_damage.png
+        assets/player/ship2_body_diff_healthy.png
+        assets/player/ship2_body_diff_heavy_damage.png
+        assets/player/ship2_body_diff_medium_damage.png
         assets/player/ship_body_spec.png
         assets/player/ship_body_glow.png
         assets/player/ship_engine_diff.png
@@ -121,9 +125,11 @@ set(RESOURCES
         assets/wall2_norm.png
         assets/Ship/Ship_Dif.png
         assets/Ship/Ship_Glow.png
+        assets/Ship/Ship_NM.png
         assets/Ship/Ship_Spec.png
-        assets/Ship/Ship_01.obj
-        assets/Ship/Ship_01.mtl
+        assets/Ship/Ship_body.obj
+        assets/Ship/Ship_engine.obj
+        assets/Ship/Ship_propeller.obj
         assets/GolfBall.obj
         assets/MusicAction.ogg
         assets/MusicCalm.ogg
@@ -157,6 +163,8 @@ set(EMBEDDED_INPUT
         shaders/Texture2D.frag
         shaders/Font.vert
         shaders/Font.frag
+        shaders/Text3D.frag
+        shaders/SingleColor3D.frag
         shaders/Post.vert
         shaders/PostCopy.frag
         shaders/PostColor.frag
@@ -226,6 +234,7 @@ set(ENGINE_SRCS
         src/Engine/Geometry/Geometry3D.cpp
         src/Engine/Geometry/Terrain.cpp
         src/Engine/Geometry/Cube.cpp
+        src/Engine/Geometry/Plane.cpp
         src/Engine/Geometry/OBJModel.cpp
         src/Engine/Geometry/Map.cpp
         src/Engine/Lighting/DeferredLighting.cpp
@@ -287,6 +296,7 @@ set(ENGINE_HEADERS
         src/Engine/Geometry/Geometry3D.hpp
         src/Engine/Geometry/Terrain.hpp
         src/Engine/Geometry/Cube.hpp
+        src/Engine/Geometry/Plane.hpp
         src/Engine/Geometry/OBJModel.hpp
         src/Engine/Geometry/Map.hpp
         src/Engine/Lighting/DeferredLighting.hpp
@@ -354,6 +364,7 @@ set(GAME_SRCS
         src/Game/System/HealthSystem.cpp
         src/Game/System/DamageSystem.cpp
         src/Game/System/LifeTimeSystem.cpp
+        src/Game/System/ExplodeSystem.cpp
         src/Game/System/ReflectSystem.cpp
         src/Game/System/AISystem.cpp
         src/Game/System/CheckpointSystem.cpp
@@ -367,6 +378,8 @@ set(GAME_SRCS
         src/Game/Component/AI/WalkerAI.cpp
         src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
+        src/Game/GameScenes/SplashScene.cpp
+        src/Game/GameScenes/MenuScene.cpp
         src/Game/GameScenes/PontusScene.cpp
         src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
@@ -398,6 +411,7 @@ set(GAME_HEADERS
         src/Game/System/HealthSystem.hpp
         src/Game/System/DamageSystem.hpp
         src/Game/System/LifeTimeSystem.hpp
+        src/Game/System/ExplodeSystem.hpp
         src/Game/System/ReflectSystem.hpp
         src/Game/System/AISystem.hpp
         src/Game/System/CheckpointSystem.hpp
@@ -411,6 +425,8 @@ set(GAME_HEADERS
         src/Game/Component/AI/WalkerAI.hpp
         src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
+        src/Game/GameScenes/SplashScene.hpp
+        src/Game/GameScenes/MenuScene.hpp
         src/Game/GameScenes/PontusScene.hpp
         src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp

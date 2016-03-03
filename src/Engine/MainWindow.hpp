@@ -61,6 +61,9 @@ class MainWindow {
          */
         bool ShouldClose() const;
         
+        /// Close the window.
+        void Close();
+        
         /// Swap front- and backbuffers.
         void SwapBuffers();
         
@@ -71,4 +74,6 @@ class MainWindow {
         GLFWwindow* mWindow;
         bool mDebugContext;
         glm::vec2 mSize;
+        
+        bool mShouldClose;
 };

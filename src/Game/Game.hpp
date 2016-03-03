@@ -5,8 +5,11 @@ class Scene;
 /// Handles the active scene and scene switching.
 class Game {
     public:
-        /// Create new game.
-        Game();
+        /// Get the instance of the class.
+        /**
+         * @return The %Game instance.
+         */
+        static Game& GetInstance();
         
         /// Set the active scene.
         /**
@@ -26,4 +29,9 @@ class Game {
     private:
         Scene* mActiveScene;
         Scene* mNextScene;
+        
+        Game();
+        
+        Game(Game const&);
+        void operator=(Game const&);
 };

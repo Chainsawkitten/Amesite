@@ -58,7 +58,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
         }
     }
 
-    map = CreateEntity(scene);
+    map = CreateEntity();
     map->AddComponent<Component::Mesh>();
     map->AddComponent<Component::Transform>();
     map->AddComponent<Component::Material>();
@@ -69,12 +69,12 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     map->GetComponent<Component::Mesh>()->geometry = mapGeometry;
     map->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
-    map->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*static_cast<float>(mWidth) / 2.f, 0.f, zScale*static_cast<float>(mWidth) / 2.f));
+    map->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*static_cast<float>(mWidth) / 2.f - xScale / 2.f, 0.f, zScale*static_cast<float>(mWidth) / 2.f - zScale / 2.f));
     map->GetComponent<Component::Transform>()->scale = glm::vec3(xScale, 5.f, zScale);
     map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
     map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
 
-    heightMap = CreateEntity(scene);
+    heightMap = CreateEntity();
 
     float** floatMap = new float*[width];
     for (int i = 0; i < width; i++) {
@@ -90,7 +90,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
         }
     }
 
-    heightMap = CreateEntity(scene);
+    heightMap = CreateEntity();
     
     heightMap->AddComponent<Component::Mesh>();
     heightMap->AddComponent<Component::Transform>();
@@ -112,7 +112,14 @@ Cave::~Cave() {
     delete[] mMap;
 }
 
-bool ** Cave::GetCaveData()
-{
+int Cave::GetWidth() {
+    return mWidth;
+}
+
+int Cave::GetHeight() {
+    return mHeight;
+}
+
+bool ** Cave::GetCaveData() {
     return mMap;
 }

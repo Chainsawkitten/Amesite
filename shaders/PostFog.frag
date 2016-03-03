@@ -26,13 +26,13 @@ vec3 reconstructPos(vec2 texCoord, float depth){
 }
 
 void main () {
-	float depth = texture(tDepth, texCoords).r;
-	gl_FragDepth = depth;
-	
-	vec3 position = reconstructPos(texCoords, depth);
-	float z = length(position);
-	float f = pow(M_E, -density * z);
-	
-	vec4 c = texture(tDiffuse, texCoords);
-	fragmentColor = f * c + (1.0 - f) * vec4(color, 1.0);
+    float depth = texture(tDepth, texCoords).r;
+    gl_FragDepth = depth;
+    
+    vec3 position = reconstructPos(texCoords, depth);
+    float z = length(position);
+    float f = pow(M_E, -density * z);
+    
+    vec4 c = texture(tDiffuse, texCoords);
+    fragmentColor = f * c + (1.0 - f) * vec4(color, 1.0);
 }

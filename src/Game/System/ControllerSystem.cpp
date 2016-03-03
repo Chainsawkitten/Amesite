@@ -14,7 +14,7 @@ void ControllerSystem::Update(Scene& scene, float deltaTime) {
     
     for (unsigned int i = 0; i < controllerObjects.size(); i++) {
         for (unsigned int scheme = 0; scheme < controllerObjects[i]->controlSchemes.size(); scheme++)
-            if(controllerObjects[i]->enabled)
+            if (controllerObjects[i]->enabled)
                 controllerObjects[i]->controlSchemes[scheme](controllerObjects[i], deltaTime);
     }
 

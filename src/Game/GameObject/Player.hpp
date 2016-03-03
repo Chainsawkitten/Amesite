@@ -2,6 +2,8 @@
 
 #include <Engine/GameObject/SuperGameObject.hpp>
 
+#include <Util/Input.hpp>
+
 #include <glm/glm.hpp>
 
 class Scene;
@@ -22,8 +24,9 @@ namespace GameObject {
             /// Create %Player
             /**
              * @param scene Pointer to which Scene %Player Enities' are contained.
+             * @param id Id of the player.
              */
-            Player(Scene* scene);
+            Player(Scene* scene, InputHandler::Player id);
            
             ~Player();
 
@@ -35,7 +38,7 @@ namespace GameObject {
 
             /// Gets health of the player.
             /**
-             * @return health of the player.
+             * @return Health of the player.
              */
             float GetHealth();
 
@@ -100,8 +103,8 @@ namespace GameObject {
 
             PlayerState state;
 
-            Texture2D* healthyTexture;
-            Texture2D* heavyDamageTexture;
-            Texture2D* mediumDamageTexture;
+            Texture2D* mHealthyTexture;
+            Texture2D* mHeavyDamageTexture;
+            Texture2D* mMediumDamageTexture;
     };
 }

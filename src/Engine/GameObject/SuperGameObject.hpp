@@ -29,10 +29,9 @@ namespace GameObject {
         protected:
             // Create Entity to %GameObject.
             /**
-             * @param scene The Scene this %GameObject will be contained.
              * @return Return Enitity.
              */
-            Entity* CreateEntity(Scene* scene);
+            Entity* CreateEntity();
 
         private:
             // Pointer to which Scene %Entity is contained.

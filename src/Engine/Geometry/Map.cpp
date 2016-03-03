@@ -38,7 +38,7 @@ int** Map::GetTypeMap() const {
     return mTypeMap;
 }
 
-glm::vec2 Geometry::Map::TextureRepeat() const {
+glm::vec2 Geometry::Map::GetTextureRepeat() const {
     return mTextureRepeat;
 }
 
