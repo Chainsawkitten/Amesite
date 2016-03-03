@@ -224,9 +224,6 @@ void MainScene::Update(float deltaTime) {
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
 
-    // Update explotion system
-    mExplodeSystem.Update(*this);
-
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
     
@@ -244,6 +241,9 @@ void MainScene::Update(float deltaTime) {
             mSpinBoss = nullptr;
             mBossCounter--;
         }
+    
+    // Update explosion system
+    mExplodeSystem.Update(*this);
     
     // Remove killed entities
     ClearKilled();
