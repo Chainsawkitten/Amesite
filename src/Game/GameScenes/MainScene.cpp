@@ -139,7 +139,7 @@ MainScene::MainScene() {
     GameEntityCreator().CreateEnemySpawner(Component::Spawner::BASIC, 5);
 
     // Push boss positions here to avoid spawning enemies.
-    mNoSpawnRooms.push_back(glm::vec3(playerStartX, 0.f, playerStartZ));
+    mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
 
     GameEntityCreator().CreateAltar(glm::vec3(mPortalPosition.x, -16.f, mPortalPosition.y));
     mPillar = GameEntityCreator().CreatePillar(glm::vec3(playerStartX + 12.f, -8.f, playerStartZ));

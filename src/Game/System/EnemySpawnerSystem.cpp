@@ -133,7 +133,8 @@ glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, co
 
 bool EnemySpawnerSystem::ProximityToBosses(const glm::vec3 position, const std::vector<glm::vec3> noSpawnRooms, int bossRadius) const {
     for (auto room : noSpawnRooms) {
-        if (glm::length(position - room) > (float)bossRadius + 1.f)
+        Log() << glm::length(position - room) << "\n";
+        if (glm::length(position - room) > (float)bossRadius + 2.f)
             return true;
     }
     return false;
