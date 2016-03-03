@@ -1,14 +1,37 @@
 #include "CheckpointSystem.hpp"
 #include "../GameObject/Player/SuperPlayer.hpp"
+
 #include "../Component/Health.hpp"
+
+#include <Component\ParticleEmitter.hpp>
 #include <Component/Transform.hpp>
 #include <Entity/Entity.hpp>
 #include <glm/glm.hpp>
 #include <vector>
 
-void System::CheckpointSystem::Update() {
+void System::CheckpointSystem::Update(float deltaTime) {
+    for (auto& thisPlayer : mPlayers) {
+        for (auto& otherPlayer : mPlayers) {
+            //If the other player isn't this player and isn't active, and the players are close enough, start healing.
+            if (thisPlayer != otherPlayer) {
+                if (thisPlayer->Active() && !otherPlayer->Active() && glm::distance(thisPlayer->GetPosition(), otherPlayer->GetPosition()) < 15.f) {
+                    otherPlayer->mRespawnTimer -= deltaTime;
+                    otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
+                }
+                else {
+                    otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
+                    otherPlayer->mRespawnTimer = 5;
+                }
+            }
+        }
+        //If the players respawn timer is < 0, then the player should be activated.
+        if (thisPlayer->mRespawnTimer < 0.001f) {
+            thisPlayer->Activate();
+        }
+    }
+
     for (auto &player : mPlayers) {
-        if (player->GetHealth() > 0.001f)
+        if (player->Active())
             return;
     }
 

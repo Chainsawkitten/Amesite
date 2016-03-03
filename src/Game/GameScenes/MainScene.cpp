@@ -227,10 +227,8 @@ void MainScene::Update(float deltaTime) {
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
 
-    //Handles the respawning of the players
-    Respawn(deltaTime);
-
-    mCheckpointSystem.Update();
+    //If all players are disabled, respawn them.
+    mCheckpointSystem.Update(deltaTime);
 
     for (int i = 0; i < mBossVector.size(); i++) {
         if (mBossVector[i] != nullptr)
@@ -278,26 +276,5 @@ void MainScene::Update(float deltaTime) {
     mPostProcessing->Render();
 
     mTimer += deltaTime;
-}
-
-void MainScene::Respawn(float deltaTime) {
-    for (auto& thisPlayer : mPlayers) {
-        for (auto& otherPlayer : mPlayers) {
-            //If the other player isn't this player and isn't active, and the players are close enough, start healing.
-            if (thisPlayer != otherPlayer) {
-                if (!otherPlayer->Active() && glm::distance(thisPlayer->GetPosition(), otherPlayer->GetPosition()) < 15.f){
-                    otherPlayer->mRespawnTimer -= deltaTime;
-                    otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
-                } else {
-                    otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
-                    otherPlayer->mRespawnTimer = 5;
-                }
-            }
-        }
-        //If the players respawn timer is < 0, then the player should be activated.
-        if (thisPlayer->mRespawnTimer < 0.001f) {
-            thisPlayer->Activate();
-        }
-    }
 
 }

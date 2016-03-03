@@ -128,9 +128,6 @@ class MainScene : public Scene {
         // Used to exclude enemy spawning from certain areas.
         std::vector<glm::vec3> mNoSpawnRooms;
 
-        // Handles the player respawn
-        void Respawn(float deltaTime);
-
         // Music.
         Audio::SoundBuffer* mMusicSoundBuffer;
         ALuint mSource;
