@@ -28,8 +28,9 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mHeight = height;
     mMap = nullptr;
 
-    xScale = 5.f;
-    zScale = 5.f;
+    mBossRadius = 7;
+
+    scaleFactor = 5.f;
 
     caveMap = new CaveGenerator::CaveMap(height, width, seed);
 
@@ -37,13 +38,17 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     caveMap->ProcessCaveMap(iterations);
 
+    caveMap->DetectRooms();
+
     caveMap->RemoveSmallRooms(threshold);
 
-    caveMap->CreateCircle(playerPosition, 7, false);
+    caveMap->CreateCircle(playerPosition, mBossRadius, false);
 
     for (auto& bossPosition : bossPositions) {
-        caveMap->CreateCircle(bossPosition, 7, false);
+        caveMap->CreateCircle(bossPosition, mBossRadius, false);
     }
+
+    caveMap->DetectRooms();
 
     caveMap->ConnectClosestRooms(true);
 
@@ -65,9 +70,9 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     map->GetComponent<Component::Mesh>()->geometry = Resources().CreateMap(mMap, glm::uvec2(mWidth, mHeight));
     map->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
-    map->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*static_cast<float>(mWidth) / 2.f, 0.f, zScale*static_cast<float>(mWidth) / 2.f));
-    map->GetComponent<Component::Transform>()->scale = glm::vec3(xScale, 5.f, zScale);
-    map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+    map->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*static_cast<float>(mWidth) / 2.f, 0.f, scaleFactor*static_cast<float>(mWidth) / 2.f));
+    map->GetComponent<Component::Transform>()->scale = glm::vec3(scaleFactor, 5.f, scaleFactor);
+    map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_spec.png");
     map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
 
     heightMap = CreateEntity();
@@ -91,12 +96,12 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->AddComponent<Component::Mesh>();
     heightMap->AddComponent<Component::Transform>();
     heightMap->AddComponent<Component::Material>();
-    heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f)+1.f, -11.f, zScale*(static_cast<float>(height) / 2.f) + 1.f));
+    heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width)/2.f)+1.f, -11.f, scaleFactor*(static_cast<float>(height) / 2.f) + 1.f));
     heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
 
-    heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, height, width, glm::vec2(xScale, zScale));
-
+    heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+    heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
 
 }
 
@@ -104,14 +109,139 @@ Cave::~Cave() {
     delete caveMap;
 }
 
-int Cave::GetWidth() {
+int Cave::GetWidth() const {
     return mWidth;
 }
 
-int Cave::GetHeight() {
+int Cave::GetHeight() const {
     return mHeight;
 }
+int Cave::GetBossRoomRadius() const {
+    return mBossRadius;
+}
 
-bool ** Cave::GetCaveData() {
+bool ** Cave::GetCaveData() const {
     return mMap;
+}
+
+int Cave::PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime) {
+    int oldX = static_cast<int>(point.x / scaleFactor);
+    int oldZ = static_cast<int>(point.z / scaleFactor);
+    int newX = static_cast<int>((point + velocity * deltaTime).x / scaleFactor);
+    int newZ = static_cast<int>((point + velocity * deltaTime).z / scaleFactor);
+
+    float X = (newX - oldX) / velocity.x;
+    float Z = (newZ - oldZ) / velocity.z;
+
+    if (newX >= mWidth || newX < 0 || newZ >= mHeight || newZ < 0)
+        return -2;
+
+    //We check if we moved to another cell in the grid.
+    if (mMap[abs(newZ)][abs(newX)]) {
+        //We collide in X
+        if (X > Z) {
+
+            if (oldX != newX) {
+                return 0;
+            }
+            else if (oldZ != newZ) {
+                return 1;
+            }
+        }
+        //We collide in Z
+        else {
+            if (oldZ != newZ) {
+                return 1;
+            }
+            else if (oldX != newX) {
+                return 0;
+            }
+        }
+    }
+    return -1;
+}
+
+bool Cave::GridCollide(Entity* entity, float deltaTime) {
+
+    Component::Transform* transform = entity->GetComponent<Component::Transform>();
+    Component::Physics* physics = entity->GetComponent<Component::Physics>();
+
+    glm::vec3 velocity = physics->velocity;
+    velocity += physics->acceleration * deltaTime;
+    velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
+
+    glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
+    glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
+
+    //glm::vec3 width = glm::vec3(2.9f, 0.f, 0.f);
+    //glm::vec3 height = glm::vec3(0.f, 0.f, 2.9f);
+
+    int c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime);
+    int c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime);
+    int c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime);
+    int c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime);
+
+    switch (c0) {
+
+    case 0:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    case 1:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    }
+    switch (c1) {
+
+    case 0:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    case 1:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    }
+    switch (c2) {
+
+    case 0:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    case 1:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    }
+    switch (c3) {
+
+    case 0:
+        physics->velocity *= glm::vec3(0, 0, 1);
+        physics->acceleration *= glm::vec3(0, 0, 1);
+        break;
+
+    case 1:
+        physics->velocity *= glm::vec3(1, 0, 0);
+        physics->acceleration *= glm::vec3(1, 0, 0);
+        break;
+
+    }
+
+    //if (c0 == -2 || c1 == -2 || c2 == -2 || c3 == -2)
+    //    if (entity->GetComponent<Component::LifeTime>() != nullptr)
+    //        entity->GetComponent<Component::LifeTime>()->lifeTime = 0.f;
+
+    if (c0 != -1 || c1 != -1 || c2 != -1 || c3 != -1)
+        return true;
+
+
+    return false;
+
 }

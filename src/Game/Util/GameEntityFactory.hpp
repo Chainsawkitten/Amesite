@@ -12,7 +12,8 @@ namespace CaveGenerator {
 
 namespace GameObject{
     class Bullet;
-    class Player;
+    class Player1;
+    class Player2;
     class Camera;
     class Enemy;
     class Cave;
@@ -21,6 +22,11 @@ namespace GameObject{
     class Pylon;
     class Shield;
     class SpinBoss;
+    class EnemySpawner;
+    class Altar;
+    class Pillar;
+    class PillarBall;
+    class Portal;
 }
 
 /// Factory responsible for creating prefab entities.
@@ -37,6 +43,14 @@ class GameEntityFactory {
         
         /// Destructor.
         ~GameEntityFactory();
+
+        /// Create an enemy spawner.
+        /**
+         * @param type of enemy the spawner handles.
+         * @param delay for spawning a new enemy.
+         * @return The enemy spawner GameObject.
+         */
+        GameObject::EnemySpawner* CreateEnemySpawner(unsigned int type, float delay);
         
         /// Create a basic enemy.
         /**
@@ -62,13 +76,19 @@ class GameEntityFactory {
          */
         GameObject::Shield* CreateShield(Entity* parentEntity, glm::vec3 offset, float lifeTime, float health);
 
-        /// Create a player.
+        /// Create player1.
         /**
          * @param origin The player's starting position.
-         * @param player Who controls the player.
-         * @return The player GameObject.
+         * @return The player1 GameObject.
          */
-        GameObject::Player* CreatePlayer(const glm::vec3& origin, InputHandler::Player player);
+        GameObject::Player1* CreatePlayer1(const glm::vec3& origin);
+
+        /// Create player2.
+        /**
+        * @param origin The player's starting position.
+        * @return The player2 GameObject.
+        */
+        GameObject::Player2* CreatePlayer2(const glm::vec3& origin);
 
         /// Create SpinBoss.
         /**
@@ -77,6 +97,34 @@ class GameEntityFactory {
          */
         GameObject::SpinBoss* CreateSpinBoss(const glm::vec3& origin);
         
+        /// Create Altar.
+        /**
+         * @param origin The Altar's starting position.
+         * @return The Spawn GameObject.
+         */
+        GameObject::Altar* CreateAltar(const glm::vec3& origin);
+
+        /// Create Pillar.
+        /**
+         * @param origin The Pillar's starting position.
+         * @return The Pillar GameObject.
+         */
+        GameObject::Pillar* CreatePillar(const glm::vec3& origin);
+
+        /// Create PillarBall.
+        /**
+         * @param origin The PillarBall's starting position.
+         * @return The PillarBall GameObject.
+         */
+        GameObject::PillarBall* CreatePillarBall(const glm::vec3& origin);
+
+        /// Create Portal.
+        /**
+         * @param origin The Portal's starting position.
+         * @return The Portal GameObject.
+         */
+        GameObject::Portal* CreatePortal(const glm::vec3& origin);
+
         /// Create player bullet.
         /**
          * @param position The bullet's starting position.

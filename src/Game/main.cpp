@@ -1,3 +1,5 @@
+#define NOMINMAX
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <MainWindow.hpp>
@@ -16,6 +18,7 @@
 //#include "GameScenes/AlbinScene.hpp"
 //#include "GameScenes/EmptyScene.hpp"
 //#include "GameScenes/DanielScene.hpp"
+#include "GameScenes/JonathanScene.hpp"
 //#include "GameScenes/IvarScene.hpp"
 
 //#define _CRTDBG_MAP_ALLOC
@@ -98,7 +101,7 @@ int main() {
         } else if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE)) {
             profiling = true;
             profileFrames = 0;
-            minFrameTime = std::numeric_limits<float>::max();
+            minFrameTime = (std::numeric_limits<float>::max)();
             averageFrameTime = 0.f;
             maxFrameTime = 0.f;
             

@@ -12,6 +12,8 @@
 #include "Game/System/ControllerSystem.hpp"
 #include "Game/System/LifeTimeSystem.hpp"
 #include "Game/System/ReflectSystem.hpp"
+#include "Game/System/EnemySpawnerSystem.hpp"
+#include "Game/System/ExplodeSystem.hpp"
 
 #include <AL/al.h>
 
@@ -23,10 +25,11 @@ class GammaCorrectionFilter;
 class GlowFilter;
 class GlowBlurFilter;
 class Entity;
+
 namespace GameObject {
     class Cave;
     class Camera;
-    class Player;
+    class SuperPlayer;
     class SpinBoss;
 }
 namespace Audio {
@@ -70,14 +73,26 @@ private:
     // The life time system
     System::LifeTimeSystem mLifeTimeSystem;
 
-    // The life time system
+    // The reflect system
+    System::ReflectSystem mReflectSystem;
+
+    // The explode system
+    System::ExplodeSystem mExplodeSystem;
+
+    // The animation system
     System::AnimationSystem mAnimationSystem;
 
     // checkpoint system
     System::CheckpointSystem mCheckpointSystem;
 
+    // The enemy spawner system
+    System::EnemySpawnerSystem mEnemySpawnerSystem;
+
     // Vector containing players
-    std::vector<GameObject::Player*> mPlayers;
+    std::vector<GameObject::SuperPlayer*> mPlayers;
+
+    // Spin boss
+    GameObject::SpinBoss* mSpinBoss;
 
     // Vector containing bosses
     std::vector<GameObject::SpinBoss*> mBosses;
@@ -89,17 +104,27 @@ private:
     GameObject::Cave* mCave;
 
     // Post processing.
-    PostProcessing* postProcessing;
-    FXAAFilter* fxaaFilter;
-    GammaCorrectionFilter* gammaCorrectionFilter;
-    GlowFilter* glowFilter;
-    GlowBlurFilter* glowBlurFilter;
+    PostProcessing* mPostProcessing;
+    FXAAFilter* mFxaaFilter;
+    GammaCorrectionFilter* mGammaCorrectionFilter;
+    GlowFilter* mGlowFilter;
+    GlowBlurFilter* mGlowBlurFilter;
+    int mBossCounter;
+    float mTimer;
+    glm::vec2 mPortalPosition;
+
+    std::vector<glm::vec3> mNoSpawnRooms;
 
     // Grid collision
-    bool GridCollide(Entity* entity, float deltaTime, float gridScale);
+    bool JonathanSceneGridCollide(Entity* entity, float deltaTime, float gridScale);
+
+    /// Handles the player respawn
+    /**
+    *@param deltaTime Time since last frame.
+    */
+    void JonathanSceneRespawn(float deltaTime);
 
     // Music.
     Audio::SoundBuffer* mMusicSoundBuffer;
     ALuint mSource;
 };
-
