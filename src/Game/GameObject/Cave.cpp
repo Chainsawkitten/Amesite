@@ -28,32 +28,37 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mHeight = height;
     mMap = nullptr;
 
-    xScale = 5.f;
-    zScale = 5.f;
+    mBossRadius = 7;
 
-    caveMap = new CaveGenerator::CaveMap(width, height, seed);
+    scaleFactor = 5.f;
+
+    caveMap = new CaveGenerator::CaveMap(height, width, seed);
 
     caveMap->GenerateCaveMap(percent);
 
     caveMap->ProcessCaveMap(iterations);
 
+    caveMap->DetectRooms();
+
     caveMap->RemoveSmallRooms(threshold);
 
-    caveMap->CreateCircle(playerPosition, 7, false);
+    caveMap->CreateCircle(playerPosition, mBossRadius, false);
+
+    for (auto& bossPosition : bossPositions) {
+        caveMap->CreateCircle(bossPosition, mBossRadius, false);
+    }
+
+    caveMap->DetectRooms();
 
     caveMap->ConnectClosestRooms(true);
 
-    for (auto& bossPosition : bossPositions) {
-        caveMap->CreateCircle(bossPosition, 7, false);
+    mMap = new bool*[height];
+    for (int i = 0; i < height; i++) {
+        mMap[i] = new bool[width];
     }
 
-    mMap = new bool*[width];
-    for (int i = 0; i < width; i++) {
-        mMap[i] = new bool[height];
-    }
-
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
             mMap[i][j] = caveMap->GetMap()[i][j];
         }
     }
@@ -69,24 +74,24 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     map->GetComponent<Component::Mesh>()->geometry = mapGeometry;
     map->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
-    map->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*static_cast<float>(mWidth) / 2.f - xScale / 2.f, 0.f, zScale*static_cast<float>(mWidth) / 2.f - zScale / 2.f));
-    map->GetComponent<Component::Transform>()->scale = glm::vec3(xScale, 5.f, zScale);
-    map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+    map->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*static_cast<float>(mWidth) / 2.f - scaleFactor / 2.f, 0.f, scaleFactor*static_cast<float>(mWidth) / 2.f - scaleFactor / 2.f));
+    map->GetComponent<Component::Transform>()->scale = glm::vec3(scaleFactor, 5.f, scaleFactor);
+    map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_spec.png");
     map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
 
     heightMap = CreateEntity();
 
-    float** floatMap = new float*[width];
-    for (int i = 0; i < width; i++) {
-        floatMap[i] = new float[height];
+    float** floatMap = new float*[height];
+    for (int i = 0; i < height; i++) {
+        floatMap[i] = new float[width];
     }
 
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
             if (mMap[i][j] == true)
-                floatMap[i][j] = 1.0f;
+                floatMap[j][i] = 1.0f;
             else
-                floatMap[i][j] = 0.0f;
+                floatMap[j][i] = 0.0f;
         }
     }
 
@@ -95,31 +100,130 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->AddComponent<Component::Mesh>();
     heightMap->AddComponent<Component::Transform>();
     heightMap->AddComponent<Component::Material>();
-    heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(xScale*(static_cast<float>(width)/2.f), -11.f, zScale*(static_cast<float>(height) / 2.f)));
+    heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width)/2.f)+1.f, -11.f, scaleFactor*(static_cast<float>(height) / 2.f) + 1.f));
     heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
 
-    heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, width, height, glm::vec2(xScale, zScale));
-
+    heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
+    heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
 
 }
 
 Cave::~Cave() {
-    for (int i = 0; i < 60; i++) {
-        delete[] mMap[i];
-    }
     delete caveMap;
-    delete[] mMap;
 }
 
-int Cave::GetWidth() {
+int Cave::GetWidth() const {
     return mWidth;
 }
 
-int Cave::GetHeight() {
+int Cave::GetHeight() const {
     return mHeight;
 }
+int Cave::GetBossRoomRadius() const {
+    return mBossRadius;
+}
 
-bool ** Cave::GetCaveData() {
+bool ** Cave::GetCaveData() const {
     return mMap;
+}
+
+bool Cave::PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime) {
+    unsigned int x = glm::floor((point + velocity * deltaTime).x / scaleFactor);
+    unsigned int z = glm::floor((point + velocity * deltaTime).z / scaleFactor);
+
+    return CellCollide(((point + velocity * deltaTime).x) / scaleFactor - x, ((point + velocity * deltaTime).z) / scaleFactor - z, x, z);
+}
+
+bool Cave::CellCollide(float xPos, float yPos, int x, int y) {
+
+    if (x >= 0 && y >= 0)
+        switch (this->mTypeMap[x][y]) {
+
+        case 1:
+            if (yPos <= 0.5f - xPos)
+                return true;
+            break;
+        case 2:
+            if (xPos >= 0.5f + yPos)
+                return true;
+            break;
+        case 3:
+            if (yPos <= 0.5f)
+                return true;
+            break;
+        case 4:
+            if (!(yPos <= 1.5f - xPos))
+                return true;
+            break;
+        case 6:
+            if (xPos >= 0.5f)
+                return true;
+            break;
+        case 7:
+            if (yPos <= xPos + 0.5f)
+                return true;
+            break;
+        case 8:
+            if (!(yPos <= xPos + 0.5f))
+                return true;
+            break;
+        case 9:
+            if (xPos <= 0.5f)
+                return true;
+            break;
+        case 11:
+            if (yPos <= 1.5f - xPos)
+                return true;
+            break;
+        case 12:
+            if (yPos >= 0.5f)
+                return true;
+            break;
+        case 13:
+            if (!(xPos >= 0.5f + yPos))
+                return true;
+            break;
+        case 14:
+            if (!(yPos <= 0.5f - xPos))
+                return true;
+            break;
+        case 15:
+            if (yPos <= xPos + 0.5f)
+                return true;
+            break;
+
+        }
+
+    return false;
+
+}
+
+bool Cave::GridCollide(Entity* entity, float deltaTime) {
+
+    Component::Transform* transform = entity->GetComponent<Component::Transform>();
+    Component::Physics* physics = entity->GetComponent<Component::Physics>();
+
+    glm::vec3 velocity = physics->velocity;
+    velocity += physics->acceleration * deltaTime;
+    velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
+
+    glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
+    glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
+
+    bool c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime);
+    bool c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime);
+    bool c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime);
+    bool c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime);
+
+    if (c0 || c1 || c2 || c3) {
+
+        physics->velocity *= glm::vec3(0, 0, 0);
+        physics->acceleration *= glm::vec3(0, 0, 0);
+        return true;
+
+    }
+
+    return false;
+
 }

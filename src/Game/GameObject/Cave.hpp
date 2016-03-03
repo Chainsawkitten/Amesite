@@ -2,6 +2,8 @@
 
 #include <Engine/GameObject/SuperGameObject.hpp>
 
+#include <glm/glm.hpp>
+
 class Scene;
 class Entity;
 namespace CaveGenerator {
@@ -34,19 +36,33 @@ namespace GameObject {
             /**
              * @return Width of the cave.
              */
-            int GetWidth();
+            int GetWidth() const;
 
             /// Gets height of the cave.
             /**
              * @return Height of the cave.
              */
-            int GetHeight();
+            int GetHeight() const;
+
+            /// Gets radius of the boss room.
+            /**
+            * @return Radius of the boss room.
+            */
+            int GetBossRoomRadius() const;
+
+            /// Grid collision
+            /**
+             * @param entity The minimum room size in tiles.
+             * @param deltaTime Where the players start.
+             * @return Returns true if collision with map, else false.
+             */
+            bool GridCollide(Entity* entity, float deltaTime);
 
             /// Gets bool grid of cave.
             /**
              * @return 2D bool array of the cave grid.
              */
-            bool** GetCaveData();
+            bool** GetCaveData() const;
 
             /// Map of all walls in the cave system.
             bool** mMap;
@@ -61,14 +77,40 @@ namespace GameObject {
             /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;
 
-            /// cave X scale.
-            float xScale;
-
-            /// cave Z scale.
-            float zScale;
+            /// Scale factor.
+            /**
+             * Default: 5.f
+             */
+            float scaleFactor;
 
         private:
+
+            ///Takes a point and checks if it collides with a wall
+            /**
+             * @param The point too check for collision.
+             * @param How far the point will move this frame
+             * @param deltaTime Where the players start.
+             * @return Returns true if it's inside a wall
+             */
+            bool PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime);
+
+            ///Takes a position and checks it agains the marching square type to see if it's in a wall
+            /**
+             * @param the xPos (0 - 1) where 0 is far to the left and 1 is far to the right.
+             * @param the yPos (0 - 1) where 0 is the top and 1 is the bottom.
+             * @param the x coordinate of the cell
+             * @param the y coordinate of the cell
+             * @return Returns true if it's inside a wall
+             */
+            bool CellCollide(float xPos, float yPos, int x, int y);
+            
+            /// cave X size.
             int mWidth;
+
+            /// cave Z size.
             int mHeight;
+
+            /// radius of a boss room.
+            int mBossRadius;
     };
 }

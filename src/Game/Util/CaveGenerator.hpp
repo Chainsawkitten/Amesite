@@ -5,7 +5,7 @@
 namespace CaveGenerator {
 
     /// A 2D coordinate in a cave.
-    struct Coordinate {
+    class Coordinate {
         public:
             /// X coordinate.
             int x;
@@ -82,6 +82,8 @@ namespace CaveGenerator {
 
             /// A set of coordintes that make up the edges of the room.
             std::vector<Coordinate> edgeCoordinates;
+
+
     };
 
     /// Handles generating and manipulating a map.
@@ -104,7 +106,10 @@ namespace CaveGenerator {
              */
             void GenerateCaveMap(int& percent);
 
-            /// Smooths and processes cave map, detects rooms as well.
+            /// Detects rooms.
+            void DetectRooms();
+
+            /// Smooths and processes cave map.
             /**
              * @param iterations The number of iterations we do.
              */
@@ -112,6 +117,14 @@ namespace CaveGenerator {
 
             /// Prints the current state of the map to the log.
             void PrintMapToLog();
+
+            ///Prints a boolmap to log.
+            /**
+             *@param map The bool map.
+             *@param rowCount The number of rows.
+             *@param columnCount The number of columns.
+             */
+            void PrintMapToLog(bool** map, int rowCount, int columnCount);
 
             /// Removes rooms smaller than a certain threshold.
             /**
@@ -178,9 +191,6 @@ namespace CaveGenerator {
              * @param tileType True if we are filling the coordinates with walls, false if we are filling with floors.
              */
             void FillCoordinates(const std::vector<Coordinate>& coordinates, bool tileType);
-
-            // Detects rooms, and puts them into mRooms.
-            void DetectRooms();
             
             // Creates a passage between rooms, used by ConnectClosestRooms.
             /*
@@ -222,8 +232,6 @@ namespace CaveGenerator {
              * @param second The second room.
              */
             void ConnectRooms(Room& first, Room& second);
-
-            void PrintMapToLog(bool** map, int rowCount, int columnCount);
 
             bool** mMap;
             int mRowCount; 

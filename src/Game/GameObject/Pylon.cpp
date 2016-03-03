@@ -29,9 +29,11 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::Collider2DCircle>()->radius = 9.f;
     node->AddComponent<Component::Health>()->faction = 1;
     node->GetComponent<Component::Health>()->health = 50.f;
+    node->GetComponent<Component::Health>()->removeOnLowHealth = false;
     node->AddComponent<Component::Explode>()->lifeTime = 0.25f;
     node->GetComponent<Component::Explode>()->size = 8.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
+    node->GetComponent<Component::Explode>()->sound = true;
 
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;

@@ -1,3 +1,5 @@
+#define NOMINMAX
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <MainWindow.hpp>
@@ -11,10 +13,12 @@
 #include "GameScenes/SplashScene.hpp"
 #include "GameScenes/MenuScene.hpp"
 #include "GameScenes/MainScene.hpp"
+#include "GameScenes/WinScene.hpp"
 //#include "GameScenes/PontusScene.hpp"
 //#include "GameScenes/AlbinScene.hpp"
 //#include "GameScenes/EmptyScene.hpp"
 //#include "GameScenes/DanielScene.hpp"
+#include "GameScenes/JonathanScene.hpp"
 //#include "GameScenes/IvarScene.hpp"
 
 //#define _CRTDBG_MAP_ALLOC
@@ -45,6 +49,7 @@ int main() {
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
     Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::PROFILE, InputHandler::KEYBOARD, GLFW_KEY_F2);
     
     System::SoundSystem* soundSystem = new System::SoundSystem();
     
@@ -52,6 +57,13 @@ int main() {
         Game::GetInstance().SetScene(new SplashScene());
     else
         Game::GetInstance().SetScene(new MenuScene());
+    
+    // Profiling variables.
+    bool profiling = false;
+    unsigned int profileFrames;
+    float minFrameTime;
+    float averageFrameTime;
+    float maxFrameTime;
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -64,10 +76,37 @@ int main() {
         Game::GetInstance().Update(static_cast<float>(deltaTime));
         
         // Set window title to reflect screen update and render times.
+        float frameTime = (glfwGetTime() - lastTime) * 1000.0f;
         std::string title = "Modership";
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))
-            title += " - " + std::to_string((glfwGetTime() - lastTime) * 1000.0f) + " ms";
+            title += " - " + std::to_string(frameTime) + " ms";
         window->SetTitle(title.c_str());
+        
+        // Profiling.
+        if (profiling) {
+            if (frameTime < minFrameTime)
+                minFrameTime = frameTime;
+            if (frameTime > maxFrameTime)
+                maxFrameTime = frameTime;
+            averageFrameTime += frameTime / 300.f;
+            
+            if (++profileFrames >= 300) {
+                Log() << "Profiling ended - " << time(nullptr) << "\n";
+                Log() << "Results:\n"
+                      << "Min: " << minFrameTime << "\n"
+                      << "Average: " << averageFrameTime << "\n"
+                      << "Max: " << maxFrameTime << "\n";
+                profiling = false;
+            }
+        } else if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE)) {
+            profiling = true;
+            profileFrames = 0;
+            minFrameTime = (std::numeric_limits<float>::max)();
+            averageFrameTime = 0.f;
+            maxFrameTime = 0.f;
+            
+            Log() << "Profiling started - " << time(nullptr) << "\n";
+        }
         
         // Swap buffers and wait until next frame.
         window->SwapBuffers();

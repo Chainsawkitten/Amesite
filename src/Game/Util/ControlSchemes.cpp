@@ -20,7 +20,7 @@
 #include <MainWindow.hpp>
 #include <Util/Log.hpp>
 
-#include <Game\GameObject\Bullet.hpp>
+#include <Game/GameObject/Bullet.hpp>
 
 void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
 
@@ -115,7 +115,6 @@ void ControlScheme::AlwaysShoot(Component::Controller* controller, float deltaTi
     Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
     Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
     if (spawnerComponent != nullptr) {
-        spawnerComponent->timeSinceSpawn += deltaTime;
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
             glm::vec2 direction = glm::vec2(1 - ((rand() % 1000) / 1000.f) * 2, 1 - ((rand() % 1000) / 1000.f) * 2);
             
@@ -162,9 +161,9 @@ void ControlScheme::RandomMove(Component::Controller* controller, float deltaTim
 }
 
 void ControlScheme::Aim(Component::Controller* controller, float deltaTime) {
-    
+
     Entity* entity = controller->entity;
-    
+
     // Move the player
     float x = Input()->ButtonValue(controller->playerID, InputHandler::AIM_X);
     float z = Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z);
@@ -241,7 +240,6 @@ void ControlScheme::AimedFire(Component::Controller* controller, float deltaTime
     Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
     
     if (spawnerComponent != nullptr) {
-        spawnerComponent->timeSinceSpawn += deltaTime;
         if (Input()->Pressed(controller->playerID, InputHandler::SHOOT) && spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
             // Spawn bullet.
             Entity* entity = controller->entity;
@@ -271,7 +269,6 @@ void ControlScheme::AutoAimedFire(Component::Controller* controller, float delta
     Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
 
     if (spawnerComponent != nullptr) {
-        spawnerComponent->timeSinceSpawn += deltaTime;
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
             Entity* entity = controller->entity;
 

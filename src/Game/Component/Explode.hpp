@@ -40,5 +40,8 @@ namespace Component {
              * Default: 0.f, 0.f, 0.f
              */
             glm::vec3 offset;
+            
+            /// Whether to play an explosion sound when it explodes.
+            bool sound;
     };
 }

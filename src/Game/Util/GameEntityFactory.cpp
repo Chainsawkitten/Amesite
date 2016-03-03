@@ -27,7 +27,8 @@
 #include "../Util/CaveGenerator.hpp"
 
 #include "../GameObject/Bullet.hpp"
-#include "../GameObject/Player.hpp"
+#include "../GameObject/Player/Player1.hpp"
+#include "../GameObject/Player/Player2.hpp"
 #include "../GameObject/Camera.hpp"
 #include "../GameObject/Enemy.hpp"
 #include "../GameObject/Cave.hpp"
@@ -35,7 +36,12 @@
 #include "../GameObject/Explosion.hpp"
 #include "../GameObject/Pylon.hpp"
 #include "../GameObject/Shield.hpp"
-#include "../GameObject/SpinBoss.hpp"
+#include "../GameObject/EnemySpawner.hpp"
+#include "../GameObject/Boss/SpinBoss.hpp"
+#include "../GameObject/Altar.hpp"
+#include "../GameObject/Pillar.hpp"
+#include "../GameObject/PillarBall.hpp"
+#include "../GameObject/Portal.hpp"
 
 using namespace GameObject;
 
@@ -47,6 +53,13 @@ GameEntityFactory& GameEntityFactory::GetInstance() {
 
 GameEntityFactory::GameEntityFactory(){
     mScene = nullptr;
+}
+
+EnemySpawner * GameEntityFactory::CreateEnemySpawner(unsigned int type, float delay)
+{
+    EnemySpawner *gameObject = new EnemySpawner(mScene, type);
+    gameObject->body->GetComponent<Component::Spawner>()->delay = delay;
+    return gameObject;
 }
 
 Enemy* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
@@ -71,23 +84,46 @@ GameObject::Shield* GameEntityFactory::CreateShield(Entity* parentEntity, glm::v
     return gameObject;
 }
 
-Player* GameEntityFactory::CreatePlayer(const glm::vec3& origin, InputHandler::Player player) {
-    Player* gameObject = new Player(mScene, player);
-    gameObject->node->GetComponent<Component::Transform>()->position = origin;
-    gameObject->node->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->leftTurret->GetComponent<Component::Controller>()->playerID = player;
-    gameObject->rightTurret->GetComponent<Component::Controller>()->playerID = player;
-    CreateDust(gameObject->node, Component::ParticleEmitter::DUST);
-    if (player == InputHandler::PLAYER_ONE) {
-        gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
-    } else {
-        gameObject->node->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::MouseRotate);
-    }
+Player1* GameEntityFactory::CreatePlayer1(const glm::vec3& origin) {
+    Player1* gameObject = new Player1(mScene);
+    gameObject->SetPosition(origin);
+    CreateDust(gameObject->GetNodeEntity(), Component::ParticleEmitter::DUST);
+    return gameObject;
+}
+
+Player2* GameEntityFactory::CreatePlayer2(const glm::vec3& origin) {
+    Player2* gameObject = new Player2(mScene);
+    gameObject->SetPosition(origin);
+    CreateDust(gameObject->GetNodeEntity(), Component::ParticleEmitter::DUST);
     return gameObject;
 }
 
 GameObject::SpinBoss* GameEntityFactory::CreateSpinBoss(const glm::vec3& origin) {
     SpinBoss* gameObject = new SpinBoss(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::Altar* GameEntityFactory::CreateAltar(const glm::vec3& origin) {
+    Altar* gameObject = new Altar(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::Pillar* GameEntityFactory::CreatePillar(const glm::vec3& origin) {
+    Pillar* gameObject = new Pillar(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::PillarBall* GameEntityFactory::CreatePillarBall(const glm::vec3& origin) {
+    PillarBall* gameObject = new PillarBall(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::Portal* GameEntityFactory::CreatePortal(const glm::vec3& origin) {
+    Portal* gameObject = new Portal(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }

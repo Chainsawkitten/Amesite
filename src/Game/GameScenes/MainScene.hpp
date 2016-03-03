@@ -4,7 +4,6 @@
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
-#include <System/ParticleSystem.hpp>
 #include <System/AnimationSystem.hpp>
 #include "Game/System/CheckpointSystem.hpp"
 #include "Game/System/HealthSystem.hpp"
@@ -13,6 +12,10 @@
 #include "Game/System/LifeTimeSystem.hpp"
 #include "Game/System/ReflectSystem.hpp"
 #include "Game/System/ExplodeSystem.hpp"
+#include "Game/System/GridCollideSystem.hpp"
+#include "Game/System/EnemySpawnerSystem.hpp"
+#include "Game/System/UpdateSystem.hpp"
+#include "Game/System/SpawnerSystem.hpp"
 
 #include <AL/al.h>
 
@@ -27,8 +30,10 @@ class Entity;
 namespace GameObject {
     class Cave;
     class Camera;
-    class Player;
+    class SuperPlayer;
     class SpinBoss;
+    class Altar;
+    class Pillar;
 }
 namespace Audio {
     class SoundBuffer;
@@ -71,6 +76,9 @@ class MainScene : public Scene {
         // The life time system
         System::LifeTimeSystem mLifeTimeSystem;
 
+        // The spawner system
+        System::SpawnerSystem mSpawnerSystem;
+
         // The reflect system
         System::ReflectSystem mReflectSystem;
 
@@ -83,8 +91,17 @@ class MainScene : public Scene {
         // checkpoint system
         System::CheckpointSystem mCheckpointSystem;
 
+        // The grid collide system
+        System::GridCollideSystem mGridCollideSystem;
+
+        // The enemy spawner system
+        System::EnemySpawnerSystem mEnemySpawnerSystem;
+        
+        // The update system
+        System::UpdateSystem mUpdateSystem;
+
         // Vector containing players
-        std::vector<GameObject::Player*> mPlayers;
+        std::vector<GameObject::SuperPlayer*> mPlayers;
 
         // Spin boss
         GameObject::SpinBoss* mSpinBoss;
@@ -101,14 +118,15 @@ class MainScene : public Scene {
         GammaCorrectionFilter* mGammaCorrectionFilter;
         GlowFilter* mGlowFilter;
         GlowBlurFilter* mGlowBlurFilter;
-        
-        // Grid collision
-        bool GridCollide(Entity* entity, float deltaTime, float gridScale);
+        int mBossCounter;
+        float mTimer;
+        glm::vec2 mPortalPosition;
+        GameObject::Pillar* mPillar;
 
-        /// Handles the player respawn
-        /**
-        *@param deltaTime Time since last frame.
-        */
+        // Used to exclude enemy spawning from certain areas.
+        std::vector<glm::vec3> mNoSpawnRooms;
+
+        // Handles the player respawn
         void Respawn(float deltaTime);
 
         // Music.

@@ -91,6 +91,7 @@ namespace CaveGenerator {
                         tempMap[j][k] = true;
                 }
             }
+
             for (int j = 0; j < mRowCount; ++j) {
                 for (int k = 0; k < mColumnCount; ++k) {
                     //Do not iterate over the border columns and rows.
@@ -161,7 +162,6 @@ namespace CaveGenerator {
         }
         
         //Find which rooms we have left after processing.
-        DetectRooms();
     }
 
     void CaveMap::DetectRooms(){
@@ -289,7 +289,7 @@ namespace CaveGenerator {
     }
 
     bool CaveMap::IsWithinMapRange(const Coordinate & coordinate) {
-        return ((coordinate.x > 0) && (coordinate.x < mColumnCount) && (coordinate.y > 0) && (coordinate.y < mRowCount));
+        return ((coordinate.x > 0) && (coordinate.x < mRowCount-1) && (coordinate.y > 0) && (coordinate.y < mColumnCount-1));
     }
 
     bool ** CaveMap::GetMap(){

@@ -16,6 +16,7 @@ Map::Map(bool **data, glm::uvec2 dataDimensions, float wallHeight) {
 Map::~Map() {
     delete[] mVertexData;
     delete[] mIndexData;
+    delete[] mTypeMap;
 }
 
 Geometry3D::Vertex* Map::GetVertices() const {
@@ -52,22 +53,29 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
 
     ControlNode** controlNodes = new ControlNode*[mDataDimensions.x];
     MSquare** mSquares = new MSquare*[mDataDimensions.x - 1];
+    mTypeMap = new int*[mDataDimensions.x - 1];
+
+    // Initialzation
+    for (unsigned int i = 0; i < mDataDimensions.x; i++) {
+        controlNodes[i] = new ControlNode[mDataDimensions.y];
+    }
+    for (unsigned int j = 0; j < mDataDimensions.x - 1; j++) {
+        mSquares[j] = new MSquare[mDataDimensions.y - 1];
+        mTypeMap[j] = new int[mDataDimensions.y - 1];
+    }
 
     // Node creation for marching squares
     for (unsigned int x = 0; x < mDataDimensions.x; x++) {
-        controlNodes[x] = new ControlNode[mDataDimensions.y];
         for (unsigned int y = 0; y < mDataDimensions.y; y++) {
             glm::vec3 pos = glm::vec3(-mMapWidth / 2.f + x * squareSize + squareSize / 2.f, 0.f, -mMapHeight / 2.f + y * squareSize + squareSize / 2.f);
             controlNodes[x][y] = CreateControlNode(pos, data[y][x], squareSize, glm::uvec2(x, y));
         }
     }
 
-    mTypeMap = new int*[mDataDimensions.x - 1];
+    
 
     // Node creation for marching squares
     for (unsigned int x = 0; x < mDataDimensions.x - 1; x++) {
-        mSquares[x] = new MSquare[mDataDimensions.y - 1];
-        mTypeMap[x] = new int[mDataDimensions.y - 1];
         for (unsigned int y = 0; y < mDataDimensions.y - 1; y++) {
             mSquares[x][y] = CreateMSquare(controlNodes[x][y + 1], controlNodes[x + 1][y + 1], controlNodes[x + 1][y], controlNodes[x][y]);
             mTypeMap[x][y] = mSquares[x][y].mType;
@@ -76,7 +84,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
 
     // Top mesh generation.
     for (unsigned int x = 0; x < mDataDimensions.x-1; x++) {
-        for (unsigned int y = 0; y < mDataDimensions.y-1; y++) {
+        for (unsigned int y = 0; y < mDataDimensions.x-1; y++) {
             TriangulateSquare(&mSquares[x][y]);
         }
     }
@@ -92,11 +100,11 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
     std::copy(mTempVertexData.begin(), mTempVertexData.end(), mVertexData);
     
     // Free used memory.
-    for (unsigned int m = 0; m < mDataDimensions.x-1; m++) {
+    for (unsigned int m = 0; m < mDataDimensions.y-1; m++) {
         delete[] controlNodes[m];
         delete[] mSquares[m];
     }
-    delete[] controlNodes[mDataDimensions.x-1];
+    delete[] controlNodes[mDataDimensions.y-1];
     delete[] controlNodes;
     delete[] mSquares;
 }
