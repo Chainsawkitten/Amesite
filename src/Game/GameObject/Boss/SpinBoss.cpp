@@ -91,10 +91,6 @@ void SpinBoss::mUpdateFunction() {
                 }
 }
 
-float SpinBoss::GetHealth() {
-    return body->GetComponent<Component::Health>()->health;
-}
-
 void SpinBoss::CreateArm(Entity* entity, glm::vec3 direction) {
     entity->GetComponent<Component::RelativeTransform>()->Move(direction);
     entity->GetComponent<Component::RelativeTransform>()->scale *= 0.5f;
@@ -147,4 +143,12 @@ void SpinBoss::ChangePhase(BossPhase phase) {
         body->GetComponent<Component::Material>()->glow = mNoReflectTexture;
         body->RemoveComponent<Component::Reflect>();
     }
+}
+
+float SpinBoss::GetHealth() {
+    return body->GetComponent<Component::Health>()->health;
+}
+
+glm::vec3 SpinBoss::GetPosition() {
+    return node->GetComponent<Component::Transform>()->position;
 }

@@ -107,16 +107,17 @@ class GameEntityFactory {
         /// Create Pillar.
         /**
          * @param origin The Pillar's starting position.
+         * @param bossPosition The Boss position.
          * @return The Pillar GameObject.
          */
-        GameObject::Pillar* CreatePillar(const glm::vec3& origin);
+        GameObject::Pillar* CreatePillar(const glm::vec3& origin, glm::vec3 bossPosition);
 
         /// Create PillarBall.
         /**
          * @param origin The PillarBall's starting position.
          * @return The PillarBall GameObject.
          */
-        GameObject::PillarBall* CreatePillarBall(const glm::vec3& origin);
+        GameObject::PillarBall* CreatePillarBall(const glm::vec3& origin, const glm::vec3& velocity);
 
         /// Create Portal.
         /**

@@ -92,9 +92,9 @@ MainScene::MainScene() {
 
     std::vector<CaveGenerator::Coordinate> bossPositions;
     bossPositions.push_back(NorthWest);
+    bossPositions.push_back(SouthWest);
     bossPositions.push_back(SouthEast);
     bossPositions.push_back(NorthEast);
-    bossPositions.push_back(SouthWest);
 
     // Create a map.
     mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
@@ -109,11 +109,17 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f)));
     mPlayers.push_back(GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f)));
     
-    // Create boss
-    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[2].x, 0.f, mCave->scaleFactor*bossPositions[2].y));
+    // Create bosses and pillars
+    for (int i = 0; i < bossPositions.size(); i++) {
+        mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[i].x, 0.f, mCave->scaleFactor*bossPositions[i].y)));
+        mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(mPortalPosition.x - 15.f + 15.f * i, -8.f, playerStartZ + 25.f - 2.f * i), mBossVector[i]->GetPosition()));
+    }
 
+    // Create altar
+    GameEntityCreator().CreateAltar(glm::vec3(mPortalPosition.x, -16.f, mPortalPosition.y));
+        
     //Stores how many bosses exist
-    mBossCounter = 1;
+    mBossCounter = mBossVector.size();
 
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
 
@@ -141,8 +147,6 @@ MainScene::MainScene() {
     // Push boss positions here to avoid spawning enemies.
     mNoSpawnRooms.push_back(glm::vec3(playerStartX, 0.f, playerStartZ));
 
-    GameEntityCreator().CreateAltar(glm::vec3(mPortalPosition.x, -16.f, mPortalPosition.y));
-    mPillar = GameEntityCreator().CreatePillar(glm::vec3(playerStartX + 12.f, -8.f, playerStartZ));
 }
 
 MainScene::~MainScene() {
@@ -234,15 +238,18 @@ void MainScene::Update(float deltaTime) {
 
     mCheckpointSystem.Update();
 
-    if (mSpinBoss != nullptr)
-        if (mSpinBoss->GetHealth() < 0.01f) {
-            mSpinBoss->Kill();
-            mSpinBoss = nullptr;
-            mBossCounter--;
-            mPillar->SetState(mPillar->ACTIVE);
-            if (mBossCounter == 0)
-                GameEntityCreator().CreatePortal(glm::vec3(mPortalPosition.x, 0.f, mPortalPosition.y));
-        }
+    for (int i = 0; i < mBossVector.size(); i++) {
+        GameObject::SuperBoss* boss = mBossVector[i];
+        if (boss != nullptr)
+            if (boss->GetHealth() < 0.01f) {
+                boss->Kill();
+                boss = nullptr;
+                mBossCounter--;
+                mPillarVector[i]->SetState(GameObject::Pillar::ACTIVE);
+                if (mBossCounter == 0)
+                    GameEntityCreator().CreatePortal(glm::vec3(mPortalPosition.x, 0.f, mPortalPosition.y));
+            }
+    }
 
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());

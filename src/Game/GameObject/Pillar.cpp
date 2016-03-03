@@ -23,7 +23,9 @@
 
 using namespace GameObject;
 
-Pillar::Pillar(Scene* scene) : SuperGameObject(scene) {
+Pillar::Pillar(Scene* scene, glm::vec3 bossPosition) : SuperGameObject(scene) {
+    mBossPosition = bossPosition;
+
     node = CreateEntity();
     node->AddComponent<Component::Transform>();
     node->AddComponent<Component::Material>();
@@ -70,11 +72,16 @@ void Pillar::mUpdateFunction() {
     if (mState == State::ACTIVE) {
         Component::Spawner* spawnerComponent = node->GetComponent<Component::Spawner>();
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
-            GameEntityCreator().CreatePillarBall(node->GetComponent<Component::Transform>()->GetWorldPosition() - glm::vec3(0.f, 10.f, 0.f));
+            GameEntityCreator().CreatePillarBall(node->GetComponent<Component::Transform>()->GetWorldPosition() - glm::vec3(0.f, 10.f, 0.f), glm::vec3(0.f, 10.f, 0.f));
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     } else {
-
+        Component::Spawner* spawnerComponent = node->GetComponent<Component::Spawner>();
+        if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay * 2.f) {
+            glm::vec3 velocity = mBossPosition - node->GetComponent<Component::Transform>()->position;
+            GameEntityCreator().CreatePillarBall(node->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(0.f, 10.f, 0.f), velocity/10.f);
+            spawnerComponent->timeSinceSpawn = 0.0f;
+        }
     }
 }
 

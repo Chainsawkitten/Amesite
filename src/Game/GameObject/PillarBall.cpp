@@ -24,10 +24,11 @@ using namespace GameObject;
 
 PillarBall::PillarBall(Scene* scene) : SuperGameObject(scene) {
     node = CreateEntity();
-    node->AddComponent<Component::Transform>()->scale *= 0.1f;
+    node->AddComponent<Component::Transform>()->scale *= 0.05f;
     node->AddComponent<Component::Physics>()->velocity.y = 20.f;
     node->GetComponent<Component::Physics>()->angularVelocity.y = 0.5f;
     node->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
+    node->GetComponent<Component::Physics>()->velocityDragFactor = 0.f;
     node->AddComponent<Component::LifeTime>()->lifeTime = 10.f;
     //node->AddComponent<Component::Update>()->updateFunction = std::bind(&PillarBall::mUpdateFunction, this);
 
