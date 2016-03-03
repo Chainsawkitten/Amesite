@@ -85,7 +85,7 @@ MainScene::MainScene() {
     int threshold = 100;
 
     CaveGenerator::Coordinate playerPosition(width/2, height/2);
-    CaveGenerator::Coordinate NorthWest(5,5);
+    CaveGenerator::Coordinate NorthWest(5, 5);
     CaveGenerator::Coordinate SouthEast(height-5, width-5);
     CaveGenerator::Coordinate NorthEast(height-5, 5);
     CaveGenerator::Coordinate SouthWest(5, width - 5);
@@ -213,16 +213,10 @@ void MainScene::Update(float deltaTime) {
     
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
-
+    
     // UpdateSystem.
     mUpdateSystem.Update(*this, deltaTime);
-
-    // Update explotion system
-    mExplodeSystem.Update(*this);
-
-    // Remove killed entities
-    ClearKilledEntities();
-
+    
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
     
@@ -241,6 +235,12 @@ void MainScene::Update(float deltaTime) {
             if (mBossCounter == 0)
                 GameEntityCreator().CreatePortal(glm::vec3(mPortalPosition.x, 0.f, mPortalPosition.y));
         }
+    
+    // Update explosion system
+    mExplodeSystem.Update(*this);
+    
+    // Remove killed entities
+    ClearKilled();
 
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
@@ -270,4 +270,5 @@ void MainScene::Update(float deltaTime) {
     mPostProcessing->Render();
 
     mTimer += deltaTime;
+
 }
