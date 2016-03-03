@@ -8,7 +8,7 @@
 
 void System::CheckpointSystem::Update() {
     for (auto &player : mPlayers) {
-        if (player->Active)
+        if (player->Active())
             return;
     }
 
