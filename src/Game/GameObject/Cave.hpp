@@ -36,13 +36,19 @@ namespace GameObject {
             /**
              * @return Width of the cave.
              */
-            int GetWidth();
+            int GetWidth() const;
 
             /// Gets height of the cave.
             /**
              * @return Height of the cave.
              */
-            int GetHeight();
+            int GetHeight() const;
+
+            /// Gets radius of the boss room.
+            /**
+            * @return Radius of the boss room.
+            */
+            int GetBossRoomRadius() const;
 
             /// Grid collision
             /**
@@ -56,7 +62,7 @@ namespace GameObject {
             /**
              * @return 2D bool array of the cave grid.
              */
-            bool** GetCaveData();
+            bool** GetCaveData() const;
 
             /// Map of all walls in the cave system.
             bool** mMap;
@@ -78,7 +84,13 @@ namespace GameObject {
 
             int Cave::PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime);
 
+            /// cave X size.
             int mWidth;
+
+            /// cave Z size.
             int mHeight;
+
+            /// radius of a boss room.
+            int mBossRadius;
     };
 }

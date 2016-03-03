@@ -18,6 +18,7 @@
 //#include "GameScenes/AlbinScene.hpp"
 //#include "GameScenes/EmptyScene.hpp"
 //#include "GameScenes/DanielScene.hpp"
+#include "GameScenes/JonathanScene.hpp"
 //#include "GameScenes/IvarScene.hpp"
 
 //#define _CRTDBG_MAP_ALLOC

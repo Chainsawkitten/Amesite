@@ -6,6 +6,8 @@ Spawner::Spawner(Entity* entity) : SuperComponent(entity) {
     timeSinceSpawn = 0.f;
     delay = 0.f;
     faction = 0;
+    type = BULLET;
+    enemyType = BASIC;
 }
 
 Spawner::~Spawner() {

@@ -36,6 +36,7 @@
 #include "../GameObject/Explosion.hpp"
 #include "../GameObject/Pylon.hpp"
 #include "../GameObject/Shield.hpp"
+#include "../GameObject/EnemySpawner.hpp"
 #include "../GameObject/Boss/SpinBoss.hpp"
 #include "../GameObject/Altar.hpp"
 #include "../GameObject/Pillar.hpp"
@@ -52,6 +53,13 @@ GameEntityFactory& GameEntityFactory::GetInstance() {
 
 GameEntityFactory::GameEntityFactory(){
     mScene = nullptr;
+}
+
+EnemySpawner * GameEntityFactory::CreateEnemySpawner(unsigned int type, float delay)
+{
+    EnemySpawner *gameObject = new EnemySpawner(mScene, type);
+    gameObject->body->GetComponent<Component::Spawner>()->delay = delay;
+    return gameObject;
 }
 
 Enemy* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
