@@ -54,8 +54,6 @@
 #include "../Game.hpp"
 #include "WinScene.hpp"
 
-bool CellCollide(float xPos, float yPos, int x, int y, GameObject::Cave* cave);
-
 using namespace GameObject;
 
 MainScene::MainScene() {
