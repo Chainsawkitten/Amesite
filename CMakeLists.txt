@@ -393,6 +393,7 @@ set(GAME_SRCS
         src/Game/System/ReflectSystem.cpp
         src/Game/System/AISystem.cpp
         src/Game/System/CheckpointSystem.cpp
+        src/Game/System/EnemySpawnerSystem.cpp
         src/Game/System/UpdateSystem.cpp
         src/Game/System/GridCollideSystem.cpp
         src/Game/System/SpawnerSystem.cpp
@@ -428,6 +429,7 @@ set(GAME_SRCS
         src/Game/GameObject/Explosion.cpp
         src/Game/GameObject/Pylon.cpp
         src/Game/GameObject/Shield.cpp
+        src/Game/GameObject/EnemySpawner.cpp
         src/Game/GameObject/Boss/SpinBoss.cpp
         src/Game/GameObject/Boss/TurretBoss.cpp
         src/Game/GameObject/Altar.cpp
@@ -452,6 +454,7 @@ set(GAME_HEADERS
         src/Game/System/ReflectSystem.hpp
         src/Game/System/AISystem.hpp
         src/Game/System/CheckpointSystem.hpp
+        src/Game/System/EnemySpawnerSystem.hpp
         src/Game/System/UpdateSystem.hpp
         src/Game/System/GridCollideSystem.hpp
         src/Game/System/SpawnerSystem.hpp
@@ -487,6 +490,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Explosion.hpp
         src/Game/GameObject/Pylon.hpp
         src/Game/GameObject/Shield.hpp
+        src/Game/GameObject/EnemySpawner.hpp
         src/Game/GameObject/Boss/SpinBoss.hpp
         src/Game/GameObject/Boss/TurretBoss.hpp
         src/Game/GameObject/Altar.hpp

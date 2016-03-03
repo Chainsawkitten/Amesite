@@ -22,6 +22,7 @@ namespace GameObject{
     class Pylon;
     class Shield;
     class SpinBoss;
+    class EnemySpawner;
     class Altar;
     class Pillar;
     class PillarBall;
@@ -42,6 +43,14 @@ class GameEntityFactory {
         
         /// Destructor.
         ~GameEntityFactory();
+
+        /// Create an enemy spawner.
+        /**
+         * @param type of enemy the spawner handles.
+         * @param delay for spawning a new enemy.
+         * @return The enemy spawner GameObject.
+         */
+        GameObject::EnemySpawner* CreateEnemySpawner(unsigned int type, float delay);
         
         /// Create a basic enemy.
         /**

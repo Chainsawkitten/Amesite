@@ -13,6 +13,7 @@
 #include "Game/System/ReflectSystem.hpp"
 #include "Game/System/ExplodeSystem.hpp"
 #include "Game/System/GridCollideSystem.hpp"
+#include "Game/System/EnemySpawnerSystem.hpp"
 #include "Game/System/UpdateSystem.hpp"
 #include "Game/System/SpawnerSystem.hpp"
 
@@ -93,6 +94,9 @@ class MainScene : public Scene {
         // The grid collide system
         System::GridCollideSystem mGridCollideSystem;
 
+        // The enemy spawner system
+        System::EnemySpawnerSystem mEnemySpawnerSystem;
+        
         // The update system
         System::UpdateSystem mUpdateSystem;
 
@@ -118,6 +122,9 @@ class MainScene : public Scene {
         float mTimer;
         glm::vec2 mPortalPosition;
         GameObject::Pillar* mPillar;
+
+        // Used to exclude enemy spawning from certain areas.
+        std::vector<glm::vec3> mNoSpawnRooms;
 
         // Handles the player respawn
         void Respawn(float deltaTime);

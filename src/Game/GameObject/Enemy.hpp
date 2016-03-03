@@ -4,6 +4,7 @@
 
 class Scene;
 class Entity;
+
 namespace Geometry {
     class OBJModel;
 }
@@ -34,7 +35,6 @@ namespace GameObject {
              * @return health of the enemy.
              */
             float GetHealth();
-
         private:
             Geometry::OBJModel* mEnemyHead;
             Geometry::OBJModel* mEnemyTail;
