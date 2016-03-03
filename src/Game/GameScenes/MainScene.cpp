@@ -70,7 +70,7 @@ MainScene::MainScene() {
     mTimer = 0.f;
     
     // Create main camera
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(300.f, 300.f, 300.f), glm::vec3(0.f, 60.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(200.f, 500.f, 200.f), glm::vec3(0.f, 90.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
 
     // Create scene
@@ -126,6 +126,9 @@ MainScene::MainScene() {
 
     GameEntityCreator().CreateEnemySpawner(Component::Spawner::PYLON, 10);
     GameEntityCreator().CreateEnemySpawner(Component::Spawner::BASIC, 15);
+
+    // Push boss positions here to avoid spawning enemies.
+    mNoSpawnRooms.push_back(glm::vec3(playerStartX, 0.f, playerStartZ));
 
     GameEntityCreator().CreateSpawn(glm::vec3(playerStartX + 1.f, -12.f, playerStartZ - 25.f));
 }
@@ -208,7 +211,7 @@ void MainScene::Update(float deltaTime) {
     System::SoundSystem::GetInstance()->Update(*this);
     
     // Update game logic
-    mMainCamera->UpdateRelativePosition(mPlayers);
+    //mMainCamera->UpdateRelativePosition(mPlayers);
 
     //Handles the respawning of the players
     Respawn(deltaTime);
