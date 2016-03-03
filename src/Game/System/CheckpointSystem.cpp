@@ -8,7 +8,7 @@
 
 void System::CheckpointSystem::Update() {
     for (auto &player : mPlayers) {
-        if (player->GetHealth() > 0.001f)
+        if (player->Active)
             return;
     }
 

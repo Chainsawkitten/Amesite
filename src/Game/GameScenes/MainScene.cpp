@@ -229,10 +229,11 @@ void MainScene::Update(float deltaTime) {
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
 
+    //If all players are disabled, respawn them.
+    mCheckpointSystem.Update();
+
     //Handles the respawning of the players
     Respawn(deltaTime);
-
-    mCheckpointSystem.Update();
 
     if (mSpinBoss != nullptr)
         if (mSpinBoss->GetHealth() < 0.01f) {
@@ -279,7 +280,7 @@ void MainScene::Respawn(float deltaTime) {
         for (auto& otherPlayer : mPlayers) {
             //If the other player isn't this player and isn't active, and the players are close enough, start healing.
             if (thisPlayer != otherPlayer) {
-                if(!otherPlayer->Active() && glm::distance(thisPlayer->GetPosition(), otherPlayer->GetPosition()) < 15.f){
+                if(thisPlayer->Active() && !otherPlayer->Active() && glm::distance(thisPlayer->GetPosition(), otherPlayer->GetPosition()) < 15.f){
                     otherPlayer->mRespawnTimer -= deltaTime;
                     otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
                 } else {
