@@ -186,9 +186,9 @@ void MainScene::Update(float deltaTime) {
         }
     }
 
-    // Update boss
-    if (mSpinBoss != nullptr)
-        mSpinBoss->Update();
+    //// Update boss
+    //if (mSpinBoss != nullptr)
+    //    mSpinBoss->Update();
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);

@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include "SuperBoss.hpp"
 
 #include <glm/glm.hpp>
-#include <vector>
 
 class Scene;
 class Entity;
@@ -14,7 +13,7 @@ namespace Geometry {
 
 namespace GameObject {
     /// A SpinBoss
-    class SpinBoss : public SuperGameObject {
+    class SpinBoss : public SuperBoss {
         public:
             /// Create %SpinBoss
             /**
@@ -24,17 +23,8 @@ namespace GameObject {
            
             ~SpinBoss();
 
-            /// Node of %SpinBoss
-            Entity* node;
-
-            /// Body relative to node
-            Entity* body;
-
             /// Arms relative to body
             Entity* armArr[4];
-
-            /// Update boss.
-            void Update();
 
             /// Gets health of the boss.
             /**
@@ -64,6 +54,8 @@ namespace GameObject {
             void CreateArm(Entity* entity, glm::vec3 direction);
 
             void ChangePhase(BossPhase phase);
+
+            void mUpdateFunction();
 
             Geometry::OBJModel* mBody;
     };
