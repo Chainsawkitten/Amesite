@@ -1,7 +1,7 @@
 #include "DamageSystem.hpp"
-#include <Engine/Scene/Scene.hpp>
+#include <Scene/Scene.hpp>
 #include <Entity/Entity.hpp>
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include <GameObject/SuperGameObject.hpp>
 
 #include "../Util/GameEntityFactory.hpp"
 

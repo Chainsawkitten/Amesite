@@ -1,8 +1,8 @@
 #include "HealthSystem.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
+#include <GameObject/SuperGameObject.hpp>
 
 #include "../Component/Health.hpp"
 #include "../Component/Explode.hpp"
@@ -20,8 +20,8 @@ HealthSystem::~HealthSystem() {
 }
 
 void HealthSystem::Update(Scene& scene, float deltaTime) {
-    std::vector<Component::Health*> healthVector = scene.GetAll<Component::Health>();
-    for (auto healthComponent : healthVector) {
+    std::vector<Component::Health*> healthComponents = scene.GetAll<Component::Health>();
+    for (auto healthComponent : healthComponents) {
         // Update last hit time
         healthComponent->cooldown = std::fmaxf(healthComponent->cooldown - deltaTime, 0.f);
         // Update hp

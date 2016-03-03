@@ -33,28 +33,30 @@ ExplodeSystem::~ExplodeSystem() {
 }
 
 void ExplodeSystem::Update(Scene& scene) {
-    std::vector<Entity*> killedEntitiesVector = scene.GetKilledEntitesVector();
-    for (auto entity : killedEntitiesVector) {
-        Component::Explode* explodeComp = entity->GetComponent<Component::Explode>();
-        if (explodeComp != nullptr) {
-            GameEntityCreator().SetScene(&scene);
-            GameObject::Explosion* explosion = GameEntityCreator().CreateExplosion(entity->GetComponent<Component::Transform>()->GetWorldPosition() + explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex);
-            
-            // Create temporary sound.
-            if (explodeComp->sound) {
-                Entity* explosionSound = scene.CreateEntity();
-                Component::Transform* transform = explosionSound->AddComponent<Component::Transform>();
-                transform->position = explosion->node->GetComponent<Component::Transform>()->position;
-                Component::SoundSource* soundSource = explosionSound->AddComponent<Component::SoundSource>();
+    std::vector<Entity*>* entities = scene.GetVector<Entity>();
+    for (Entity* entity : *entities) {
+        if (entity->IsKilled()) {
+            Component::Explode* explodeComp = entity->GetComponent<Component::Explode>();
+            if (explodeComp != nullptr) {
+                GameEntityCreator().SetScene(&scene);
+                GameObject::Explosion* explosion = GameEntityCreator().CreateExplosion(entity->GetComponent<Component::Transform>()->GetWorldPosition() + explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex);
                 
-                // Use random explosion sound.
-                std::uniform_int_distribution<uint32_t> distribution(0, mExplosionSounds.size()-1);
-                soundSource->soundBuffer = mExplosionSounds[distribution(mRNG)];
-                soundSource->gain = 15.f;
-                soundSource->Play();
-                
-                Component::LifeTime* lifetime = explosionSound->AddComponent<Component::LifeTime>();
-                lifetime->lifeTime = 6.f;
+                // Create temporary sound.
+                if (explodeComp->sound) {
+                    Entity* explosionSound = scene.CreateEntity();
+                    Component::Transform* transform = explosionSound->AddComponent<Component::Transform>();
+                    transform->position = explosion->node->GetComponent<Component::Transform>()->position;
+                    Component::SoundSource* soundSource = explosionSound->AddComponent<Component::SoundSource>();
+                    
+                    // Use random explosion sound.
+                    std::uniform_int_distribution<uint32_t> distribution(0, mExplosionSounds.size()-1);
+                    soundSource->soundBuffer = mExplosionSounds[distribution(mRNG)];
+                    soundSource->gain = 15.f;
+                    soundSource->Play();
+                    
+                    Component::LifeTime* lifetime = explosionSound->AddComponent<Component::LifeTime>();
+                    lifetime->lifeTime = 6.f;
+                }
             }
         }
     }

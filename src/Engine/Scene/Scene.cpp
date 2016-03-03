@@ -19,7 +19,7 @@ Scene::~Scene() {
 
 Entity* Scene::CreateEntity() {
     Entity* entity = new Entity(this);
-    mEntityVector.push_back(entity);
+    mEntities.push_back(entity);
     return entity;
 }
 
@@ -32,36 +32,34 @@ void Scene::RemoveComponentFromList(Component::SuperComponent* component, const 
 }
 
 void Scene::ClearAll() {
-    for (Entity* entity : mEntityVector)
+    for (Entity* entity : mEntities)
         delete entity;
-    mEntityVector.clear();
-    mEntityVector.shrink_to_fit();
-
-    for (Collision* collision : mCollisionVector)
+    mEntities.clear();
+    
+    for (Collision* collision : mCollisions)
         delete collision;
-    mCollisionVector.clear();
-    mCollisionVector.shrink_to_fit();
-
-    for (GameObject::SuperGameObject* gameObject : mGameObjectVector)
+    mCollisions.clear();
+    
+    for (GameObject::SuperGameObject* gameObject : mGameObjects)
         delete gameObject;
-    mGameObjectVector.clear();
-    mGameObjectVector.shrink_to_fit();
-
+    mGameObjects.clear();
+    
     for (auto& it : mComponents) {
         for (Component::SuperComponent* component : it.second)
             delete component;
     }
     mComponents.clear();
-
+    
     mParticleCount = 0;
 }
 
 void Scene::UpdateModelMatrices() {
     std::vector<Component::Transform*> transforms = GetAll<Component::Transform>();
-    for (unsigned int i = 0; i < transforms.size(); i++)
-        transforms[i]->UpdateModelMatrix();
-    std::vector<Component::Animation*> animationVector = GetAll<Component::Animation>();
-    for (auto animationComponent : animationVector) {
+    for (Component::Transform* transform : transforms)
+        transform->UpdateModelMatrix();
+    
+    std::vector<Component::Animation*> animations = GetAll<Component::Animation>();
+    for (auto animationComponent : animations) {
         Component::RelativeTransform* relativeTranform = animationComponent->entity->GetComponent<Component::RelativeTransform>();
         if (relativeTranform != nullptr && relativeTranform->parentEntity->GetComponent<Component::Animation>() != nullptr) {
             Component::Animation* relativeAnimation = relativeTranform->parentEntity->GetComponent<Component::Animation>();
@@ -78,15 +76,45 @@ void Scene::UpdateModelMatrices() {
     }
 }
 
-void Scene::ClearKilledEntities() {
-    for (auto entity : mKilledEntitesVector) {
-        entity->Clear();
+void Scene::ClearKilled() {
+    // Clear killed components.
+    std::size_t i;
+    for (auto& componentIt : mComponents) {
+        i = 0;
+        while (i < componentIt.second.size()) {
+            if (componentIt.second[i]->IsKilled()) {
+                delete componentIt.second[i];
+                componentIt.second[i] = componentIt.second[componentIt.second.size() - 1];
+                componentIt.second.pop_back();
+            } else {
+                ++i;
+            }
+        }
     }
-    mKilledEntitesVector.clear();
-}
-
-const std::vector<Entity*>& Scene::GetKilledEntitesVector() const {
-    return mKilledEntitesVector;
+    
+    // Clear killed entities.
+    i = 0;
+    while (i < mEntities.size()) {
+        if (mEntities[i]->IsKilled()) {
+            delete mEntities[i];
+            mEntities[i] = mEntities[mEntities.size() - 1];
+            mEntities.pop_back();
+        } else {
+            ++i;
+        }
+    }
+    
+    // Clear killed game objects.
+    i = 0;
+    while (i < mGameObjects.size()) {
+        if (mGameObjects[i]->IsKilled()) {
+            delete mGameObjects[i];
+            mGameObjects[i] = mGameObjects[mGameObjects.size() - 1];
+            mGameObjects.pop_back();
+        } else {
+            ++i;
+        }
+    }
 }
 
 System::ParticleSystem::Particle* Scene::GetParticles() const {
