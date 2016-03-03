@@ -33,8 +33,8 @@ class Entity {
          */
         template <typename T> T* GetComponent();
 
-        /// Remove component of type T.
-        template <typename T> void RemoveComponent();
+        /// Kill component of type T.
+        template <typename T> void KillComponent();
 
         /// Remove %Entity from scene.
         void Clear();
@@ -108,7 +108,7 @@ template <typename T> T* Entity::AddComponent() {
     return component;
 }
 
-template <typename T> void Entity::RemoveComponent() {
+template <typename T> void Entity::KillComponent() {
     const std::type_info* componentType = &typeid(T*);
     if (components.find(componentType) != components.end()) {
         T* component = static_cast<T*>(components[componentType]);
