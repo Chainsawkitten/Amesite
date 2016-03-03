@@ -54,7 +54,7 @@ int main() {
     if (GameSettings::GetInstance().GetBool("Show Splash Screen"))
         Game::GetInstance().SetScene(new SplashScene());
     else
-        Game::GetInstance().SetScene(new JonathanScene());
+        Game::GetInstance().SetScene(new MenuScene());
     
     // Profiling variables.
     bool profiling = false;
