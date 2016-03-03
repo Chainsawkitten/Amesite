@@ -110,15 +110,16 @@ GameObject::Altar* GameEntityFactory::CreateAltar(const glm::vec3& origin) {
     return gameObject;
 }
 
-GameObject::Pillar* GameEntityFactory::CreatePillar(const glm::vec3& origin) {
-    Pillar* gameObject = new Pillar(mScene);
+GameObject::Pillar* GameEntityFactory::CreatePillar(const glm::vec3& origin, glm::vec3 bossPosition) {
+    Pillar* gameObject = new Pillar(mScene, bossPosition);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }
 
-GameObject::PillarBall* GameEntityFactory::CreatePillarBall(const glm::vec3& origin) {
+GameObject::PillarBall* GameEntityFactory::CreatePillarBall(const glm::vec3& origin, const glm::vec3& velocity) {
     PillarBall* gameObject = new PillarBall(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    gameObject->node->GetComponent<Component::Physics>()->velocity = velocity;
     return gameObject;
 }
 

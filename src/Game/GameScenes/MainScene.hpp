@@ -31,7 +31,7 @@ namespace GameObject {
     class Cave;
     class Camera;
     class SuperPlayer;
-    class SpinBoss;
+    class SuperBoss;
     class Altar;
     class Pillar;
 }
@@ -103,8 +103,11 @@ class MainScene : public Scene {
         // Vector containing players
         std::vector<GameObject::SuperPlayer*> mPlayers;
 
-        // Spin boss
-        GameObject::SpinBoss* mSpinBoss;
+        // Bosses
+        std::vector<GameObject::SuperBoss*> mBossVector;
+
+        // Pillars
+        std::vector<GameObject::Pillar*> mPillarVector;
 
         // The main camera
         GameObject::Camera* mMainCamera;
@@ -121,7 +124,6 @@ class MainScene : public Scene {
         int mBossCounter;
         float mTimer;
         glm::vec2 mPortalPosition;
-        GameObject::Pillar* mPillar;
 
         // Used to exclude enemy spawning from certain areas.
         std::vector<glm::vec3> mNoSpawnRooms;

@@ -34,7 +34,8 @@ ExplodeSystem::~ExplodeSystem() {
 
 void ExplodeSystem::Update(Scene& scene) {
     std::vector<Entity*>* entities = scene.GetVector<Entity>();
-    for (Entity* entity : *entities) {
+    for (std::size_t i = 0; i < entities->size(); ++i) {
+        Entity* entity = (*entities)[i];
         if (entity->IsKilled()) {
             Component::Explode* explodeComp = entity->GetComponent<Component::Explode>();
             if (explodeComp != nullptr) {
