@@ -430,8 +430,9 @@ set(GAME_SRCS
         src/Game/GameObject/Pylon.cpp
         src/Game/GameObject/Shield.cpp
         src/Game/GameObject/EnemySpawner.cpp
+        src/Game/GameObject/Boss/SuperBoss.cpp
         src/Game/GameObject/Boss/SpinBoss.cpp
-        src/Game/GameObject/Boss/TurretBoss.cpp
+        src/Game/GameObject/Boss/ShieldBoss.cpp
         src/Game/GameObject/Altar.cpp
         src/Game/GameObject/Pillar.cpp
         src/Game/GameObject/PillarBall.cpp
@@ -491,8 +492,9 @@ set(GAME_HEADERS
         src/Game/GameObject/Pylon.hpp
         src/Game/GameObject/Shield.hpp
         src/Game/GameObject/EnemySpawner.hpp
+        src/Game/GameObject/Boss/SuperBoss.hpp
         src/Game/GameObject/Boss/SpinBoss.hpp
-        src/Game/GameObject/Boss/TurretBoss.hpp
+        src/Game/GameObject/Boss/ShieldBoss.hpp
         src/Game/GameObject/Altar.hpp
         src/Game/GameObject/Pillar.hpp
         src/Game/GameObject/PillarBall.hpp

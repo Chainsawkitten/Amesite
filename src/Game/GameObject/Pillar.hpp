@@ -2,6 +2,8 @@
 
 #include <Engine/GameObject/SuperGameObject.hpp>
 
+#include <glm/glm.hpp>
+
 class Scene;
 class Entity;
 namespace Geometry {
@@ -15,8 +17,9 @@ namespace GameObject {
             /// Create %Pillar
             /**
              * @param scene Pointer to which Scene %Enemy Enities' are contained.
+             * @param bossPosition Vector of boss position.
              */
-            Pillar(Scene* scene);
+            Pillar(Scene* scene, glm::vec3 bossPosition);
            
             ~Pillar();
 
@@ -51,5 +54,7 @@ namespace GameObject {
             State mLastState;
 
             Entity* mLight;
+
+            glm::vec3 mBossPosition;
     };
 }

@@ -37,7 +37,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_heavy_damage.png");
 
     mNode = CreateEntity();
-    mNode->AddComponent<Component::Transform>()->scale *= 0.35f;
+    mNode->AddComponent<Component::Transform>()->scale *= 0.2f;
     mNode->AddComponent<Component::Controller>()->speed = 5000.f;
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
