@@ -68,6 +68,9 @@ void SoundSystem::Update(Scene& scene) {
     // Update sound sources.
     std::list<Component::SoundSource*> soundComponents = scene.GetAll<Component::SoundSource>();
     for (Component::SoundSource* sound : soundComponents) {
+        if (sound->IsKilled())
+            continue;
+        
         Entity* entity = sound->entity;
         
         // Pause it.

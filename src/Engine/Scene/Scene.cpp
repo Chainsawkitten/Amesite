@@ -76,7 +76,21 @@ void Scene::UpdateModelMatrices() {
     }
 }
 
-void Scene::ClearKilledEntities() {
+void Scene::ClearKilled() {
+    // Clear killed components.
+    for (auto& componentIt : mComponents) {
+        auto it = componentIt.second.begin();
+        while (it != componentIt.second.end()) {
+            if ((*it)->IsKilled()) {
+                delete *it;
+                it = componentIt.second.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+    
+    // Clear killed entities.
     for (auto entity : mKilledEntites) {
         entity->Clear();
     }

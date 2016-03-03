@@ -112,10 +112,6 @@ template <typename T> void Entity::KillComponent() {
     const std::type_info* componentType = &typeid(T*);
     if (components.find(componentType) != components.end()) {
         components[componentType]->Kill();
-        
-        T* component = static_cast<T*>(components[componentType]);
-        delete component;
         components.erase(componentType);
-        mScene->RemoveComponentFromList(component, componentType);
     }
 }

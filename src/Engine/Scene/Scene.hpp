@@ -39,8 +39,8 @@ class Scene {
         /// Updates all model matrices in %Scene.
         void UpdateModelMatrices();
         
-        /// Removes all killed entites in %Scene.
-        void ClearKilledEntities();
+        /// Removes all killed game objects, entities and components in the scene.
+        void ClearKilled();
         
         /// Gets all components of a specific type.
         /**

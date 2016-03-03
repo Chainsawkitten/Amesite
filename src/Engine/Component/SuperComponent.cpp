@@ -10,6 +10,7 @@ SuperComponent::SuperComponent(Entity* entity) {
 }
 
 SuperComponent::~SuperComponent() {
+    
 }
 
 void SuperComponent::Kill() {

@@ -41,6 +41,9 @@ void ParticleSystem::Update(Scene& scene, double time) {
     
     std::list<Component::ParticleEmitter*> particleEmitters = scene.GetAll<Component::ParticleEmitter>();
     for (Component::ParticleEmitter* emitter : particleEmitters) {
+        if (emitter->IsKilled())
+            continue;
+        
         if (emitter->enabled) {
             emitter->timeToNext -= time;
             while (emitter->timeToNext < 0.0) {

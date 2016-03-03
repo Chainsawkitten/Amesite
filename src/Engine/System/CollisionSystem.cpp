@@ -44,6 +44,9 @@ void CollisionSystem::Update(Scene& scene) {
     glm::vec3 scale;
     std::vector<Node> nodes;
     for (auto collider : collider2DCircle) {
+        if (collider->IsKilled())
+            continue;
+        
         node.collider = collider;
         pos = collider->entity->GetComponent<Component::Transform>()->GetWorldPosition();
         scale = collider->entity->GetComponent<Component::Transform>()->GetWorldScale();

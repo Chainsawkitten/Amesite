@@ -17,6 +17,9 @@ PhysicsSystem::~PhysicsSystem() {
 void PhysicsSystem::Update(Scene& scene, float deltaTime) {
     std::list<Component::Physics*> physicsObjects = scene.GetAll<Component::Physics>();
     for (Component::Physics* physicsComp : physicsObjects) {
+        if (physicsComp->IsKilled())
+            continue;
+        
         Component::Transform* transformComp = physicsComp->entity->GetComponent<Component::Transform>();
         if (transformComp != nullptr) {
 
