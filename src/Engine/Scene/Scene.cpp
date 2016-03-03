@@ -91,14 +91,15 @@ void Scene::ClearKilled() {
     }
     
     // Clear killed entities.
-    for (auto entity : mKilledEntites) {
-        entity->Clear();
+    auto it = mEntities.begin();
+    while (it != mEntities.end()) {
+        if ((*it)->IsKilled()) {
+            delete *it;
+            it = mEntities.erase(it);
+        } else {
+            ++it;
+        }
     }
-    mKilledEntites.clear();
-}
-
-const std::list<Entity*>& Scene::GetKilledEntitesVector() const {
-    return mKilledEntites;
 }
 
 System::ParticleSystem::Particle* Scene::GetParticles() const {

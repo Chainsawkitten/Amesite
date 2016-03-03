@@ -36,9 +36,6 @@ class Entity {
         /// Kill component of type T.
         template <typename T> void KillComponent();
 
-        /// Remove %Entity from scene.
-        void Clear();
-
         /// Kill entity, will be removed at end of frame by scene.
         void Kill();
         

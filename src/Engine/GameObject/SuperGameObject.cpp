@@ -16,9 +16,6 @@ SuperGameObject::~SuperGameObject() {
 }
 
 void SuperGameObject::Clear() {
-    for (auto& entity : mEntityVector)
-        entity->Clear();
-    mEntityVector.clear();
     std::list<SuperGameObject*>* gameObjects = mScene->GetList<SuperGameObject>();
     gameObjects->erase(std::remove(gameObjects->begin(), gameObjects->end(), this), gameObjects->end());
     delete this;

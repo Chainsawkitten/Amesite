@@ -60,12 +60,6 @@ class Scene {
          */
         virtual void Update(float deltaTime) = 0;
         
-        /// Gets a read-only vector of killed entites.
-        /**
-         * @return A pointer to a list of pointers to all killed entites.
-         */
-        const std::list<Entity*>& GetKilledEntitesVector() const;
-        
         /// Get all the particles in the scene.
         /**
          * @return Array of all the particles in the scene.
@@ -115,9 +109,6 @@ class Scene {
         
         // List of all game objects in this scene.
         std::list<GameObject::SuperGameObject*> mGameObjects;
-        
-        // List of entites to be removed.
-        std::list<Entity*> mKilledEntites;
 };
 
 // GetAll<T>

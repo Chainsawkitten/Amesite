@@ -85,8 +85,6 @@ AlbinScene::AlbinScene() {
 }
 
 AlbinScene::~AlbinScene() {
-    s1->Clear();
-    
     Resources().FreeSound(mTestSoundBuffer);
     
     delete fxaaFilter;
