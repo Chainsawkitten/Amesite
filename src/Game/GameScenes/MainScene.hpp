@@ -13,6 +13,7 @@
 #include "Game/System/ReflectSystem.hpp"
 #include "Game/System/ExplodeSystem.hpp"
 #include "Game/System/GridCollideSystem.hpp"
+#include "Game/System/UpdateSystem.hpp"
 
 #include <AL/al.h>
 
@@ -85,6 +86,9 @@ class MainScene : public Scene {
 
         // The grid collide system
         System::GridCollideSystem mGridCollideSystem;
+
+        // The update system
+        System::UpdateSystem mUpdateSystem;
 
         // Vector containing players
         std::vector<GameObject::SuperPlayer*> mPlayers;

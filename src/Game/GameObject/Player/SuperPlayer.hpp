@@ -40,9 +40,6 @@ namespace GameObject {
              */
             virtual float GetHealth() = 0;
 
-            /// Update player.
-            virtual void Update() = 0;
-
             /// Returns true if the player is active.
             bool Active();
 

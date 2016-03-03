@@ -10,6 +10,7 @@
 #include "../../Component/Controller.hpp"
 #include "../../Component/Health.hpp"
 #include "../../Component/Spawner.hpp"
+#include "../../Component/Update.hpp"
 #include <Component/Transform.hpp>
 #include <Component/Mesh.hpp>
 #include <Component/Material.hpp>
@@ -74,6 +75,8 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     emitter->particleType.startAlpha = 1.f;
     emitter->particleType.midAlpha = 1.f;
     emitter->particleType.endAlpha = 0.f;
+
+    mNode->AddComponent<Component::Update>()->updateFunction = std::bind(&Player2::mUpdateFunction, this);
 
     mBody = CreateEntity();
     mBody->AddComponent<Component::RelativeTransform>()->parentEntity = mNode;
@@ -194,7 +197,28 @@ void Player2::Deactivate() {
 
 }
 
-void Player2::Update() {
+void Player2::AddEngine(Entity* entity, glm::vec3 position, glm::vec3 scale) {
+    entity->AddComponent<Component::RelativeTransform>()->Move(position);
+    entity->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
+    entity->GetComponent<Component::RelativeTransform>()->scale = scale;
+    entity->AddComponent<Component::Animation>();
+    entity->AddComponent<Component::Mesh>()->geometry = mEngineModel;
+    entity->AddComponent<Component::Material>();
+    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_diff.png");
+}
+
+void Player2::AddPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale) {
+    entity->GetComponent<Component::RelativeTransform>()->Move(position);
+    entity->GetComponent<Component::RelativeTransform>()->scale = scale;
+    entity->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
+    entity->GetComponent<Component::Physics>()->angularVelocity.y = 2.f * (entity->GetComponent<Component::RelativeTransform>()->parentEntity->GetComponent<Component::Transform>()->position.x < 0.f) * 2.f - 1.f;
+    entity->AddComponent<Component::Animation>();
+    entity->AddComponent<Component::Mesh>()->geometry = mPropellerModel;
+    entity->AddComponent<Component::Material>();
+    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_diff.png");
+}
+
+void Player2::mUpdateFunction() {
     //Update health texture
     if (GetHealth() >= 2.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = LIGHTDAMAGE;
@@ -234,29 +258,7 @@ void Player2::Update() {
     mFrontEngineRight->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
     mFrontEngineLeft->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
 
-
     //Update body
     mBody->GetComponent<Component::Transform>()->pitch = pitchFactor * 10.f * velocityFactor;
     mBody->GetComponent<Component::Transform>()->roll = rollFactor * 25.f * velocityFactor;
-}
-
-void Player2::AddEngine(Entity* entity, glm::vec3 position, glm::vec3 scale) {
-    entity->AddComponent<Component::RelativeTransform>()->Move(position);
-    entity->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
-    entity->GetComponent<Component::RelativeTransform>()->scale = scale;
-    entity->AddComponent<Component::Animation>();
-    entity->AddComponent<Component::Mesh>()->geometry = mEngineModel;
-    entity->AddComponent<Component::Material>();
-    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_diff.png");
-}
-
-void Player2::AddPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale) {
-    entity->GetComponent<Component::RelativeTransform>()->Move(position);
-    entity->GetComponent<Component::RelativeTransform>()->scale = scale;
-    entity->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
-    entity->GetComponent<Component::Physics>()->angularVelocity.y = 2.f * (entity->GetComponent<Component::RelativeTransform>()->parentEntity->GetComponent<Component::Transform>()->position.x < 0.f) * 2.f - 1.f;
-    entity->AddComponent<Component::Animation>();
-    entity->AddComponent<Component::Mesh>()->geometry = mPropellerModel;
-    entity->AddComponent<Component::Material>();
-    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_diff.png");
 }
