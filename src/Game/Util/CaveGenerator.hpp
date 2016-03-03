@@ -106,7 +106,7 @@ namespace CaveGenerator {
              */
             void GenerateCaveMap(int& percent);
 
-            // Detects rooms, and puts them into mRooms.
+            /// Detects rooms.
             void DetectRooms();
 
             /// Smooths and processes cave map.
