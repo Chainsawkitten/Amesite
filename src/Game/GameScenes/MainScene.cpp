@@ -74,15 +74,23 @@ MainScene::MainScene() {
 
     // Create scene
     int width;
-    int height = width = 60;
+    int height = width = 90;
     int seed = 0;
     int percent = 50;
     int iterations = 10;
     int threshold = 100;
 
     CaveGenerator::Coordinate playerPosition(width/2, height/2);
+    CaveGenerator::Coordinate NorthWest(5,5);
+    CaveGenerator::Coordinate SouthEast(height-5, width-5);
+    CaveGenerator::Coordinate NorthEast(height-5, 5);
+    CaveGenerator::Coordinate SouthWest(5, width - 5);
+
     std::vector<CaveGenerator::Coordinate> bossPositions;
-    bossPositions.push_back(CaveGenerator::Coordinate(45, 45));
+    bossPositions.push_back(NorthWest);
+    bossPositions.push_back(SouthEast);
+    bossPositions.push_back(NorthEast);
+    bossPositions.push_back(SouthWest);
 
     // Create a map.
     mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
@@ -98,8 +106,8 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f)));
     
     // Create boss
-    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y));
-    
+    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[2].x, 0.f, mCave->scaleFactor*bossPositions[2].y));
+
     //Stores how many bosses exist
     mBossCounter = 1;
 
