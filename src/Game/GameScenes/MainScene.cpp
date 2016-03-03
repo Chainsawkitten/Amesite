@@ -43,6 +43,7 @@
 
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
+#include "../GameObject/Boss/SuperBoss.hpp"
 #include "../GameObject/Boss/SpinBoss.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
@@ -113,6 +114,7 @@ MainScene::MainScene() {
     for (int i = 0; i < bossPositions.size(); i++) {
         mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[i].x, 0.f, mCave->scaleFactor*bossPositions[i].y)));
         mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(mPortalPosition.x - 15.f + 15.f * i, -8.f, playerStartZ + 25.f - 2.f * i), mBossVector[i]->GetPosition()));
+        mNoSpawnRooms.push_back(glm::vec3(bossPositions[i].x, 0.f, bossPositions[i].y));
     }
 
     // Create altar
@@ -239,11 +241,10 @@ void MainScene::Update(float deltaTime) {
     mCheckpointSystem.Update();
 
     for (int i = 0; i < mBossVector.size(); i++) {
-        GameObject::SuperBoss* boss = mBossVector[i];
-        if (boss != nullptr)
-            if (boss->GetHealth() < 0.01f) {
-                boss->Kill();
-                boss = nullptr;
+        if (mBossVector[i] != nullptr)
+            if (mBossVector[i]->GetHealth() < 0.01f) {
+                mBossVector[i]->Kill();
+                mBossVector[i] = nullptr;
                 mBossCounter--;
                 mPillarVector[i]->SetState(GameObject::Pillar::ACTIVE);
                 if (mBossCounter == 0)
