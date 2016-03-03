@@ -115,6 +115,7 @@ class GameEntityFactory {
         /// Create PillarBall.
         /**
          * @param origin The PillarBall's starting position.
+         * @param velocity The PillarBall's velocity.
          * @return The PillarBall GameObject.
          */
         GameObject::PillarBall* CreatePillarBall(const glm::vec3& origin, const glm::vec3& velocity);
