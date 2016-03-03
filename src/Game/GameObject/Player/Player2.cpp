@@ -33,8 +33,8 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mState = LIGHTDAMAGE;
 
     mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff.png");
-    mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff.png");
-    mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff.png");
+    mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_medium_damage.png");
+    mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_heavy_damage.png");
 
     mNode = CreateEntity();
     mNode->AddComponent<Component::Transform>()->scale *= 0.35f;
