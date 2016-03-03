@@ -46,6 +46,9 @@
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
 #include "../GameObject/Bullet.hpp"
+#include "../GameObject/Altar.hpp"
+#include "../GameObject/Pillar.hpp"
+
 
 #include "../Game.hpp"
 #include "WinScene.hpp"
@@ -139,7 +142,8 @@ MainScene::MainScene() {
     GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
     GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
 
-    GameEntityCreator().CreateSpawn(glm::vec3(playerStartX + 1.f, -12.f, playerStartZ - 25.f));
+    GameEntityCreator().CreateAltar(glm::vec3(mPortalPosition.x, -16.f, mPortalPosition.y));
+    mPillar = GameEntityCreator().CreatePillar(glm::vec3(playerStartX + 12.f, -8.f, playerStartZ));
 }
 
 MainScene::~MainScene() {
@@ -154,6 +158,9 @@ MainScene::~MainScene() {
 }
 
 void MainScene::Update(float deltaTime) {
+    // Update spawners
+    mSpawnerSystem.Update(*this, deltaTime);
+
     // ControllerSystem
     mControllerSystem.Update(*this, deltaTime);
 
@@ -166,7 +173,7 @@ void MainScene::Update(float deltaTime) {
         }
         glm::vec2 playerPosition(player->GetPosition().x, player->GetPosition().z);
 
-        if (mBossCounter == 0 && glm::distance(playerPosition, mPortalPosition) < 10.f) {
+        if (mBossCounter == 0 && glm::distance(playerPosition, mPortalPosition) < 2.f) {
             Game::GetInstance().SetScene(new WinScene(mTimer, 10));
         }
     }
@@ -230,6 +237,9 @@ void MainScene::Update(float deltaTime) {
             mSpinBoss->Kill();
             mSpinBoss = nullptr;
             mBossCounter--;
+            mPillar->SetState(mPillar->ACTIVE);
+            if (mBossCounter == 0)
+                GameEntityCreator().CreatePortal(glm::vec3(mPortalPosition.x, 0.f, mPortalPosition.y));
         }
 
     // Render.

@@ -9,28 +9,19 @@ namespace Geometry {
 }
 
 namespace GameObject {
-    /// Spawn
-    class Spawn : public SuperGameObject {
+    /// Altar
+    class Altar : public SuperGameObject {
         public:
-            /// Create %Spawn
+            /// Create %Altar
             /**
              * @param scene Pointer to which Scene %Enemy Enities' are contained.
              */
-            Spawn(Scene* scene);
+            Altar(Scene* scene);
            
-            ~Spawn();
+            ~Altar();
 
-            /// Node of %Spawn
+            /// Node of %Altar
             Entity* node;
-
-            /// Altar relative to node
-            Entity* altar;
-
-            /// Pillar relative to Node
-            Entity* pillar1;
-            
-            /// Pillar relative to Node
-            Entity* pillar2;
 
         private:
             Geometry::OBJModel* mAltarModel;
