@@ -34,6 +34,10 @@ namespace System {
             */
             void Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms);
 
+            ///Returns amount of enemies killed.
+            /**
+            * @return The amount of enemies killed.
+            */
             unsigned int GetEnemiesKilled();
 
         private:
