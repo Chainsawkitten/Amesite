@@ -23,7 +23,10 @@ namespace GameObject{
     class Shield;
     class SpinBoss;
     class EnemySpawner;
-    class Spawn;
+    class Altar;
+    class Pillar;
+    class PillarBall;
+    class Portal;
 }
 
 /// Factory responsible for creating prefab entities.
@@ -94,12 +97,33 @@ class GameEntityFactory {
          */
         GameObject::SpinBoss* CreateSpinBoss(const glm::vec3& origin);
         
-        /// Create Spawn.
+        /// Create Altar.
         /**
-         * @param origin The Spawn's starting position.
+         * @param origin The Altar's starting position.
          * @return The Spawn GameObject.
          */
-        GameObject::Spawn* CreateSpawn(const glm::vec3& origin);
+        GameObject::Altar* CreateAltar(const glm::vec3& origin);
+
+        /// Create Pillar.
+        /**
+         * @param origin The Pillar's starting position.
+         * @return The Pillar GameObject.
+         */
+        GameObject::Pillar* CreatePillar(const glm::vec3& origin);
+
+        /// Create PillarBall.
+        /**
+         * @param origin The PillarBall's starting position.
+         * @return The PillarBall GameObject.
+         */
+        GameObject::PillarBall* CreatePillarBall(const glm::vec3& origin);
+
+        /// Create Portal.
+        /**
+         * @param origin The Portal's starting position.
+         * @return The Portal GameObject.
+         */
+        GameObject::Portal* CreatePortal(const glm::vec3& origin);
 
         /// Create player bullet.
         /**

@@ -26,5 +26,7 @@ void System::CheckpointSystem::AddPlayer(GameObject::SuperPlayer* player) {
 void System::CheckpointSystem::RespawnPlayers() {
     for (auto &player : mPlayers) {
         player->SetPosition(glm::vec3(mPosition.x, 0.f, mPosition.y));
+        player->GetNodeEntity()->GetComponent<Component::Health>()->health = player->GetNodeEntity()->GetComponent<Component::Health>()->maxHealth;
+        player->Activate();
     }
 }

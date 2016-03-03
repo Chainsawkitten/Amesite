@@ -162,7 +162,6 @@ namespace CaveGenerator {
         }
         
         //Find which rooms we have left after processing.
-        DetectRooms();
     }
 
     void CaveMap::DetectRooms(){
@@ -290,7 +289,7 @@ namespace CaveGenerator {
     }
 
     bool CaveMap::IsWithinMapRange(const Coordinate & coordinate) {
-        return ((coordinate.x > 0) && (coordinate.x < mRowCount) && (coordinate.y > 0) && (coordinate.y < mColumnCount));
+        return ((coordinate.x > 0) && (coordinate.x < mRowCount-1) && (coordinate.y > 0) && (coordinate.y < mColumnCount-1));
     }
 
     bool ** CaveMap::GetMap(){

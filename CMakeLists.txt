@@ -108,6 +108,8 @@ set(RESOURCES
         assets/player1/player1_turret_barrel.obj
         assets/player1/player1_turret_body.obj
         assets/player2/player2_diff.png
+        assets/player2/player2_diff_medium_damage.png
+        assets/player2/player2_diff_heavy_damage.png
         assets/player2/player2_glow.png
         assets/player2/player2_norm.png
         assets/player2/player2_spec.png
@@ -392,7 +394,9 @@ set(GAME_SRCS
         src/Game/System/AISystem.cpp
         src/Game/System/CheckpointSystem.cpp
         src/Game/System/EnemySpawnerSystem.cpp
+        src/Game/System/UpdateSystem.cpp
         src/Game/System/GridCollideSystem.cpp
+        src/Game/System/SpawnerSystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
@@ -400,6 +404,7 @@ set(GAME_SRCS
         src/Game/Component/LifeTime.cpp
         src/Game/Component/Explode.cpp
         src/Game/Component/Reflect.cpp
+        src/Game/Component/Update.cpp
         src/Game/Component/GridCollide.cpp
         src/Game/Component/AI/WalkerAI.cpp
         src/Game/Component/AI/LookerAI.cpp
@@ -427,7 +432,10 @@ set(GAME_SRCS
         src/Game/GameObject/EnemySpawner.cpp
         src/Game/GameObject/Boss/SpinBoss.cpp
         src/Game/GameObject/Boss/TurretBoss.cpp
-        src/Game/GameObject/Spawn.cpp
+        src/Game/GameObject/Altar.cpp
+        src/Game/GameObject/Pillar.cpp
+        src/Game/GameObject/PillarBall.cpp
+        src/Game/GameObject/Portal.cpp
     )
 
 set(GAME_HEADERS
@@ -447,7 +455,9 @@ set(GAME_HEADERS
         src/Game/System/AISystem.hpp
         src/Game/System/CheckpointSystem.hpp
         src/Game/System/EnemySpawnerSystem.hpp
+        src/Game/System/UpdateSystem.hpp
         src/Game/System/GridCollideSystem.hpp
+        src/Game/System/SpawnerSystem.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
@@ -455,6 +465,7 @@ set(GAME_HEADERS
         src/Game/Component/LifeTime.hpp
         src/Game/Component/Explode.hpp
         src/Game/Component/Reflect.hpp
+        src/Game/Component/Update.hpp
         src/Game/Component/GridCollide.hpp
         src/Game/Component/AI/WalkerAI.hpp
         src/Game/Component/AI/LookerAI.hpp
@@ -482,7 +493,10 @@ set(GAME_HEADERS
         src/Game/GameObject/EnemySpawner.hpp
         src/Game/GameObject/Boss/SpinBoss.hpp
         src/Game/GameObject/Boss/TurretBoss.hpp
-        src/Game/GameObject/Spawn.hpp
+        src/Game/GameObject/Altar.hpp
+        src/Game/GameObject/Pillar.hpp
+        src/Game/GameObject/PillarBall.hpp
+        src/Game/GameObject/Portal.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

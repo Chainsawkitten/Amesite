@@ -28,10 +28,10 @@ namespace Component {
             ~Spawner();
             
             /// Elapsed time since last spawn (in second).
-            float timeSinceSpawn;
             /**
              * Default: 0.f
              */
+            float timeSinceSpawn;
             
             /// Delay between spawns.
             /**

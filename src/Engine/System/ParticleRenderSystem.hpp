@@ -8,9 +8,6 @@ class Texture;
 class Texture2D;
 
 #include "ParticleSystem.hpp"
-#include "Particle.vert.hpp"
-#include "Particle.geom.hpp"
-#include "Particle.frag.hpp"
 
 namespace System {
     /// %System to render particles
