@@ -393,6 +393,7 @@ set(GAME_SRCS
         src/Game/System/CheckpointSystem.cpp
         src/Game/System/UpdateSystem.cpp
         src/Game/System/GridCollideSystem.cpp
+        src/Game/System/SpawnerSystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
@@ -448,6 +449,7 @@ set(GAME_HEADERS
         src/Game/System/CheckpointSystem.hpp
         src/Game/System/UpdateSystem.hpp
         src/Game/System/GridCollideSystem.hpp
+        src/Game/System/SpawnerSystem.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
