@@ -22,6 +22,7 @@
 #include "Game/Component/Health.hpp"
 #include "Game/Component/Damage.hpp"
 #include "Game/Component/LifeTime.hpp"
+#include "Game/Component/Spawner.hpp"
 
 #include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
@@ -123,21 +124,8 @@ MainScene::MainScene() {
     mGlowFilter = new GlowFilter();
     mGlowBlurFilter = new GlowBlurFilter();
 
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(100, 0, 35));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(130, 0, 35));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(150, 0, 55));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(160, 0, 65));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(130, 0, 85));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(110, 0, 55));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(50, 0, 105));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(115, 0, 135));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(175, 0, 135));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(195, 0, 145));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(195, 0, 245));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(225, 0, 235));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(155, 0, 175));
-    GameEntityCreator().CreateEnemyPylon(glm::vec3(105, 0, 190));
-    GameEntityCreator().CreateBasicEnemy(glm::vec3(55, 0, 190));
+    GameEntityCreator().CreateEnemySpawner(Component::Spawner::PYLON, 10);
+    GameEntityCreator().CreateEnemySpawner(Component::Spawner::BASIC, 15);
 
     GameEntityCreator().CreateSpawn(glm::vec3(playerStartX + 1.f, -12.f, playerStartZ - 25.f));
 }
@@ -191,6 +179,9 @@ void MainScene::Update(float deltaTime) {
     
     // Check collisions.
     mCollisionSystem.Update(*this);
+
+    // Update enemy spawning
+    mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);
     
     // Check grid collisions.
     mGridCollideSystem.Update(*this, deltaTime, *mCave);

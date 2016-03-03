@@ -6,16 +6,16 @@ namespace Component {
     /// %Component spawning other entities.
     class Spawner : public SuperComponent {
         public:
-            /// Different types of spawners
+            /// Different types of spawners.
             enum SpawnerType : unsigned int {
-                ENEMY = 0,
-                BULLET,
+                ENEMY = 0, ///< Enemy spawner.
+                BULLET, ///< Bullet spawner.
             };
 
             /// Different types of enemy spawners.
             enum EnemyType : unsigned int {
-                BASIC = 0,
-                PYLON,
+                BASIC = 0, ///< Basic enemy spawner.
+                PYLON, ///< Pylon enemy spawner.
             };
 
             /// Create new spawner.

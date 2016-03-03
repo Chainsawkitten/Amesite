@@ -24,7 +24,7 @@
 using namespace System;
 
 EnemySpawnerSystem::EnemySpawnerSystem() {
-    mMaxEnemyCount = 10;
+    mMaxEnemyCount = 30;
     mEnemyCount = 0;
     mSpawnerRadius = 100.f;
 }
@@ -68,7 +68,6 @@ void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject:
 
         for (auto spawner : spawners) {
             if (spawner->type == Component::Spawner::ENEMY) {
-                spawner->timeSinceSpawn += deltaTime;
                 if (spawner->delay <= spawner->timeSinceSpawn) {
                     glm::vec3 position = FindValidPosition(cave, players, noSpawnRooms);       
                     if (position.x > 0.f) {

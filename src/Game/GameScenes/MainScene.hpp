@@ -13,6 +13,7 @@
 #include "Game/System/ReflectSystem.hpp"
 #include "Game/System/ExplodeSystem.hpp"
 #include "Game/System/GridCollideSystem.hpp"
+#include "Game/System/EnemySpawnerSystem.hpp"
 
 #include <AL/al.h>
 
@@ -86,6 +87,9 @@ class MainScene : public Scene {
         // The grid collide system
         System::GridCollideSystem mGridCollideSystem;
 
+        // The enemy spawner system
+        System::EnemySpawnerSystem mEnemySpawnerSystem;
+
         // Vector containing players
         std::vector<GameObject::SuperPlayer*> mPlayers;
 
@@ -107,6 +111,9 @@ class MainScene : public Scene {
         int mBossCounter;
         float mTimer;
         glm::vec2 mPortalPosition;
+
+        // Used to exclude enemy spawning from certain areas.
+        std::vector<glm::vec3> mNoSpawnRooms;
 
         // Handles the player respawn
         void Respawn(float deltaTime);
