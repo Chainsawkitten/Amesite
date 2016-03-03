@@ -236,7 +236,7 @@ void JonathanScene::Update(float deltaTime) {
     //Handles the respawning of the players
     JonathanSceneRespawn(deltaTime);
 
-    mCheckpointSystem.Update();
+    mCheckpointSystem.Update(deltaTime);
 
     if (mSpinBoss != nullptr)
         if (mSpinBoss->GetHealth() < 0.01f) {
