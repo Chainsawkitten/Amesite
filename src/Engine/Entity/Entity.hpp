@@ -41,6 +41,12 @@ class Entity {
 
         /// Kill entity, will be removed at end of frame by scene.
         void Kill();
+        
+        /// Get whether entity has been killed.
+        /**
+         * @return Whether the entity has been killed.
+         */
+        bool IsKilled() const;
 
         /// Pointer to which GameObject %Entity is contained.
         /**
@@ -67,6 +73,8 @@ class Entity {
          * Maps component type to component.
          */
         std::map<const std::type_info*, Component::SuperComponent*> components;
+        
+        bool mKilled;
 };
 
 template <typename T> T* Entity::GetComponent() {

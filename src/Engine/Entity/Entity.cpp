@@ -7,6 +7,7 @@
 Entity::Entity(Scene* scene) {
     mScene = scene;
     gameObject = nullptr;
+    mKilled = false;
 }
 
 Entity::~Entity() {
@@ -29,6 +30,12 @@ void Entity::Clear() {
 }
 
 void Entity::Kill() {
+    mKilled = true;
+    
     if (std::find(mScene->mKilledEntites.begin(), mScene->mKilledEntites.end(), this) == mScene->mKilledEntites.end())
         mScene->mKilledEntites.push_back(this);
+}
+
+bool Entity::IsKilled() const {
+    return mKilled;
 }
