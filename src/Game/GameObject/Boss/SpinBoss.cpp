@@ -141,7 +141,7 @@ void SpinBoss::ChangePhase(BossPhase phase) {
     } else {
         mState = BossState::NOREFLECT;
         body->GetComponent<Component::Material>()->glow = mNoReflectTexture;
-        body->RemoveComponent<Component::Reflect>();
+        body->KillComponent<Component::Reflect>();
     }
 }
 

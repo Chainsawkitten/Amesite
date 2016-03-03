@@ -93,4 +93,3 @@ void Pillar::CreateLight() {
     mLight->AddComponent<Component::Mesh>()->geometry = mLightModel;
     mLight->AddComponent<Component::PointLight>()->attenuation = 0.01f;
 }
-

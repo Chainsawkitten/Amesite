@@ -222,7 +222,7 @@ void JonathanScene::Update(float deltaTime) {
     mExplodeSystem.Update(*this);
 
     // Remove killed entities
-    ClearKilledEntities();
+    ClearKilled();
 
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);

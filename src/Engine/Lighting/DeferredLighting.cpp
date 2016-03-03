@@ -159,15 +159,15 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     
     // Render all directional lights.
     std::vector<Component::DirectionalLight*> directionalLights = scene.GetAll<Component::DirectionalLight>();
-    for (unsigned int i=0; i<directionalLights.size(); i++) {
-        Entity* lightEntity = directionalLights[i]->entity;
+    for (Component::DirectionalLight* light : directionalLights) {
+        Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
             glm::vec4 direction = glm::vec4(transform->GetWorldDirection(), 0.f);
             glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * -direction)[0]);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &directionalLights[i]->color[0]);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &light->color[0]);
             glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), 1.f);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), directionalLights[i]->ambientCoefficient);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), light->ambientCoefficient);
             glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 0.f);
             glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
             
@@ -177,14 +177,14 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     
     // Render all point lights.
     std::vector<Component::PointLight*> pointLights = scene.GetAll<Component::PointLight>();
-    for (unsigned int i=0; i<pointLights.size(); i++) {
-        Entity* lightEntity = pointLights[i]->entity;
+    for (Component::PointLight* light : pointLights) {
+        Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
             glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &pointLights[i]->color[0]);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), pointLights[i]->attenuation);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), pointLights[i]->ambientCoefficient);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &light->color[0]);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), light->attenuation);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), light->ambientCoefficient);
             glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 180.f);
             glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
             
@@ -194,16 +194,16 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     
     // Render all spot lights.
     std::vector<Component::SpotLight*> spotLights = scene.GetAll<Component::SpotLight>();
-    for (unsigned int i=0; i<spotLights.size(); i++) {
-        Entity* lightEntity = spotLights[i]->entity;
+    for (Component::SpotLight* light : spotLights) {
+        Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
             glm::vec4 direction = viewMat * glm::vec4(transform->GetWorldDirection(), 0.f);
             glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &spotLights[i]->color[0]);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), spotLights[i]->attenuation);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), spotLights[i]->ambientCoefficient);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), spotLights[i]->coneAngle);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &light->color[0]);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), light->attenuation);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), light->ambientCoefficient);
+            glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), light->coneAngle);
             glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(direction)[0]);
             
             glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);

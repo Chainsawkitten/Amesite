@@ -73,7 +73,7 @@ void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject:
                     spawner->timeSinceSpawn += (deltaTime * 20);
                 }
                 if (spawner->delay <= spawner->timeSinceSpawn) {
-                    glm::vec3 position = FindValidPosition(cave, players, noSpawnRooms);       
+                    glm::vec3 position = FindValidPosition(cave, players, noSpawnRooms);
                     if (position.x > 0.f) {
                         spawner->timeSinceSpawn = 0.0;
                         if (spawner->enemyType == Component::Spawner::BASIC) {
@@ -108,7 +108,7 @@ glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, co
     float factor = 1.f / static_cast<float>(players->size());
 
     averagePlayerPosition.x *= factor;
-    averagePlayerPosition.z *= factor;  
+    averagePlayerPosition.z *= factor;
   
     bool** map = cave->GetCaveData();
 
