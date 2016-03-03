@@ -82,6 +82,8 @@ namespace CaveGenerator {
 
             /// A set of coordintes that make up the edges of the room.
             std::vector<Coordinate> edgeCoordinates;
+
+
     };
 
     /// Handles generating and manipulating a map.
@@ -104,7 +106,10 @@ namespace CaveGenerator {
              */
             void GenerateCaveMap(int& percent);
 
-            /// Smooths and processes cave map, detects rooms as well.
+            /// Detects rooms.
+            void DetectRooms();
+
+            /// Smooths and processes cave map.
             /**
              * @param iterations The number of iterations we do.
              */
@@ -186,9 +191,6 @@ namespace CaveGenerator {
              * @param tileType True if we are filling the coordinates with walls, false if we are filling with floors.
              */
             void FillCoordinates(const std::vector<Coordinate>& coordinates, bool tileType);
-
-            // Detects rooms, and puts them into mRooms.
-            void DetectRooms();
             
             // Creates a passage between rooms, used by ConnectClosestRooms.
             /*
