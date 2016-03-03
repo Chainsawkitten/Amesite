@@ -27,6 +27,7 @@ EnemySpawnerSystem::EnemySpawnerSystem() {
     mMinEnemyCount = 15;
     mMaxEnemyCount = 30;
     mEnemyCount = 0;
+    mEnemiesKilled = 0;
     mSpawnerRadius = 60.f;
 }
 
@@ -44,6 +45,7 @@ void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject:
             
             //Kill game object
             mPylons[i]->Kill();
+            mEnemiesKilled++;
             mPylons.erase(mPylons.begin() + i);
         }
     }
@@ -57,6 +59,7 @@ void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject:
 
             //Kill game object
             mEnemies[i]->Kill();
+            mEnemiesKilled++;
             mEnemies.erase(mEnemies.begin() + i);
         }
     }
@@ -78,8 +81,7 @@ void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject:
                         spawner->timeSinceSpawn = 0.0;
                         if (spawner->enemyType == Component::Spawner::BASIC) {
                             mEnemies.push_back(GameEntityCreator().CreateBasicEnemy(position));
-                        }
-                        else if (spawner->enemyType == Component::Spawner::PYLON) {
+                        } else if (spawner->enemyType == Component::Spawner::PYLON) {
                             mPylons.push_back(GameEntityCreator().CreateEnemyPylon(position));
                         }
                     }
@@ -87,6 +89,10 @@ void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject:
             }
         }
     }
+}
+
+unsigned int EnemySpawnerSystem::GetEnemiesKilled() {
+    return mEnemiesKilled;
 }
 
 glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) const {

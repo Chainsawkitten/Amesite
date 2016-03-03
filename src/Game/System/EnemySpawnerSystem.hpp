@@ -34,11 +34,14 @@ namespace System {
             */
             void Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms);
 
+            unsigned int GetEnemiesKilled();
+
         private:
             // Enemy count.
             unsigned int mMaxEnemyCount;
             unsigned int mMinEnemyCount;
             unsigned int mEnemyCount;
+            unsigned int mEnemiesKilled;
             float mSpawnerRadius;
             glm::vec3 mMapScale;
 
