@@ -8,7 +8,7 @@ using namespace GameObject;
 
 SuperGameObject::SuperGameObject(Scene* scene) {
     mScene = scene;
-    mScene->GetList<SuperGameObject>()->push_back(this);
+    mScene->GetVector<SuperGameObject>()->push_back(this);
     mKilled = false;
 }
 

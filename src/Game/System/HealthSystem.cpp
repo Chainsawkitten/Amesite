@@ -20,7 +20,7 @@ HealthSystem::~HealthSystem() {
 }
 
 void HealthSystem::Update(Scene& scene, float deltaTime) {
-    std::list<Component::Health*> healthComponents = scene.GetAll<Component::Health>();
+    std::vector<Component::Health*> healthComponents = scene.GetAll<Component::Health>();
     for (auto healthComponent : healthComponents) {
         // Update last hit time
         healthComponent->cooldown = std::fmaxf(healthComponent->cooldown - deltaTime, 0.f);

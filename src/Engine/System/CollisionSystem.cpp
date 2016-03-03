@@ -8,7 +8,6 @@
 #include "../Component/Transform.hpp"
 
 #include <glm/glm.hpp>
-#include <vector>
 #include <algorithm>
 
 using namespace System;
@@ -30,8 +29,8 @@ bool myfunction(Node& i, Node& j) { return (i.min.x<j.min.x); }
 
 void CollisionSystem::Update(Scene& scene) {
     // Get components from scene.
-    std::list<Scene::Collision*>* collisions = scene.GetList<Scene::Collision>();
-    std::list<Component::Collider2DCircle*> collider2DCircle = scene.GetAll<Component::Collider2DCircle>();
+    std::vector<Scene::Collision*>* collisions = scene.GetVector<Scene::Collision>();
+    std::vector<Component::Collider2DCircle*> collider2DCircle = scene.GetAll<Component::Collider2DCircle>();
     
     // Clear collisions.
     for (Scene::Collision* collision : *collisions) {

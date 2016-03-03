@@ -26,7 +26,7 @@ DamageSystem::~DamageSystem() {
 }
 
 void DamageSystem::Update(Scene& scene) {
-    std::list<Scene::Collision*>* collisionVector = scene.GetList<Scene::Collision>();
+    std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
     // Loop through collision vector
     for (auto collisionX : *collisionVector) {
         // Does the colliding entity have a health component or a reflect component?

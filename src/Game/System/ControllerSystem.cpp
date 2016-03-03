@@ -9,7 +9,7 @@
 using namespace System;
 
 void ControllerSystem::Update(Scene& scene, float deltaTime) {
-    std::list<Component::Controller*> controllerObjects = scene.GetAll<Component::Controller>();
+    std::vector<Component::Controller*> controllerObjects = scene.GetAll<Component::Controller>();
     for (Component::Controller* controller : controllerObjects) {
         for (unsigned int scheme = 0; scheme < controller->controlSchemes.size(); scheme++)
             if (controller->enabled)

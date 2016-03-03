@@ -39,7 +39,7 @@ void ParticleSystem::Update(Scene& scene, double time) {
         }
     }
     
-    std::list<Component::ParticleEmitter*> particleEmitters = scene.GetAll<Component::ParticleEmitter>();
+    std::vector<Component::ParticleEmitter*> particleEmitters = scene.GetAll<Component::ParticleEmitter>();
     for (Component::ParticleEmitter* emitter : particleEmitters) {
         if (emitter->IsKilled())
             continue;

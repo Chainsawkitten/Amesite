@@ -18,7 +18,7 @@ LifeTimeSystem::~LifeTimeSystem() {
 }
 
 void LifeTimeSystem::Update(Scene& scene, float deltaTime) {
-    std::list<Component::LifeTime*> lifeTimes = scene.GetAll<Component::LifeTime>();
+    std::vector<Component::LifeTime*> lifeTimes = scene.GetAll<Component::LifeTime>();
     for (auto& lifeTimeComponent : lifeTimes) {
         lifeTimeComponent->lifeTime -= deltaTime;
         if (lifeTimeComponent->lifeTime < 0.f)

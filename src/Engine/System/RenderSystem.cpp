@@ -52,7 +52,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
     Entity* camera = nullptr;
     
     // Find last camera.
-    std::list<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
+    std::vector<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
     for (Component::Lens* lens : lenses) {
         if (lens->entity->GetComponent<Component::Transform>() != nullptr)
             camera = lens->entity;
@@ -67,7 +67,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
         
         // Finds models in scene.
-        std::list<Component::Mesh*> meshes = scene.GetAll<Component::Mesh>();
+        std::vector<Component::Mesh*> meshes = scene.GetAll<Component::Mesh>();
         for (Component::Mesh* mesh : meshes) {
             Entity* model = mesh->entity;
             Component::Transform* transform = model->GetComponent<Component::Transform>();

@@ -17,7 +17,7 @@ ReflectSystem::~ReflectSystem() {
 }
 
 void ReflectSystem::Update(Scene& scene, float deltaTime) {
-    std::list<Scene::Collision*>* collisionVector = scene.GetList<Scene::Collision>();
+    std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
     for (auto collisionX : *collisionVector)
         if (collisionX->entity->GetComponent<Component::Reflect>() != nullptr)
             for (auto collisionY : collisionX->intersect) {

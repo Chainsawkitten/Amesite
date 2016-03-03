@@ -15,7 +15,7 @@ PhysicsSystem::~PhysicsSystem() {
 }
 
 void PhysicsSystem::Update(Scene& scene, float deltaTime) {
-    std::list<Component::Physics*> physicsObjects = scene.GetAll<Component::Physics>();
+    std::vector<Component::Physics*> physicsObjects = scene.GetAll<Component::Physics>();
     for (Component::Physics* physicsComp : physicsObjects) {
         if (physicsComp->IsKilled())
             continue;

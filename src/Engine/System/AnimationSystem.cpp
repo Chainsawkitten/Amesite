@@ -43,7 +43,7 @@ glm::vec3 AnimationSystem::Slerp(glm::vec3 p0, glm::vec3 p1, float t) {
 }
 
 void AnimationSystem::Update(Scene& scene, float deltaTime) {
-    std::list<Component::Animation*> animations = scene.GetAll<Component::Animation>();
+    std::vector<Component::Animation*> animations = scene.GetAll<Component::Animation>();
     for (auto animationComponent : animations) {
         if (animationComponent->IsKilled())
             continue;

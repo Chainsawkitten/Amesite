@@ -15,11 +15,11 @@ AISystem::~AISystem() {
 }
 
 void AISystem::Update(Scene& scene, float deltaTime) {
-    std::list<Component::WalkerAI*> walkers = scene.GetAll<Component::WalkerAI>();
+    std::vector<Component::WalkerAI*> walkers = scene.GetAll<Component::WalkerAI>();
     for (auto AIComponent : walkers)
         AIComponent->Update(deltaTime);
 
-    std::list<Component::LookerAI*> lookers = scene.GetAll<Component::LookerAI>();
+    std::vector<Component::LookerAI*> lookers = scene.GetAll<Component::LookerAI>();
     for (auto AIComponent : lookers)
         AIComponent->Update(deltaTime);
 

@@ -2,7 +2,7 @@
 
 #include <map>
 #include <typeinfo>
-#include <list>
+#include <vector>
 #include <algorithm>
 #include <iterator>
 #include "../System/ParticleSystem.hpp"
@@ -46,13 +46,13 @@ class Scene {
         /**
          * @return A list of pointers to all components of the specified scene.
          */
-        template <typename T> std::list<T*>& GetAll();
+        template <typename T> std::vector<T*>& GetAll();
         
         /// Gets all item of a specific type.
         /**
          * @return A pointer to a list of pointers to all items of the specified scene.
          */
-        template <typename T> std::list<T*>* GetList() { return nullptr; }
+        template <typename T> std::vector<T*>* GetVector() { return nullptr; }
         
         /// Updates %Scene by calling systems.
         /**
@@ -84,7 +84,7 @@ class Scene {
             Entity* entity = nullptr;
 
             /// Instersecting entities.
-            std::list<Entity*> intersect;
+            std::vector<Entity*> intersect;
         };
         
     private:
@@ -95,36 +95,36 @@ class Scene {
         void RemoveComponentFromList(Component::SuperComponent* component, const std::type_info* componentType);
         
         // List of all entities created in this scene.
-        std::list<Entity*> mEntities;
+        std::vector<Entity*> mEntities;
         
         // All particles in the scene.
         System::ParticleSystem::Particle* mParticles;
         unsigned int mParticleCount;
         
         // Map containing list of components.
-        std::map<const std::type_info*, std::list<Component::SuperComponent*>> mComponents;
+        std::map<const std::type_info*, std::vector<Component::SuperComponent*>> mComponents;
         
         // List of all collisons in this scene.
-        std::list<Collision*> mCollisions;
+        std::vector<Collision*> mCollisions;
         
         // List of all game objects in this scene.
-        std::list<GameObject::SuperGameObject*> mGameObjects;
+        std::vector<GameObject::SuperGameObject*> mGameObjects;
 };
 
 // GetAll<T>
-template <typename T> inline std::list<T*>& Scene::GetAll() {
-    return reinterpret_cast<std::list<T*>&>(mComponents[&typeid(T*)]);
+template <typename T> inline std::vector<T*>& Scene::GetAll() {
+    return reinterpret_cast<std::vector<T*>&>(mComponents[&typeid(T*)]);
 }
 
-// GetList<T>
-template<> inline std::list<Entity*>* Scene::GetList() {
+// GetVector<T>
+template<> inline std::vector<Entity*>* Scene::GetVector() {
     return &mEntities;
 }
 
-template<> inline std::list<GameObject::SuperGameObject*>* Scene::GetList() {
+template<> inline std::vector<GameObject::SuperGameObject*>* Scene::GetVector() {
     return &mGameObjects;
 }
 
-template<> inline std::list<Scene::Collision*>* Scene::GetList() {
+template<> inline std::vector<Scene::Collision*>* Scene::GetVector() {
     return &mCollisions;
 }

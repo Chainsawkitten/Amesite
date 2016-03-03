@@ -54,11 +54,11 @@ void Scene::ClearAll() {
 }
 
 void Scene::UpdateModelMatrices() {
-    std::list<Component::Transform*> transforms = GetAll<Component::Transform>();
+    std::vector<Component::Transform*> transforms = GetAll<Component::Transform>();
     for (Component::Transform* transform : transforms)
         transform->UpdateModelMatrix();
     
-    std::list<Component::Animation*> animations = GetAll<Component::Animation>();
+    std::vector<Component::Animation*> animations = GetAll<Component::Animation>();
     for (auto animationComponent : animations) {
         Component::RelativeTransform* relativeTranform = animationComponent->entity->GetComponent<Component::RelativeTransform>();
         if (relativeTranform != nullptr && relativeTranform->parentEntity->GetComponent<Component::Animation>() != nullptr) {
@@ -78,37 +78,41 @@ void Scene::UpdateModelMatrices() {
 
 void Scene::ClearKilled() {
     // Clear killed components.
+    std::size_t i;
     for (auto& componentIt : mComponents) {
-        auto it = componentIt.second.begin();
-        while (it != componentIt.second.end()) {
-            if ((*it)->IsKilled()) {
-                delete *it;
-                it = componentIt.second.erase(it);
+        i = 0;
+        while (i < componentIt.second.size()) {
+            if (componentIt.second[i]->IsKilled()) {
+                delete componentIt.second[i];
+                componentIt.second[i] = componentIt.second[componentIt.second.size() - 1];
+                componentIt.second.pop_back();
             } else {
-                ++it;
+                ++i;
             }
         }
     }
     
     // Clear killed entities.
-    auto entityIt = mEntities.begin();
-    while (entityIt != mEntities.end()) {
-        if ((*entityIt)->IsKilled()) {
-            delete *entityIt;
-            entityIt = mEntities.erase(entityIt);
+    i = 0;
+    while (i < mEntities.size()) {
+        if (mEntities[i]->IsKilled()) {
+            delete mEntities[i];
+            mEntities[i] = mEntities[mEntities.size() - 1];
+            mEntities.pop_back();
         } else {
-            ++entityIt;
+            ++i;
         }
     }
     
     // Clear killed game objects.
-    auto gameObjectIt = mGameObjects.begin();
-    while (gameObjectIt != mGameObjects.end()) {
-        if ((*gameObjectIt)->IsKilled()) {
-            delete *gameObjectIt;
-            gameObjectIt = mGameObjects.erase(gameObjectIt);
+    i = 0;
+    while (i < mGameObjects.size()) {
+        if (mGameObjects[i]->IsKilled()) {
+            delete mGameObjects[i];
+            mGameObjects[i] = mGameObjects[mGameObjects.size() - 1];
+            mGameObjects.pop_back();
         } else {
-            ++gameObjectIt;
+            ++i;
         }
     }
 }

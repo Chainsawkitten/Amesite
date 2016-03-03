@@ -66,7 +66,7 @@ void SoundSystem::CheckError(const char* message) {
 
 void SoundSystem::Update(Scene& scene) {
     // Update sound sources.
-    std::list<Component::SoundSource*> soundComponents = scene.GetAll<Component::SoundSource>();
+    std::vector<Component::SoundSource*> soundComponents = scene.GetAll<Component::SoundSource>();
     for (Component::SoundSource* sound : soundComponents) {
         if (sound->IsKilled())
             continue;
@@ -120,7 +120,7 @@ void SoundSystem::Update(Scene& scene) {
     }
     
     // Update listener.
-    std::list<Component::Listener*> listeners = scene.GetAll<Component::Listener>();
+    std::vector<Component::Listener*> listeners = scene.GetAll<Component::Listener>();
     for (Component::Listener* listener : listeners) {
         Entity* entity = listener->entity;
         Component::Transform* transform = entity->GetComponent<Component::Transform>();
