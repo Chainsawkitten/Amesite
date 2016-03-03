@@ -31,29 +31,6 @@ Altar::Altar(Scene* scene) : SuperGameObject(scene) {
     node->GetComponent<Component::Material>()->SetDiffuse("Resources/altar_diff.png");
     node->GetComponent<Component::Material>()->SetGlow("Resources/altar_glow.png");
     node->AddComponent<Component::Mesh>()->geometry = mAltarModel = Resources().CreateOBJModel("Resources/altar.obj");
-
-    //mPillarModel = Resources().CreateOBJModel("Resources/pillar.obj");
-
-    //pillar1 = CreateEntity();
-    //pillar1->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    //pillar1->GetComponent<Component::RelativeTransform>()->Move(25.f, 8.f, 15.f);
-    //pillar1->GetComponent<Component::RelativeTransform>()->scale *= 2.f;
-    //pillar1->GetComponent<Component::RelativeTransform>()->roll = 12.f;
-    //pillar1->AddComponent<Component::Material>();
-    //pillar1->GetComponent<Component::Material>()->SetDiffuse("Resources/pillar_diff.png");
-    //pillar1->GetComponent<Component::Material>()->SetGlow("Resources/pillar_glow.png");
-    //pillar1->AddComponent<Component::Mesh>()->geometry = mPillarModel;
-
-    //pillar2 = CreateEntity();
-    //pillar2->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    //pillar2->GetComponent<Component::RelativeTransform>()->Move(-25.f, 3.f, 15.f);
-    //pillar2->GetComponent<Component::RelativeTransform>()->scale *= 2.5f;
-    //pillar2->GetComponent<Component::RelativeTransform>()->yaw = -20.f;
-    //pillar2->GetComponent<Component::RelativeTransform>()->roll = -16.f;
-    //pillar2->AddComponent<Component::Material>();
-    //pillar2->GetComponent<Component::Material>()->SetDiffuse("Resources/pillar_diff.png");
-    //pillar2->GetComponent<Component::Material>()->SetGlow("Resources/pillar_glow.png");
-    //pillar2->AddComponent<Component::Mesh>()->geometry = mPillarModel;
 }
 
 Altar::~Altar() {
