@@ -395,6 +395,7 @@ set(GAME_SRCS
         src/Game/System/CheckpointSystem.cpp
         src/Game/System/UpdateSystem.cpp
         src/Game/System/GridCollideSystem.cpp
+        src/Game/System/SpawnerSystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
         src/Game/Component/Health.cpp
@@ -429,7 +430,10 @@ set(GAME_SRCS
         src/Game/GameObject/Shield.cpp
         src/Game/GameObject/Boss/SpinBoss.cpp
         src/Game/GameObject/Boss/TurretBoss.cpp
-        src/Game/GameObject/Spawn.cpp
+        src/Game/GameObject/Altar.cpp
+        src/Game/GameObject/Pillar.cpp
+        src/Game/GameObject/PillarBall.cpp
+        src/Game/GameObject/Portal.cpp
     )
 
 set(GAME_HEADERS
@@ -450,6 +454,7 @@ set(GAME_HEADERS
         src/Game/System/CheckpointSystem.hpp
         src/Game/System/UpdateSystem.hpp
         src/Game/System/GridCollideSystem.hpp
+        src/Game/System/SpawnerSystem.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
         src/Game/Component/Health.hpp
@@ -484,7 +489,10 @@ set(GAME_HEADERS
         src/Game/GameObject/Shield.hpp
         src/Game/GameObject/Boss/SpinBoss.hpp
         src/Game/GameObject/Boss/TurretBoss.hpp
-        src/Game/GameObject/Spawn.hpp
+        src/Game/GameObject/Altar.hpp
+        src/Game/GameObject/Pillar.hpp
+        src/Game/GameObject/PillarBall.hpp
+        src/Game/GameObject/Portal.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

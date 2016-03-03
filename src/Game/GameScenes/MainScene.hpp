@@ -14,6 +14,7 @@
 #include "Game/System/ExplodeSystem.hpp"
 #include "Game/System/GridCollideSystem.hpp"
 #include "Game/System/UpdateSystem.hpp"
+#include "Game/System/SpawnerSystem.hpp"
 
 #include <AL/al.h>
 
@@ -30,6 +31,8 @@ namespace GameObject {
     class Camera;
     class SuperPlayer;
     class SpinBoss;
+    class Altar;
+    class Pillar;
 }
 namespace Audio {
     class SoundBuffer;
@@ -72,6 +75,9 @@ class MainScene : public Scene {
         // The life time system
         System::LifeTimeSystem mLifeTimeSystem;
 
+        // The spawner system
+        System::SpawnerSystem mSpawnerSystem;
+
         // The reflect system
         System::ReflectSystem mReflectSystem;
 
@@ -111,6 +117,7 @@ class MainScene : public Scene {
         int mBossCounter;
         float mTimer;
         glm::vec2 mPortalPosition;
+        GameObject::Pillar* mPillar;
 
         // Handles the player respawn
         void Respawn(float deltaTime);

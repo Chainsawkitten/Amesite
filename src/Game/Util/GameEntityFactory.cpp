@@ -37,7 +37,10 @@
 #include "../GameObject/Pylon.hpp"
 #include "../GameObject/Shield.hpp"
 #include "../GameObject/Boss/SpinBoss.hpp"
-#include "../GameObject/Spawn.hpp"
+#include "../GameObject/Altar.hpp"
+#include "../GameObject/Pillar.hpp"
+#include "../GameObject/PillarBall.hpp"
+#include "../GameObject/Portal.hpp"
 
 using namespace GameObject;
 
@@ -93,8 +96,26 @@ GameObject::SpinBoss* GameEntityFactory::CreateSpinBoss(const glm::vec3& origin)
     return gameObject;
 }
 
-GameObject::Spawn* GameEntityFactory::CreateSpawn(const glm::vec3& origin) {
-    Spawn* gameObject = new Spawn(mScene);
+GameObject::Altar* GameEntityFactory::CreateAltar(const glm::vec3& origin) {
+    Altar* gameObject = new Altar(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::Pillar* GameEntityFactory::CreatePillar(const glm::vec3& origin) {
+    Pillar* gameObject = new Pillar(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::PillarBall* GameEntityFactory::CreatePillarBall(const glm::vec3& origin) {
+    PillarBall* gameObject = new PillarBall(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::Portal* GameEntityFactory::CreatePortal(const glm::vec3& origin) {
+    Portal* gameObject = new Portal(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }
