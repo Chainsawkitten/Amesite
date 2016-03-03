@@ -26,15 +26,15 @@ namespace GameObject {
             /// Arms relative to body
             Entity* armArr[4];
 
-            /// Gets position of player
+            /// Gets position of boss.
             /**
-             * @return Position of the player.
+             * @return Position of the boss.
              */
             glm::vec3 GetPosition();
 
-            /// Gets health of the player.
+            /// Gets health of the boss.
             /**
-             * @return Health of the player.
+             * @return Health of the boss.
              */
             float GetHealth();
 

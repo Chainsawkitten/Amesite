@@ -18,15 +18,15 @@ namespace GameObject {
            
             virtual ~SuperBoss();
 
-            /// Gets position of player
+            /// Gets position of boss
             /**
-             * @return Position of the player.
+             * @return Position of the boss.
              */
             virtual glm::vec3 GetPosition() = 0;
 
-            /// Gets health of the player.
+            /// Gets health of the boss.
             /**
-             * @return Health of the player.
+             * @return Health of the boss.
              */
             virtual float GetHealth() = 0;
 
