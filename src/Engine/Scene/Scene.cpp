@@ -91,13 +91,24 @@ void Scene::ClearKilled() {
     }
     
     // Clear killed entities.
-    auto it = mEntities.begin();
-    while (it != mEntities.end()) {
-        if ((*it)->IsKilled()) {
-            delete *it;
-            it = mEntities.erase(it);
+    auto entityIt = mEntities.begin();
+    while (entityIt != mEntities.end()) {
+        if ((*entityIt)->IsKilled()) {
+            delete *entityIt;
+            entityIt = mEntities.erase(entityIt);
         } else {
-            ++it;
+            ++entityIt;
+        }
+    }
+    
+    // Clear killed game objects.
+    auto gameObjectIt = mGameObjects.begin();
+    while (gameObjectIt != mGameObjects.end()) {
+        if ((*gameObjectIt)->IsKilled()) {
+            delete *gameObjectIt;
+            gameObjectIt = mGameObjects.erase(gameObjectIt);
+        } else {
+            ++gameObjectIt;
         }
     }
 }

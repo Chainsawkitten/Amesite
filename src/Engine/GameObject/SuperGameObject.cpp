@@ -9,28 +9,17 @@ using namespace GameObject;
 SuperGameObject::SuperGameObject(Scene* scene) {
     mScene = scene;
     mScene->GetList<SuperGameObject>()->push_back(this);
-    mKilled = true;
+    mKilled = false;
 }
 
 SuperGameObject::~SuperGameObject() {
 }
 
-void SuperGameObject::Clear() {
-    std::list<SuperGameObject*>* gameObjects = mScene->GetList<SuperGameObject>();
-    gameObjects->erase(std::remove(gameObjects->begin(), gameObjects->end(), this), gameObjects->end());
-    delete this;
-}
-
 void SuperGameObject::Kill() {
     mKilled = true;
     
-    for (auto entity : mEntityVector) {
+    for (auto entity : mEntityVector)
         entity->Kill();
-        entity->gameObject = nullptr;
-    }
-    std::list<SuperGameObject*>* gameObjects = mScene->GetList<SuperGameObject>();
-    gameObjects->erase(std::remove(gameObjects->begin(), gameObjects->end(), this), gameObjects->end());
-    delete this;
 }
 
 bool SuperGameObject::IsKilled() const {

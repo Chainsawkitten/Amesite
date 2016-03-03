@@ -20,9 +20,6 @@ namespace GameObject {
             /// Destructor.
             virtual ~SuperGameObject();
 
-            /// Remove %SuperGameObject from scene.
-            void Clear();
-
             /// Kill game object, will be removed at end of frame by scene.
             void Kill();
             
