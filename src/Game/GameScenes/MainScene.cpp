@@ -85,7 +85,7 @@ MainScene::MainScene() {
     int threshold = 100;
 
     CaveGenerator::Coordinate playerPosition(width/2, height/2);
-    CaveGenerator::Coordinate NorthWest(5,5);
+    CaveGenerator::Coordinate NorthWest(5, 5);
     CaveGenerator::Coordinate SouthEast(height-5, width-5);
     CaveGenerator::Coordinate NorthEast(height-5, 5);
     CaveGenerator::Coordinate SouthWest(5, width - 5);
@@ -279,7 +279,7 @@ void MainScene::Respawn(float deltaTime) {
         for (auto& otherPlayer : mPlayers) {
             //If the other player isn't this player and isn't active, and the players are close enough, start healing.
             if (thisPlayer != otherPlayer) {
-                if(!otherPlayer->Active() && glm::distance(thisPlayer->GetPosition(), otherPlayer->GetPosition()) < 15.f){
+                if (!otherPlayer->Active() && glm::distance(thisPlayer->GetPosition(), otherPlayer->GetPosition()) < 15.f){
                     otherPlayer->mRespawnTimer -= deltaTime;
                     otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
                 } else {
