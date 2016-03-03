@@ -147,7 +147,7 @@ MainScene::MainScene() {
     GameEntityCreator().CreateEnemySpawner(Component::Spawner::BASIC, 5);
 
     // Push boss positions here to avoid spawning enemies.
-    mNoSpawnRooms.push_back(glm::vec3(playerStartX, 0.f, playerStartZ));
+    mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
 
 }
 
