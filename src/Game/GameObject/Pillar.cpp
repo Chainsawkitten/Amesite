@@ -67,7 +67,6 @@ void Pillar::mUpdateFunction() {
         mLastState = mState;
     }
 
-
     // Update
     if (mState == State::ACTIVE) {
         Component::Spawner* spawnerComponent = node->GetComponent<Component::Spawner>();
