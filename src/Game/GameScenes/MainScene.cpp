@@ -135,8 +135,8 @@ MainScene::MainScene() {
     mGlowFilter = new GlowFilter();
     mGlowBlurFilter = new GlowBlurFilter();
 
-    GameEntityCreator().CreateEnemySpawner(Component::Spawner::PYLON, 10);
-    GameEntityCreator().CreateEnemySpawner(Component::Spawner::BASIC, 15);
+    GameEntityCreator().CreateEnemySpawner(Component::Spawner::PYLON, 2);
+    GameEntityCreator().CreateEnemySpawner(Component::Spawner::BASIC, 5);
 
     // Push boss positions here to avoid spawning enemies.
     mNoSpawnRooms.push_back(glm::vec3(playerStartX, 0.f, playerStartZ));

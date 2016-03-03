@@ -168,7 +168,6 @@ void JonathanScene::Update(float deltaTime) {
     mControllerSystem.Update(*this, deltaTime);
 
     for (auto player : mPlayers) {
-        player->Update();
         JonathanSceneGridCollide(player->GetNodeEntity(), deltaTime, 5);
         if (player->GetHealth() < 0.01f && player->Active()) {
             player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;

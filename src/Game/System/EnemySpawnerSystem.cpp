@@ -26,7 +26,7 @@ using namespace System;
 EnemySpawnerSystem::EnemySpawnerSystem() {
     mMaxEnemyCount = 30;
     mEnemyCount = 0;
-    mSpawnerRadius = 100.f;
+    mSpawnerRadius = 60.f;
 }
 
 EnemySpawnerSystem::~EnemySpawnerSystem() {
