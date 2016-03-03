@@ -33,16 +33,19 @@ class Entity {
          */
         template <typename T> T* GetComponent();
 
-        /// Remove component of type T.
-        template <typename T> void RemoveComponent();
-
-        /// Remove %Entity from scene.
-        void Clear();
+        /// Kill component of type T.
+        template <typename T> void KillComponent();
 
         /// Kill entity, will be removed at end of frame by scene.
         void Kill();
+        
+        /// Get whether entity has been killed.
+        /**
+         * @return Whether the entity has been killed.
+         */
+        bool IsKilled() const;
 
-        // Pointer to which GameObject %Entity is contained.
+        /// Pointer to which GameObject %Entity is contained.
         /**
          * Default: nullptr
          */
@@ -50,23 +53,25 @@ class Entity {
 
     private:
         // Adds a component to this entity and to the scene.
-        /**
+        /*
          * @param component The component that will be added.
          * @param componentType The type of the component.
          */
         void AddComponent(Component::SuperComponent* component, const std::type_info* componentType);
 
         // Pointer to which Scene %Entity is contained.
-        /**
+        /*
          * Default: Must point to a Scene
          */
         Scene* mScene;
 
         // Unordered map containing components.
-        /**
+        /*
          * Maps component type to component.
          */
         std::map<const std::type_info*, Component::SuperComponent*> components;
+        
+        bool mKilled;
 };
 
 template <typename T> T* Entity::GetComponent() {
@@ -100,12 +105,10 @@ template <typename T> T* Entity::AddComponent() {
     return component;
 }
 
-template <typename T> void Entity::RemoveComponent() {
+template <typename T> void Entity::KillComponent() {
     const std::type_info* componentType = &typeid(T*);
     if (components.find(componentType) != components.end()) {
-        T* component = static_cast<T*>(components[componentType]);
-        delete component;
+        components[componentType]->Kill();
         components.erase(componentType);
-        mScene->RemoveComponentFromList(component, componentType);
     }
 }

@@ -53,9 +53,9 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
     
     // Find last camera.
     std::vector<Component::Lens*> lenses = scene.GetAll<Component::Lens>();
-    for (unsigned int i = 0; i < lenses.size(); i++) {
-        if (lenses[i]->entity->GetComponent<Component::Transform>() != nullptr)
-            camera = lenses[i]->entity;
+    for (Component::Lens* lens : lenses) {
+        if (lens->entity->GetComponent<Component::Transform>() != nullptr)
+            camera = lens->entity;
     };
     
     // Render from camera.
@@ -68,12 +68,12 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
         
         // Finds models in scene.
         std::vector<Component::Mesh*> meshes = scene.GetAll<Component::Mesh>();
-        for (unsigned int i = 0; i < meshes.size(); i++) {
-            Entity* model = meshes[i]->entity;
+        for (Component::Mesh* mesh : meshes) {
+            Entity* model = mesh->entity;
             Component::Transform* transform = model->GetComponent<Component::Transform>();
             Component::Material* material = model->GetComponent<Component::Material>();
             if (transform != nullptr && material != nullptr) {
-                glBindVertexArray(meshes[i]->geometry->GetVertexArray());
+                glBindVertexArray(mesh->geometry->GetVertexArray());
                 
                 // Set texture locations
                 glUniform1i(mShaderProgram->GetUniformLocation("baseImage"), 0);
@@ -97,7 +97,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
                 glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
                 glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
                 
-                glDrawElements(GL_TRIANGLES, meshes[i]->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+                glDrawElements(GL_TRIANGLES, mesh->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
             }
         }
         

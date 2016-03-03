@@ -7,28 +7,23 @@
 Entity::Entity(Scene* scene) {
     mScene = scene;
     gameObject = nullptr;
+    mKilled = false;
 }
 
 Entity::~Entity() {
 }
 
 void Entity::AddComponent(Component::SuperComponent* component, const std::type_info* componentType) {
-    this->components[componentType] = component;
-}
-
-void Entity::Clear() {
-    for (auto& it : components) {
-        mScene->RemoveComponentFromList(it.second, it.first);
-        if (it.first != &typeid(Component::RelativeTransform*))
-            delete it.second;
-    }
-    components.clear();
-    std::vector<Entity*>* entityVector = mScene->GetVector<Entity>();
-    entityVector->erase(std::remove(entityVector->begin(), entityVector->end(), this), entityVector->end());
-    delete this;
+    components[componentType] = component;
 }
 
 void Entity::Kill() {
-    if (std::find(mScene->mKilledEntitesVector.begin(), mScene->mKilledEntitesVector.end(), this) == mScene->mKilledEntitesVector.end())
-        mScene->mKilledEntitesVector.push_back(this);
+    mKilled = true;
+    
+    for (auto& it : components)
+        it.second->Kill();
+}
+
+bool Entity::IsKilled() const {
+    return mKilled;
 }

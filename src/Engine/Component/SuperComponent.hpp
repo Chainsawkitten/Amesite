@@ -20,5 +20,17 @@ namespace Component {
              * Default: Must point to an Entity.
              */
             Entity* entity;
+            
+            /// Kill component, will be removed at end of frame by scene.
+            void Kill();
+            
+            /// Get whether component has been killed.
+            /**
+             * @return Whether component has been killed.
+             */
+            bool IsKilled() const;
+            
+        private:
+            bool mKilled;
     };
 }

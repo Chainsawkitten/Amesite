@@ -82,7 +82,7 @@ namespace GameObject {
 
         private:
 
-            int Cave::PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime);
+            int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime);
 
             /// cave X size.
             int mWidth;
