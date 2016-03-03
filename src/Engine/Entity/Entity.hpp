@@ -42,7 +42,7 @@ class Entity {
         /// Kill entity, will be removed at end of frame by scene.
         void Kill();
 
-        // Pointer to which GameObject %Entity is contained.
+        /// Pointer to which GameObject %Entity is contained.
         /**
          * Default: nullptr
          */
@@ -50,20 +50,20 @@ class Entity {
 
     private:
         // Adds a component to this entity and to the scene.
-        /**
+        /*
          * @param component The component that will be added.
          * @param componentType The type of the component.
          */
         void AddComponent(Component::SuperComponent* component, const std::type_info* componentType);
 
         // Pointer to which Scene %Entity is contained.
-        /**
+        /*
          * Default: Must point to a Scene
          */
         Scene* mScene;
 
         // Unordered map containing components.
-        /**
+        /*
          * Maps component type to component.
          */
         std::map<const std::type_info*, Component::SuperComponent*> components;
