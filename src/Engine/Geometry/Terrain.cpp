@@ -2,30 +2,33 @@
 #include "../Util/Log.hpp"
 #include "../Resources.hpp"
 #include <stb_image.h>
+#include "../Texture/Texture2D.hpp"
 
 namespace Geometry {
-    Terrain::Terrain(const char* filename) {
+    Terrain::Terrain(const char* filename, const glm::vec2& textureRepeat) {
+        mTextureRepeat = textureRepeat;
+        
         // Load height map from file
         int components;
         unsigned char* data;
-        data = stbi_load(filename, &width, &height, &components, 0);
+        data = stbi_load(filename, &mWidth, &mHeight, &components, 0);
     
         if (data == NULL)
             Log() << "Couldn't load image: " << filename << "\n";
     
         // Convert height map to float.
-        heightMap = new float*[width];
-        normals = new glm::vec3*[width];
-        tangents = new glm::vec3*[width];
-        for (int i = 0; i < width; i++) {
-            heightMap[i] = new float[height];
-            normals[i] = new glm::vec3[height];
-            tangents[i] = new glm::vec3[height];
+        mHeightMap = new float*[mWidth];
+        mNormals = new glm::vec3*[mWidth];
+        mTangents = new glm::vec3*[mWidth];
+        for (int i = 0; i < mWidth; i++) {
+            mHeightMap[i] = new float[mHeight];
+            mNormals[i] = new glm::vec3[mHeight];
+            mTangents[i] = new glm::vec3[mHeight];
         }
     
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                heightMap[x][y] = data[(x + y*width)*components] / 256.f;
+        for (int x = 0; x < mWidth; x++) {
+            for (int y = 0; y < mHeight; y++) {
+                mHeightMap[x][y] = data[(x + y*mWidth)*components] / 256.f;
             }
         }
     
@@ -37,85 +40,87 @@ namespace Geometry {
         GenerateVertices();
         GenerateIndices();
     
-        for (int i = 0; i < width; i++) {
-            delete[] normals[i];
-            delete[] tangents[i];
+        for (int i = 0; i < mWidth; i++) {
+            delete[] mNormals[i];
+            delete[] mTangents[i];
         }
-        delete[] normals;
-        delete[] tangents;
+        delete[] mNormals;
+        delete[] mTangents;
     
         GenerateBuffers();
         GenerateVertexArray();
     }
 
-    Terrain::Terrain(float** floatArray, int width, int height, glm::vec2 textureRepeat ) {
+    Terrain::Terrain(float** floatArray, int width, int height, const glm::vec2& textureRepeat ) {
+        mTextureRepeat = textureRepeat;
+        
         // Load height map from file
-        this->width = width;
-        this->height = height;
+        mWidth = width;
+        mHeight = height;
 
-        heightMap = new float*[width];
-        normals = new glm::vec3*[width];
-        tangents = new glm::vec3*[width];
-        for (int i = 0; i < width; i++) {
-            heightMap[i] = new float[height];
-            normals[i] = new glm::vec3[height];
-            tangents[i] = new glm::vec3[height];
+        mHeightMap = new float*[mWidth];
+        mNormals = new glm::vec3*[mWidth];
+        mTangents = new glm::vec3*[mWidth];
+        for (int i = 0; i < mWidth; i++) {
+            mHeightMap[i] = new float[mHeight];
+            mNormals[i] = new glm::vec3[mHeight];
+            mTangents[i] = new glm::vec3[mHeight];
         }
 
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                heightMap[i][j] = floatArray[i][j];
+        for (int i = 0; i < mWidth; i++) {
+            for (int j = 0; j < mHeight; j++) {
+                mHeightMap[i][j] = floatArray[i][j];
             }
         }
 
         Filter3x3();
         CalculateNormals();
 
-        GenerateVertices(textureRepeat);
+        GenerateVertices();
         GenerateIndices();
 
-        for (int i = 0; i < width; i++) {
-            delete[] normals[i];
-            delete[] tangents[i];
+        for (int i = 0; i < mWidth; i++) {
+            delete[] mNormals[i];
+            delete[] mTangents[i];
         }
-        delete[] normals;
-        delete[] tangents;
+        delete[] mNormals;
+        delete[] mTangents;
 
         GenerateBuffers();
         GenerateVertexArray();
     }
     
     Terrain::~Terrain() {
-        delete[] vertexData;
-        delete[] indexData;
+        delete[] mVertexData;
+        delete[] mIndexData;
         
-        for (int i = 0; i < width; i++) {
-            delete[] heightMap[i];
+        for (int i = 0; i < mWidth; i++) {
+            delete[] mHeightMap[i];
         }
-        delete[] heightMap;
+        delete[] mHeightMap;
     }
     
     Geometry::Geometry3D::Vertex* Terrain::GetVertices() const {
-        return vertexData;
+        return mVertexData;
     }
     
     unsigned int Terrain::GetVertexCount() const {
-        return vertexNr;
+        return mVertexNr;
     }
     
     unsigned int* Terrain::GetIndices() const {
-        return indexData;
+        return mIndexData;
     }
     
     unsigned int Terrain::GetIndexCount() const {
-        return indexNr;
+        return mIndexNr;
     }
     
     float Terrain::GetY(float x, float z) const {
-        float xInTerrain = x * width;
-        float zInTerrain = z * height;
+        float xInTerrain = x * mWidth;
+        float zInTerrain = z * mHeight;
     
-        if (xInTerrain < 0.f || xInTerrain >= width - 1 || zInTerrain < 0.f || zInTerrain >= height - 1) {
+        if (xInTerrain < 0.f || xInTerrain >= mWidth - 1 || zInTerrain < 0.f || zInTerrain >= mHeight - 1) {
             return 0.f;
         }
     
@@ -126,17 +131,17 @@ namespace Geometry {
         float dz = zInTerrain - zFloor;
     
         // Bilinear interpolation.
-        return (1.f - dx)*(1.f - dz) * heightMap[xFloor][zFloor] +
-               dx * (1.f - dz) * heightMap[xFloor + 1][zFloor] +
-               (1.f - dx) * dz * heightMap[xFloor][zFloor + 1] +
-               dx * dz * heightMap[xFloor + 1][zFloor + 1];
+        return (1.f - dx)*(1.f - dz) * mHeightMap[xFloor][zFloor] +
+               dx * (1.f - dz) * mHeightMap[xFloor + 1][zFloor] +
+               (1.f - dx) * dz * mHeightMap[xFloor][zFloor + 1] +
+               dx * dz * mHeightMap[xFloor + 1][zFloor + 1];
     }
 
     glm::vec3 Terrain::GetNormal(float x, float z) const {
-        float xInTerrain = x * width;
-        float zInTerrain = z * height;
+        float xInTerrain = x * mWidth;
+        float zInTerrain = z * mHeight;
 
-        if (xInTerrain < 0.f || xInTerrain >= width - 1 || zInTerrain < 0.f || zInTerrain >= height - 1) {
+        if (xInTerrain < 0.f || xInTerrain >= mWidth - 1 || zInTerrain < 0.f || zInTerrain >= mHeight - 1) {
             return glm::vec3(0.f, 0.f, 0.f);
         }
         int xFloor = static_cast<int>(xInTerrain);
@@ -145,13 +150,13 @@ namespace Geometry {
         // Get triangle.
         Vertex a, b, c;
         if (zInTerrain - zFloor > xInTerrain - xFloor){
-            a = vertexData[xFloor + zFloor*width];
-            b = vertexData[(xFloor + 1) + (zFloor + 1)*width];
-            c = vertexData[(xFloor + 1) + zFloor*width];
+            a = mVertexData[xFloor + zFloor*mWidth];
+            b = mVertexData[(xFloor + 1) + (zFloor + 1)*mWidth];
+            c = mVertexData[(xFloor + 1) + zFloor*mWidth];
         } else {
-            a = vertexData[xFloor + zFloor*width];
-            b = vertexData[xFloor + (zFloor + 1)*width];
-            c = vertexData[(xFloor + 1) + (zFloor + 1)*width];
+            a = mVertexData[xFloor + zFloor*mWidth];
+            b = mVertexData[xFloor + (zFloor + 1)*mWidth];
+            c = mVertexData[(xFloor + 1) + (zFloor + 1)*mWidth];
         }
         
         // Interpolate triangle normal.
@@ -170,91 +175,70 @@ namespace Geometry {
     }
     
     glm::vec2 Terrain::GetTextureRepeat() const {
-        return textureRepeat;
+        return mTextureRepeat;
     }
-    
-    void Terrain::SetTextureRepeat(const glm::vec2& repeat) {
-        textureRepeat = repeat;
-    }
-    
+
     void Terrain::GenerateVertices() {
-        vertexNr = width * height;
-        vertexData = new Vertex[vertexNr];
-    
-        for (unsigned int i = 0; i < vertexNr; i++) {
-            vertexData[i] = {
-                // Position
-                glm::vec3(static_cast<float>(i % width) / width - 0.5f,
-                          heightMap[i % width][i / width],
-                          static_cast<float>(i / width) / height - 0.5f),
-                // Texture coordinates
-                glm::vec2(static_cast<float>(i % width) / width,
-                          static_cast<float>(i / width) / height),
-                // Normal
-                glm::vec3(normals[i % width][i / width].x,
-                          normals[i % width][i / width].y,
-                          normals[i % width][i / width].z)
-            };
-        }
-    }
+        mVertexNr = mWidth * mHeight;
+        mVertexData = new Vertex[mVertexNr];
 
-    void Terrain::GenerateVertices(glm::vec2 textureRepeat) {
-        vertexNr = width * height;
-        vertexData = new Vertex[vertexNr];
-
-        for (unsigned int i = 0; i < vertexNr; i++) {
-            vertexData[i] = {
+        for (unsigned int i = 0; i < mVertexNr; i++) {
+            mVertexData[i] = {
                 // Position
-                glm::vec3(static_cast<float>(i % width) / width - 0.5f,
-                heightMap[i % width][i / width],
-                    static_cast<float>(i / width) / height - 0.5f),
+                glm::vec3(static_cast<float>(i % mWidth) / mWidth - 0.5f,
+                          mHeightMap[i % mWidth][i / mWidth],
+                          static_cast<float>(i / mWidth) / mHeight - 0.5f),
                 // Texture coordinates
-                glm::vec2(static_cast<float>(i % width) / width,
-                    static_cast<float>(i / width) / height)*textureRepeat,
+                glm::vec2(static_cast<float>(i % mWidth) / mWidth,
+                          static_cast<float>(i / mWidth) / mHeight) * mTextureRepeat,
                 // Normal
-                glm::vec3(normals[i % width][i / width].x,
-                    normals[i % width][i / width].y,
-                    normals[i % width][i / width].z)
+                glm::vec3(mNormals[i % mWidth][i / mWidth].x,
+                          mNormals[i % mWidth][i / mWidth].y,
+                          mNormals[i % mWidth][i / mWidth].z),
+                // Tangent
+                glm::vec3(mTangents[i % mWidth][i / mWidth].x,
+                          mTangents[i % mWidth][i / mWidth].y,
+                          mTangents[i % mWidth][i / mWidth].z)
             };
         }
     }
     
     void Terrain::GenerateIndices() {
-        indexNr = (width - 1) * (height - 1) * 6;
-        indexData = new unsigned int[indexNr];
+        mIndexNr = (mWidth - 1) * (mHeight - 1) * 6;
+        mIndexData = new unsigned int[mIndexNr];
     
-        for (unsigned int i = 0; i < indexNr; i += 6) {
-            unsigned int x = (i / 6) % (width - 1);
-            unsigned int y = (i / 6) / (width - 1);
+        for (unsigned int i = 0; i < mIndexNr; i += 6) {
+            unsigned int x = (i / 6) % (mWidth - 1);
+            unsigned int y = (i / 6) / (mWidth - 1);
     
-            indexData[i] = x + y*width;
-            indexData[i + 1] = (x + 1) + (y + 1)*width;
-            indexData[i + 2] = (x + 1) + y*width;
-            indexData[i + 3] = x + y*width;
-            indexData[i + 4] = x + (y + 1)*width;
-            indexData[i + 5] = (x + 1) + (y + 1)*width;
+            mIndexData[i] = x + y*mWidth;
+            mIndexData[i + 1] = (x + 1) + (y + 1)*mWidth;
+            mIndexData[i + 2] = (x + 1) + y*mWidth;
+            mIndexData[i + 3] = x + y*mWidth;
+            mIndexData[i + 4] = x + (y + 1)*mWidth;
+            mIndexData[i + 5] = (x + 1) + (y + 1)*mWidth;
         }
     }
     
     void Terrain::Filter3x3() {
-        float** filteredHeightMap = new float*[width];
-        for (int i = 0; i < width; i++) {
-            filteredHeightMap[i] = new float[height];
+        float** filteredHeightMap = new float*[mWidth];
+        for (int i = 0; i < mWidth; i++) {
+            filteredHeightMap[i] = new float[mHeight];
         }
     
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        for (int x = 0; x < mWidth; x++) {
+            for (int y = 0; y < mHeight; y++) {
                 filteredHeightMap[x][y] = SampleHeight(x, y);
             }
         }
     
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                heightMap[x][y] = filteredHeightMap[x][y];
+        for (int x = 0; x < mWidth; x++) {
+            for (int y = 0; y < mHeight; y++) {
+                mHeightMap[x][y] = filteredHeightMap[x][y];
             }
         }
     
-        for (int i = 0; i < width; i++) {
+        for (int i = 0; i < mWidth; i++) {
             delete[] filteredHeightMap[i];
         }
         delete[] filteredHeightMap;
@@ -266,9 +250,9 @@ namespace Geometry {
     
         for (int i = x - 1; i <= x + 1; i++) {
             for (int j = y - 1; j <= y; j++) {
-                if (i >= 0 && i < width && j >= 0 && j < height) {
+                if (i >= 0 && i < mWidth && j >= 0 && j < mHeight) {
                     num++;
-                    sum += heightMap[i][j];
+                    sum += mHeightMap[i][j];
                 }
             }
         }
@@ -278,18 +262,18 @@ namespace Geometry {
     
     
     void Terrain::CalculateNormals() {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                float sx = heightMap[x < width - 1 ? x + 1 : x][y] - heightMap[x > 0 ? x - 1 : x][y];
-                if (x == 0 || x == width - 1)
+        for (int x = 0; x < mWidth; x++) {
+            for (int y = 0; y < mHeight; y++) {
+                float sx = mHeightMap[x < mWidth - 1 ? x + 1 : x][y] - mHeightMap[x > 0 ? x - 1 : x][y];
+                if (x == 0 || x == mWidth - 1)
                     sx *= 2.f;
     
-                float sy = heightMap[x][y<height - 1 ? y + 1 : y] - heightMap[x][y > 0 ? y - 1 : y];
-                if (y == 0 || y == height - 1)
+                float sy = mHeightMap[x][y<mHeight - 1 ? y + 1 : y] - mHeightMap[x][y > 0 ? y - 1 : y];
+                if (y == 0 || y == mHeight - 1)
                     sy *= 2.f;
     
-                tangents[x][y] = glm::normalize(glm::vec3(2.f, sx, 0.f));
-                normals[x][y] = glm::normalize(glm::vec3(-width * sx, 2.f, -height * sy));
+                mTangents[x][y] = glm::normalize(glm::vec3(2.f, sx, 0.f));
+                mNormals[x][y] = glm::normalize(glm::vec3(-mWidth * sx, 2.f, -mHeight * sy));
             }
         }
     }
