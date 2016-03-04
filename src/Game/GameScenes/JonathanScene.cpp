@@ -150,6 +150,7 @@ JonathanScene::JonathanScene() {
 
     GameEntityCreator().CreateEnemySpawner(Component::Spawner::PYLON, 5.f);
     GameEntityCreator().CreateEnemySpawner(Component::Spawner::BASIC, 10.f);
+    GameEntityCreator().CreateSpinBoss(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 20.f));
 }
 
 JonathanScene::~JonathanScene() {
@@ -180,10 +181,6 @@ void JonathanScene::Update(float deltaTime) {
             Game::GetInstance().SetScene(new WinScene(mTimer, 10));
         }
     }
-
-    // Update boss
-    if (mSpinBoss != nullptr)
-        mSpinBoss->Update();
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
@@ -225,7 +222,7 @@ void JonathanScene::Update(float deltaTime) {
     mExplodeSystem.Update(*this);
 
     // Remove killed entities
-    ClearKilledEntities();
+    ClearKilled();
 
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
@@ -236,7 +233,7 @@ void JonathanScene::Update(float deltaTime) {
     //Handles the respawning of the players
     JonathanSceneRespawn(deltaTime);
 
-    mCheckpointSystem.Update();
+    mCheckpointSystem.Update(deltaTime);
 
     if (mSpinBoss != nullptr)
         if (mSpinBoss->GetHealth() < 0.01f) {

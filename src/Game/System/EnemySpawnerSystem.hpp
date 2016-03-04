@@ -33,11 +33,19 @@ namespace System {
             * @param bosses list of bosses to avoid spawning enemies in boss room.
             */
             void Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms);
-        
+
+            ///Returns amount of enemies killed.
+            /**
+            * @return The amount of enemies killed.
+            */
+            unsigned int GetEnemiesKilled();
+
         private:
             // Enemy count.
             unsigned int mMaxEnemyCount;
+            unsigned int mMinEnemyCount;
             unsigned int mEnemyCount;
+            unsigned int mEnemiesKilled;
             float mSpawnerRadius;
             glm::vec3 mMapScale;
 

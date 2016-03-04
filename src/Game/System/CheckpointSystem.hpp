@@ -11,7 +11,10 @@ namespace System {
     class CheckpointSystem {
         public:
             ///Checks if all players are dead. If they are, respawn them.
-            void Update();
+            /**
+             * @param deltaTime time since last frame.
+             */
+            void Update(float deltaTime);
 
             ///Moves checkpoint to designated location.
             /**

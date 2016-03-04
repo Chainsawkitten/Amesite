@@ -39,4 +39,3 @@ Portal::Portal(Scene* scene) : SuperGameObject(scene) {
 Portal::~Portal() {
     Resources().FreeOBJModel(mPortalModel);
 }
-

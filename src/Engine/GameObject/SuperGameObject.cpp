@@ -9,28 +9,21 @@ using namespace GameObject;
 SuperGameObject::SuperGameObject(Scene* scene) {
     mScene = scene;
     mScene->GetVector<SuperGameObject>()->push_back(this);
+    mKilled = false;
 }
 
 SuperGameObject::~SuperGameObject() {
 }
 
-void SuperGameObject::Clear() {
-    for (auto& entity : mEntityVector)
-        entity->Clear();
-    mEntityVector.clear();
-    std::vector<GameObject::SuperGameObject*>* gameObjectVector = mScene->GetVector<SuperGameObject>();
-    gameObjectVector->erase(std::remove(gameObjectVector->begin(), gameObjectVector->end(), this), gameObjectVector->end());
-    delete this;
+void SuperGameObject::Kill() {
+    mKilled = true;
+    
+    for (auto entity : mEntityVector)
+        entity->Kill();
 }
 
-void SuperGameObject::Kill() {
-    for (auto entity : mEntityVector) {
-        entity->Kill();
-        entity->gameObject = nullptr;
-    }
-    std::vector<GameObject::SuperGameObject*>* gameObjectVector = mScene->GetVector<SuperGameObject>();
-    gameObjectVector->erase(std::remove(gameObjectVector->begin(), gameObjectVector->end(), this), gameObjectVector->end());
-    delete this;
+bool SuperGameObject::IsKilled() const {
+    return mKilled;
 }
 
 Entity* SuperGameObject::CreateEntity() {

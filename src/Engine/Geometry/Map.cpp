@@ -6,7 +6,7 @@ using namespace Geometry;
 Map::Map(bool **data, glm::uvec2 dataDimensions, float wallHeight) {
     mDataDimensions = dataDimensions;
     mWallHeight = wallHeight;
-    mTextureRepeat = glm::vec2(60.f, 60.f);
+    mTextureRepeat = glm::vec2(dataDimensions);
     MarchingSquares(data, 1.f);
 
     GenerateBuffers();
@@ -225,9 +225,9 @@ void Map::CreateWallMesh() {
             vertex[3].textureCoordinate = glm::vec2(1.f, 0.f);
 
             // Normal of quad.
-            glm::vec3 ab = vertex[2].position - vertex[0].position;
-            glm::vec3 ac = vertex[3].position - vertex[0].position;
-            glm::vec3 normal = glm::normalize(glm::cross(ab, ac));
+            glm::vec3 ab = vertex[1].position - vertex[0].position;
+            glm::vec3 ac = vertex[2].position - vertex[0].position;
+            glm::vec3 normal = glm::normalize(glm::cross(ac, ab));
 
             vertex[0].normal = normal;
             vertex[1].normal = normal;

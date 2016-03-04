@@ -13,6 +13,8 @@
 #include "../../Component/Reflect.hpp"
 #include "../../Component/Controller.hpp"
 #include "../../Component/Spawner.hpp"
+#include "../../Component/Update.hpp"
+
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/RelativeTransform.hpp>
 #include <Engine/Component/Mesh.hpp>
@@ -26,17 +28,16 @@
 
 using namespace GameObject;
 
-SpinBoss::SpinBoss(Scene* scene) : SuperGameObject(scene) {
-    node = CreateEntity();
+SpinBoss::SpinBoss(Scene* scene) : SuperBoss(scene) {
     node->AddComponent<Component::Transform>()->scale *= 1.f;
     node->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     node->GetComponent<Component::Physics>()->angularVelocity.y = -0.1f;
 
+    node->AddComponent<Component::Update>()->updateFunction = std::bind(&SpinBoss::mUpdateFunction, this);
+
     mNoReflectTexture = Resources().CreateTexture2DFromFile("Resources/Crystal_01_glow.png");
     mReflectTexture = Resources().CreateTexture2DFromFile("Resources/Crystal_01_spec.png");
 
-    body = CreateEntity();
-    body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     body->AddComponent<Component::Mesh>()->geometry = mBody = Resources().CreateOBJModel("Resources/Crystal_01.obj");
     body->AddComponent<Component::Material>();
     Resources().FreeTexture2D(body->GetComponent<Component::Material>()->glow);
@@ -70,6 +71,7 @@ SpinBoss::SpinBoss(Scene* scene) : SuperGameObject(scene) {
 }
 
 SpinBoss::~SpinBoss() {
+    //node->RemoveComponent<Component::Update>();
     Resources().FreeOBJModel(mBody);
     if (mState != BossState::REFLECT)
         Resources().FreeTexture2D(mReflectTexture);
@@ -77,7 +79,7 @@ SpinBoss::~SpinBoss() {
         Resources().FreeTexture2D(mNoReflectTexture);
 }
 
-void SpinBoss::Update() {
+void SpinBoss::mUpdateFunction() {
     if (mPhase == BossPhase::ONE)
         for (int i = 0; i < 4; i++)
             if (armArr[i] != nullptr)
@@ -87,10 +89,6 @@ void SpinBoss::Update() {
                     if (--mNrOfArms <= 0)
                         ChangePhase(BossPhase::TWO);
                 }
-}
-
-float SpinBoss::GetHealth() {
-    return body->GetComponent<Component::Health>()->health;
 }
 
 void SpinBoss::CreateArm(Entity* entity, glm::vec3 direction) {
@@ -143,6 +141,14 @@ void SpinBoss::ChangePhase(BossPhase phase) {
     } else {
         mState = BossState::NOREFLECT;
         body->GetComponent<Component::Material>()->glow = mNoReflectTexture;
-        body->RemoveComponent<Component::Reflect>();
+        body->KillComponent<Component::Reflect>();
     }
+}
+
+float SpinBoss::GetHealth() {
+    return body->GetComponent<Component::Health>()->health;
+}
+
+glm::vec3 SpinBoss::GetPosition() {
+    return node->GetComponent<Component::Transform>()->position;
 }

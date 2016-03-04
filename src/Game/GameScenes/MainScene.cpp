@@ -43,6 +43,7 @@
 
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
+#include "../GameObject/Boss/SuperBoss.hpp"
 #include "../GameObject/Boss/SpinBoss.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
@@ -85,16 +86,16 @@ MainScene::MainScene() {
     int threshold = 100;
 
     CaveGenerator::Coordinate playerPosition(width/2, height/2);
-    CaveGenerator::Coordinate NorthWest(5,5);
+    CaveGenerator::Coordinate NorthWest(5, 5);
     CaveGenerator::Coordinate SouthEast(height-5, width-5);
     CaveGenerator::Coordinate NorthEast(height-5, 5);
     CaveGenerator::Coordinate SouthWest(5, width - 5);
 
     std::vector<CaveGenerator::Coordinate> bossPositions;
     bossPositions.push_back(NorthWest);
+    bossPositions.push_back(SouthWest);
     bossPositions.push_back(SouthEast);
     bossPositions.push_back(NorthEast);
-    bossPositions.push_back(SouthWest);
 
     // Create a map.
     mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
@@ -109,11 +110,18 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f)));
     mPlayers.push_back(GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f)));
     
-    // Create boss
-    mSpinBoss = GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[2].x, 0.f, mCave->scaleFactor*bossPositions[2].y));
+    // Create bosses and pillars
+    for (int i = 0; i < bossPositions.size(); i++) {
+        mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[i].x, 0.f, mCave->scaleFactor*bossPositions[i].y)));
+        mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(mPortalPosition.x - 15.f + 15.f * i, -8.f, playerStartZ + 25.f - 2.f * i), mBossVector[i]->GetPosition()));
+        mNoSpawnRooms.push_back(glm::vec3(bossPositions[i].x, 0.f, bossPositions[i].y));
+    }
 
+    // Create altar
+    GameEntityCreator().CreateAltar(glm::vec3(mPortalPosition.x, -16.f, mPortalPosition.y));
+        
     //Stores how many bosses exist
-    mBossCounter = 1;
+    mBossCounter = mBossVector.size();
 
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
 
@@ -139,10 +147,8 @@ MainScene::MainScene() {
     GameEntityCreator().CreateEnemySpawner(Component::Spawner::BASIC, 5);
 
     // Push boss positions here to avoid spawning enemies.
-    mNoSpawnRooms.push_back(glm::vec3(playerStartX, 0.f, playerStartZ));
+    mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
 
-    GameEntityCreator().CreateAltar(glm::vec3(mPortalPosition.x, -16.f, mPortalPosition.y));
-    mPillar = GameEntityCreator().CreatePillar(glm::vec3(playerStartX + 12.f, -8.f, playerStartZ));
 }
 
 MainScene::~MainScene() {
@@ -172,14 +178,9 @@ void MainScene::Update(float deltaTime) {
         }
         glm::vec2 playerPosition(player->GetPosition().x, player->GetPosition().z);
 
-        if (mBossCounter == 0 && glm::distance(playerPosition, mPortalPosition) < 2.f) {
-            Game::GetInstance().SetScene(new WinScene(mTimer, 10));
-        }
+        if (mBossCounter == 0 && glm::distance(playerPosition, mPortalPosition) < 2.f)
+            Game::GetInstance().SetScene(new WinScene(mTimer, mEnemySpawnerSystem.GetEnemiesKilled()));
     }
-
-    // Update boss
-    if (mSpinBoss != nullptr)
-        mSpinBoss->Update();
 
     // AnimationSystem.
     mAnimationSystem.Update(*this, deltaTime);
@@ -213,36 +214,36 @@ void MainScene::Update(float deltaTime) {
 
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
-
+    
     // UpdateSystem.
     mUpdateSystem.Update(*this, deltaTime);
-
-    // Update explotion system
-    mExplodeSystem.Update(*this);
-
-    // Remove killed entities
-    ClearKilledEntities();
-
+    
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
 
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
 
-    //Handles the respawning of the players
-    Respawn(deltaTime);
+    //If all players are disabled, respawn them.
+    mCheckpointSystem.Update(deltaTime);
 
-    mCheckpointSystem.Update();
-
-    if (mSpinBoss != nullptr)
-        if (mSpinBoss->GetHealth() < 0.01f) {
-            mSpinBoss->Kill();
-            mSpinBoss = nullptr;
-            mBossCounter--;
-            mPillar->SetState(mPillar->ACTIVE);
-            if (mBossCounter == 0)
-                GameEntityCreator().CreatePortal(glm::vec3(mPortalPosition.x, 0.f, mPortalPosition.y));
-        }
+    for (int i = 0; i < mBossVector.size(); i++) {
+        if (mBossVector[i] != nullptr)
+            if (mBossVector[i]->GetHealth() < 0.01f) {
+                mBossVector[i]->Kill();
+                mBossVector[i] = nullptr;
+                mBossCounter--;
+                mPillarVector[i]->SetState(GameObject::Pillar::ACTIVE);
+                if (mBossCounter == 0)
+                    GameEntityCreator().CreatePortal(glm::vec3(mPortalPosition.x, 0.f, mPortalPosition.y));
+            }
+    }
+    
+    // Update explosion system
+    mExplodeSystem.Update(*this);
+    
+    // Remove killed entities
+    ClearKilled();
 
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
@@ -272,27 +273,5 @@ void MainScene::Update(float deltaTime) {
     mPostProcessing->Render();
 
     mTimer += deltaTime;
-
-}
-
-void MainScene::Respawn(float deltaTime) {
-    for (auto& thisPlayer : mPlayers) {
-        for (auto& otherPlayer : mPlayers) {
-            //If the other player isn't this player and isn't active, and the players are close enough, start healing.
-            if (thisPlayer != otherPlayer) {
-                if(!otherPlayer->Active() && glm::distance(thisPlayer->GetPosition(), otherPlayer->GetPosition()) < 15.f){
-                    otherPlayer->mRespawnTimer -= deltaTime;
-                    otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
-                } else {
-                    otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
-                    otherPlayer->mRespawnTimer = 5;
-                }
-            }
-        }
-        //If the players respawn timer is < 0, then the player should be activated.
-        if (thisPlayer->mRespawnTimer < 0.001f) {
-            thisPlayer->Activate();
-        }
-    }
 
 }

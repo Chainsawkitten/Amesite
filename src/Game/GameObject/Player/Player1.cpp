@@ -37,7 +37,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_heavy_damage.png");
 
     mNode = CreateEntity();
-    mNode->AddComponent<Component::Transform>()->scale *= 0.3f;
+    mNode->AddComponent<Component::Transform>()->scale *= 0.2f;
     mNode->AddComponent<Component::Controller>()->speed = 5000.f;
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
@@ -283,7 +283,7 @@ void Player1::mUpdateFunction() {
     // Update health texture
     if (GetHealth() >= 2.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = LIGHTDAMAGE;
-        mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture; 
+        mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
     } else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = MEDIUMDAMAGE;
         mBody->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;

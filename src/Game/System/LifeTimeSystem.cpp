@@ -1,15 +1,13 @@
 #include "LifeTimeSystem.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
+#include <GameObject/SuperGameObject.hpp>
 
 #include "../Util/GameEntityFactory.hpp"
 
 #include "../Component/Explode.hpp"
 #include "../Component/LifeTime.hpp"
-
-#include <vector>
 
 using namespace System;
 
@@ -20,8 +18,8 @@ LifeTimeSystem::~LifeTimeSystem() {
 }
 
 void LifeTimeSystem::Update(Scene& scene, float deltaTime) {
-    std::vector<Component::LifeTime*> lifeTimeVector = scene.GetAll<Component::LifeTime>();
-    for (auto& lifeTimeComponent : lifeTimeVector) {
+    std::vector<Component::LifeTime*> lifeTimes = scene.GetAll<Component::LifeTime>();
+    for (auto& lifeTimeComponent : lifeTimes) {
         lifeTimeComponent->lifeTime -= deltaTime;
         if (lifeTimeComponent->lifeTime < 0.f)
             if (lifeTimeComponent->entity->gameObject != nullptr)
