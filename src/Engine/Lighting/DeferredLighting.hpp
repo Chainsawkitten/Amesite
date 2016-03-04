@@ -8,7 +8,6 @@ namespace Geometry {
 }
 class Scene;
 class Entity;
-class Shader;
 class ShaderProgram;
 class RenderTarget;
 
@@ -80,6 +79,4 @@ class DeferredLighting {
         Geometry::Square* mSquare;
         
         ShaderProgram* mShaderProgram;
-        Shader* mVertexShader;
-        Shader* mFragmentShader;
 };
