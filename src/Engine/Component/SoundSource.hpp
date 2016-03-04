@@ -14,7 +14,7 @@ namespace System {
 namespace Component {
     /// %Component describing a sound source.
     class SoundSource : public SuperComponent {
-        friend System::SoundSystem;
+        friend class System::SoundSystem;
         
         public:
             /// Create new sound source.
