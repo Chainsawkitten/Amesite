@@ -7,6 +7,7 @@
 #include "../Shader/ShaderProgram.hpp"
 #include "Post.vert.hpp"
 #include "Deferred.frag.hpp"
+#include "../RenderTarget.hpp"
 
 #include "../Entity/Entity.hpp"
 #include "../Component/Transform.hpp"
@@ -122,7 +123,7 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
         glEnable(GL_DEPTH_TEST);
 }
 
-void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, float scale) {
+void DeferredLighting::Render(Scene& scene, Entity* camera, RenderTarget* renderTarget, const glm::vec2& screenSize, float scale) {
     // Disable depth testing
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
     glEnable(GL_DEPTH_TEST);
@@ -140,6 +141,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     mShaderProgram->Use();
     
     BindForReading();
+    renderTarget->SetTarget();
     glClear(GL_COLOR_BUFFER_BIT);
     
     glBindVertexArray(mSquare->GetVertexArray());

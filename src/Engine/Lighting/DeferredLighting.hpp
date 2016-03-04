@@ -10,6 +10,7 @@ class Scene;
 class Entity;
 class Shader;
 class ShaderProgram;
+class RenderTarget;
 
 /// Holds the frame buffers used for deferred rendering.
 class DeferredLighting {
@@ -54,10 +55,11 @@ class DeferredLighting {
 		/**
          * @param scene Scene to get the lights from.
 		 * @param camera Camera to use.
-		 * @param screenSize Size of the screen in pixels.
+		 * @param renderTarget Target to render to.
+		 * @param screenSize Size of the render target in pixels.
 		 * @param scale Scaling to apply to texture coordinates.
 		 */
-		void Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, float scale = 1.f);
+		void Render(Scene& scene, Entity* camera, RenderTarget* renderTarget, const glm::vec2& screenSize, float scale = 1.f);
         
 	private:
         static void AttachTexture(GLuint texture, unsigned int width, unsigned int height, GLenum attachment, GLint internalFormat);

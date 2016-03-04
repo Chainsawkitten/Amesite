@@ -103,9 +103,8 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
         
         glBindVertexArray(0);
 
-        renderTarget->SetTarget();
         //mDeferredLighting->ShowTextures(screenSize);
-        mDeferredLighting->Render(scene, camera, screenSize);
+        mDeferredLighting->Render(scene, camera, renderTarget, screenSize);
         
         // Render the particle system
         particleRenderSystem.Render(scene, camera, screenSize);
