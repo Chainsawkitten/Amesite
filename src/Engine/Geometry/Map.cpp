@@ -6,6 +6,7 @@ using namespace Geometry;
 Map::Map(bool **data, glm::uvec2 dataDimensions, float wallHeight) {
     mDataDimensions = dataDimensions;
     mWallHeight = wallHeight;
+    mSquareSize = 1.f;
     mTextureRepeat = glm::vec2(dataDimensions);
     MarchingSquares(data, 1.f);
 
@@ -420,6 +421,20 @@ void Map::StoreTriangle(MeshNode a, MeshNode b, MeshNode c) {
     AddToDictionary(triangle.indexA, triangle);
     AddToDictionary(triangle.indexB, triangle);
     AddToDictionary(triangle.indexC, triangle);
+}
+
+void Geometry::Map::CreateBorder(const unsigned int size, const glm::uvec2 dataDimensions)
+{
+    std::vector<glm::vec3> mapCornerPositions;
+    mapCornerPositions.reserve(4);
+
+    // Node creation for marching squares.
+    for (unsigned int x = 0; x < mDataDimensions.x ; x+=(mDataDimensions.x-1)) {
+        for (unsigned int y = 0; y < mDataDimensions.y; y+= (mDataDimensions.y - 1)) {
+            mapCornerPositions.push_back(glm::vec3(-mMapWidth / 2.f + x *  +mSquareSize / 2.f, 0.f, -mMapHeight / 2.f + y * mSquareSize + mSquareSize / 2.f));
+        }
+    }
+    // Make border mesh here.
 }
 
 bool Map::MapTriangle::Contains(int index) {

@@ -115,6 +115,9 @@ namespace Geometry {
         void TriangulateSquare(MSquare* square);
         void StoreTriangle(MeshNode a, MeshNode b, MeshNode c);
 
+        // Create a border.
+        void CreateBorder(const unsigned int size, const glm::uvec2 dataDimensions);
+
         // Data
         glm::uvec2 mDataDimensions;
         float mMapHeight, mMapWidth, mWallHeight;
@@ -139,5 +142,7 @@ namespace Geometry {
 
         unsigned int* mIndexData = nullptr;
         unsigned int mIndexNr = 0;
+
+        float mSquareSize;
     };
 }
