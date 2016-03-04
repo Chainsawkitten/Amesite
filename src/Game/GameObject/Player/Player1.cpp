@@ -95,7 +95,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLight->GetComponent<Component::RelativeTransform>()->pitch = 15.f;
     mLight->AddComponent<Component::Animation>();
     mLight->AddComponent<Component::SpotLight>()->coneAngle = 20.f;
-    mLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
+    mLight->GetComponent<Component::SpotLight>()->attenuation = 0.05f;
 
     mTurretBodyModel = Resources().CreateOBJModel("Resources/player1_turret_body.obj");
     mTurretBarrelModel = Resources().CreateOBJModel("Resources/player1_turret_barrel.obj");

@@ -96,7 +96,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mLight->GetComponent<Component::RelativeTransform>()->pitch = 15.f;
     mLight->AddComponent<Component::Animation>();
     mLight->AddComponent<Component::SpotLight>()->coneAngle = 20.f;
-    mLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
+    mLight->GetComponent<Component::SpotLight>()->attenuation = 0.05f;
 
     mLeftTurret = CreateEntity();
     mLeftTurret->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
