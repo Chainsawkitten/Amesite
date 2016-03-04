@@ -8,6 +8,7 @@
 #include <../Game/Component/Controller.hpp>
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
+#include <Component/PointLight.hpp>
 #include "../Component/Spawner.hpp"
 #include "../Component/Damage.hpp"
 #include "../Component/Health.hpp"
@@ -252,7 +253,8 @@ void ControlScheme::AimedFire(Component::Controller* controller, float deltaTime
 
             float bulletSpeed = 60.f;
 
-            GameEntityCreator().CreatePlayerBullet(transform->GetWorldPosition(), bulletSpeed *  direction, spawnerComponent->faction);
+            GameObject::Bullet* bullet = GameEntityCreator().CreatePlayerBullet(transform->GetWorldPosition(), bulletSpeed *  direction, spawnerComponent->faction);
+            //bullet->node->AddComponent<Component::PointLight>()->attenuation = 2.f;
             spawnerComponent->timeSinceSpawn = 0.f;
             
             // Shoot sound.

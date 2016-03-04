@@ -21,6 +21,8 @@
 #include "../Util/GameEntityFactory.hpp"
 #include "../Util/ControlSchemes.hpp"
 
+#include "../GameObject/PillarBall.hpp"
+
 using namespace GameObject;
 
 Pillar::Pillar(Scene* scene, glm::vec3 bossPosition) : SuperGameObject(scene) {
@@ -78,7 +80,8 @@ void Pillar::mUpdateFunction() {
         Component::Spawner* spawnerComponent = node->GetComponent<Component::Spawner>();
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay * 2.f) {
             glm::vec3 velocity = mBossPosition - node->GetComponent<Component::Transform>()->position;
-            GameEntityCreator().CreatePillarBall(node->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(0.f, 10.f, 0.f), velocity/10.f);
+            GameObject::PillarBall* ball = GameEntityCreator().CreatePillarBall(node->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(0.f, 40.f, 0.f), velocity/10.f);
+            ball->node->GetComponent<Component::Transform>()->scale *= 0.2;
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }
@@ -91,5 +94,5 @@ void Pillar::CreateLight() {
     mLight->GetComponent<Component::RelativeTransform>()->scale *= 0.2f;
     mLight->AddComponent<Component::Material>();
     mLight->AddComponent<Component::Mesh>()->geometry = mLightModel;
-    mLight->AddComponent<Component::PointLight>()->attenuation = 0.01f;
+    mLight->AddComponent<Component::PointLight>()->attenuation = 1.f;
 }
