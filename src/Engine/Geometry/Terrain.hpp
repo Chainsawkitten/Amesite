@@ -75,8 +75,7 @@ namespace Geometry {
             void SetTextureRepeat(const glm::vec2& repeat);
             
         private:
-            void GenerateVertices();
-            void GenerateVertices(glm::vec2 textureRepeat);
+            void GenerateVertices(glm::vec2 textureRepeat = glm::vec2(1.0, 1.0));
             void GenerateIndices();
             void Filter3x3();
             float SampleHeight(int x, int y) const;

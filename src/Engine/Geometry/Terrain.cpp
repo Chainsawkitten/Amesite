@@ -176,27 +176,6 @@ namespace Geometry {
     void Terrain::SetTextureRepeat(const glm::vec2& repeat) {
         textureRepeat = repeat;
     }
-    
-    void Terrain::GenerateVertices() {
-        vertexNr = width * height;
-        vertexData = new Vertex[vertexNr];
-    
-        for (unsigned int i = 0; i < vertexNr; i++) {
-            vertexData[i] = {
-                // Position
-                glm::vec3(static_cast<float>(i % width) / width - 0.5f,
-                          heightMap[i % width][i / width],
-                          static_cast<float>(i / width) / height - 0.5f),
-                // Texture coordinates
-                glm::vec2(static_cast<float>(i % width) / width,
-                          static_cast<float>(i / width) / height),
-                // Normal
-                glm::vec3(normals[i % width][i / width].x,
-                          normals[i % width][i / width].y,
-                          normals[i % width][i / width].z)
-            };
-        }
-    }
 
     void Terrain::GenerateVertices(glm::vec2 textureRepeat) {
         vertexNr = width * height;
@@ -206,15 +185,19 @@ namespace Geometry {
             vertexData[i] = {
                 // Position
                 glm::vec3(static_cast<float>(i % width) / width - 0.5f,
-                heightMap[i % width][i / width],
-                    static_cast<float>(i / width) / height - 0.5f),
+                          heightMap[i % width][i / width],
+                          static_cast<float>(i / width) / height - 0.5f),
                 // Texture coordinates
                 glm::vec2(static_cast<float>(i % width) / width,
-                    static_cast<float>(i / width) / height)*textureRepeat,
+                          static_cast<float>(i / width) / height) * textureRepeat,
                 // Normal
                 glm::vec3(normals[i % width][i / width].x,
-                    normals[i % width][i / width].y,
-                    normals[i % width][i / width].z)
+                          normals[i % width][i / width].y,
+                          normals[i % width][i / width].z),
+                // Tangent
+                glm::vec3(tangents[i % width][i / width].x,
+                          tangents[i % width][i / width].y,
+                          tangents[i % width][i / width].z)
             };
         }
     }
