@@ -5,10 +5,8 @@ Directional light (sunlight).
 #version 400
 
 uniform sampler2D tShadowMap;
-uniform sampler2D tDiffuse;
 uniform sampler2D tNormals;
 uniform sampler2D tSpecular;
-uniform sampler2D tGlow;
 uniform sampler2D tDepth;
 
 uniform mat4 inverseProjectionMatrix;
@@ -30,7 +28,7 @@ layout(location = 0) out vec4 diffuseOut;
 layout(location = 1) out vec4 specularOut;
 
 // Apply ambient, diffuse and specular lighting.
-void ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecular) {
+void ApplyLight(vec3 normal, vec3 position, vec3 surfaceSpecular) {
     vec3 surfaceToLight;
     float attenuation = 1.0;
     
@@ -76,9 +74,8 @@ vec3 reconstructPos(vec2 texCoord, float depth){
 void main () {
     float depth = texture(tDepth, texCoords * scale).r;
     vec3 position = reconstructPos(texCoords, depth);
-    vec3 diffuse = texture(tDiffuse, texCoords * scale).rgb;
     vec3 normal = texture(tNormals, texCoords * scale).xyz;
     vec3 specular = texture(tSpecular, texCoords * scale).xyz;
     
-    ApplyLight(diffuse, normalize(normal), position, specular);
+    ApplyLight(normalize(normal), position, specular);
 }

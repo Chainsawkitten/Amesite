@@ -173,7 +173,6 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, RenderTarget* render
     
     mShaderProgram->Use();
     
-    BindForReading();
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mCelShadingFrameBuffer);
     
     glClear(GL_COLOR_BUFFER_BIT);
@@ -184,11 +183,19 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, RenderTarget* render
     glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     
-    glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::DIFFUSE);
-    glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), DeferredLighting::NORMAL);
-    glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
-    glUniform1i(mShaderProgram->GetUniformLocation("tGlow"), DeferredLighting::GLOW);
-    glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
+    // Bind textures.
+    glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), 0);
+    glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), 1);
+    glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), 2);
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTextures[NORMAL]);
+    
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mTextures[SPECULAR]);
+    
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, mDepthHandle);
     
     glUniform1f(mShaderProgram->GetUniformLocation("scale"), scale);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(projectionMat)[0][0]);
@@ -261,16 +268,6 @@ void DeferredLighting::AttachTexture(GLuint texture, unsigned int width, unsigne
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture, 0);
-}
-
-void DeferredLighting::BindForReading() {
-    for (unsigned int i = 0; i < NUM_TEXTURES; i++) {
-        glActiveTexture(GL_TEXTURE0 + i);
-        glBindTexture(GL_TEXTURE_2D, mTextures[i]);
-    }
-    
-    glActiveTexture(GL_TEXTURE0 + NUM_TEXTURES);
-    glBindTexture(GL_TEXTURE_2D, mDepthHandle);
 }
 
 void DeferredLighting::BindForTexReading() {
