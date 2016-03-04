@@ -68,12 +68,6 @@ namespace Geometry {
              */
             glm::vec2 GetTextureRepeat() const;
             
-            /// Set how many times the texture should repeat.
-            /**
-             * @param repeat How many times the texture should repeat.
-             */
-            void SetTextureRepeat(const glm::vec2& repeat);
-            
         private:
             void GenerateVertices(glm::vec2 textureRepeat = glm::vec2(1.0, 1.0));
             void GenerateIndices();

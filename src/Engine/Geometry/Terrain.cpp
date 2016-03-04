@@ -172,10 +172,6 @@ namespace Geometry {
     glm::vec2 Terrain::GetTextureRepeat() const {
         return mTextureRepeat;
     }
-    
-    void Terrain::SetTextureRepeat(const glm::vec2& repeat) {
-        mTextureRepeat = repeat;
-    }
 
     void Terrain::GenerateVertices(glm::vec2 textureRepeat) {
         mVertexNr = mWidth * mHeight;
