@@ -64,9 +64,32 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
     
     // Default framebuffer
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    
+    
+    // Create cel shading intermediate framebuffer.
+    glGenFramebuffers(1, &mCelShadingFrameBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, mCelShadingFrameBuffer);
+    
+    // Generate textures
+    glGenTextures(2, mCelShadingTextures);
+    
+    AttachTexture(mCelShadingTextures[0], width, height, GL_COLOR_ATTACHMENT0, GL_RGB16F);
+    AttachTexture(mCelShadingTextures[1], width, height, GL_COLOR_ATTACHMENT1, GL_RGB16F);
+    
+    // Create and intialize draw buffers (output from geometry pass)
+    GLenum celShadingDrawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+    glDrawBuffers(2, celShadingDrawBuffers);
+    
+    // Check if framebuffer created correctly
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        Log() << "Cel shading intermediate frame buffer creation failed\n";
+    
+    // Default framebuffer
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
 DeferredLighting::~DeferredLighting() {
+    // Free framebuffer.
     if (mFrameBufferObject != 0)
         glDeleteFramebuffers(1, &mFrameBufferObject);
     
@@ -75,6 +98,13 @@ DeferredLighting::~DeferredLighting() {
     
     if (mDepthHandle != 0)
         glDeleteTextures(1, &mDepthHandle);
+    
+    // Free cel shading framebuffer.
+    if (mCelShadingFrameBuffer != 0)
+        glDeleteFramebuffers(1, &mCelShadingFrameBuffer);
+    
+    if (mCelShadingTextures[0] != 0)
+        glDeleteTextures(NUM_TEXTURES, mCelShadingTextures);
     
     Resources().FreeShaderProgram(mShaderProgram);
     Resources().FreeShader(mVertexShader);

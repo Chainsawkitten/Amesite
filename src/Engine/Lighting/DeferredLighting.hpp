@@ -72,6 +72,9 @@ class DeferredLighting {
 		GLuint mFrameBufferObject;
 		GLuint mDepthHandle;
         
+        GLuint mCelShadingTextures[2];
+        GLuint mCelShadingFrameBuffer;
+        
 		glm::vec2 mSize;
         
         Geometry::Square* mSquare;
