@@ -178,11 +178,8 @@ void MainScene::Update(float deltaTime) {
         }
         glm::vec2 playerPosition(player->GetPosition().x, player->GetPosition().z);
 
-
-    }
-
-    if (mTimer > 20.f) {
-        Game::GetInstance().SetScene(new WinScene(mTimer, mEnemySpawnerSystem.GetEnemiesKilled()));
+        if (mBossCounter == 0 && glm::distance(playerPosition, mPortalPosition) < 2.f)
+            Game::GetInstance().SetScene(new WinScene(mTimer, mEnemySpawnerSystem.GetEnemiesKilled()));
     }
 
     // AnimationSystem.
