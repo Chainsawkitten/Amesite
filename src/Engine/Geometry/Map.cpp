@@ -224,6 +224,12 @@ void Map::CreateWallMesh() {
             vertex[1].normal = normal;
             vertex[2].normal = normal;
             vertex[3].normal = normal;
+            
+            /// @todo Not actually generated tangents.
+            vertex[0].tangent = glm::vec3(0.f, -1.0f, 0.f);
+            vertex[1].tangent = glm::vec3(0.f, -1.0f, 0.f);
+            vertex[2].tangent = glm::vec3(0.f, -1.0f, 0.f);
+            vertex[3].tangent = glm::vec3(0.f, -1.0f, 0.f);
 
 
             mTempVertexData.push_back(vertex[0]);
