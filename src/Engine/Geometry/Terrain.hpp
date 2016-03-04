@@ -15,7 +15,13 @@ namespace Geometry {
              */
             Terrain(const char* filename, const glm::vec2& textureRepeat);
             
-            ///TODO comment.
+            /// Create new terrain from a given array of heights.
+            /**
+             * @param floatArray Array of heights.
+             * @param width Width of the array.
+             * @param height Height of the array.
+             * @param textureRepeat How many times the texture should repeat across the terrain.
+             */
             Terrain(float** floatArray, int width, int height, const glm::vec2& textureRepeat);
             
             /// Destructor
