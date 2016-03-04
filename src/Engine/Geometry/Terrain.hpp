@@ -1,7 +1,8 @@
 #pragma once
 
 #include "../Geometry/Geometry3D.hpp"
-#include "../Texture/Texture2D.hpp"
+
+class Texture2D;
 
 namespace Geometry {
     /// A terrain mesh.

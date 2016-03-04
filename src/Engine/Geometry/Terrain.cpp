@@ -2,6 +2,7 @@
 #include "../Util/Log.hpp"
 #include "../Resources.hpp"
 #include <stb_image.h>
+#include "../Texture/Texture2D.hpp"
 
 namespace Geometry {
     Terrain::Terrain(const char* filename) {
