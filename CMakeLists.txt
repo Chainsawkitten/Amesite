@@ -149,6 +149,8 @@ set(RESOURCES
         assets/wall2_diff.png
         assets/wall2_norm.png
         assets/wall2_spec.png
+        assets/wall_gray.png
+        assets/ground_sand.png
         assets/GolfBall.obj
         assets/MusicAction.ogg
         assets/MusicCalm.ogg

@@ -34,6 +34,6 @@ namespace GameObject {
 
             void AddPartilces(Entity* entity);
 
-            //void mUpdateFunction();
+            void mUpdateFunction();
     };
 }

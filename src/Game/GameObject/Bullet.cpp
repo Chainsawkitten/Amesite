@@ -16,6 +16,7 @@
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/Mesh.hpp>
 #include <Engine/Component/Material.hpp>
+#include <Engine/Component/PointLight.hpp>
 
 
 using namespace GameObject;
@@ -30,7 +31,7 @@ Bullet::Bullet(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::Collider2DCircle>()->radius = 0.25f;
     node->AddComponent<Component::GridCollide>();
     node->AddComponent<Component::Physics>();
-    node->AddComponent<Component::LifeTime>()->lifeTime = 15.f;
+    node->AddComponent<Component::LifeTime>()->lifeTime = 4.f;
     Component::ParticleEmitter* emitter = node->AddComponent<Component::ParticleEmitter>();
     emitter->emitterType = Component::ParticleEmitter::POINT;
     emitter->maxEmitTime = 0.02;

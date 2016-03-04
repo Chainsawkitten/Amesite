@@ -30,7 +30,7 @@ PillarBall::PillarBall(Scene* scene) : SuperGameObject(scene) {
     node->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
     node->GetComponent<Component::Physics>()->velocityDragFactor = 0.f;
     node->AddComponent<Component::LifeTime>()->lifeTime = 10.f;
-    //node->AddComponent<Component::Update>()->updateFunction = std::bind(&PillarBall::mUpdateFunction, this);
+    node->AddComponent<Component::Update>()->updateFunction = std::bind(&PillarBall::mUpdateFunction, this);
 
     mBallModel = Resources().CreateOBJModel("Resources/portal.obj");
 
@@ -54,11 +54,11 @@ PillarBall::~PillarBall() {
     //node->RemoveComponent<Component::Update>();
 }
 
-//void PillarBall::mUpdateFunction() {
-//    float speedFactor = (10.f - node->GetComponent<Component::LifeTime>()->lifeTime);
-//    node->GetComponent<Component::Physics>()->velocity.y = 5.f + speedFactor * 20.f;
-//    node->GetComponent<Component::Physics>()->angularAcceleration.y = 0.25f + 0.25f * speedFactor;
-//}
+void PillarBall::mUpdateFunction() {
+    //float speedFactor = (10.f - node->GetComponent<Component::LifeTime>()->lifeTime);
+    //node->GetComponent<Component::Physics>()->velocity.y = 5.f + speedFactor * 20.f;
+    //node->GetComponent<Component::Physics>()->angularAcceleration.y = 0.1f + 0.1f * speedFactor;
+}
 
 void PillarBall::AddPartilces(Entity* entity) {
     entity->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);

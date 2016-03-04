@@ -72,8 +72,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     map->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
     map->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*static_cast<float>(mWidth) / 2.f, 9.f, scaleFactor*static_cast<float>(mWidth) / 2.f));
     map->GetComponent<Component::Transform>()->scale = glm::vec3(scaleFactor, 5.f, scaleFactor);
-    map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_spec.png");
-    map->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
+    map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall_gray.png");
+    map->GetComponent<Component::Material>()->SetSpecular("Resources/wall_gray.png");
 
     heightMap = CreateEntity();
 
@@ -100,8 +100,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
 
     heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
-    heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/wall2_diff.png");
-    heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/wall2_spec.png");
+    heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/ground_sand.png");
+    heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/ground_sand.png");
 
 }
 

@@ -92,9 +92,10 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLight = CreateEntity();
     mLight->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
     mLight->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
+    mLight->GetComponent<Component::RelativeTransform>()->pitch = 15.f;
     mLight->AddComponent<Component::Animation>();
-    mLight->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
-    mLight->GetComponent<Component::SpotLight>()->attenuation = 0.05f;
+    mLight->AddComponent<Component::SpotLight>()->coneAngle = 20.f;
+    mLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
 
     mTurretBodyModel = Resources().CreateOBJModel("Resources/player1_turret_body.obj");
     mTurretBarrelModel = Resources().CreateOBJModel("Resources/player1_turret_barrel.obj");
@@ -119,7 +120,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLeftSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBarrel;
     mLeftSpawnNode->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, 10.f);
     mLeftSpawnNode->AddComponent<Component::Animation>();
-    mLeftSpawnNode->AddComponent<Component::Spawner>()->delay = 0.25f;
+    mLeftSpawnNode->AddComponent<Component::Spawner>()->delay = 0.5f;
     mLeftSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
     mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     Component::SoundSource* sound = mLeftSpawnNode->AddComponent<Component::SoundSource>();
@@ -147,10 +148,11 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mRightSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBarrel;
     mRightSpawnNode->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, 10.f);
     mRightSpawnNode->AddComponent<Component::Animation>();
-    mRightSpawnNode->AddComponent<Component::Spawner>()->delay = 0.25f;
+    mRightSpawnNode->AddComponent<Component::Spawner>()->delay = 0.5f;
     mRightSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
     mRightSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
 
+    Entity* pointLight;
     // Engine
     mFrontEngineLeft = CreateEntity();
     mFrontEngineLeft->AddComponent<Component::RelativeTransform>()->Move(8.5f, 0.f, 8.3f);
@@ -163,6 +165,11 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mFrontEngineLeftParticles = CreateEntity();
     mFrontEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
     AddEnginePartilces(mFrontEngineLeftParticles);
+    pointLight = CreateEntity();
+    pointLight->AddComponent<Component::PointLight>();
+    pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
+    pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
+    pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
 
     mFrontEngineRight = CreateEntity();
     mFrontEngineRight->AddComponent<Component::RelativeTransform>()->Move(-8.5f, 0.f, 8.3f);
@@ -176,6 +183,11 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mFrontEngineRightParticles = CreateEntity();
     mFrontEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineRight;
     AddEnginePartilces(mFrontEngineRightParticles);
+    pointLight = CreateEntity();
+    pointLight->AddComponent<Component::PointLight>();
+    pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
+    pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineRight;
+    pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
 
     mBackEngineLeft = CreateEntity();
     mBackEngineLeft->AddComponent<Component::RelativeTransform>()->Move(10.5f, 0.f, 0.f);
@@ -188,6 +200,11 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mBackEngineLeftParticles = CreateEntity();
     mBackEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineLeft;
     AddEnginePartilces(mBackEngineLeftParticles);
+    //pointLight = CreateEntity();
+    //pointLight->AddComponent<Component::PointLight>();
+    //pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
+    //pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
+    //pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
 
     mBackEngineRight = CreateEntity();
     mBackEngineRight->AddComponent<Component::RelativeTransform>()->Move(-10.5f, 0.f, 0.f);
@@ -201,6 +218,11 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mBackEngineRightParticles = CreateEntity();
     mBackEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineRight;
     AddEnginePartilces(mBackEngineRightParticles);
+    //pointLight = CreateEntity();
+    //pointLight->AddComponent<Component::PointLight>();
+    //pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
+    //pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineRight;
+    //pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
 }
 
 Player1::~Player1() {
