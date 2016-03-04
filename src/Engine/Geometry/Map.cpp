@@ -49,7 +49,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
     ControlNode** controlNodes = new ControlNode*[mDataDimensions.x];
     MSquare** mSquares = new MSquare*[mDataDimensions.x - 1];
 
-    // Initialzation
+    // Initialization.
     for (unsigned int i = 0; i < mDataDimensions.x; i++) {
         controlNodes[i] = new ControlNode[mDataDimensions.y];
     }
@@ -57,7 +57,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
         mSquares[j] = new MSquare[mDataDimensions.y - 1];
     }
 
-    // Node creation for marching squares
+    // Node creation for marching squares.
     for (unsigned int x = 0; x < mDataDimensions.x; x++) {
         for (unsigned int y = 0; y < mDataDimensions.y; y++) {
             glm::vec3 pos = glm::vec3(-mMapWidth / 2.f + x * squareSize + squareSize / 2.f, 0.f, -mMapHeight / 2.f + y * squareSize + squareSize / 2.f);
@@ -65,7 +65,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
         }
     }
 
-    // Node creation for marching squares
+    // Node creation for marching squares.
     for (unsigned int x = 0; x < mDataDimensions.x - 1; x++) {
         for (unsigned int y = 0; y < mDataDimensions.y - 1; y++) {
             mSquares[x][y] = CreateMSquare(controlNodes[x][y + 1], controlNodes[x + 1][y + 1], controlNodes[x + 1][y], controlNodes[x][y]);
@@ -79,7 +79,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
         }
     }
 
-    // Wall mesh generation
+    // Wall mesh generation.
     CreateWallMesh();
 
     // Initialize index and vertex data and copy from temp.
@@ -173,7 +173,7 @@ void Map::CreateMesh(MeshNode* node, unsigned int size) {
             Vertex vertex;
             vertex.position = node[i].mPosition;
             vertex.normal = glm::vec3(0.f, 1.f, 0.f);
-            vertex.tangent = glm::vec3(0.0f, 0.0f, -1.0f);
+            vertex.tangent = glm::vec3(1.0f, 0.0f, 0.0f);
             vertex.textureCoordinate = node[i].mTexCoords;
             mTempVertexData.push_back(vertex);
             mVertexNr++;
