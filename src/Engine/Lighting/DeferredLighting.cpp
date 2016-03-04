@@ -227,8 +227,6 @@ void DeferredLighting::AttachTexture(GLuint texture, unsigned int width, unsigne
 }
 
 void DeferredLighting::BindForReading() {
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, mFrameBufferObject);
-    
     for (unsigned int i = 0; i < NUM_TEXTURES; i++) {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, mTextures[i]);
