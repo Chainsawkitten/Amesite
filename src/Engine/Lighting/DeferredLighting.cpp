@@ -161,22 +161,21 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
 void DeferredLighting::Render(Scene& scene, Entity* camera, RenderTarget* renderTarget, const glm::vec2& screenSize, float scale) {
     // Disable depth testing
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
-    glEnable(GL_DEPTH_TEST);
-    
-    GLint oldDepthFunctionMode;
-    glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunctionMode);
-    glDepthFunc(GL_ALWAYS);
+    glDisable(GL_DEPTH_TEST);
     
     // Blending enabled for handling multiple light sources
-    GLboolean blend = glIsEnabledi(GL_BLEND, 0);
     glEnablei(GL_BLEND, 0);
     glBlendEquationi(0, GL_FUNC_ADD);
     glBlendFunci(0, GL_ONE, GL_ONE);
+    glEnablei(GL_BLEND, 1);
+    glBlendEquationi(1, GL_FUNC_ADD);
+    glBlendFunci(1, GL_ONE, GL_ONE);
     
     mShaderProgram->Use();
     
     BindForReading();
-    renderTarget->SetTarget();
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mCelShadingFrameBuffer);
+    
     glClear(GL_COLOR_BUFFER_BIT);
     
     glBindVertexArray(mSquare->GetVertexArray());
@@ -247,12 +246,13 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, RenderTarget* render
         }
     }
     
+    glDisablei(GL_BLEND, 0);
+    glDisablei(GL_BLEND, 1);
+    
+    RenderCelShading(renderTarget);
+    
     if (!depthTest)
         glDisable(GL_DEPTH_TEST);
-    if (!blend)
-        glDisablei(GL_BLEND, 0);
-    
-    glDepthFunc(oldDepthFunctionMode);
 }
 
 void DeferredLighting::AttachTexture(GLuint texture, unsigned int width, unsigned int height, GLenum attachment, GLint internalFormat) {
@@ -279,4 +279,47 @@ void DeferredLighting::BindForTexReading() {
 
 void DeferredLighting::SetReadBuffer(TEXTURE_TYPE textureType){
     glReadBuffer(GL_COLOR_ATTACHMENT0 + textureType);
+}
+
+void DeferredLighting::RenderCelShading(RenderTarget* renderTarget) {
+    // Disable depth testing
+    glEnable(GL_DEPTH_TEST);
+    
+    GLint oldDepthFunctionMode;
+    glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunctionMode);
+    glDepthFunc(GL_ALWAYS);
+    
+    mCelShadingProgram->Use();
+    
+    renderTarget->SetTarget();
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    glBindVertexArray(mSquare->GetVertexArray());
+    
+    // Bind textures.
+    glUniform1i(mCelShadingProgram->GetUniformLocation("tDiffuse"), 0);
+    glUniform1i(mCelShadingProgram->GetUniformLocation("tDiffuseLevels"), 1);
+    glUniform1i(mCelShadingProgram->GetUniformLocation("tSpecular"), 2);
+    glUniform1i(mCelShadingProgram->GetUniformLocation("tGlow"), 3);
+    glUniform1i(mCelShadingProgram->GetUniformLocation("tDepth"), 4);
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTextures[DIFFUSE]);
+    
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mCelShadingTextures[0]);
+    
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, mCelShadingTextures[1]);
+    
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, mTextures[GLOW]);
+    
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, mDepthHandle);
+    
+    // Render full screen quad.
+    glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+    
+    glDepthFunc(oldDepthFunctionMode);
 }

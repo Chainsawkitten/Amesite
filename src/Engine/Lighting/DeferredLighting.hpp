@@ -65,6 +65,7 @@ class DeferredLighting {
         void BindForReading();
         void BindForTexReading();
         void SetReadBuffer(TEXTURE_TYPE textureType);
+        void RenderCelShading(RenderTarget* renderTarget);
         
 		GLuint mTextures[NUM_TEXTURES];
         

@@ -81,5 +81,4 @@ void main () {
     vec3 specular = texture(tSpecular, texCoords * scale).xyz;
     
     ApplyLight(diffuse, normalize(normal), position, specular);
-    gl_FragDepth = depth;
 }
