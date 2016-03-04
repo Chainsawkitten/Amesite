@@ -26,11 +26,11 @@ uniform float scale;
 
 in vec2 texCoords;
 
-layout(location = 0) out vec4 fragmentColor;
-layout(location = 1) out vec4 extraOut;
+layout(location = 0) out vec4 diffuseOut;
+layout(location = 1) out vec4 specularOut;
 
 // Apply ambient, diffuse and specular lighting.
-vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecular) {
+void ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecular) {
     vec3 surfaceToLight;
     float attenuation = 1.0;
     
@@ -50,12 +50,8 @@ vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecu
             attenuation = 0.0;
     }
     
-    // Ambient.
-    vec3 ambient = light.ambientCoefficient * surfaceColor;
-    
     // Diffuse
     float diffuseCoefficient = max(0.0, dot(normal, surfaceToLight));
-    vec3 diffuse = diffuseCoefficient * surfaceColor * light.intensities;
     
     // Specular
     vec3 surfaceToCamera = normalize(-position);
@@ -63,10 +59,10 @@ vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecu
     float specularCoefficient = 0.0;
     if (diffuseCoefficient > 0.0)
         specularCoefficient = pow(max(dot(surfaceToCamera, reflect(-surfaceToLight, normal)), 0.0), materialShininess);
-    vec3 specular = specularCoefficient * surfaceSpecular * light.intensities;
     
     // Linear color (color before gamma correction)
-    return ambient + attenuation * (diffuse + specular);
+    diffuseOut = vec4(light.ambientCoefficient + attenuation * diffuseCoefficient * light.intensities, 1.0);
+    specularOut = vec4(attenuation * specularCoefficient * surfaceSpecular * light.intensities, 1.0);
 }
 
 // Reconstruct position.
@@ -84,7 +80,6 @@ void main () {
     vec3 normal = texture(tNormals, texCoords * scale).xyz;
     vec3 specular = texture(tSpecular, texCoords * scale).xyz;
     
-    fragmentColor = vec4(ApplyLight(diffuse, normalize(normal), position, specular), 1.0);
-    extraOut = vec4(texture(tGlow, texCoords * scale).rgb, 1.0);
+    ApplyLight(diffuse, normalize(normal), position, specular);
     gl_FragDepth = depth;
 }
