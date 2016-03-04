@@ -11,11 +11,12 @@ namespace Geometry {
             /// Create new terrain from the given height map.
             /**
              * @param filename Filename (relative or absolute) to height map texture.
+             * @param textureRepeat How many times the texture should repeat across the terrain.
              */
-            Terrain(const char* filename);
+            Terrain(const char* filename, const glm::vec2& textureRepeat);
             
             ///TODO comment.
-            Terrain(float** floatArray, int width, int height, glm::vec2 textureRepeat);
+            Terrain(float** floatArray, int width, int height, const glm::vec2& textureRepeat);
             
             /// Destructor
             ~Terrain();
@@ -70,7 +71,7 @@ namespace Geometry {
             glm::vec2 GetTextureRepeat() const;
             
         private:
-            void GenerateVertices(glm::vec2 textureRepeat = glm::vec2(1.0, 1.0));
+            void GenerateVertices();
             void GenerateIndices();
             void Filter3x3();
             float SampleHeight(int x, int y) const;
