@@ -7,6 +7,7 @@
 #include "../Shader/ShaderProgram.hpp"
 #include "Post.vert.hpp"
 #include "Deferred.frag.hpp"
+#include "CelShading.frag.hpp"
 #include "../RenderTarget.hpp"
 
 #include "../Entity/Entity.hpp"
@@ -21,11 +22,14 @@
 DeferredLighting::DeferredLighting(const glm::vec2& size) {
     mSize = size;
     
+    // Create shaders.
     Shader* vertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
     Shader* fragmentShader = Resources().CreateShader(DEFERRED_FRAG, DEFERRED_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
     Resources().FreeShader(fragmentShader);
+    fragmentShader = Resources().CreateShader(CELSHADING_FRAG, CELSHADING_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mCelShadingProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
+    Resources().FreeShader(vertexShader);
     
     mSquare = Resources().CreateSquare();
     
@@ -109,6 +113,7 @@ DeferredLighting::~DeferredLighting() {
         glDeleteTextures(NUM_TEXTURES, mCelShadingTextures);
     
     Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShaderProgram(mCelShadingProgram);
     
     Resources().FreeSquare();
 }

@@ -79,4 +79,5 @@ class DeferredLighting {
         Geometry::Square* mSquare;
         
         ShaderProgram* mShaderProgram;
+        ShaderProgram* mCelShadingProgram;
 };

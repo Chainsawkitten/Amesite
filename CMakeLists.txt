@@ -201,6 +201,7 @@ set(EMBEDDED_INPUT
         shaders/PostGlow.frag
         shaders/PostGlowBlur.frag
         shaders/Deferred.frag
+        shaders/CelShading.frag
         shaders/Particle.vert
         shaders/Particle.geom
         shaders/Particle.frag
