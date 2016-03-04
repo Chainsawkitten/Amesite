@@ -266,7 +266,6 @@ void Player1::Activate() {
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = true;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = false;
-
 }
 
 void Player1::Deactivate() {
@@ -276,7 +275,6 @@ void Player1::Deactivate() {
     mLeftSpawnNode->GetComponent<Component::Controller>()->enabled = false;
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = false;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = true;
-
 }
 
 void Player1::AddEnginePartilces(Entity* entity) {
