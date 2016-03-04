@@ -128,74 +128,74 @@ bool ** Cave::GetCaveData() const {
     return mMap;
 }
 
-bool Cave::PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime) {
+glm::vec3 Cave::PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime) {
     unsigned int x = glm::floor((point + velocity * deltaTime).x / scaleFactor);
     unsigned int z = glm::floor((point + velocity * deltaTime).z / scaleFactor);
-
+    
     return CellCollide(((point + velocity * deltaTime).x) / scaleFactor - x, ((point + velocity * deltaTime).z) / scaleFactor - z, x, z);
 }
 
-bool Cave::CellCollide(float xPos, float yPos, int x, int y) {
+glm::vec3 Cave::CellCollide(float xPos, float yPos, int x, int y) {
 
     if (x >= 0 && y >= 0)
         switch (this->mTypeMap[x][y]) {
 
         case 1:
             if (yPos <= 0.5f - xPos)
-                return true;
+                return glm::vec3(0,0,0);
             break;
         case 2:
             if (xPos >= 0.5f + yPos)
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
         case 3:
             if (yPos <= 0.5f)
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
         case 4:
             if (!(yPos <= 1.5f - xPos))
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
         case 6:
             if (xPos >= 0.5f)
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
         case 7:
             if (yPos <= xPos + 0.5f)
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
         case 8:
             if (!(yPos <= xPos + 0.5f))
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
         case 9:
             if (xPos <= 0.5f)
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
         case 11:
             if (yPos <= 1.5f - xPos)
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
         case 12:
             if (yPos >= 0.5f)
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
         case 13:
             if (!(xPos >= 0.5f + yPos))
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
         case 14:
             if (!(yPos <= 0.5f - xPos))
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
         case 15:
             if (yPos <= xPos + 0.5f)
-                return true;
+                return glm::vec3(0, 0, 0);
             break;
 
         }
 
-    return false;
+    return glm::vec3(0, 0, 0);
 
 }
 
@@ -211,18 +211,20 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
     glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
     glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
 
-    bool c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime);
-    bool c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime);
-    bool c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime);
-    bool c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime);
+    glm::vec3 c = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime);
 
-    if (c0 || c1 || c2 || c3) {
+    //glm::vec3 c0 = PointCollide(transform->CalculateWorldPosition() - width - height, velocity, deltaTime);
+    //glm::vec3 c1 = PointCollide(transform->CalculateWorldPosition() + width - height, velocity, deltaTime);
+    //glm::vec3 c2 = PointCollide(transform->CalculateWorldPosition() + width + height, velocity, deltaTime);
+    //glm::vec3 c3 = PointCollide(transform->CalculateWorldPosition() - width + height, velocity, deltaTime);
 
-        physics->velocity *= glm::vec3(0, 0, 0);
-        physics->acceleration *= glm::vec3(0, 0, 0);
-        return true;
+    //if (c0 || c1 || c2 || c3) {
 
-    }
+    //    physics->velocity *= glm::vec3(0, 0, 0);
+    //    physics->acceleration *= glm::vec3(0, 0, 0);
+    //    return true;
+
+    //}
 
     return false;
 

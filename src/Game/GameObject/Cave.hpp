@@ -92,7 +92,7 @@ namespace GameObject {
              * @param deltaTime Where the players start.
              * @return Returns true if it's inside a wall
              */
-            bool PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime);
+            glm::vec3 PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime);
 
             ///Takes a position and checks it agains the marching square type to see if it's in a wall
             /**
@@ -102,7 +102,7 @@ namespace GameObject {
              * @param the y coordinate of the cell
              * @return Returns true if it's inside a wall
              */
-            bool CellCollide(float xPos, float yPos, int x, int y);
+            glm::vec3 CellCollide(float xPos, float yPos, int x, int y);
             
             /// cave X size.
             int mWidth;
