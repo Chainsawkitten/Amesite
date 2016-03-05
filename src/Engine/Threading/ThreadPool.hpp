@@ -22,6 +22,12 @@ namespace Threading {
             /// Destructor.
             ~ThreadPool();
             
+            /// Add a job to be peformed by the thread pool.
+            /**
+             * @param job Job to perform.
+             */
+            void Add(std::function<void()> job);
+            
             /// Wait for the worker threads to finish.
             void Wait();
             
@@ -39,8 +45,7 @@ namespace Threading {
             std::mutex mJobMutex;
             std::condition_variable mJobCondition;
             
-            std::atomic<std::size_t> mUnfinishedJobs;
-            std::mutex mFinishedMutex;
+            std::size_t mUnfinishedJobs;
             std::condition_variable mFinishedCondition;
             
             // Whether worker threads should stop.

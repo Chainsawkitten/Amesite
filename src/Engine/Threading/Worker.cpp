@@ -16,7 +16,7 @@ void Worker::Join() {
 void Worker::Execute() {
     std::function<void()> job;
     while (true) {
-        { // Aquire mutex lock.
+        {
             std::unique_lock<std::mutex> lock(mThreadPool.mJobMutex);
             
             while (!mThreadPool.mStop && mThreadPool.mJobs.empty()) {
@@ -30,13 +30,16 @@ void Worker::Execute() {
             // Get next job.
             job = mThreadPool.mJobs.front();
             mThreadPool.mJobs.pop();
-        } // Release mutex lock.
+        }
         
         // Perform the job.
         job();
         
         // Signal that we finished the job.
-        --mThreadPool.mUnfinishedJobs;
+        {
+            std::unique_lock<std::mutex> lock(mThreadPool.mJobMutex);
+            --mThreadPool.mUnfinishedJobs;
+        }
         mThreadPool.mFinishedCondition.notify_all();
     }
 }

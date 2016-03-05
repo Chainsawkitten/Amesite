@@ -17,8 +17,18 @@ ThreadPool::~ThreadPool() {
         delete mWorkers[i];
 }
 
+void ThreadPool::Add(std::function<void()> job) {
+    {
+        std::unique_lock<std::mutex> lock(mJobMutex);
+        mJobs.push(job);
+        ++mUnfinishedJobs;
+    }
+    
+    mJobCondition.notify_one();
+}
+
 void ThreadPool::Wait() {
-    std::unique_lock<std::mutex> lock(mFinishedMutex);
+    std::unique_lock<std::mutex> lock(mJobMutex);
     
     while (mUnfinishedJobs > 0)
         mFinishedCondition.wait(lock);
