@@ -19,8 +19,8 @@ void SpawnerSystem::Update(Scene& scene, float deltaTime) {
     std::vector<Component::Spawner*>& spawnerVector = scene.GetAll<Component::Spawner>();
     
     unsigned int threads = Threading::GetParallelCount();
+    std::size_t length = spawnerVector.size() / threads;
     for (unsigned int i=0; i < threads; ++i) {
-        std::size_t length = spawnerVector.size() / threads;
         std::size_t begin = i * length;
         if (i == threads - 1)
             length = spawnerVector.size() - begin;
