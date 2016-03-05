@@ -166,6 +166,7 @@ MainScene::~MainScene() {
 void MainScene::Update(float deltaTime) {
     // Update spawners
     mSpawnerSystem.Update(*this, deltaTime);
+    Threading::FrontEndJobs().Wait();
 
     // ControllerSystem
     mControllerSystem.Update(*this, deltaTime);

@@ -1,12 +1,11 @@
 #include "SpawnerSystem.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
+#include <GameObject/SuperGameObject.hpp>
 
 #include "../Component/Spawner.hpp"
-
-#include <vector>
+#include <Threading/Threading.hpp>
 
 using namespace System;
 
@@ -17,7 +16,21 @@ SpawnerSystem::~SpawnerSystem() {
 }
 
 void SpawnerSystem::Update(Scene& scene, float deltaTime) {
-    std::vector<Component::Spawner*> spawnerVector = scene.GetAll<Component::Spawner>();
-    for (auto& spawnerComponent : spawnerVector)
-        spawnerComponent->timeSinceSpawn += deltaTime;
+    std::vector<Component::Spawner*>& spawnerVector = scene.GetAll<Component::Spawner>();
+    
+    unsigned int threads = Threading::GetParallelCount();
+    for (unsigned int i=0; i < threads; ++i) {
+        std::size_t length = spawnerVector.size() / threads;
+        std::size_t begin = i * length;
+        if (i == threads - 1)
+            length = spawnerVector.size() - begin;
+        
+        if (length > 0)
+            Threading::FrontEndJobs().Add(std::bind(&SpawnerSystem::UpdatePart, this, std::ref(spawnerVector), deltaTime, begin, length));
+    }
+}
+
+void SpawnerSystem::UpdatePart(std::vector<Component::Spawner*>& spawners, float deltaTime, std::size_t begin, std::size_t length) {
+    for (std::size_t i=begin; i < begin+length; ++i)
+        spawners[i]->timeSinceSpawn += deltaTime;
 }
