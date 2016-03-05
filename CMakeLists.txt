@@ -309,6 +309,7 @@ set(ENGINE_SRCS
         src/Engine/GameObject/SuperGameObject.cpp
         src/Engine/Threading/Worker.cpp
         src/Engine/Threading/ThreadPool.cpp
+        src/Engine/Threading/Threading.cpp
     )
 
 set(ENGINE_HEADERS
@@ -374,6 +375,7 @@ set(ENGINE_HEADERS
         src/Engine/GameObject/SuperGameObject.hpp
         src/Engine/Threading/Worker.hpp
         src/Engine/Threading/ThreadPool.hpp
+        src/Engine/Threading/Threading.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
