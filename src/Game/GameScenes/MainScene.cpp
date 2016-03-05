@@ -219,9 +219,6 @@ void MainScene::Update(float deltaTime) {
     // UpdateSystem.
     mUpdateSystem.Update(*this, deltaTime);
     
-    // Update sounds.
-    System::SoundSystem::GetInstance()->Update(*this);
-    
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
 
@@ -242,6 +239,9 @@ void MainScene::Update(float deltaTime) {
     
     // Update explosion system
     mExplodeSystem.Update(*this);
+    
+    // Update sounds.
+    System::SoundSystem::GetInstance()->Update(*this);
     
     // Remove killed entities
     ClearKilled();
