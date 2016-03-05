@@ -33,6 +33,7 @@
 #include <cmath>
 #include <Util/Picking.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <Threading/Threading.hpp>
 
 MenuScene::MenuScene() {
     // Bind scene to gameEntityCreator
@@ -169,6 +170,8 @@ void MenuScene::Update(float deltaTime) {
     // Handle pressed menu option.
     if (Input()->Triggered(InputHandler::ANYONE, InputHandler::SHOOT))
         mMenuOptions[mSelected]->callback();
+    
+    Threading::FrontEndJobs().Wait();
     
     // Render.
     glViewport(0, 0, static_cast<int>(screenSize.x), static_cast<int>(screenSize.y));

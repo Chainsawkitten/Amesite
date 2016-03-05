@@ -9,6 +9,8 @@
 #include <Util/FileSystem.hpp>
 #include <System/SoundSystem.hpp>
 
+#include <Threading/Threading.hpp>
+
 #include "Game.hpp"
 #include "GameScenes/SplashScene.hpp"
 #include "GameScenes/MenuScene.hpp"
@@ -26,7 +28,6 @@
 //#include <crtdbg.h>
 
 #include <thread>
-#include <vector>
 #include <fstream>
 
 using namespace std;
@@ -43,6 +44,10 @@ int main() {
     if (!glfwInit())
         return 1;
     
+    /// @todo Log unsigned int
+    Log() << "Using " << std::to_string(Threading::GetParallelCount()) << " front end threads.\n";
+    
+    // Create main window.
     MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Modership", GameSettings::GetInstance().GetBool("Debug Context"));
     glewInit();
     window->Init(GameSettings::GetInstance().GetBool("Show Notifications"));
@@ -123,6 +128,8 @@ int main() {
     Game::GetInstance().Free();
     delete soundSystem;
     delete window;
+    
+    Threading::FrontEndJobs().Stop();
     
     glfwTerminate();
     

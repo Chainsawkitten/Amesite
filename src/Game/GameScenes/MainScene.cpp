@@ -51,6 +51,7 @@
 #include "../GameObject/Altar.hpp"
 #include "../GameObject/Pillar.hpp"
 
+#include <Threading/Threading.hpp>
 
 #include "../Game.hpp"
 #include "WinScene.hpp"
@@ -224,7 +225,7 @@ void MainScene::Update(float deltaTime) {
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
 
-    //If all players are disabled, respawn them.
+    // If all players are disabled, respawn them.
     mCheckpointSystem.Update(deltaTime);
 
     for (int i = 0; i < mBossVector.size(); i++) {
@@ -244,6 +245,8 @@ void MainScene::Update(float deltaTime) {
     
     // Remove killed entities
     ClearKilled();
+    
+    Threading::FrontEndJobs().Wait();
 
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
