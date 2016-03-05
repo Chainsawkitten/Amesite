@@ -19,15 +19,12 @@ namespace Threading {
             /// Join the thread.
             void Join();
             
-            /// Execute the worker thread.
-            /**
-             * Continually checks for available jobs in the thread pool and executes them.
-             */
-            void operator()();
-            
         private:
             ThreadPool& mThreadPool;
             
             std::thread* mThread;
+            
+            // Execute the worker thread. Continually checks for available jobs in the thread pool and executes them.
+            void Execute();
     };
 }
