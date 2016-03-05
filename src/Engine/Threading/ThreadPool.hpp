@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Worker.hpp"
 #include <vector>
 
 namespace Threading {
+    class Worker;
+    
     /// Handles a pool of worker threads.
     class ThreadPool {
         public:
@@ -13,6 +14,9 @@ namespace Threading {
              */
             ThreadPool(std::size_t threads);
             
+            /// Destructor.
+            ~ThreadPool();
+            
             /// Wait for the worker threads to finish.
             void Wait();
             
@@ -20,6 +24,6 @@ namespace Threading {
             void Stop();
             
         private:
-            std::vector<Worker> mWorkers;
+            std::vector<Worker*> mWorkers;
     };
 }
