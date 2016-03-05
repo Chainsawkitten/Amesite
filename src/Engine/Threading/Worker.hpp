@@ -1,5 +1,9 @@
 #pragma once
 
+namespace std {
+    class thread;
+}
+
 namespace Threading {
     class ThreadPool;
     
@@ -12,6 +16,9 @@ namespace Threading {
              */
             Worker(ThreadPool& threadPool);
             
+            /// Join the thread.
+            void Join();
+            
             /// Execute the worker thread.
             /**
              * Continually checks for available jobs in the thread pool and executes them.
@@ -20,5 +27,7 @@ namespace Threading {
             
         private:
             ThreadPool& mThreadPool;
+            
+            std::thread* mThread;
     };
 }

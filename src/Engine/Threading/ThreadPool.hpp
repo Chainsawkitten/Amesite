@@ -1,7 +1,7 @@
 #pragma once
 
+#include "Worker.hpp"
 #include <vector>
-#include <thread>
 
 namespace Threading {
     /// Handles a pool of worker threads.
@@ -13,7 +13,13 @@ namespace Threading {
              */
             ThreadPool(std::size_t threads);
             
+            /// Wait for the worker threads to finish.
+            void Wait();
+            
+            /// Wait for jobs to finish, the stop the worker threads.
+            void Stop();
+            
         private:
-            std::vector<std::thread> mWorkers;
+            std::vector<Worker> mWorkers;
     };
 }
