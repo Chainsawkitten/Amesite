@@ -1,8 +1,9 @@
 #include "Scene.hpp"
 
 #include "../Entity/Entity.hpp"
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include "../GameObject/SuperGameObject.hpp"
 #include "../Component/Animation.hpp"
+#include "../Threading/Threading.hpp"
 
 #include <algorithm>
 
@@ -77,9 +78,9 @@ void Scene::UpdateModelMatrices() {
 }
 
 void Scene::ClearKilled() {
-    ClearKilledComponents();
-    ClearKilledEntities();
-    ClearKilledGameObjects();
+    Threading::FrontEndJobs().Add(std::bind(&Scene::ClearKilledComponents, this));
+    Threading::FrontEndJobs().Add(std::bind(&Scene::ClearKilledEntities, this));
+    Threading::FrontEndJobs().Add(std::bind(&Scene::ClearKilledGameObjects, this));
 }
 
 System::ParticleSystem::Particle* Scene::GetParticles() const {
