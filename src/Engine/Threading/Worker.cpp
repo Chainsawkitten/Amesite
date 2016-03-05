@@ -6,7 +6,8 @@
 using namespace Threading;
 
 Worker::Worker(ThreadPool& threadPool) : mThreadPool(threadPool) {
-    mThread = new std::thread(std::bind(Worker::Execute, *this));
+    mFinished = false;
+    mThread = new std::thread(std::bind(&Worker::Execute, this));
 }
 
 void Worker::Join() {
@@ -16,5 +17,5 @@ void Worker::Join() {
 void Worker::Execute() {
     /// @todo Implement worker thread.
     
-    //mFinished = true;
+    mFinished = true;
 }

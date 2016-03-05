@@ -1,5 +1,7 @@
 #pragma once
 
+#include <atomic>
+
 namespace std {
     class thread;
 }
@@ -23,6 +25,8 @@ namespace Threading {
             ThreadPool& mThreadPool;
             
             std::thread* mThread;
+            
+            std::atomic<bool> mFinished;
             
             // Execute the worker thread. Continually checks for available jobs in the thread pool and executes them.
             void Execute();
