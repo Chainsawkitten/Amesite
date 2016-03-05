@@ -109,6 +109,10 @@ class Scene {
         
         // List of all game objects in this scene.
         std::vector<GameObject::SuperGameObject*> mGameObjects;
+        
+        void ClearKilledComponents();
+        void ClearKilledEntities();
+        void ClearKilledGameObjects();
 };
 
 // GetAll<T>

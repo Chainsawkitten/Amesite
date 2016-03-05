@@ -77,7 +77,24 @@ void Scene::UpdateModelMatrices() {
 }
 
 void Scene::ClearKilled() {
-    // Clear killed components.
+    ClearKilledComponents();
+    ClearKilledEntities();
+    ClearKilledGameObjects();
+}
+
+System::ParticleSystem::Particle* Scene::GetParticles() const {
+    return mParticles;
+}
+
+unsigned int Scene::GetParticleCount() const {
+    return mParticleCount;
+}
+
+void Scene::SetParticleCount(unsigned int particleCount) {
+    mParticleCount = particleCount;
+}
+
+void Scene::ClearKilledComponents() {
     std::size_t i;
     for (auto& componentIt : mComponents) {
         i = 0;
@@ -91,9 +108,10 @@ void Scene::ClearKilled() {
             }
         }
     }
-    
-    // Clear killed entities.
-    i = 0;
+}
+
+void Scene::ClearKilledEntities() {
+    std::size_t i = 0;
     while (i < mEntities.size()) {
         if (mEntities[i]->IsKilled()) {
             delete mEntities[i];
@@ -103,9 +121,10 @@ void Scene::ClearKilled() {
             ++i;
         }
     }
-    
-    // Clear killed game objects.
-    i = 0;
+}
+
+void Scene::ClearKilledGameObjects() {
+    std::size_t i = 0;
     while (i < mGameObjects.size()) {
         if (mGameObjects[i]->IsKilled()) {
             delete mGameObjects[i];
@@ -115,16 +134,4 @@ void Scene::ClearKilled() {
             ++i;
         }
     }
-}
-
-System::ParticleSystem::Particle* Scene::GetParticles() const {
-    return mParticles;
-}
-
-unsigned int Scene::GetParticleCount() const {
-    return mParticleCount;
-}
-
-void Scene::SetParticleCount(unsigned int particleCount) {
-    mParticleCount = particleCount;
 }
