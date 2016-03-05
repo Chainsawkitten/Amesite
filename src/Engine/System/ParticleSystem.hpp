@@ -60,7 +60,7 @@ namespace System {
              * @param scene Scene to update.
              * @param time Time since last frame (in seconds).
              */
-             void Update(Scene& scene, double time);
+             void Update(Scene* scene, double time);
              
         private:
             static ParticleSystem* mActiveInstance;
@@ -72,10 +72,10 @@ namespace System {
             ParticleSystem();
             
             // Decide where the emitter should emit before rendering.
-            void EmitParticle(Scene& scene, Component::ParticleEmitter* emitter);
+            void EmitParticle(Scene* scene, Component::ParticleEmitter* emitter);
             
             // Emit a particle at the given position.
-            void EmitParticle(Scene& scene, glm::vec3 position, Component::ParticleEmitter* emitter);
+            void EmitParticle(Scene* scene, glm::vec3 position, Component::ParticleEmitter* emitter);
     };
     
     /// Get currently active ParticleSystem.

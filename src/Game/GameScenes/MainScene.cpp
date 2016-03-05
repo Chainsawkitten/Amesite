@@ -193,10 +193,13 @@ void MainScene::Update(float deltaTime) {
     UpdateModelMatrices();
 
     // ParticleSystem
-    System::Particle().Update(*this, deltaTime);
+    Threading::FrontEndJobs().Add(std::bind(&System::ParticleSystem::Update, &System::Particle(), this, deltaTime));
     
     // Check collisions.
     mCollisionSystem.Update(*this);
+    
+    // Wait for particle system to finish updating before potentially adding more emitters.
+    Threading::FrontEndJobs().Wait();
 
     // Update enemy spawning
     mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);

@@ -192,7 +192,7 @@ void JonathanScene::Update(float deltaTime) {
     UpdateModelMatrices();
 
     // ParticleSystem
-    System::Particle().Update(*this, deltaTime);
+    System::Particle().Update(this, deltaTime);
 
     // Check collisions.
     mCollisionSystem.Update(*this);

@@ -30,16 +30,16 @@ unsigned int ParticleSystem::MaxParticleCount() const {
     return mMaxParticleCount;
 }
 
-void ParticleSystem::Update(Scene& scene, double time) {
-    for (unsigned int i = 0; i < scene.GetParticleCount(); ++i) {
-        scene.GetParticles()[i].life += static_cast<float>(time);
-        if (scene.GetParticles()[i].life >= scene.GetParticles()[i].lifetime) {
-            scene.GetParticles()[i--] = scene.GetParticles()[scene.GetParticleCount() - 1];
-            scene.SetParticleCount(scene.GetParticleCount() - 1);
+void ParticleSystem::Update(Scene* scene, double time) {
+    for (unsigned int i = 0; i < scene->GetParticleCount(); ++i) {
+        scene->GetParticles()[i].life += static_cast<float>(time);
+        if (scene->GetParticles()[i].life >= scene->GetParticles()[i].lifetime) {
+            scene->GetParticles()[i--] = scene->GetParticles()[scene->GetParticleCount() - 1];
+            scene->SetParticleCount(scene->GetParticleCount() - 1);
         }
     }
     
-    std::vector<Component::ParticleEmitter*> particleEmitters = scene.GetAll<Component::ParticleEmitter>();
+    std::vector<Component::ParticleEmitter*> particleEmitters = scene->GetAll<Component::ParticleEmitter>();
     for (Component::ParticleEmitter* emitter : particleEmitters) {
         if (emitter->IsKilled())
             continue;
@@ -67,7 +67,7 @@ ParticleSystem& System::Particle() {
     return ParticleSystem::GetActiveInstance();
 }
 
-void ParticleSystem::EmitParticle(Scene& scene, Component::ParticleEmitter* emitter) {
+void ParticleSystem::EmitParticle(Scene* scene, Component::ParticleEmitter* emitter) {
     Component::Transform* transform = emitter->entity->GetComponent<Component::Transform>();
     if (transform != nullptr) {
         glm::vec3 position;
@@ -82,8 +82,8 @@ void ParticleSystem::EmitParticle(Scene& scene, Component::ParticleEmitter* emit
     }
 }
 
-void ParticleSystem::EmitParticle(Scene& scene, glm::vec3 position, Component::ParticleEmitter* emitter) {
-    if (scene.GetParticleCount() < mMaxParticleCount) {
+void ParticleSystem::EmitParticle(Scene* scene, glm::vec3 position, Component::ParticleEmitter* emitter) {
+    if (scene->GetParticleCount() < mMaxParticleCount) {
         Particle particle;
         
         particle.worldPos = position;
@@ -106,7 +106,7 @@ void ParticleSystem::EmitParticle(Scene& scene, glm::vec3 position, Component::P
         particle.velocity.y = emitter->particleType.minVelocity.y + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.y - emitter->particleType.minVelocity.y));
         particle.velocity.z = emitter->particleType.minVelocity.z + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.z - emitter->particleType.minVelocity.z));
         
-        scene.GetParticles()[scene.GetParticleCount()] = particle;
-        scene.SetParticleCount(scene.GetParticleCount() + 1);
+        scene->GetParticles()[scene->GetParticleCount()] = particle;
+        scene->SetParticleCount(scene->GetParticleCount() + 1);
     }
 }
