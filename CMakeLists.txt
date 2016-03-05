@@ -308,6 +308,7 @@ set(ENGINE_SRCS
         src/Engine/PostProcessing/GlowBlurFilter.cpp
         src/Engine/GameObject/SuperGameObject.cpp
         src/Engine/Threading/Worker.cpp
+        src/Engine/Threading/ThreadPool.cpp
     )
 
 set(ENGINE_HEADERS
@@ -372,6 +373,7 @@ set(ENGINE_HEADERS
         src/Engine/PostProcessing/GlowBlurFilter.hpp
         src/Engine/GameObject/SuperGameObject.hpp
         src/Engine/Threading/Worker.hpp
+        src/Engine/Threading/ThreadPool.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
