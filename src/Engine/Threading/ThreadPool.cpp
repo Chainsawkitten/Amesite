@@ -15,7 +15,8 @@ ThreadPool::~ThreadPool() {
 }
 
 void ThreadPool::Wait() {
-    /// @todo Wait for worker threads to finish their jobs.
+    for (std::size_t i = 0; i < mWorkers.size(); ++i)
+        mWorkers[i]->Wait();
 }
 
 void ThreadPool::Stop() {
