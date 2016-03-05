@@ -1,21 +1,12 @@
 #include "Worker.hpp"
 
+#include "ThreadPool.hpp"
 #include <thread>
-#include <functional>
 
 using namespace Threading;
 
 Worker::Worker(ThreadPool& threadPool) : mThreadPool(threadPool) {
-    mFinished = false;
     mThread = new std::thread(std::bind(&Worker::Execute, this));
-}
-
-void Worker::Wait() {
-    std::unique_lock<std::mutex> lock(mFinishedMutex);
-    
-    while (!mFinished) {
-        mFinishedCondition.wait(lock);
-    }
 }
 
 void Worker::Join() {
@@ -23,9 +14,29 @@ void Worker::Join() {
 }
 
 void Worker::Execute() {
-    /// @todo Implement worker thread.
-    
-    // Signal that we've finished all our jobs (for now).
-    mFinished = true;
-    mFinishedCondition.notify_all();
+    std::function<void()> job;
+    while (true) {
+        { // Aquire mutex lock.
+            std::unique_lock<std::mutex> lock(mThreadPool.mJobMutex);
+            
+            while (!mThreadPool.mStop && mThreadPool.mJobs.empty()) {
+                // Wait for new job to become available.
+                mThreadPool.mJobCondition.wait(lock);
+            }
+            
+            if (mThreadPool.mStop)
+                return;
+            
+            // Get next job.
+            job = mThreadPool.mJobs.front();
+            mThreadPool.mJobs.pop();
+        } // Release mutex lock.
+        
+        // Perform the job.
+        job();
+        
+        // Signal that we finished the job.
+        --mThreadPool.mUnfinishedJobs;
+        mThreadPool.mFinishedCondition.notify_all();
+    }
 }
