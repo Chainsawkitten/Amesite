@@ -171,8 +171,6 @@ void MenuScene::Update(float deltaTime) {
     if (Input()->Triggered(InputHandler::ANYONE, InputHandler::SHOOT))
         mMenuOptions[mSelected]->callback();
     
-    Threading::FrontEndJobs().Wait();
-    
     // Render.
     glViewport(0, 0, static_cast<int>(screenSize.x), static_cast<int>(screenSize.y));
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());

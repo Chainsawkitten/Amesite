@@ -28,6 +28,8 @@ void SpawnerSystem::Update(Scene& scene, float deltaTime) {
         if (length > 0)
             Threading::FrontEndJobs().Add(std::bind(&SpawnerSystem::UpdatePart, this, std::ref(spawnerVector), deltaTime, begin, length));
     }
+    
+    Threading::FrontEndJobs().Wait();
 }
 
 void SpawnerSystem::UpdatePart(std::vector<Component::Spawner*>& spawners, float deltaTime, std::size_t begin, std::size_t length) {

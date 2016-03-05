@@ -81,6 +81,7 @@ void Scene::ClearKilled() {
     Threading::FrontEndJobs().Add(std::bind(&Scene::ClearKilledComponents, this));
     Threading::FrontEndJobs().Add(std::bind(&Scene::ClearKilledEntities, this));
     Threading::FrontEndJobs().Add(std::bind(&Scene::ClearKilledGameObjects, this));
+    Threading::FrontEndJobs().Wait();
 }
 
 System::ParticleSystem::Particle* Scene::GetParticles() const {
