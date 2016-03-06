@@ -7,6 +7,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "../Threading/Threading.hpp"
+
 using namespace System;
 
 AnimationSystem::AnimationSystem() {
@@ -43,14 +45,24 @@ glm::vec3 AnimationSystem::Slerp(glm::vec3 p0, glm::vec3 p1, float t) {
 }
 
 void AnimationSystem::Update(Scene& scene, float deltaTime) {
-    std::vector<Component::Animation*> animations = scene.GetAll<Component::Animation>();
-    for (auto animationComponent : animations) {
+    std::vector<Component::Animation*>& animations = scene.GetAll<Component::Animation>();
+    
+    mDeltaTime = deltaTime;
+    Threading::ParallelFor(&AnimationSystem::UpdatePart, this, animations);
+    Threading::FrontEndJobs().Wait();
+}
+
+void AnimationSystem::UpdatePart(std::vector<Component::Animation*>& animations, std::size_t begin, std::size_t length) {
+    for (std::size_t i=begin; i < begin+length; ++i) {
+        Component::Animation* animationComponent = animations[i];
+        
         if (animationComponent->IsKilled())
             continue;
         
         Component::Transform* transformComponent = animationComponent->entity->GetComponent<Component::Transform>();
         if (transformComponent == nullptr)
-            return;
+            continue;
+        
         Component::Animation::AnimationClip* animationClip = animationComponent->GetActiveAnimationClip();
         if (animationClip != nullptr && !animationClip->pause) {
             std::vector<Component::Animation::KeyFrame>* keyFrameVector = &animationClip->keyFrameVector;
@@ -60,7 +72,7 @@ void AnimationSystem::Update(Scene& scene, float deltaTime) {
                 Component::Animation::KeyFrame* oldKeyFrame = &keyFrameVector->at((animationClip->activeKeyFrame - 1) % keyFrameVector->size());
                 Component::Animation::KeyFrame* newKeyFrame = &keyFrameVector->at(animationClip->activeKeyFrame);
 
-                animationClip->animationTime += deltaTime * animationClip->speed;
+                animationClip->animationTime += mDeltaTime * animationClip->speed;
                 float interpolation;
                 if (newKeyFrame->slerpTime)
                     interpolation = SlerpTime(animationClip->animationTime, newKeyFrame->time);

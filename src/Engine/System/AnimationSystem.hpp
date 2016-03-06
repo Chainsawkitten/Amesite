@@ -1,9 +1,13 @@
 #pragma once
 
+#include <glm/glm.hpp>
+#include <vector>
+
 class Entity;
 class Scene;
-
-#include <glm/glm.hpp>
+namespace Component {
+    class Animation;
+}
 
 namespace System {
     /// %System to animate.
@@ -37,5 +41,10 @@ namespace System {
 
             // Spherical linear interpolation for vectors.
             glm::vec3 Slerp(glm::vec3 p0, glm::vec3 p1, float t);
+            
+            float mDeltaTime;
+            
+            // Update part of the component vector.
+            void UpdatePart(std::vector<Component::Animation*>& animations, std::size_t begin, std::size_t length);
     };
 }

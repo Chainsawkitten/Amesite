@@ -17,7 +17,7 @@ PhysicsSystem::~PhysicsSystem() {
 }
 
 void PhysicsSystem::Update(Scene& scene, float deltaTime) {
-    std::vector<Component::Physics*> physicsObjects = scene.GetAll<Component::Physics>();
+    std::vector<Component::Physics*>& physicsObjects = scene.GetAll<Component::Physics>();
     
     mDeltaTime = deltaTime;
     Threading::ParallelFor(&PhysicsSystem::UpdatePart, this, physicsObjects);
