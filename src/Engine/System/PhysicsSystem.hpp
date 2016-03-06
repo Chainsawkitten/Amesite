@@ -1,8 +1,12 @@
 #pragma once
 
-class Scene;
-
 #include <glm/glm.hpp>
+#include <vector>
+
+class Scene;
+namespace Component {
+    class Physics;
+}
 
 namespace System {
     /// %System to update the physics of a scene.
@@ -22,10 +26,15 @@ namespace System {
             void Update(Scene& scene, float deltaTime);
             
         private:
-            /// Gravity (in meter/secound)
-            /**
+            // Gravity (in meter/second)
+            /*
              * Default: 0.f, -9.82.f, 0.f
              */
             glm::vec3 mGravity;
+            
+            float mDeltaTime;
+            
+            // Update part of the component vector.
+            void UpdatePart(std::vector<Component::Physics*>& physics, std::size_t begin, std::size_t length);
         };
 }
