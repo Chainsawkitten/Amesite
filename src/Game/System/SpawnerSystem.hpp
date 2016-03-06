@@ -25,7 +25,9 @@ namespace System {
             void Update(Scene& scene, float deltaTime);
             
         private:
+            float mDeltaTime;
+            
             // Update part of the component vector.
-            void UpdatePart(std::vector<Component::Spawner*>& spawners, float deltaTime, std::size_t begin, std::size_t length);
+            void UpdatePart(std::vector<Component::Spawner*>& spawners, std::size_t begin, std::size_t length);
     };
 }
