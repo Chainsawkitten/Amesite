@@ -111,7 +111,8 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f)));
     
     // Create bosses and pillars
-    for (int i = 0; i < bossPositions.size(); i++) {
+    int numberOfBossPositions = bossPositions.size();
+    for (int i = 0; i < numberOfBossPositions; i++) {
         mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[i].x, 0.f, mCave->scaleFactor*bossPositions[i].y)));
         mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(mPortalPosition.x - 15.f + 15.f * i, -8.f, playerStartZ + 25.f - 2.f * i), mBossVector[i]->GetPosition()));
         mNoSpawnRooms.push_back(glm::vec3(bossPositions[i].x, 0.f, bossPositions[i].y));
@@ -227,7 +228,8 @@ void MainScene::Update(float deltaTime) {
     //If all players are disabled, respawn them.
     mCheckpointSystem.Update(deltaTime);
 
-    for (int i = 0; i < mBossVector.size(); i++) {
+    int bossVectorSize = mBossVector.size();
+    for (int i = 0; i < bossVectorSize; i++) {
         if (mBossVector[i] != nullptr)
             if (mBossVector[i]->GetHealth() < 0.01f) {
                 mBossVector[i]->Kill();
@@ -250,7 +252,7 @@ void MainScene::Update(float deltaTime) {
 
     // Glow.
     mGlowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
-    int blurAmount = 5;
+    int blurAmount = 1;
     for (int i = 0; i < blurAmount; ++i) {
         mGlowBlurFilter->SetHorizontal(true);
         mPostProcessing->ApplyFilter(mGlowBlurFilter);
