@@ -120,7 +120,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLeftSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBarrel;
     mLeftSpawnNode->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, 10.f);
     mLeftSpawnNode->AddComponent<Component::Animation>();
-    mLeftSpawnNode->AddComponent<Component::Spawner>()->delay = 0.5f;
+    mLeftSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
     mLeftSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
     mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     Component::SoundSource* sound = mLeftSpawnNode->AddComponent<Component::SoundSource>();
@@ -148,7 +148,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mRightSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBarrel;
     mRightSpawnNode->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, 10.f);
     mRightSpawnNode->AddComponent<Component::Animation>();
-    mRightSpawnNode->AddComponent<Component::Spawner>()->delay = 0.5f;
+    mRightSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
     mRightSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
     mRightSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
 
