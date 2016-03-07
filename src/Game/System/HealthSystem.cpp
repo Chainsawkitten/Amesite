@@ -10,7 +10,6 @@
 #include "../Util/GameEntityFactory.hpp"
 
 #include <Threading/Threading.hpp>
-#include <Util/Log.hpp>
 
 using namespace System;
 
@@ -22,8 +21,6 @@ HealthSystem::~HealthSystem() {
 
 void HealthSystem::Update(Scene& scene, float deltaTime) {
     std::vector<Component::Health*>& healthComponents = scene.GetAll<Component::Health>();
-    
-    Log() << "Health system\n";
     
     mDeltaTime = deltaTime;
     Threading::ParallelFor(&HealthSystem::UpdatePart, this, healthComponents);
