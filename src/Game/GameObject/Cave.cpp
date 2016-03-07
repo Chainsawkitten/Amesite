@@ -215,7 +215,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
     glm::vec3 n;
     
     n = PointCollide(transform->CalculateWorldPosition() + height + width, velocity, deltaTime);
-    float bounce = 10.f;
+    float bounce = 2.f;
 
     if (n != glm::vec3(0, 0, 0)) {
 
