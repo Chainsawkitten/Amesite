@@ -74,7 +74,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     map->GetComponent<Component::Mesh>()->geometry = mapGeometry;
     map->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
-    map->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*static_cast<float>(mWidth) / 2.f - scaleFactor / 2.f, 0.f, scaleFactor*static_cast<float>(mWidth) / 2.f - scaleFactor / 2.f));
+    map->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*static_cast<float>(mWidth) / 2.f - scaleFactor / 2.f, 3.f, scaleFactor*static_cast<float>(mWidth) / 2.f - scaleFactor / 2.f));
     map->GetComponent<Component::Transform>()->scale = glm::vec3(scaleFactor, 5.f, scaleFactor);
     map->GetComponent<Component::Material>()->SetDiffuse("Resources/wall_gray.png");
     map->GetComponent<Component::Material>()->SetSpecular("Resources/wall_gray.png");
