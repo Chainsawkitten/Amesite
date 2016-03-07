@@ -20,7 +20,6 @@
 #include "../Util/CaveGenerator.hpp"
 
 #include "../Util/ControlSchemes.hpp"
-#include "Util\Log.hpp"
 
 using namespace GameObject;
 
