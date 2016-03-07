@@ -30,15 +30,12 @@ namespace Threading {
 
 template<typename M, typename O, typename T>
 void Threading::ParallelFor(M method, O* object, std::vector<T>& list) {
-    Log () << "Parallel for (list size " << std::to_string(list.size()) << "):\n";
     unsigned int threads = GetParallelCount();
     std::size_t length = list.size() / threads;
     for (unsigned int i=0; i < threads; ++i) {
         std::size_t begin = i * length;
         if (i == threads - 1)
             length = list.size() - begin;
-        
-        Log() << "Task " << std::to_string(i) << ": " << std::to_string(begin) << ", " << std::to_string(length) << "\n";
         
         if (length > 0)
             Threading::FrontEndJobs().Add(std::bind(method, object, std::ref(list), begin, length));

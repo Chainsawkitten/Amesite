@@ -18,13 +18,15 @@ ThreadPool::~ThreadPool() {
 }
 
 void ThreadPool::Add(std::function<void()> job) {
-    {
-        std::unique_lock<std::mutex> lock(mJobMutex);
-        mJobs.push(job);
-        ++mUnfinishedJobs;
-    }
+    std::unique_lock<std::mutex> lock(mJobMutex, std::defer_lock);
+    lock.lock();
+    
+    mJobs.push(job);
+    ++mUnfinishedJobs;
     
     mJobCondition.notify_one();
+    
+    lock.unlock();
 }
 
 void ThreadPool::Wait() {

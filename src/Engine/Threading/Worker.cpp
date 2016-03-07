@@ -15,31 +15,31 @@ void Worker::Join() {
 
 void Worker::Execute() {
     std::function<void()> job;
+    std::unique_lock<std::mutex> lock(mThreadPool.mJobMutex, std::defer_lock);
+    
     while (true) {
-        {
-            std::unique_lock<std::mutex> lock(mThreadPool.mJobMutex);
-            
-            while (!mThreadPool.mStop && mThreadPool.mJobs.empty()) {
-                // Wait for new job to become available.
-                mThreadPool.mJobCondition.wait(lock);
-            }
-            
-            if (mThreadPool.mStop)
-                return;
-            
-            // Get next job.
-            job = mThreadPool.mJobs.front();
-            mThreadPool.mJobs.pop();
-        }
+        lock.lock();
+        
+        // Wait for new job to become available.
+        while (!mThreadPool.mStop && mThreadPool.mJobs.empty())
+            mThreadPool.mJobCondition.wait(lock);
+        
+        if (mThreadPool.mStop)
+            return;
+        
+        // Get next job.
+        job = mThreadPool.mJobs.front();
+        mThreadPool.mJobs.pop();
+        
+        lock.unlock();
         
         // Perform the job.
         job();
         
         // Signal that we finished the job.
-        {
-            std::unique_lock<std::mutex> lock(mThreadPool.mJobMutex);
-            --mThreadPool.mUnfinishedJobs;
-        }
+        lock.lock();
+        --mThreadPool.mUnfinishedJobs;
         mThreadPool.mFinishedCondition.notify_all();
+        lock.unlock();
     }
 }
