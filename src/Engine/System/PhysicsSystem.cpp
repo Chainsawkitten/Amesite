@@ -6,6 +6,7 @@
 #include "../Component/Physics.hpp"
 
 #include "../Threading/Threading.hpp"
+#include "../Util/Log.hpp"
 
 using namespace System;
 
@@ -18,6 +19,8 @@ PhysicsSystem::~PhysicsSystem() {
 
 void PhysicsSystem::Update(Scene& scene, float deltaTime) {
     std::vector<Component::Physics*>& physicsObjects = scene.GetAll<Component::Physics>();
+    
+    Log() << "Physics\n";
     
     mDeltaTime = deltaTime;
     Threading::ParallelFor(&PhysicsSystem::UpdatePart, this, physicsObjects);

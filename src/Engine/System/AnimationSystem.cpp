@@ -8,6 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "../Threading/Threading.hpp"
+#include "../Util/Log.hpp"
 
 using namespace System;
 
@@ -46,6 +47,8 @@ glm::vec3 AnimationSystem::Slerp(glm::vec3 p0, glm::vec3 p1, float t) {
 
 void AnimationSystem::Update(Scene& scene, float deltaTime) {
     std::vector<Component::Animation*>& animations = scene.GetAll<Component::Animation>();
+    
+    Log() << "Animation system\n";
     
     mDeltaTime = deltaTime;
     Threading::ParallelFor(&AnimationSystem::UpdatePart, this, animations);

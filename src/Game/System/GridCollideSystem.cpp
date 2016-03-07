@@ -7,6 +7,7 @@
 #include "../Component/GridCollide.hpp"
 
 #include <Threading/Threading.hpp>
+#include <Util/Log.hpp>
 
 using namespace System;
 
@@ -18,6 +19,8 @@ GridCollideSystem::~GridCollideSystem() {
 
 void GridCollideSystem::Update(Scene& scene, float deltaTime, GameObject::Cave& cave) {
     std::vector<Component::GridCollide*>& gridCollideVector = scene.GetAll<Component::GridCollide>();
+    
+    Log() << "Grid collide\n";
     
     mDeltaTime = deltaTime;
     mCave = &cave;

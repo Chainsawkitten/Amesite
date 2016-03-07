@@ -6,6 +6,7 @@
 
 #include "../Component/Spawner.hpp"
 #include <Threading/Threading.hpp>
+#include <Util/Log.hpp>
 
 using namespace System;
 
@@ -17,6 +18,8 @@ SpawnerSystem::~SpawnerSystem() {
 
 void SpawnerSystem::Update(Scene& scene, float deltaTime) {
     std::vector<Component::Spawner*>& spawnerVector = scene.GetAll<Component::Spawner>();
+    
+    Log() << "Spawner\n";
     
     mDeltaTime = deltaTime;
     Threading::ParallelFor(&SpawnerSystem::UpdatePart, this, spawnerVector);

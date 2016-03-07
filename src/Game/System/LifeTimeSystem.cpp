@@ -10,6 +10,7 @@
 #include "../Component/LifeTime.hpp"
 
 #include <Threading/Threading.hpp>
+#include <Util/Log.hpp>
 
 using namespace System;
 
@@ -21,6 +22,8 @@ LifeTimeSystem::~LifeTimeSystem() {
 
 void LifeTimeSystem::Update(Scene& scene, float deltaTime) {
     std::vector<Component::LifeTime*>& lifeTimes = scene.GetAll<Component::LifeTime>();
+    
+    Log() << "Life time\n";
     
     mDeltaTime = deltaTime;
     Threading::ParallelFor(&LifeTimeSystem::UpdatePart, this, lifeTimes);
