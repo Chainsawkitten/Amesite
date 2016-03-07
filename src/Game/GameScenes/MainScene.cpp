@@ -187,19 +187,19 @@ void MainScene::Update(float deltaTime) {
 
     // PhysicsSystem.
     mPhysicsSystem.Update(*this, deltaTime);
-    
+
     // Updates model matrices for this frame.
     UpdateModelMatrices();
 
     // ParticleSystem
     System::Particle().Update(*this, deltaTime);
-    
+
     // Check collisions.
     mCollisionSystem.Update(*this);
 
     // Update enemy spawning
     mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);
-    
+
     // Check grid collisions.
     mGridCollideSystem.Update(*this, deltaTime, *mCave);
 
@@ -208,10 +208,10 @@ void MainScene::Update(float deltaTime) {
 
     // Update reflection
     mReflectSystem.Update(*this, deltaTime);
-    
+
     // Update damage
     mDamageSystem.Update(*this);
-    
+
     // Update lifetimes
     mLifeTimeSystem.Update(*this, deltaTime);
     
@@ -220,7 +220,7 @@ void MainScene::Update(float deltaTime) {
     
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
-    
+
     // Update game logic
     mMainCamera->UpdateRelativePosition(mPlayers);
 
@@ -247,28 +247,28 @@ void MainScene::Update(float deltaTime) {
 
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
-    
+
     // Glow.
     mGlowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
     int blurAmount = 5;
-    for (int i=0; i<blurAmount; ++i) {
+    for (int i = 0; i < blurAmount; ++i) {
         mGlowBlurFilter->SetHorizontal(true);
         mPostProcessing->ApplyFilter(mGlowBlurFilter);
         mGlowBlurFilter->SetHorizontal(false);
         mPostProcessing->ApplyFilter(mGlowBlurFilter);
     }
     mPostProcessing->ApplyFilter(mGlowFilter);
-    
+
     // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
         mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
         mPostProcessing->ApplyFilter(mFxaaFilter);
     }
-    
+
     // Gamma correction.
     mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
     mPostProcessing->ApplyFilter(mGammaCorrectionFilter);
-    
+
     // Render to back buffer.
     mPostProcessing->Render();
 
