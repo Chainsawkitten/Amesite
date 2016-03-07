@@ -134,8 +134,8 @@ MainScene::MainScene() {
     Entity* dirLight = CreateEntity();
     dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
     dirLight->AddComponent<Component::DirectionalLight>();
-    dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.01f, 0.01f, 0.01f);
-    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.24f;
+    dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.0000001f, 0.0000001f, 0.0000001f);
+    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.005f;
     
     mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     mFxaaFilter = new FXAAFilter();

@@ -55,7 +55,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
     MSquare** mSquares = new MSquare*[mDataDimensions.x - 1];
     mTypeMap = new int*[mDataDimensions.x - 1];
 
-    // Initialzation
+    // Initialization.
     for (unsigned int i = 0; i < mDataDimensions.x; i++) {
         controlNodes[i] = new ControlNode[mDataDimensions.y];
     }
@@ -64,15 +64,13 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
         mTypeMap[j] = new int[mDataDimensions.y - 1];
     }
 
-    // Node creation for marching squares
+    // Node creation for marching squares.
     for (unsigned int x = 0; x < mDataDimensions.x; x++) {
         for (unsigned int y = 0; y < mDataDimensions.y; y++) {
             glm::vec3 pos = glm::vec3(-mMapWidth / 2.f + x * squareSize + squareSize / 2.f, 0.f, -mMapHeight / 2.f + y * squareSize + squareSize / 2.f);
             controlNodes[x][y] = CreateControlNode(pos, data[y][x], squareSize, glm::uvec2(x, y));
         }
     }
-
-    
 
     // Node creation for marching squares
     for (unsigned int x = 0; x < mDataDimensions.x - 1; x++) {
@@ -89,7 +87,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
         }
     }
 
-    // Wall mesh generation
+    // Wall mesh generation.
     CreateWallMesh();
 
     // Initialize index and vertex data and copy from temp.
@@ -182,7 +180,7 @@ void Map::CreateMesh(MeshNode* node, unsigned int size) {
             Vertex vertex;
             vertex.position = node[i].mPosition;
             vertex.normal = glm::vec3(0.f, 1.f, 0.f);
-            vertex.tangent = glm::vec3(0.0f, 0.0f, -1.0f);
+            vertex.tangent = glm::vec3(1.0f, 0.0f, 0.0f);
             vertex.textureCoordinate = node[i].mTexCoords;
             mTempVertexData.push_back(vertex);
             mVertexNr++;
@@ -233,6 +231,12 @@ void Map::CreateWallMesh() {
             vertex[1].normal = normal;
             vertex[2].normal = normal;
             vertex[3].normal = normal;
+            
+            /// @todo Not actually generated tangents.
+            vertex[0].tangent = glm::vec3(0.f, -1.0f, 0.f);
+            vertex[1].tangent = glm::vec3(0.f, -1.0f, 0.f);
+            vertex[2].tangent = glm::vec3(0.f, -1.0f, 0.f);
+            vertex[3].tangent = glm::vec3(0.f, -1.0f, 0.f);
 
 
             mTempVertexData.push_back(vertex[0]);

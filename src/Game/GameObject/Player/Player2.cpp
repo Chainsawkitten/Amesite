@@ -93,15 +93,16 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mLight = CreateEntity();
     mLight->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
     mLight->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
+    mLight->GetComponent<Component::RelativeTransform>()->pitch = 15.f;
     mLight->AddComponent<Component::Animation>();
-    mLight->AddComponent<Component::SpotLight>()->coneAngle = 45.f;
-    mLight->GetComponent<Component::SpotLight>()->attenuation = 0.05f;
+    mLight->AddComponent<Component::SpotLight>()->coneAngle = 20.f;
+    mLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
 
     mLeftTurret = CreateEntity();
     mLeftTurret->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
     mLeftTurret->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
     mLeftTurret->AddComponent<Component::Animation>();
-    mLeftTurret->AddComponent<Component::Spawner>()->delay = 0.25f;
+    mLeftTurret->AddComponent<Component::Spawner>()->delay = 0.5f;
     mLeftTurret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
     mLeftTurret->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
     Component::SoundSource* sound = mLeftTurret->AddComponent<Component::SoundSource>();
@@ -113,36 +114,58 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mRightTurret->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 13);
     mRightTurret->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
     mRightTurret->AddComponent<Component::Animation>();
-    mRightTurret->AddComponent<Component::Spawner>()->delay = 0.25f;
+    mRightTurret->AddComponent<Component::Spawner>()->delay = 0.5f;
     mRightTurret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
     mRightTurret->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
 
     mEngineModel = Resources().CreateOBJModel("Resources/player2_engine.obj");
     mPropellerModel = Resources().CreateOBJModel("Resources/player2_propeller.obj");
 
+    Entity* pointLight;
+
     mFrontEngineLeft = CreateEntity();
     AddEngine(mFrontEngineLeft, glm::vec3(5.5f, -1.f, 5.0f), glm::vec3(1.f, 1.f, 1.f) * 0.6f);
     mFrontPropellerLeft = CreateEntity();
     mFrontPropellerLeft->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
     AddPropeller(mFrontPropellerLeft, glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f) * 1.f);
+    pointLight = CreateEntity();
+    pointLight->AddComponent<Component::PointLight>();
+    pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
+    pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
+    pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
 
     mFrontEngineRight = CreateEntity();
     AddEngine(mFrontEngineRight, glm::vec3(-5.5f, -1.f, 5.0f), glm::vec3(1.f, 1.f, 1.f) * 0.6f);
     mFrontPropellerRight = CreateEntity();
     mFrontPropellerRight->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineRight;
     AddPropeller(mFrontPropellerRight, glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f) * 1.f);
+    pointLight = CreateEntity();
+    pointLight->AddComponent<Component::PointLight>();
+    pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
+    pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineRight;
+    pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
 
     mBackEngineLeft = CreateEntity();
     AddEngine(mBackEngineLeft, glm::vec3(7.f, -1.f, -0.5f), glm::vec3(1.f, 1.f, 1.f) * 1.f);
     mBackPropellerLeft = CreateEntity();
     mBackPropellerLeft->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineLeft;
     AddPropeller(mBackPropellerLeft, glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f) * 1.f);
+    //pointLight = CreateEntity();
+    //pointLight->AddComponent<Component::PointLight>();
+    //pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
+    //pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineLeft;
+    //pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
 
     mBackEngineRight = CreateEntity();
     AddEngine(mBackEngineRight, glm::vec3(-7.f, -1.f, -0.5f), glm::vec3(1.f, 1.f, 1.f) * 1.f);
     mBackPropellerRight = CreateEntity();
     mBackPropellerRight->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineRight;
     AddPropeller(mBackPropellerRight, glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f) * 1.f);
+    //pointLight = CreateEntity();
+    //pointLight->AddComponent<Component::PointLight>();
+    //pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
+    //pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineRight;
+    //pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
 }
 
 Player2::~Player2() {

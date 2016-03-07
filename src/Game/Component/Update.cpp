@@ -10,5 +10,4 @@ Update::~Update() {
 }
 
 void Update::mEmptyFunction() {
-    bool a = true;
 }

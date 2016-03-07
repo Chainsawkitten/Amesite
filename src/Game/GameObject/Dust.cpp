@@ -18,10 +18,10 @@ Dust::Dust(Scene* scene) : SuperGameObject(scene) {
     Component::ParticleEmitter* emitter = body->GetComponent<Component::ParticleEmitter>();
 
     emitter->emitterType = Component::ParticleEmitter::CUBOID;
-    emitter->maxEmitTime = 0.15;
-    emitter->minEmitTime = 0.1;
+    emitter->maxEmitTime = 0.15 * 4.f;
+    emitter->minEmitTime = 0.1 * 4.f;
     emitter->lifetime = 0.0;
-    emitter->size = glm::vec3(40.f, 20.f, 40.f);
+    emitter->size = glm::vec3(40.f, 20.f, 40.f) * 2.f;
     emitter->timeToNext = 0.0;
     emitter->particleType.minLifetime = 5.f;
     emitter->particleType.maxLifetime = 7.f;

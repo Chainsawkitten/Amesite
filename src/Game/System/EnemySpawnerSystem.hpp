@@ -26,12 +26,12 @@ namespace System {
 
             /// Update Scene containing entities. Updates AI components.
             /**
-            * @param scene The scene to update.
-            * @param deltaTime Time since last frame (in seconds).
-            * @param cave from where to access data about terrain.
-            * @param players list of players to access their positions.
-            * @param bosses list of bosses to avoid spawning enemies in boss room.
-            */
+             * @param scene The scene to update.
+             * @param deltaTime Time since last frame (in seconds).
+             * @param cave Cave from which to access data about terrain.
+             * @param players List of players to access their positions.
+             * @param noSpawnRooms List of rooms in which no enemies should spawn.
+             */
             void Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms);
 
             ///Returns amount of enemies killed.

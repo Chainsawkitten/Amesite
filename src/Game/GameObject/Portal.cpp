@@ -8,6 +8,7 @@
 #include <Geometry/OBJModel.hpp>
 
 #include <Engine/Component/Transform.hpp>
+#include <Engine/Component/PointLight.hpp>
 #include <Engine/Component/Mesh.hpp>
 #include <Engine/Component/Material.hpp>
 #include <Engine/Component/Physics.hpp>
@@ -34,6 +35,8 @@ Portal::Portal(Scene* scene) : SuperGameObject(scene) {
     idleNode->CreateKeyFrame(glm::vec3(0.1f, -0.1f, -0.1f), 0.f, 0.f, 0.f, 1.5f, false, true);
     idleNode->CreateKeyFrame(glm::vec3(-0.1f, 0.1f, 0.1f), 0.f, 0.f, 0.f, 1.5f, false, true);
     node->GetComponent<Component::Animation>()->Start("idle");
+    node->AddComponent<Component::PointLight>()->attenuation = 0.1f;
+
 }
 
 Portal::~Portal() {
