@@ -200,7 +200,7 @@ glm::vec3 Cave::CellCollide(float xPos, float yPos, int x, int y) {
             break;
         case 15:
             if (yPos <= xPos + 0.5f)
-                return glm::vec3(0, 0, 0);
+                return glm::vec3(-1, -1, -1);
             break;
 
         }
