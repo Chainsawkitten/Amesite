@@ -1,5 +1,7 @@
 #pragma once
 
+class Font;
+
 /// An interactive menu showing different submenus.
 class Menu {
     public:
@@ -23,4 +25,8 @@ class Menu {
         
         /// Render menu options.
         void RenderMenuOptions();
+        
+    private:
+        // Text.
+        Font* mFont;
 };
