@@ -18,8 +18,10 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include "../Util/MainCamera.hpp"
+#include <Util/Input.hpp>
 
 #include "MenuOption.hpp"
+#include <Util/Picking.hpp>
 
 Menu::Menu() {
     // Load font.
@@ -65,7 +67,51 @@ bool Menu::IsActive() const {
 }
 
 void Menu::Update() {
-    /// @todo
+    // Update menu selection.
+    int movement = Input()->Triggered(InputHandler::ANYONE, InputHandler::DOWN) - Input()->Triggered(InputHandler::ANYONE, InputHandler::UP);
+    if (mSelected + movement >= 0 && mSelected + movement < static_cast<int>(mMenuOptions.size()))
+        mSelected += movement;
+    
+    const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
+    
+    Entity& camera = MainCamera::GetInstance().GetMainCamera();
+    glm::mat4 viewMat = camera.GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera.GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 projectionMat = camera.GetComponent<Component::Lens>()->GetProjection(screenSize);
+    glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
+    
+    glm::vec3 cameraPosition = camera.GetComponent<Component::Transform>()->position;
+    glm::vec3 ray(Picking::CreateWorldRay(mouseCoordinates, viewMat, projectionMat));
+    
+    for (std::size_t i=0; i < mMenuOptions.size(); ++i) {
+        // Plane vectors.
+        glm::mat3 invModelMat(glm::transpose(glm::inverse(mMenuOptions[i]->GetModelMatrix())));
+        glm::vec3 normal = glm::normalize(invModelMat * glm::vec3(0.f, 0.f, 1.f));
+        glm::vec3 tangent = glm::normalize(invModelMat * glm::vec3(1.f, 0.f, 0.f));
+        glm::vec3 bitangent = glm::normalize(invModelMat * glm::vec3(0.f, 1.f, 0.f));
+        
+        // Discard if ray and plane are (almost) parallel.
+        float denom = glm::dot(normal, ray);
+        if (denom > -1e-6)
+            continue;
+        
+        glm::vec3 origin = mMenuOptions[i]->position;
+        float length = glm::dot(origin - cameraPosition, normal) / denom;
+        
+        // World position.
+        glm::vec3 position(cameraPosition + length * ray);
+        
+        // Position relative to origin of the plane.
+        glm::vec3 q = position - origin;
+        
+        glm::vec2 planePosition(glm::dot(q, tangent), glm::dot(q, bitangent));
+        
+        if (fabs(planePosition.x) <= mMenuOptions[i]->scale.x * 0.5f && fabs(planePosition.y) <= mMenuOptions[i]->scale.y * 0.5f)
+            mSelected = i;
+    }
+    
+    // Handle pressed menu option.
+    if (Input()->Triggered(InputHandler::ANYONE, InputHandler::SHOOT))
+        mMenuOptions[mSelected]->callback();
 }
 
 void Menu::RenderSelected() {
