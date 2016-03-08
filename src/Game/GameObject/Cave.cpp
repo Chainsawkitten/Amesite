@@ -152,6 +152,17 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mLeftBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
     mLeftBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
 
+    //Set the texture
+    std::string texture = "Resources/wall_gray.png";
+    mTopBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mTopBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mBottomBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mBottomBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mRightBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mRightBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mLeftBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mLeftBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+
 }
 
 Cave::~Cave() {
