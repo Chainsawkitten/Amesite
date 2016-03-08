@@ -1,10 +1,14 @@
 #pragma once
 
+#include <vector>
+#include <glm/glm.hpp>
+
 class Font;
 class ShaderProgram;
 namespace Geometry {
     class Plane;
 }
+class MenuOption;
 
 /// An interactive menu showing different submenus.
 class Menu {
@@ -38,4 +42,9 @@ class Menu {
         Geometry::Plane* mPlane;
         ShaderProgram* mTextShaderProgram;
         ShaderProgram* mSelectedShaderProgram;
+        
+        // Menu options.
+        std::vector<MenuOption*> mMenuOptions;
+        
+        void RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize);
 };

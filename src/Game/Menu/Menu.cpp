@@ -11,6 +11,16 @@
 #include "Text3D.frag.hpp"
 #include "SingleColor3D.frag.hpp"
 
+#include <Entity/Entity.hpp>
+#include <Component/Transform.hpp>
+#include <Component/Lens.hpp>
+#include <Texture/Texture2D.hpp>
+
+#include <glm/gtc/matrix_transform.hpp>
+#include "../Util/MainCamera.hpp"
+
+#include "MenuOption.hpp"
+
 Menu::Menu() {
     // Load font.
     float fontHeight = glm::ceil(MainWindow::GetInstance()->GetSize().y * 0.07f);
@@ -51,4 +61,42 @@ void Menu::RenderSelected() {
 
 void Menu::RenderMenuOptions() {
     /// @todo
+}
+
+void Menu::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize) {
+    // Blending enabled.
+    GLboolean blend = glIsEnabled(GL_BLEND);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    mTextShaderProgram->Use();
+    
+    Entity& camera = MainCamera::GetInstance().GetMainCamera();
+    glm::mat4 viewMat = camera.GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera.GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 projectionMat = camera.GetComponent<Component::Lens>()->GetProjection(screenSize);
+    
+    glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
+    glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
+    
+    glBindVertexArray(mPlane->GetVertexArray());
+    
+    // Texture.
+    glUniform1i(mTextShaderProgram->GetUniformLocation("baseImage"), 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, menuOption->prerenderedText->GetTextureID());
+    
+    glm::mat4 modelMat = menuOption->GetModelMatrix();
+    glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
+    glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
+    glUniformMatrix3fv(mTextShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
+    
+    glUniform3fv(mTextShaderProgram->GetUniformLocation("color"), 1, &glm::vec3(1.f, 1.f, 1.f)[0]);
+    
+    glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+    
+    glUseProgram(0);
+    
+    // Reset blending.
+    if (!blend)
+        glDisable(GL_BLEND);
 }
