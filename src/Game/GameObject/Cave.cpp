@@ -107,10 +107,20 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/ground_sand.png");
     heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/ground_sand.png");
 
+    for (int i = 0; i < mHeight; i++)
+        delete[] floatMap[i];
+    delete[] floatMap;
+
 }
 
 Cave::~Cave() {
+    
+    for (int i = 0; i < mHeight - 1; i++)
+        delete[] mMap[i];
+    delete[] mMap;
+
     delete caveMap;
+
 }
 
 int Cave::GetWidth() const {
@@ -190,7 +200,7 @@ glm::vec3 Cave::CellCollide(float xPos, float yPos, int x, int y) {
             break;
         case 15:
             if (yPos <= xPos + 0.5f)
-                return glm::vec3(0, 0, 0);
+                return glm::vec3(-1, -1, -1);
             break;
 
         }
