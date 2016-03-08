@@ -1,7 +1,6 @@
 #include "SoundSystem.hpp"
 
 #include "../Util/Log.hpp"
-#include <AL/al.h>
 
 #include "../Scene/Scene.hpp"
 #include "../Entity/Entity.hpp"
@@ -10,6 +9,8 @@
 #include "../Component/SoundSource.hpp"
 #include "../Component/Listener.hpp"
 #include "../Audio/SoundBuffer.hpp"
+
+#include "../Threading/Threading.hpp"
 
 using namespace Audio;
 using namespace System;
@@ -66,8 +67,39 @@ void SoundSystem::CheckError(const char* message) {
 
 void SoundSystem::Update(Scene& scene) {
     // Update sound sources.
-    std::vector<Component::SoundSource*> soundComponents = scene.GetAll<Component::SoundSource>();
-    for (Component::SoundSource* sound : soundComponents) {
+    std::vector<Component::SoundSource*>& soundComponents = scene.GetAll<Component::SoundSource>();
+    
+    Threading::ParallelFor(&SoundSystem::UpdatePart, this, soundComponents);
+    
+    // Update listener.
+    std::vector<Component::Listener*> listeners = scene.GetAll<Component::Listener>();
+    for (Component::Listener* listener : listeners) {
+        Entity* entity = listener->entity;
+        Component::Transform* transform = entity->GetComponent<Component::Transform>();
+        if (transform != nullptr) {
+            // Set position
+            glm::vec3 position = soundScale * transform->position;
+            alListener3f(AL_POSITION, position.x, position.y, position.z);
+            CheckError("Couldn't set listener position.");
+            
+            // Set orientation.
+            glm::vec4 forward = glm::inverse(transform->GetWorldOrientation()) * glm::vec4(0.f, 0.f, -1.f, 1.f);
+            glm::vec4 up = glm::inverse(transform->GetWorldOrientation()) * glm::vec4(0.f, 1.f, 0.f, 1.f);
+            ALfloat listenerOri[] = { forward.x, forward.y, forward.z, up.x, up.y, up.z };
+            alListenerfv(AL_ORIENTATION, listenerOri);
+            CheckError("Couldn't set listener orientation.");
+            
+            break;
+        }
+    }
+    
+    Threading::FrontEndJobs().Wait();
+}
+
+void SoundSystem::UpdatePart(std::vector<Component::SoundSource*>& soundSources, std::size_t begin, std::size_t length) {
+    for (std::size_t i=begin; i < begin+length; ++i) {
+        Component::SoundSource* sound = soundSources[i];
+        
         if (sound->IsKilled())
             continue;
         
@@ -117,27 +149,5 @@ void SoundSystem::Update(Scene& scene) {
         }
         
         CheckError("Something went wrong updating a sound source.");
-    }
-    
-    // Update listener.
-    std::vector<Component::Listener*> listeners = scene.GetAll<Component::Listener>();
-    for (Component::Listener* listener : listeners) {
-        Entity* entity = listener->entity;
-        Component::Transform* transform = entity->GetComponent<Component::Transform>();
-        if (transform != nullptr) {
-            // Set position
-            glm::vec3 position = soundScale * transform->position;
-            alListener3f(AL_POSITION, position.x, position.y, position.z);
-            CheckError("Couldn't set listener position.");
-            
-            // Set orientation.
-            glm::vec4 forward = glm::inverse(transform->GetWorldOrientation()) * glm::vec4(0.f, 0.f, -1.f, 1.f);
-            glm::vec4 up = glm::inverse(transform->GetWorldOrientation()) * glm::vec4(0.f, 1.f, 0.f, 1.f);
-            ALfloat listenerOri[] = { forward.x, forward.y, forward.z, up.x, up.y, up.z };
-            alListenerfv(AL_ORIENTATION, listenerOri);
-            CheckError("Couldn't set listener orientation.");
-            
-            break;
-        }
     }
 }

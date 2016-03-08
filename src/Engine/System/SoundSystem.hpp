@@ -1,6 +1,7 @@
 #pragma once
 
 #include <AL/alc.h>
+#include <vector>
 
 class Scene;
 namespace Component {
@@ -63,5 +64,8 @@ namespace System {
             ALCcontext *mContext;
             
             float mVolume;
+            
+            // Update part of the component vector.
+            void UpdatePart(std::vector<Component::SoundSource*>& soundSources, std::size_t begin, std::size_t length);
     };
 }
