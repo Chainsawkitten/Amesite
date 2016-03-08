@@ -275,6 +275,8 @@ void Player1::Deactivate() {
     mLeftSpawnNode->GetComponent<Component::Controller>()->enabled = false;
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = false;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = true;
+    mNode->GetComponent<Component::Physics>()->acceleration = glm::vec3(0, 0, 0);
+
 }
 
 void Player1::AddEnginePartilces(Entity* entity) {
