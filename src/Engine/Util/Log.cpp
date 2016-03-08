@@ -18,7 +18,17 @@ Log& Log::operator <<(int value) {
     return *this;
 }
 
+Log& Log::operator <<(unsigned int value) {
+    fprintf(stderr, "%u", value);
+    return *this;
+}
+
 Log& Log::operator <<(float value) {
+    fprintf(stderr, "%f", value);
+    return *this;
+}
+
+Log& Log::operator <<(double value) {
     fprintf(stderr, "%f", value);
     return *this;
 }

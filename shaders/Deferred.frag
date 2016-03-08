@@ -12,6 +12,7 @@ uniform sampler2D tGlow;
 uniform sampler2D tDepth;
 
 uniform mat4 inverseProjectionMatrix;
+uniform vec2 screenSize;
 
 uniform struct Light {
     vec4 position;
@@ -21,10 +22,6 @@ uniform struct Light {
     float coneAngle;
     vec3 direction;
 } light;
-
-uniform float scale;
-
-in vec2 texCoords;
 
 layout(location = 0) out vec4 fragmentColor;
 layout(location = 1) out vec4 extraOut;
@@ -78,13 +75,15 @@ vec3 reconstructPos(vec2 texCoord, float depth){
 }
 
 void main () {
-    float depth = texture(tDepth, texCoords * scale).r;
+    vec2 texCoords = gl_FragCoord.xy / screenSize;
+    
+    float depth = texture(tDepth, texCoords).r;
     vec3 position = reconstructPos(texCoords, depth);
-    vec3 diffuse = texture(tDiffuse, texCoords * scale).rgb;
-    vec3 normal = texture(tNormals, texCoords * scale).xyz;
-    vec3 specular = texture(tSpecular, texCoords * scale).xyz;
+    vec3 diffuse = texture(tDiffuse, texCoords).rgb;
+    vec3 normal = texture(tNormals, texCoords).xyz;
+    vec3 specular = texture(tSpecular, texCoords).xyz;
     
     fragmentColor = vec4(ApplyLight(diffuse, normalize(normal), position, specular), 1.0);
-    extraOut = vec4(texture(tGlow, texCoords * scale).rgb, 1.0);
+    extraOut = vec4(texture(tGlow, texCoords).rgb, 1.0);
     gl_FragDepth = depth;
 }
