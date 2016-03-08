@@ -38,6 +38,14 @@ Menu::Menu() {
     mSelectedShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
     Resources().FreeShader(vertexShader);
     Resources().FreeShader(fragmentShader);
+    
+    // Define menu options.
+    mMenuOptions.push_back(new MenuOption(mFont, "START GAME", glm::vec3(0.f, 1.0f, 2.5f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.8f, 2.6f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, 0.6f, 2.7f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    
+    const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
+    glViewport(0, 0, static_cast<int>(screenSize.x), static_cast<int>(screenSize.y));
 }
 
 Menu::~Menu() {
@@ -45,6 +53,10 @@ Menu::~Menu() {
     Resources().FreePlane();
     Resources().FreeShaderProgram(mTextShaderProgram);
     Resources().FreeShaderProgram(mSelectedShaderProgram);
+    
+    for (MenuOption* menuOption : mMenuOptions) {
+        delete menuOption;
+    }
 }
 
 bool Menu::IsActive() const {
