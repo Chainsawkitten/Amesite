@@ -102,7 +102,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mLeftTurret->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
     mLeftTurret->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
     mLeftTurret->AddComponent<Component::Animation>();
-    mLeftTurret->AddComponent<Component::Spawner>()->delay = 0.5f;
+    mLeftTurret->AddComponent<Component::Spawner>()->delay = 0.3f;
     mLeftTurret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
     mLeftTurret->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
     Component::SoundSource* sound = mLeftTurret->AddComponent<Component::SoundSource>();
@@ -114,7 +114,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mRightTurret->AddComponent<Component::RelativeTransform>()->Move(-2.5f, 0, 13);
     mRightTurret->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
     mRightTurret->AddComponent<Component::Animation>();
-    mRightTurret->AddComponent<Component::Spawner>()->delay = 0.5f;
+    mRightTurret->AddComponent<Component::Spawner>()->delay = 0.3f;
     mRightTurret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
     mRightTurret->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
 
@@ -217,6 +217,7 @@ void Player2::Deactivate() {
     mLeftTurret->GetComponent<Component::Controller>()->enabled = false;
     mRightTurret->GetComponent<Component::Controller>()->enabled = false;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = true;
+    mNode->GetComponent<Component::Physics>()->acceleration = glm::vec3(0, 0, 0);
 
 }
 

@@ -66,6 +66,9 @@ namespace GameObject {
 
             /// Map of all walls in the cave system.
             bool** mMap;
+            
+            /// Map that contains marching cube info.
+            int** mTypeMap;
 
             /// Map of the %Cave
             Entity* map;
@@ -82,8 +85,25 @@ namespace GameObject {
 
         private:
 
-            int PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime);
+            ///Takes a point and checks if it collides with a wall
+            /**
+             * @param The point too check for collision.
+             * @param How far the point will move this frame
+             * @param deltaTime Where the players start.
+             * @return Returns true if it's inside a wall
+             */
+            glm::vec3 PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime);
 
+            ///Takes a position and checks it agains the marching square type to see if it's in a wall
+            /**
+             * @param the xPos (0 - 1) where 0 is far to the left and 1 is far to the right.
+             * @param the yPos (0 - 1) where 0 is the top and 1 is the bottom.
+             * @param the x coordinate of the cell
+             * @param the y coordinate of the cell
+             * @return Returns true if it's inside a wall
+             */
+            glm::vec3 CellCollide(float xPos, float yPos, int x, int y);
+            
             /// cave X size.
             int mWidth;
 

@@ -134,6 +134,7 @@ Bullet* GameEntityFactory::CreatePlayerBullet(const glm::vec3& position, const g
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::Physics>()->velocity = direction;
     gameObject->node->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
+    gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = 1.2f;
     gameObject->node->GetComponent<Component::Damage>()->faction = faction;
     return gameObject;
 }
