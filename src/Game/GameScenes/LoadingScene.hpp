@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Scene/Scene.hpp>
-#include <vector>
 
 class Texture2D;
 
@@ -22,4 +21,5 @@ class LoadingScene : public Scene {
         
     private:
         bool mShown;
+        Texture2D* mLoadingImage;
 };

@@ -161,6 +161,7 @@ set(RESOURCES
         assets/Explosion03.ogg
         assets/Explosion04.ogg
         assets/Explosion05.ogg
+        assets/Loading.png
     )
 
 add_custom_target(ResourceTarget ALL)
