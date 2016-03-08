@@ -17,6 +17,7 @@
 #include "../GameObject/Enemy/SuperEnemy.hpp"
 #include "../GameObject/Enemy/Pylon.hpp"
 #include "../GameObject/Enemy/Rocket.hpp"
+#include "../GameObject/Enemy/Nest.hpp"
 #include "../GameObject/Boss/SpinBoss.hpp"
 
 #include <vector>
@@ -61,7 +62,8 @@ void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject:
                             mEnemies.push_back(GameEntityCreator().CreateEnemyPylon(position));
                         } else if (spawner->enemyType == Component::Spawner::ROCKET) {
                             mEnemies.push_back(GameEntityCreator().CreateRocket(position));
-                        }
+                        } else if (spawner->enemyType == Component::Spawner::NEST)
+                            mEnemies.push_back(GameEntityCreator().CreateNest(position));
                     }
                 }
             }

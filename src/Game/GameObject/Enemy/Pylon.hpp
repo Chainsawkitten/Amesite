@@ -16,7 +16,7 @@ namespace GameObject {
         public:
             /// Create %Pylon
             /**
-             * @param scene Pointer to which Scene %Enemy Enities' are contained.
+             * @param scene Pointer to which Scene %Pylon Enities' are contained.
              */
             Pylon(Scene* scene);
            
@@ -47,7 +47,7 @@ namespace GameObject {
         protected:
             void mUpdateFunction();
         private:
-            Geometry::OBJModel* mBody;
+            Geometry::OBJModel* mBodyModel;
             Geometry::OBJModel* mPylon1;
             Geometry::OBJModel* mPylon2;
 

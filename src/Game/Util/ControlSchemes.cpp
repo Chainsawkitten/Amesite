@@ -136,20 +136,24 @@ void ControlScheme::AlwaysShootClosestPlayer(Component::Controller* controller, 
     Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
     if (spawnerComponent != nullptr) {
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
-            glm::vec2 direction;
+            spawnerComponent->timeSinceSpawn = 0.0f;
             GameObject::Player1* player1 = HubInstance().GetPlayer1();
             GameObject::Player2* player2 = HubInstance().GetPlayer2();
-            if (player1->Active() || player2->Active()) {
-                glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
-                if (player1->Active() && glm::distance(player1->GetPosition(), transformWorldPosition) < glm::distance(player2->GetPosition(), transformWorldPosition))
-                    direction = glm::vec2(player1->GetPosition().x - transformWorldPosition.x, player1->GetPosition().z - transformWorldPosition.z);
-                else
-                    direction = glm::vec2(player2->GetPosition().x - transformWorldPosition.x, player2->GetPosition().z - transformWorldPosition.z);
-                if (glm::length(direction) > 0.f) {
-                    float bulletSpeed = 20.f;
-                    GameEntityCreator().CreateEnemyBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), spawnerComponent->faction);
-                    spawnerComponent->timeSinceSpawn = 0.0f;
-                }
+            glm::vec3 distance;
+            glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
+            if (player1->Active() && player2->Active())
+                if (glm::distance(player1->GetPosition(), transformWorldPosition) < glm::distance(player2->GetPosition(), transformWorldPosition))
+                    distance = player1->GetPosition() - transformWorldPosition;
+                else 
+                    distance = player2->GetPosition() - transformWorldPosition;
+            else if (player1->Active())
+                distance = player1->GetPosition() - transformWorldPosition;
+            else if (player2->Active())
+                distance = player2->GetPosition() - transformWorldPosition;
+   
+            if (glm::length(distance) > 0.01f) {
+                float bulletSpeed = 20.f;
+                GameEntityCreator().CreateEnemyBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(distance.x, 0.f, distance.z)), spawnerComponent->faction);
             }
         }
     }
@@ -160,20 +164,24 @@ void ControlScheme::AlwaysShootRandomPlayer(Component::Controller* controller, f
     Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
     if (spawnerComponent != nullptr) {
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
-            glm::vec2 direction;
+            spawnerComponent->timeSinceSpawn = 0.0f;
             GameObject::Player1* player1 = HubInstance().GetPlayer1();
             GameObject::Player2* player2 = HubInstance().GetPlayer2();
+            glm::vec3 distance;
             glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
-            if (player1->Active() || player2->Active()) {
-                if (rand() % 2 && player1->Active())
-                    direction = glm::vec2(player1->GetPosition().x - transformWorldPosition.x, player1->GetPosition().z - transformWorldPosition.z);
+            if (player1->Active() && player2->Active())
+                if (rand() % 2)
+                    distance = player1->GetPosition() - transformWorldPosition;
                 else
-                    direction = glm::vec2(player2->GetPosition().x - transformWorldPosition.x, player2->GetPosition().z - transformWorldPosition.z);
-                if (glm::length(direction) > 0.f) {
-                    float bulletSpeed = 20.f;
-                    GameEntityCreator().CreateEnemyBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), spawnerComponent->faction);
-                    spawnerComponent->timeSinceSpawn = 0.0f;
-                }
+                    distance = player2->GetPosition() - transformWorldPosition;
+            else if (player1->Active())
+                distance = player1->GetPosition() - transformWorldPosition;
+            else if (player2->Active())
+                distance = player2->GetPosition() - transformWorldPosition;
+
+            if (glm::length(distance) > 0.01f) {
+                float bulletSpeed = 20.f;
+                GameEntityCreator().CreateEnemyBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(distance.x, 0.f, distance.z)), spawnerComponent->faction);
             }
         }
     }
@@ -183,65 +191,89 @@ void ControlScheme::LookAtClosestPlayer(Component::Controller* controller, float
     Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
     GameObject::Player1* player1 = HubInstance().GetPlayer1();
     GameObject::Player2* player2 = HubInstance().GetPlayer2();
+    glm::vec3 distance;
     glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
-    if (player1->Active() || player2->Active()) {
-        glm::vec3 direction;
-        if (player1->Active() && glm::distance(player1->GetPosition(), transformWorldPosition) < glm::distance(player2->GetPosition(), transformWorldPosition))
-            direction = glm::vec3(player1->GetPosition().x - transformWorldPosition.x, 0.f, player1->GetPosition().z - transformWorldPosition.z);
+    if (player1->Active() && player2->Active())
+        if (glm::distance(player1->GetPosition(), transformWorldPosition) < glm::distance(player2->GetPosition(), transformWorldPosition))
+            distance = player1->GetPosition() - transformWorldPosition;
         else
-            direction = glm::vec3(player2->GetPosition().x - transformWorldPosition.x, 0.f, player2->GetPosition().z - transformWorldPosition.z);
-        if (glm::length(direction) > 0.f) {
-            float angle = glm::degrees(glm::acos(glm::dot(glm::normalize(direction), glm::vec3(0.f, 0.f, 1.f))));
-            if (direction.x > 0.f)
-                transformComponent->yaw = angle;
-            else
-                transformComponent->yaw = 360.f - angle;
-        }
+            distance = player2->GetPosition() - transformWorldPosition;
+    else if (player1->Active())
+        distance = player1->GetPosition() - transformWorldPosition;
+    else if (player2->Active())
+        distance = player2->GetPosition() - transformWorldPosition;
+
+    if (glm::length(distance) > 0.01f) {
+        float angle = glm::degrees(glm::acos(glm::dot(glm::normalize(distance), glm::vec3(0.f, 0.f, 1.f))));
+        if (distance.x > 0.f)
+            transformComponent->yaw = angle;
+        else
+            transformComponent->yaw = 360.f - angle;
     }
 }
 
 void ControlScheme::AccelerateTowardsClosestPlayer(Component::Controller* controller, float deltaTime) {
-    //Component::Physics* physics = controller->entity->GetComponent<Component::Physics>();
-    //Component::Transform* transform = controller->entity->GetComponent<Component::Transform>();
-    //if (physics != nullptr) {
-    //    glm::vec3 worldDirection = transform->GetWorldDirection();
-    //    /*if (glm::length(physics->acceleration) < 0.01f)
-    //        physics->acceleration = worldDirection * controller->speed * deltaTime;
-    //    else {
-    //        float accelerationFactor = ((glm::dot(worldDirection, glm::normalize(physics->acceleration)) - 1.f) * -1.f) * 20.f + 1.f;
-    //        physics->acceleration += worldDirection * controller->speed * deltaTime * accelerationFactor * accelerationFactor * accelerationFactor;
-    //    }*/
-
-    //    if (glm::length(physics->velocity) < 0.01f)
-    //    physics->velocity = worldDirection * controller->speed * deltaTime;
-    //    else {
-    //    //float accelerationFactor = ((glm::dot(worldDirection, glm::normalize(physics->acceleration)) - 1.f) * -1.f) * 20.f + 1.f;
-    //        physics->velocity += worldDirection * controller->speed * deltaTime;// *accelerationFactor * accelerationFactor * accelerationFactor;
-    //    }
-    //}    
-
     Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
     GameObject::Player1* player1 = HubInstance().GetPlayer1();
     GameObject::Player2* player2 = HubInstance().GetPlayer2();
+    glm::vec3 distance;
     glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
-    if (player1->Active() || player2->Active()) {
-        glm::vec3 direction;
-        if (player1->Active() && glm::distance(player1->GetPosition(), transformWorldPosition) < glm::distance(player2->GetPosition(), transformWorldPosition))
-            direction = glm::vec3(player1->GetPosition().x - transformWorldPosition.x, 0.f, player1->GetPosition().z - transformWorldPosition.z);
+    if (player1->Active() && player2->Active())
+        if (glm::distance(player1->GetPosition(), transformWorldPosition) < glm::distance(player2->GetPosition(), transformWorldPosition))
+            distance = player1->GetPosition() - transformWorldPosition;
         else
-            direction = glm::vec3(player2->GetPosition().x - transformWorldPosition.x, 0.f, player2->GetPosition().z - transformWorldPosition.z);
-        if (glm::length(direction) > 0.01f) {
-            Component::Physics* physics = controller->entity->GetComponent<Component::Physics>();
-            if (physics != nullptr) {
-                direction = glm::normalize(direction);
-                if (glm::length(physics->velocity) < 0.01f) {
-                    physics->velocity = direction * controller->speed * deltaTime;
-                } else {
-                    physics->velocity += direction * controller->speed * deltaTime;
-                }
+            distance = player2->GetPosition() - transformWorldPosition;
+    else if (player1->Active())
+        distance = player1->GetPosition() - transformWorldPosition;
+    else if (player2->Active())
+        distance = player2->GetPosition() - transformWorldPosition;
+
+    if (glm::length(distance) > 0.01f) {
+        Component::Physics* physics = controller->entity->GetComponent<Component::Physics>();
+        if (physics != nullptr) {
+            transformComponent->Move(transformComponent->GetWorldDirection() * 0.01f * controller->speed * deltaTime);
+            if (glm::length(physics->acceleration) < 0.01f) {
+                physics->acceleration = distance * controller->speed * deltaTime;
+            } else {
+                float accelerationFactor = ((glm::dot(glm::normalize(distance), glm::normalize(physics->acceleration)) - 1.f) * -1.f) * 20.f + 1.f;
+                physics->acceleration += distance * controller->speed * deltaTime * accelerationFactor * accelerationFactor * accelerationFactor;
             }
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    //GameObject::Player1* player1 = HubInstance().GetPlayer1();
+    //GameObject::Player2* player2 = HubInstance().GetPlayer2();
+    //glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
+    //if (player1->Active() || player2->Active()) {
+    //    glm::vec3 direction;
+    //    if (player1->Active() && glm::distance(player1->GetPosition(), transformWorldPosition) < glm::distance(player2->GetPosition(), transformWorldPosition))
+    //        direction = glm::vec3(player1->GetPosition().x - transformWorldPosition.x, 0.f, player1->GetPosition().z - transformWorldPosition.z);
+    //    else
+    //        direction = glm::vec3(player2->GetPosition().x - transformWorldPosition.x, 0.f, player2->GetPosition().z - transformWorldPosition.z);
+    //    if (glm::length(direction) > 0.01f) {
+    //        Component::Physics* physics = controller->entity->GetComponent<Component::Physics>();
+    //        if (physics != nullptr) {
+    //            if (glm::length(physics->acceleration) < 0.01f) {
+    //                physics->acceleration = direction * controller->speed * deltaTime;
+    //            } else {
+    //                float accelerationFactor = ((glm::dot(glm::normalize(direction), glm::normalize(physics->acceleration)) - 1.f) * -1.f) * 20.f + 1.f;
+    //                physics->acceleration += direction * controller->speed * deltaTime * accelerationFactor * accelerationFactor * accelerationFactor;
+    //                transformComponent->Move(transformComponent->GetWorldDirection() * 0.01f * controller->speed * deltaTime);
+    //            }
+    //        }
+    //    }
+    //}
 }
 
 void ControlScheme::AutoRotate(Component::Controller* controller, float deltaTime) {

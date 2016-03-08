@@ -30,9 +30,10 @@ using namespace GameObject;
 Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
     mActiveGlow = Resources().CreateTexture2DFromFile("Resources/Crystal_01_glow.png");
 
-    node->AddComponent<Component::Transform>()->scale *= 0.2f;
+    node->AddComponent<Component::Transform>()->scale *= 0.15f;
     node->AddComponent<Component::Collider2DCircle>()->radius = 8.0f;
     node->AddComponent<Component::Physics>()->velocityDragFactor = 1.f;
+    node->GetComponent<Component::Physics>()->maxAngularVelocity *= 2.f;
     node->AddComponent<Component::Health>()->faction = 1;
     node->GetComponent<Component::Health>()->health = 500.f;
     node->GetComponent<Component::Health>()->removeOnLowHealth = false;

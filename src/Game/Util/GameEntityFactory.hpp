@@ -16,6 +16,7 @@ namespace GameObject{
     class Player2;
     class Camera;
     class Rocket;
+    class Nest;
     class Pylon;
     class Cave;
     class Dust;
@@ -68,6 +69,13 @@ class GameEntityFactory {
         * @return The enemy GameObject.
         */
         GameObject::Rocket* CreateMiniRocket(const glm::vec3& origin);
+
+        /// Create a nest enemy.
+        /**
+         * @param origin The enemy's starting position
+         * @return The enemy GameObject.
+         */
+        GameObject::Nest* CreateNest(const glm::vec3& origin);
 
         /// Create pylon enemy.
         /**

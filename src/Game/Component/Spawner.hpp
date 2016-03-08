@@ -16,6 +16,7 @@ namespace Component {
             enum EnemyType : unsigned int {
                 PYLON = 0, ///< Pylon enemy spawner.
                 ROCKET, ///< Rocket enemy spawner.
+                NEST, ///< Nest enemy spawner.
             };
 
             /// Create new spawner.

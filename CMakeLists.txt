@@ -433,6 +433,7 @@ set(GAME_SRCS
         src/Game/GameObject/Enemy/SuperEnemy.cpp
         src/Game/GameObject/Enemy/Pylon.cpp
         src/Game/GameObject/Enemy/Rocket.cpp
+        src/Game/GameObject/Enemy/Nest.cpp
         src/Game/GameObject/Boss/SuperBoss.cpp
         src/Game/GameObject/Boss/SpinBoss.cpp
         src/Game/GameObject/Boss/ShieldBoss.cpp
@@ -498,6 +499,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Enemy/SuperEnemy.hpp
         src/Game/GameObject/Enemy/Pylon.hpp
         src/Game/GameObject/Enemy/Rocket.hpp
+        src/Game/GameObject/Enemy/Nest.hpp
         src/Game/GameObject/Boss/SuperBoss.hpp
         src/Game/GameObject/Boss/SpinBoss.hpp
         src/Game/GameObject/Boss/ShieldBoss.hpp

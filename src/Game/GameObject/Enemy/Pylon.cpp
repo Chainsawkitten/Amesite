@@ -42,7 +42,7 @@ Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
 
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    body->AddComponent<Component::Mesh>()->geometry = mBody = Resources().CreateOBJModel("Resources/Crystal_01.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/Crystal_01.obj");
     body->AddComponent<Component::Material>();
     body->GetComponent<Component::Material>()->SetDiffuse("Resources/Crystal_01_diff.png");
     body->GetComponent<Component::Material>()->SetSpecular("Resources/Crystal_01_spec.png");
@@ -103,7 +103,7 @@ Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
 }
 
 Pylon::~Pylon() {
-    Resources().FreeOBJModel(mBody);
+    Resources().FreeOBJModel(mBodyModel);
     Resources().FreeOBJModel(mPylon1);
     Resources().FreeOBJModel(mPylon2);
     if (Active()) {

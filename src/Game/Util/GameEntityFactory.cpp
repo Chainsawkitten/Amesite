@@ -33,6 +33,7 @@
 #include "../GameObject/Camera.hpp"
 #include "../GameObject/Enemy/Rocket.hpp"
 #include "../GameObject/Enemy/Pylon.hpp"
+#include "../GameObject/Enemy/Nest.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Dust.hpp"
 #include "../GameObject/Explosion.hpp"
@@ -76,13 +77,19 @@ Rocket* GameEntityFactory::CreateMiniRocket(const glm::vec3& origin) {
     Rocket* gameObject = new Rocket(mScene);
     Component::Transform* transform = gameObject->node->GetComponent<Component::Transform>();
     transform->position = origin;
-    transform->scale *= 0.5f;
+    transform->scale *= 0.25f;
     gameObject->node->AddComponent<Component::LifeTime>()->lifeTime = 5.f;
     gameObject->node->GetComponent<Component::Damage>()->removeOnImpact = true;
     gameObject->node->GetComponent<Component::GridCollide>()->removeOnImpact = true;
     Component::Health *healthComp = gameObject->node->GetComponent<Component::Health>();
     healthComp->maxHealth = healthComp->health = 20.f;
     healthComp->removeOnLowHealth = true;
+    return gameObject;
+}
+
+Nest* GameEntityFactory::CreateNest(const glm::vec3& origin) {
+    Nest* gameObject = new Nest(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }
 
