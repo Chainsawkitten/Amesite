@@ -122,7 +122,7 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
         glEnable(GL_DEPTH_TEST);
 }
 
-void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, float scale) {
+void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize) {
     // Disable depth testing
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
     glEnable(GL_DEPTH_TEST);
@@ -154,7 +154,6 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glUniform1i(mShaderProgram->GetUniformLocation("tGlow"), DeferredLighting::GLOW);
     glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
     
-    glUniform1f(mShaderProgram->GetUniformLocation("scale"), scale);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(projectionMat)[0][0]);
     
     // Render all directional lights.
