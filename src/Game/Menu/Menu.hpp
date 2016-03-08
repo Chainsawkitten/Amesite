@@ -45,6 +45,8 @@ class Menu {
         
         // Menu options.
         std::vector<MenuOption*> mMenuOptions;
+        int mSelected;
         
+        void RenderSelectedMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize);
         void RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize);
 };

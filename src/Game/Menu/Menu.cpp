@@ -43,6 +43,7 @@ Menu::Menu() {
     mMenuOptions.push_back(new MenuOption(mFont, "START GAME", glm::vec3(0.f, 1.0f, 2.5f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
     mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.8f, 2.6f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
     mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, 0.6f, 2.7f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mSelected = 0;
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     glViewport(0, 0, static_cast<int>(screenSize.x), static_cast<int>(screenSize.y));
@@ -68,7 +69,9 @@ void Menu::Update() {
 }
 
 void Menu::RenderSelected() {
-    /// @todo
+    const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
+    
+    RenderSelectedMenuOption(mMenuOptions[mSelected], screenSize);
 }
 
 void Menu::RenderMenuOptions() {
@@ -76,6 +79,46 @@ void Menu::RenderMenuOptions() {
     
     for (MenuOption* menuOption : mMenuOptions)
         RenderMenuOption(menuOption, screenSize);
+}
+
+void Menu::RenderSelectedMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize) {
+    // Blending enabled.
+    GLboolean blend = glIsEnabled(GL_BLEND);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    // Don't write to the depth buffer.
+    GLboolean depthMask;
+    glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
+    glDepthMask(GL_FALSE);
+    
+    mSelectedShaderProgram->Use();
+    
+    Entity& camera = MainCamera::GetInstance().GetMainCamera();
+    glm::mat4 viewMat = camera.GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera.GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 projectionMat = camera.GetComponent<Component::Lens>()->GetProjection(screenSize);
+    
+    glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
+    glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
+    
+    glBindVertexArray(mPlane->GetVertexArray());
+    
+    glm::mat4 modelMat = menuOption->GetModelMatrix();
+    glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
+    glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
+    glUniformMatrix3fv(mSelectedShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
+    
+    glUniform4fv(mSelectedShaderProgram->GetUniformLocation("color"), 1, &glm::vec4(0.f, 0.f, 0.f, 0.65f)[0]);
+    
+    glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+    
+    glUseProgram(0);
+    
+    // Reset depth and blending.
+    if (!blend)
+        glDisable(GL_BLEND);
+    if (depthMask)
+        glDepthMask(GL_TRUE);
 }
 
 void Menu::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize) {
