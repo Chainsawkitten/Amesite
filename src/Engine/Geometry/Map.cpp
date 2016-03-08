@@ -16,7 +16,11 @@ Map::Map(bool **data, glm::uvec2 dataDimensions, float wallHeight) {
 Map::~Map() {
     delete[] mVertexData;
     delete[] mIndexData;
+
+    for (int i = 0; i < mDataDimensions.y - 1; i++)
+        delete[] mTypeMap[i];
     delete[] mTypeMap;
+
 }
 
 Geometry3D::Vertex* Map::GetVertices() const {

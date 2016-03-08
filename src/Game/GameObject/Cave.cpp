@@ -107,10 +107,20 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/ground_sand.png");
     heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/ground_sand.png");
 
+    for (int i = 0; i < mHeight; i++)
+        delete[] floatMap[i];
+    delete[] floatMap;
+
 }
 
 Cave::~Cave() {
+    
+    for (int i = 0; i < mHeight - 1; i++)
+        delete[] mMap[i];
+    delete[] mMap;
+
     delete caveMap;
+
 }
 
 int Cave::GetWidth() const {
