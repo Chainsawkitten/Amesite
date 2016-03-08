@@ -4,7 +4,8 @@
 #include <glm/glm.hpp>
 
 namespace Geometry {
-    class Square;
+    class Plane;
+    class Cube;
 }
 class Scene;
 class Entity;
@@ -55,9 +56,8 @@ class DeferredLighting {
          * @param scene Scene to get the lights from.
 		 * @param camera Camera to use.
 		 * @param screenSize Size of the screen in pixels.
-		 * @param scale Scaling to apply to texture coordinates.
 		 */
-		void Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, float scale = 1.f);
+		void Render(Scene& scene, Entity* camera, const glm::vec2& screenSize);
         
 	private:
         static void AttachTexture(GLuint texture, unsigned int width, unsigned int height, GLenum attachment, GLint internalFormat);
@@ -72,7 +72,8 @@ class DeferredLighting {
         
 		glm::vec2 mSize;
         
-        Geometry::Square* mSquare;
+        Geometry::Plane* mPlane;
+        Geometry::Cube* mCube;
         
         ShaderProgram* mShaderProgram;
         Shader* mVertexShader;

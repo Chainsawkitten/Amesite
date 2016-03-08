@@ -11,6 +11,10 @@ namespace CaveGenerator {
     class Coordinate;
 }
 
+namespace Geometry {
+    class Plane;
+}
+
 namespace GameObject {
     /// A Cave
     class Cave : public SuperGameObject {
@@ -112,5 +116,15 @@ namespace GameObject {
 
             /// radius of a boss room.
             int mBossRadius;
+
+            ///The border geometry
+            Geometry::Plane* mBorder;
+
+            ///The four border entites
+            Entity* mTopBorder;
+            Entity* mBottomBorder;
+            Entity* mRightBorder;
+            Entity* mLeftBorder;
+
     };
 }

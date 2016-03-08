@@ -29,7 +29,7 @@
 void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
 
 void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
-    
+
     // Move the player
     double x = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_X);
     double z = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_Z);

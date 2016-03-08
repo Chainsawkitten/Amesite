@@ -217,6 +217,7 @@ void Player2::Deactivate() {
     mLeftTurret->GetComponent<Component::Controller>()->enabled = false;
     mRightTurret->GetComponent<Component::Controller>()->enabled = false;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = true;
+    mNode->GetComponent<Component::Physics>()->acceleration = glm::vec3(0, 0, 0);
 
 }
 
