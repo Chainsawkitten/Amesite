@@ -19,4 +19,7 @@ class LoadingScene : public Scene {
          *@param deltaTime Time since last frame.
          */
         void Update(float deltaTime);
+        
+    private:
+        bool mShown;
 };

@@ -4,7 +4,7 @@
 #include "MenuScene.hpp"
 
 LoadingScene::LoadingScene() {
-    
+    mShown = false;
 }
 
 LoadingScene::~LoadingScene() {
@@ -12,5 +12,8 @@ LoadingScene::~LoadingScene() {
 }
 
 void LoadingScene::Update(float deltaTime) {
-    Game::GetInstance().SetScene(new MenuScene());
+    if (mShown)
+        Game::GetInstance().SetScene(new MenuScene());
+    
+    mShown = true;
 }
