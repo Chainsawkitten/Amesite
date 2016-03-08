@@ -21,6 +21,8 @@
 
 #include "../Util/ControlSchemes.hpp"
 
+#include "Geometry/Plane.hpp"
+
 using namespace GameObject;
 
 Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold, CaveGenerator::Coordinate playerPosition, std::vector<CaveGenerator::Coordinate> bossPositions) : SuperGameObject(scene) {
@@ -111,6 +113,56 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
         delete[] floatMap[i];
     delete[] floatMap;
 
+    //Create the border
+    mBorder = new Geometry::Plane();
+
+    mTopBorder = CreateEntity();
+    mTopBorder->AddComponent<Component::Mesh>();
+    mTopBorder->AddComponent<Component::Material>();
+    mTopBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
+    mTopBorder->GetComponent<Component::Transform>()->Move(glm::vec3(0, 0, scaleFactor*(static_cast<float>(width) / 2.f) + 45.f));
+    mTopBorder->GetComponent<Component::Transform>()->scale = glm::vec3(1000, 100, 1);
+    mTopBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
+    mTopBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
+
+    mBottomBorder = CreateEntity();
+    mBottomBorder->AddComponent<Component::Mesh>();
+    mBottomBorder->AddComponent<Component::Material>();
+    mBottomBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
+    mBottomBorder->GetComponent<Component::Transform>()->Move(glm::vec3(0, 0, -scaleFactor*(static_cast<float>(width) / 2.f) - 50.f));
+    mBottomBorder->GetComponent<Component::Transform>()->scale = glm::vec3(1000, 100, 1);
+    mBottomBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
+    mBottomBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
+
+    mRightBorder = CreateEntity();
+    mRightBorder->AddComponent<Component::Mesh>();
+    mRightBorder->AddComponent<Component::Material>();
+    mRightBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
+    mRightBorder->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f) + 45.f, 0, 0));
+    mRightBorder->GetComponent<Component::Transform>()->scale = glm::vec3(100, 1000, 1);
+    mRightBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
+    mRightBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
+
+    mLeftBorder = CreateEntity();
+    mLeftBorder->AddComponent<Component::Mesh>();
+    mLeftBorder->AddComponent<Component::Material>();
+    mLeftBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
+    mLeftBorder->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(-static_cast<float>(width) / 2.f) - 50.f, 0, 0));
+    mLeftBorder->GetComponent<Component::Transform>()->scale = glm::vec3(100, 1000, 1);
+    mLeftBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
+    mLeftBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
+
+    //Set the texture
+    std::string texture = "Resources/wall_gray.png";
+    mTopBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mTopBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mBottomBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mBottomBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mRightBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mRightBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mLeftBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mLeftBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+
 }
 
 Cave::~Cave() {
@@ -120,6 +172,7 @@ Cave::~Cave() {
     delete[] mMap;
 
     delete caveMap;
+    delete mBorder;
 
 }
 
@@ -218,25 +271,41 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
     velocity += physics->acceleration * deltaTime;
     velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
 
+    if (glm::length(velocity) > physics->maxVelocity)
+        velocity = glm::normalize(velocity) * physics->maxVelocity;
+
     glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
     glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
 
     glm::vec3 n;
-    
-    n = PointCollide(transform->CalculateWorldPosition() + height + width, velocity, deltaTime);
     float bounce = 2.f;
+
+    n = PointCollide(transform->CalculateWorldPosition() + height + width, velocity, deltaTime);
 
     if (n != glm::vec3(0, 0, 0)) {
 
         n = glm::normalize(n);
+        glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
 
-        physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
-        physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
+        bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
 
-        physics->velocity /= bounce;
-        physics->acceleration /= bounce;
+        if (c0 && c1 && c2 && c3) {
 
-        return true;
+            physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+            physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
+
+            physics->velocity /= bounce;
+            physics->acceleration /= bounce;
+
+            return true;
+
+        }
+
+        physics->velocity = glm::vec3(0, 0, 0);
+        physics->acceleration = glm::vec3(0, 0, 0);
 
     }
 
@@ -245,30 +314,27 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
     if (n != glm::vec3(0, 0, 0)) {
 
         n = glm::normalize(n);
+        glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
 
-        physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
-        physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
+        bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
 
-        physics->velocity /= bounce;
-        physics->acceleration /= bounce;
+        if (c0 && c1 && c2 && c3) {
 
-        return true;
+            physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+            physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
 
-    }
+            physics->velocity /= bounce;
+            physics->acceleration /= bounce;
 
-    n = PointCollide(transform->CalculateWorldPosition() - height + width, velocity, deltaTime);
+            return true;
 
-    if (n != glm::vec3(0, 0, 0)) {
+        }
 
-        n = glm::normalize(n);
-
-        physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
-        physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
-
-        physics->velocity /= bounce;
-        physics->acceleration /= bounce;
-
-        return true;
+        physics->velocity = glm::vec3(0, 0, 0);
+        physics->acceleration = glm::vec3(0, 0, 0);
 
     }
 
@@ -277,14 +343,56 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
     if (n != glm::vec3(0, 0, 0)) {
 
         n = glm::normalize(n);
+        glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
 
-        physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
-        physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
+        bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
 
-        physics->velocity /= bounce;
-        physics->acceleration /= bounce;
+        if (c0 && c1 && c2 && c3) {
 
-        return true;
+            physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+            physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
+
+            physics->velocity /= bounce;
+            physics->acceleration /= bounce;
+
+            return true;
+
+        }
+
+        physics->velocity = glm::vec3(0, 0, 0);
+        physics->acceleration = glm::vec3(0, 0, 0);
+
+    }
+
+    n = PointCollide(transform->CalculateWorldPosition() - height + width, velocity, deltaTime);
+
+    if (n != glm::vec3(0, 0, 0)) {
+
+        n = glm::normalize(n);
+        glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+
+        bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+
+        if (c0 && c1 && c2 && c3) {
+
+            physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+            physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
+
+            physics->velocity /= bounce;
+            physics->acceleration /= bounce;
+
+            return true;
+
+        }
+
+        physics->velocity = glm::vec3(0, 0, 0);
+        physics->acceleration = glm::vec3(0, 0, 0);
 
     }
 
