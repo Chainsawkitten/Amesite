@@ -161,6 +161,7 @@ set(RESOURCES
         assets/Explosion03.ogg
         assets/Explosion04.ogg
         assets/Explosion05.ogg
+        assets/Loading.png
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -420,6 +421,7 @@ set(GAME_SRCS
         src/Game/GameScenes/JonathanScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
         src/Game/GameScenes/WinScene.cpp
+        src/Game/GameScenes/LoadingScene.cpp
         src/Game/GameObject/Bullet.cpp
         src/Game/GameObject/Player/SuperPlayer.cpp
         src/Game/GameObject/Player/Player1.cpp
@@ -482,6 +484,7 @@ set(GAME_HEADERS
         src/Game/GameScenes/JonathanScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
         src/Game/GameScenes/WinScene.hpp
+        src/Game/GameScenes/LoadingScene.hpp
         src/Game/GameObject/Bullet.hpp
         src/Game/GameObject/Player/SuperPlayer.hpp
         src/Game/GameObject/Player/Player1.hpp
