@@ -23,6 +23,8 @@
 #include "MenuOption.hpp"
 #include <Util/Picking.hpp>
 
+#include <Util/Log.hpp>
+
 Menu::Menu() {
     // Load font.
     float fontHeight = glm::ceil(MainWindow::GetInstance()->GetSize().y * 0.07f);
@@ -43,8 +45,10 @@ Menu::Menu() {
     
     // Define menu options.
     mMenuOptions.push_back(new MenuOption(mFont, "START GAME", glm::vec3(0.f, 1.0f, 2.5f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mMenuOptions[0]->callback = std::bind(&Menu::StartGame, this);
     mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.8f, 2.6f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
     mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, 0.6f, 2.7f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mMenuOptions[2]->callback = std::bind(&Menu::Quit, this);
     mSelected = 0;
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
@@ -203,4 +207,12 @@ void Menu::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& scree
     // Reset blending.
     if (!blend)
         glDisable(GL_BLEND);
+}
+
+void Menu::StartGame() {
+    /// @todo Start game.
+}
+
+void Menu::Quit() {
+    MainWindow::GetInstance()->Close();
 }
