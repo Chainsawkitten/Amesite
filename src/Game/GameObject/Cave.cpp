@@ -21,6 +21,8 @@
 
 #include "../Util/ControlSchemes.hpp"
 
+#include "Geometry/Plane.hpp"
+
 using namespace GameObject;
 
 Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold, CaveGenerator::Coordinate playerPosition, std::vector<CaveGenerator::Coordinate> bossPositions) : SuperGameObject(scene) {
@@ -111,6 +113,45 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
         delete[] floatMap[i];
     delete[] floatMap;
 
+    //Create the border
+    mBorder = new Geometry::Plane();
+
+    mTopBorder = CreateEntity();
+    mTopBorder->AddComponent<Component::Mesh>();
+    mTopBorder->AddComponent<Component::Material>();
+    mTopBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
+    mTopBorder->GetComponent<Component::Transform>()->Move(glm::vec3(0, 0, scaleFactor*(static_cast<float>(width) / 2.f) + 45.f));
+    mTopBorder->GetComponent<Component::Transform>()->scale = glm::vec3(1000, 100, 1);
+    mTopBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
+    mTopBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
+
+    mBottomBorder = CreateEntity();
+    mBottomBorder->AddComponent<Component::Mesh>();
+    mBottomBorder->AddComponent<Component::Material>();
+    mBottomBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
+    mBottomBorder->GetComponent<Component::Transform>()->Move(glm::vec3(0, 0, -scaleFactor*(static_cast<float>(width) / 2.f) - 50.f));
+    mBottomBorder->GetComponent<Component::Transform>()->scale = glm::vec3(1000, 100, 1);
+    mBottomBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
+    mBottomBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
+
+    mRightBorder = CreateEntity();
+    mRightBorder->AddComponent<Component::Mesh>();
+    mRightBorder->AddComponent<Component::Material>();
+    mRightBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
+    mRightBorder->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f) + 45.f, 0, 0));
+    mRightBorder->GetComponent<Component::Transform>()->scale = glm::vec3(100, 1000, 1);
+    mRightBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
+    mRightBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
+
+    mLeftBorder = CreateEntity();
+    mLeftBorder->AddComponent<Component::Mesh>();
+    mLeftBorder->AddComponent<Component::Material>();
+    mLeftBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
+    mLeftBorder->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(-static_cast<float>(width) / 2.f) - 50.f, 0, 0));
+    mLeftBorder->GetComponent<Component::Transform>()->scale = glm::vec3(100, 1000, 1);
+    mLeftBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
+    mLeftBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
+
 }
 
 Cave::~Cave() {
@@ -120,6 +161,7 @@ Cave::~Cave() {
     delete[] mMap;
 
     delete caveMap;
+    delete mBorder;
 
 }
 
