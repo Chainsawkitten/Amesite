@@ -439,6 +439,7 @@ set(GAME_SRCS
         src/Game/GameObject/Pillar.cpp
         src/Game/GameObject/PillarBall.cpp
         src/Game/GameObject/Portal.cpp
+        src/Game/Menu/Menu.cpp
     )
 
 set(GAME_HEADERS
@@ -501,6 +502,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Pillar.hpp
         src/Game/GameObject/PillarBall.hpp
         src/Game/GameObject/Portal.hpp
+        src/Game/Menu/Menu.cpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
