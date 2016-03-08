@@ -271,6 +271,9 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
     velocity += physics->acceleration * deltaTime;
     velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
 
+    if (glm::length(velocity) > physics->maxVelocity)
+        velocity = glm::normalize(velocity) * physics->maxVelocity;
+
     glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
     glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
 
