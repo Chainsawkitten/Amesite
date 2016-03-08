@@ -1,6 +1,10 @@
 #pragma once
 
 class Font;
+class ShaderProgram;
+namespace Geometry {
+    class Plane;
+}
 
 /// An interactive menu showing different submenus.
 class Menu {
@@ -29,4 +33,9 @@ class Menu {
     private:
         // Text.
         Font* mFont;
+        
+        // Used to render 3D text.
+        Geometry::Plane* mPlane;
+        ShaderProgram* mTextShaderProgram;
+        ShaderProgram* mSelectedShaderProgram;
 };
