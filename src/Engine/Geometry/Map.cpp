@@ -16,6 +16,7 @@ Map::Map(bool **data, glm::uvec2 dataDimensions, float wallHeight) {
 Map::~Map() {
     delete[] mVertexData;
     delete[] mIndexData;
+    delete[] mTypeMap;
 }
 
 Geometry3D::Vertex* Map::GetVertices() const {
@@ -34,6 +35,10 @@ unsigned int Map::GetIndexCount() const {
     return mIndexNr;
 }
 
+int** Map::GetTypeMap() const {
+    return mTypeMap;
+}
+
 glm::vec2 Geometry::Map::GetTextureRepeat() const {
     return mTextureRepeat;
 }
@@ -48,6 +53,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
 
     ControlNode** controlNodes = new ControlNode*[mDataDimensions.x];
     MSquare** mSquares = new MSquare*[mDataDimensions.x - 1];
+    mTypeMap = new int*[mDataDimensions.x - 1];
 
     // Initialization.
     for (unsigned int i = 0; i < mDataDimensions.x; i++) {
@@ -55,6 +61,7 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
     }
     for (unsigned int j = 0; j < mDataDimensions.x - 1; j++) {
         mSquares[j] = new MSquare[mDataDimensions.y - 1];
+        mTypeMap[j] = new int[mDataDimensions.y - 1];
     }
 
     // Node creation for marching squares.
@@ -65,10 +72,11 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
         }
     }
 
-    // Node creation for marching squares.
+    // Node creation for marching squares
     for (unsigned int x = 0; x < mDataDimensions.x - 1; x++) {
         for (unsigned int y = 0; y < mDataDimensions.y - 1; y++) {
             mSquares[x][y] = CreateMSquare(controlNodes[x][y + 1], controlNodes[x + 1][y + 1], controlNodes[x + 1][y], controlNodes[x][y]);
+            mTypeMap[x][y] = mSquares[x][y].mType;
         }
     }
 
@@ -97,7 +105,6 @@ void Map::MarchingSquares(bool ** data, const float squareSize) {
     delete[] controlNodes[mDataDimensions.y-1];
     delete[] controlNodes;
     delete[] mSquares;
-    
 }
 
 Map::MSquare Map::CreateMSquare(ControlNode topLeft, ControlNode topRight, ControlNode bottomRight, ControlNode bottomLeft) {
