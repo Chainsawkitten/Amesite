@@ -7,10 +7,11 @@
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/OBJModel.hpp>
 
-#include "../Component/Health.hpp"
-#include "../Component/Spawner.hpp"
-#include "../Component/Explode.hpp"
-#include "../Component/Controller.hpp"
+#include "../../Component/Health.hpp"
+#include "../../Component/Spawner.hpp"
+#include "../../Component/Explode.hpp"
+#include "../../Component/Controller.hpp"
+#include "../../Component/Update.hpp"
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/RelativeTransform.hpp>
 #include <Engine/Component/Mesh.hpp>
@@ -19,12 +20,15 @@
 #include <Engine/Component/Animation.hpp>
 #include <Engine/Component/ParticleEmitter.hpp>
 
-#include "../Util/ControlSchemes.hpp"
+#include "../../Util/ControlSchemes.hpp"
 
 using namespace GameObject;
 
-Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
-    node = CreateEntity();
+Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
+    mActiveGlowBody = Resources().CreateTexture2DFromFile("Resources/Crystal_01_glow.png");
+    mActiveGlowPylon1 = Resources().CreateTexture2DFromFile("Resources/Crystal_01_glow.png");
+    mActiveGlowPylon2 = Resources().CreateTexture2DFromFile("Resources/Crystal_01_glow.png");
+
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
     node->AddComponent<Component::Collider2DCircle>()->radius = 9.f;
     node->AddComponent<Component::Health>()->faction = 1;
@@ -34,6 +38,7 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
     node->GetComponent<Component::Explode>()->size = 8.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     node->GetComponent<Component::Explode>()->sound = true;
+    node->AddComponent<Component::Update>()->updateFunction = std::bind(&Pylon::mUpdateFunction, this);
 
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
@@ -41,7 +46,7 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::Material>();
     body->GetComponent<Component::Material>()->SetDiffuse("Resources/Crystal_01_diff.png");
     body->GetComponent<Component::Material>()->SetSpecular("Resources/Crystal_01_spec.png");
-    body->GetComponent<Component::Material>()->SetGlow("Resources/Crystal_01_glow.png");
+    mDeactiveGlowBody = body->GetComponent<Component::Material>()->glow;
     Component::Animation::AnimationClip* idleBody = body->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleBody->CreateKeyFrame(glm::vec3(0.3f, 0.f, 0.f), 0.f, 0.f, 0, 1.5f, false, true);
     idleBody->CreateKeyFrame(glm::vec3(0.f, 0.3f, 0.3f), 0.f, 0.f, 0.f, 1.5f, false, true);
@@ -51,12 +56,12 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
 
     pylon1 = CreateEntity();
     pylon1->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    pylon1->GetComponent<Component::RelativeTransform>()->scale *= 0.8f;
-    pylon1->AddComponent<Component::Mesh>()->geometry = mPylon1 = Resources().CreateOBJModel("Resources/Pylon_01.obj");
+    pylon1->GetComponent<Component::RelativeTransform>()->scale *= 0.5f;
+    pylon1->AddComponent<Component::Mesh>()->geometry = mPylon1 = Resources().CreateOBJModel("Resources/Crystal_01.obj");
     pylon1->AddComponent<Component::Material>();
-    pylon1->GetComponent<Component::Material>()->SetDiffuse("Resources/Pylon_01_diff.png");
-    pylon1->GetComponent<Component::Material>()->SetSpecular("Resources/Pylon_01_spec.png");
-    pylon1->GetComponent<Component::Material>()->SetGlow("Resources/Pylon_01_glow.png");
+    pylon1->GetComponent<Component::Material>()->SetDiffuse("Resources/Crystal_01_diff.png");
+    pylon1->GetComponent<Component::Material>()->SetSpecular("Resources/Crystal_01_spec.png");
+    mDeactiveGlowPylon1 = pylon1->GetComponent<Component::Material>()->glow;
     Component::Animation::AnimationClip* idlePylon1 = pylon1->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idlePylon1->CreateKeyFrame(glm::vec3(0.f, 0.f, 3.f), 0.f, 0.f, 0, 3.f * 0.1f, true, false);
     idlePylon1->CreateKeyFrame(glm::vec3(-3.f, 0.f, 0.f), 0.f, 0.f, 0.f, 3.f * 0.1f, true, false);
@@ -70,12 +75,12 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
 
     pylon2 = CreateEntity();
     pylon2->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    pylon2->GetComponent<Component::RelativeTransform>()->scale *= 0.8f;
-    pylon2->AddComponent<Component::Mesh>()->geometry = mPylon2 = Resources().CreateOBJModel("Resources/Pylon_01.obj");
+    pylon2->GetComponent<Component::RelativeTransform>()->scale *= 0.5f;
+    pylon2->AddComponent<Component::Mesh>()->geometry = mPylon2 = Resources().CreateOBJModel("Resources/Crystal_01.obj");
     pylon2->AddComponent<Component::Material>();
-    pylon2->GetComponent<Component::Material>()->SetDiffuse("Resources/Pylon_01_diff.png");
+    pylon2->GetComponent<Component::Material>()->SetDiffuse("Resources/Crystal_01_diff.png");
     pylon2->GetComponent<Component::Material>()->SetSpecular("Resources/Pylon_01_spec.png");
-    pylon2->GetComponent<Component::Material>()->SetGlow("Resources/Pylon_01_glow.png");
+    mDeactiveGlowPylon2 = pylon2->GetComponent<Component::Material>()->glow;
     Component::Animation::AnimationClip* idlePylon2 = pylon2->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idlePylon2->CreateKeyFrame(glm::vec3(0.f, 0.f, -3.f), 0.f, 0.f, 0, 3.f * 0.1f, true, false);
     idlePylon2->CreateKeyFrame(glm::vec3(3.f, 0.f, 0.f), 0.f, 0.f, 0.f, 3.f * 0.1f, true, false);
@@ -93,12 +98,24 @@ Pylon::Pylon(Scene* scene) : SuperGameObject(scene) {
     turret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShootClosestPlayer);
     turret->AddComponent<Component::Spawner>()->delay = 0.5f;
     turret->GetComponent<Component::Spawner>()->faction = 1;
+
+    Deactivate();
 }
 
 Pylon::~Pylon() {
     Resources().FreeOBJModel(mBody);
     Resources().FreeOBJModel(mPylon1);
     Resources().FreeOBJModel(mPylon2);
+    if (Active()) {
+        Resources().FreeTexture2D(mDeactiveGlowBody);
+        Resources().FreeTexture2D(mDeactiveGlowPylon1);
+        Resources().FreeTexture2D(mDeactiveGlowPylon2);
+    } else {
+        Resources().FreeTexture2D(mActiveGlowBody);
+        Resources().FreeTexture2D(mActiveGlowPylon1);
+        Resources().FreeTexture2D(mActiveGlowPylon2);
+    }
+
 }
 
 void Pylon::AddPylonPartilces(Entity* entity) {
@@ -120,4 +137,36 @@ void Pylon::AddPylonPartilces(Entity* entity) {
     emitter->particleType.startAlpha = 1.f;
     emitter->particleType.midAlpha = 1.f;
     emitter->particleType.endAlpha = 0.f;
+}
+
+float Pylon::GetHealth() {
+    return node->GetComponent<Component::Health>()->health;
+}
+
+void Pylon::Activate() {
+    SuperEnemy::Activate();
+    turret->GetComponent<Component::Controller>()->enabled = true;
+    pylon1->GetComponent<Component::Controller>()->enabled = true;
+    pylon2->GetComponent<Component::Controller>()->enabled = true;
+    body->GetComponent<Component::Material>()->glow = mActiveGlowBody;
+    pylon1->GetComponent<Component::Material>()->glow = mActiveGlowPylon1;
+    pylon2->GetComponent<Component::Material>()->glow = mActiveGlowPylon2;
+    pylon1->GetComponent<Component::ParticleEmitter>()->enabled = true;
+    pylon2->GetComponent<Component::ParticleEmitter>()->enabled = true;
+}
+
+void Pylon::Deactivate() {
+    SuperEnemy::Deactivate();
+    turret->GetComponent<Component::Controller>()->enabled = false;
+    pylon1->GetComponent<Component::Controller>()->enabled = false;
+    pylon2->GetComponent<Component::Controller>()->enabled = false;
+    body->GetComponent<Component::Material>()->glow = mDeactiveGlowBody;
+    pylon1->GetComponent<Component::Material>()->glow = mDeactiveGlowPylon1;
+    pylon2->GetComponent<Component::Material>()->glow = mDeactiveGlowPylon2;
+    pylon1->GetComponent<Component::ParticleEmitter>()->enabled = false;
+    pylon2->GetComponent<Component::ParticleEmitter>()->enabled = false;
+}
+
+void Pylon::mUpdateFunction() {
+    SuperEnemy::mUpdateFunction();
 }

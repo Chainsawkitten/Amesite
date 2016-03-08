@@ -7,9 +7,8 @@ class Scene;
 
 namespace GameObject {
     class SuperPlayer;
-    class SpinBoss;
-    class Enemy;
-    class Pylon;
+    class SuperBoss;
+    class SuperEnemy;
     class EnemySpawner;
     class Cave;
 }
@@ -56,10 +55,7 @@ namespace System {
             bool ProximityToBosses(const glm::vec3 position, const std::vector<glm::vec3> noSpawnRooms, int bossRadius) const;
 
             // Keeps track of the active enemies in the scene.
-            std::vector<GameObject::Enemy*> mEnemies;
-
-            // Keeps track of the active enemies in the scene.
-            std::vector<GameObject::Pylon*> mPylons;
+            std::vector<GameObject::SuperEnemy*> mEnemies;
 
     };
 }

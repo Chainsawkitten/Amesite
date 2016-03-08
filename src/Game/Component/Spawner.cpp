@@ -7,7 +7,7 @@ Spawner::Spawner(Entity* entity) : SuperComponent(entity) {
     delay = 0.f;
     faction = 0;
     type = BULLET;
-    enemyType = BASIC;
+    enemyType = PYLON;
 }
 
 Spawner::~Spawner() {

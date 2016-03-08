@@ -39,6 +39,28 @@ namespace ControlScheme {
      * @param deltaTime Time since last frame (in seconds).
      */
     void AlwaysShoot(Component::Controller* controller, float deltaTime);
+
+    /// Constantly fires bullets at closest player.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void AlwaysShootClosestPlayer(Component::Controller* controller, float deltaTime);
+    
+    /// Constantly fires bullets at random player.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void AlwaysShootRandomPlayer(Component::Controller* controller, float deltaTime);
+
+    /// Constantly looks at closest player.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void LookAtClosestPlayer(Component::Controller* controller, float deltaTime);
+
     
     /// Rotates the enitity with the AIM input.
     /**

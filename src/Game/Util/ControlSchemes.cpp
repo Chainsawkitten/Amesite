@@ -16,12 +16,15 @@
 #include "../GameObject/Bullet.hpp"
 #include "../Util/GameEntityFactory.hpp"
 #include <Util/Picking.hpp>
-#include "../Util/MainCamera.hpp"
+#include "../Util/Hub.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <MainWindow.hpp>
 #include <Util/Log.hpp>
 
-#include <Game/GameObject/Bullet.hpp>
+#include "../Game/GameObject/Bullet.hpp"
+#include "../Game/GameObject/Camera.hpp"
+#include "../Game/GameObject/Player/Player1.hpp"
+#include "../Game/GameObject/Player/Player2.hpp"
 
 void ControlScheme::Empty(Component::Controller* controller, float deltaTime) {}
 
@@ -76,13 +79,15 @@ void ControlScheme::MouseRotate(Component::Controller* controller, float deltaTi
     glm::vec4 playerPosition = transformComponent->modelMatrix*glm::vec4(0.f, 0.f, 0.f, 1.f);
     
     glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
-    Entity& mainCamera = MainCameraInstance().GetMainCamera();
-    glm::mat4 projectionMatrix = mainCamera.GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
-    glm::mat4 viewMatrix = mainCamera.GetComponent<Component::Transform>()->GetWorldOrientation()*glm::translate(glm::mat4(), -mainCamera.GetComponent<Component::Transform>()->GetWorldPosition());
+
+    GameObject::Camera& mainCamera = HubInstance().GetMainCamera();
+    Component::Transform* cameraTransform = mainCamera.body->GetComponent<Component::Transform>();
+    glm::mat4 projectionMatrix = mainCamera.body->GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
+    glm::mat4 viewMatrix = cameraTransform->GetWorldOrientation()*glm::translate(glm::mat4(), -cameraTransform->GetWorldPosition());
     
     glm::vec4 worldRay = Picking::CreateWorldRay(mouseCoordinates, viewMatrix, projectionMatrix);
     
-    glm::vec4 directionInPlane = Picking::CreatePlayerAimDirection(worldRay, playerPosition, glm::vec4(mainCamera.GetComponent<Component::Transform>()->position, 1.f));
+    glm::vec4 directionInPlane = Picking::CreatePlayerAimDirection(worldRay, playerPosition, glm::vec4(cameraTransform->position, 1.f));
     glm::vec2 direction(directionInPlane.x, directionInPlane.z);
     
     if (direction.y >= 0)
@@ -122,6 +127,75 @@ void ControlScheme::AlwaysShoot(Component::Controller* controller, float deltaTi
             float bulletSpeed = 20.f;
             GameEntityCreator().CreateEnemyBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), spawnerComponent->faction);
             spawnerComponent->timeSinceSpawn = 0.0f;
+        }
+    }
+}
+
+void ControlScheme::AlwaysShootClosestPlayer(Component::Controller* controller, float deltaTime) {
+    Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
+    Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
+    if (spawnerComponent != nullptr) {
+        if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
+            glm::vec2 direction;
+            GameObject::Player1* player1 = HubInstance().GetPlayer1();
+            GameObject::Player2* player2 = HubInstance().GetPlayer2();
+            if (player1->Active() || player2->Active()) {
+                glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
+                if (player1->Active() && glm::distance(player1->GetPosition(), transformWorldPosition) < glm::distance(player2->GetPosition(), transformWorldPosition))
+                    direction = glm::vec2(player1->GetPosition().x - transformWorldPosition.x, player1->GetPosition().z - transformWorldPosition.z);
+                else
+                    direction = glm::vec2(player2->GetPosition().x - transformWorldPosition.x, player2->GetPosition().z - transformWorldPosition.z);
+                if (glm::length(direction) > 0.f) {
+                    float bulletSpeed = 20.f;
+                    GameEntityCreator().CreateEnemyBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), spawnerComponent->faction);
+                    spawnerComponent->timeSinceSpawn = 0.0f;
+                }
+            }
+        }
+    }
+}
+
+void ControlScheme::AlwaysShootRandomPlayer(Component::Controller* controller, float deltaTime) {
+    Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
+    Component::Spawner* spawnerComponent = controller->entity->GetComponent<Component::Spawner>();
+    if (spawnerComponent != nullptr) {
+        if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
+            glm::vec2 direction;
+            GameObject::Player1* player1 = HubInstance().GetPlayer1();
+            GameObject::Player2* player2 = HubInstance().GetPlayer2();
+            glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
+            if (player1->Active() || player2->Active()) {
+                if (rand() % 2 && player1->Active())
+                    direction = glm::vec2(player1->GetPosition().x - transformWorldPosition.x, player1->GetPosition().z - transformWorldPosition.z);
+                else
+                    direction = glm::vec2(player2->GetPosition().x - transformWorldPosition.x, player2->GetPosition().z - transformWorldPosition.z);
+                if (glm::length(direction) > 0.f) {
+                    float bulletSpeed = 20.f;
+                    GameEntityCreator().CreateEnemyBullet(transformComponent->GetWorldPosition(), bulletSpeed * glm::normalize(glm::vec3(direction.x, 0.f, direction.y)), spawnerComponent->faction);
+                    spawnerComponent->timeSinceSpawn = 0.0f;
+                }
+            }
+        }
+    }
+}
+
+void ControlScheme::LookAtClosestPlayer(Component::Controller* controller, float deltaTime) {
+    Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
+    GameObject::Player1* player1 = HubInstance().GetPlayer1();
+    GameObject::Player2* player2 = HubInstance().GetPlayer2();
+    glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
+    if (player1->Active() || player2->Active()) {
+        glm::vec3 direction;
+        if (player1->Active() && glm::distance(player1->GetPosition(), transformWorldPosition) < glm::distance(player2->GetPosition(), transformWorldPosition))
+            direction = glm::vec3(player1->GetPosition().x - transformWorldPosition.x, 0.f, player1->GetPosition().z - transformWorldPosition.z);
+        else
+            direction = glm::vec3(player2->GetPosition().x - transformWorldPosition.x, 0.f, player2->GetPosition().z - transformWorldPosition.z);
+        if (glm::length(direction) > 0.f) {
+            float angle = glm::degrees(glm::acos(glm::dot(glm::normalize(direction), glm::vec3(0.f, 0.f, 1.f))));
+            if (direction.x > 0.f)
+                transformComponent->yaw = angle;
+            else
+                transformComponent->yaw = 360.f - angle;
         }
     }
 }

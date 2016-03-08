@@ -4,7 +4,7 @@
 #include <Engine/Entity/Entity.hpp>
 
 #include "../Component/Spawner.hpp"
-#include "Enemy.hpp"
+#include "Enemy/SuperEnemy.hpp"
 
 using namespace GameObject;
 

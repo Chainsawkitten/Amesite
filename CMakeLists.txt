@@ -385,7 +385,7 @@ set(GAME_SRCS
         src/Game/Util/GameSettings.cpp
         src/Game/Util/GameEntityFactory.cpp
         src/Game/Util/ControlSchemes.cpp
-        src/Game/Util/MainCamera.cpp
+        src/Game/Util/Hub.cpp
         src/Game/Util/CaveGenerator.cpp
         src/Game/System/ControllerSystem.cpp
         src/Game/System/HealthSystem.cpp
@@ -425,16 +425,19 @@ set(GAME_SRCS
         src/Game/GameObject/Player/Player1.cpp
         src/Game/GameObject/Player/Player2.cpp
         src/Game/GameObject/Camera.cpp
-        src/Game/GameObject/Enemy.cpp
         src/Game/GameObject/Cave.cpp
         src/Game/GameObject/Dust.cpp
         src/Game/GameObject/Explosion.cpp
-        src/Game/GameObject/Pylon.cpp
         src/Game/GameObject/Shield.cpp
         src/Game/GameObject/EnemySpawner.cpp
+        src/Game/GameObject/Enemy/SuperEnemy.cpp
+        src/Game/GameObject/Enemy/Pylon.cpp
+        src/Game/GameObject/Enemy/Rocket.cpp
         src/Game/GameObject/Boss/SuperBoss.cpp
         src/Game/GameObject/Boss/SpinBoss.cpp
         src/Game/GameObject/Boss/ShieldBoss.cpp
+        src/Game/GameObject/Boss/DivideBoss.cpp
+        src/Game/GameObject/Boss/RingBoss.cpp
         src/Game/GameObject/Altar.cpp
         src/Game/GameObject/Pillar.cpp
         src/Game/GameObject/PillarBall.cpp
@@ -447,7 +450,7 @@ set(GAME_HEADERS
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameEntityFactory.hpp
         src/Game/Util/ControlSchemes.hpp
-        src/Game/Util/MainCamera.hpp
+        src/Game/Util/Hub.hpp
         src/Game/Util/CaveGenerator.hpp
         src/Game/System/ControllerSystem.hpp
         src/Game/System/HealthSystem.hpp
@@ -487,16 +490,19 @@ set(GAME_HEADERS
         src/Game/GameObject/Player/Player1.hpp
         src/Game/GameObject/Player/Player2.hpp
         src/Game/GameObject/Camera.hpp
-        src/Game/GameObject/Enemy.hpp
         src/Game/GameObject/Cave.hpp
         src/Game/GameObject/Dust.hpp
         src/Game/GameObject/Explosion.hpp
-        src/Game/GameObject/Pylon.hpp
         src/Game/GameObject/Shield.hpp
         src/Game/GameObject/EnemySpawner.hpp
+        src/Game/GameObject/Enemy/SuperEnemy.hpp
+        src/Game/GameObject/Enemy/Pylon.hpp
+        src/Game/GameObject/Enemy/Rocket.hpp
         src/Game/GameObject/Boss/SuperBoss.hpp
         src/Game/GameObject/Boss/SpinBoss.hpp
         src/Game/GameObject/Boss/ShieldBoss.hpp
+        src/Game/GameObject/Boss/DivideBoss.hpp
+        src/Game/GameObject/Boss/RingBoss.hpp
         src/Game/GameObject/Altar.hpp
         src/Game/GameObject/Pillar.hpp
         src/Game/GameObject/PillarBall.hpp

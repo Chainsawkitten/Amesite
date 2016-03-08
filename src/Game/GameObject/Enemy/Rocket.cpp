@@ -1,4 +1,4 @@
-#include "Enemy.hpp"
+#include "Rocket.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>
@@ -7,10 +7,11 @@
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/OBJModel.hpp>
 
-#include "../Component/Controller.hpp"
-#include "../Component/Health.hpp"
-#include "../Component/Spawner.hpp"
-#include "../Component/Explode.hpp"
+#include "../../Component/Controller.hpp"
+#include "../../Component/Health.hpp"
+#include "../../Component/Spawner.hpp"
+#include "../../Component/Explode.hpp"
+#include "../../Component/Update.hpp"
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/RelativeTransform.hpp>
 #include <Engine/Component/Mesh.hpp>
@@ -20,12 +21,13 @@
 #include <Engine/Component/Animation.hpp>
 #include <Engine/Component/ParticleEmitter.hpp>
 
-#include "../Util/ControlSchemes.hpp"
+#include "../../Util/ControlSchemes.hpp"
 
 using namespace GameObject;
 
-Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
-    node = CreateEntity();
+Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
+    mActiveGlow = Resources().CreateTexture2DFromFile("Resources/enemy_head_crystal_glow.png");
+
     node->AddComponent<Component::Transform>()->scale *= 0.28f;
     node->AddComponent<Component::Collider2DCircle>()->radius = 9.f;
     node->AddComponent<Component::Physics>();
@@ -36,6 +38,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     node->GetComponent<Component::Explode>()->size = 8.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     node->GetComponent<Component::Explode>()->sound = true;
+    node->AddComponent<Component::Update>()->updateFunction = std::bind(&Rocket::mUpdateFunction, this);
 
     head = CreateEntity();
     head->AddComponent<Component::RelativeTransform>()->Move(0, 0, 5.5f);
@@ -44,7 +47,7 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     head->AddComponent<Component::Material>();
     head->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_head_crystal_diff.png");
     head->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_head_crystal_spec.png");
-    head->GetComponent<Component::Material>()->SetGlow("Resources/enemy_head_crystal_glow.png");
+    mDeactiveGlow = head->GetComponent<Component::Material>()->glow;
     Component::Animation::AnimationClip* idleHead = head->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleHead->CreateKeyFrame(glm::vec3(-0.15f, 0.f, 0.f), 0.f, 0.f, 0, 3.f, false, true);
     idleHead->CreateKeyFrame(glm::vec3(0.15f, 0.f, 0.f), 0.f, 0.f, 0.f, 3.f, false, true);
@@ -69,13 +72,35 @@ Enemy::Enemy(Scene* scene) : SuperGameObject(scene) {
     turret->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShoot);
     turret->AddComponent<Component::Spawner>()->delay = 0.5f;
     turret->GetComponent<Component::Spawner>()->faction = 1;
+
+    Deactivate();
 }
 
-Enemy::~Enemy() {
+Rocket::~Rocket() {
     Resources().FreeOBJModel(mEnemyHead);
     Resources().FreeOBJModel(mEnemyTail);
+    if (Active())
+        Resources().FreeTexture2D(mDeactiveGlow);
+    else
+        Resources().FreeTexture2D(mActiveGlow);
 }
 
-float Enemy::GetHealth() {
+float Rocket::GetHealth() {
     return node->GetComponent<Component::Health>()->health;
+}
+
+void Rocket::Activate() {
+    SuperEnemy::Activate();
+    turret->GetComponent<Component::Controller>()->enabled = true;
+    tail->GetComponent<Component::Material>()->glow = mActiveGlow;
+}
+
+void Rocket::Deactivate() {
+    SuperEnemy::Deactivate();
+    turret->GetComponent<Component::Controller>()->enabled = false;
+    tail->GetComponent<Component::Material>()->glow = mDeactiveGlow;
+}
+
+void Rocket::mUpdateFunction() {
+    SuperEnemy::mUpdateFunction();
 }

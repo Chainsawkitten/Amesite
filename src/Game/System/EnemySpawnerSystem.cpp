@@ -14,8 +14,9 @@
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
-#include "../GameObject/Pylon.hpp"
-#include "../GameObject/Enemy.hpp"
+#include "../GameObject/Enemy/SuperEnemy.hpp"
+#include "../GameObject/Enemy/Pylon.hpp"
+#include "../GameObject/Enemy/Rocket.hpp"
 #include "../GameObject/Boss/SpinBoss.hpp"
 
 #include <vector>
@@ -35,38 +36,15 @@ EnemySpawnerSystem::~EnemySpawnerSystem() {
 }
 
 void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) {
-    // Ugly hardcode until we have a proper SuperEnemy to inherit from.
-    for (unsigned int i = 0; i < mPylons.size(); i++) {
-        if (mPylons[i]->node->GetComponent<Component::Health>()->health < 0.01f) {
-            Component::Explode* explodeComp = mPylons[i]->node->GetComponent<Component::Explode>();
-            // Create Explosion    
-            if (explodeComp != nullptr)
-                GameEntityCreator().CreateExplosion(mPylons[i]->node->GetComponent<Component::Transform>()->GetWorldPosition() + explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex);
-            
-            //Kill game object
-            mPylons[i]->Kill();
-            mEnemiesKilled++;
-            mPylons.erase(mPylons.begin() + i);
-        }
-    }
-
     for (unsigned int i = 0; i < mEnemies.size(); i++) {
-        if (mEnemies[i]->node->GetComponent<Component::Health>()->health < 0.01f) {
-            Component::Explode* explodeComp = mEnemies[i]->node->GetComponent<Component::Explode>();
-            // Create Explosion    
-            if (explodeComp != nullptr)
-                GameEntityCreator().CreateExplosion(mEnemies[i]->node->GetComponent<Component::Transform>()->GetWorldPosition() + explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex);
-
-            //Kill game object
+        if (mEnemies[i]->GetHealth() < 0.01f) {
             mEnemies[i]->Kill();
             mEnemiesKilled++;
             mEnemies.erase(mEnemies.begin() + i);
         }
     }
 
-    mEnemyCount = mEnemies.size() + mPylons.size();
-
-    if (mEnemyCount < mMaxEnemyCount) {
+    if (mEnemies.size() < mMaxEnemyCount) {
         std::vector<Component::Spawner*> spawners;
         spawners = scene.GetAll<Component::Spawner>();
 
@@ -79,10 +57,10 @@ void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject:
                     glm::vec3 position = FindValidPosition(cave, players, noSpawnRooms);
                     if (position.x > 0.f) {
                         spawner->timeSinceSpawn = 0.0;
-                        if (spawner->enemyType == Component::Spawner::BASIC) {
-                            mEnemies.push_back(GameEntityCreator().CreateBasicEnemy(position));
-                        } else if (spawner->enemyType == Component::Spawner::PYLON) {
-                            mPylons.push_back(GameEntityCreator().CreateEnemyPylon(position));
+                        if (spawner->enemyType == Component::Spawner::PYLON) {
+                            mEnemies.push_back(GameEntityCreator().CreateEnemyPylon(position));
+                        } else if (spawner->enemyType == Component::Spawner::ROCKET) {
+                            mEnemies.push_back(GameEntityCreator().CreateRocket(position));
                         }
                     }
                 }

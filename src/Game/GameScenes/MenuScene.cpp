@@ -20,7 +20,7 @@
 #include "../Util/GameSettings.hpp"
 
 #include "../Util/GameEntityFactory.hpp"
-#include "../Util/MainCamera.hpp"
+#include "../Util/Hub.hpp"
 #include "../GameObject/Camera.hpp"
 #include <Entity/Entity.hpp>
 #include <Component/Transform.hpp>
@@ -40,7 +40,7 @@ MenuScene::MenuScene() {
     
     // Create main camera
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(-3.f, 1.4f, 5.f), glm::vec3(60.f, 10.f, 0.f));
-    MainCameraInstance().SetMainCamera(mMainCamera->body);
+    Hub().SetMainCamera(mMainCamera);
     
     GameEntityCreator().CreatePlayer1(glm::vec3(0.f, -0.3f, -1.f));
     GameEntityCreator().CreatePlayer2(glm::vec3(10.f, 0.f, 0.f));

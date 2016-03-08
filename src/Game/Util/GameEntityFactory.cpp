@@ -30,14 +30,17 @@
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
 #include "../GameObject/Camera.hpp"
-#include "../GameObject/Enemy.hpp"
+#include "../GameObject/Enemy/Rocket.hpp"
+#include "../GameObject/Enemy/Pylon.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Dust.hpp"
 #include "../GameObject/Explosion.hpp"
-#include "../GameObject/Pylon.hpp"
 #include "../GameObject/Shield.hpp"
 #include "../GameObject/EnemySpawner.hpp"
 #include "../GameObject/Boss/SpinBoss.hpp"
+#include "../GameObject/Boss/ShieldBoss.hpp"
+#include "../GameObject/Boss/DivideBoss.hpp"
+#include "../GameObject/Boss/RingBoss.hpp"
 #include "../GameObject/Altar.hpp"
 #include "../GameObject/Pillar.hpp"
 #include "../GameObject/PillarBall.hpp"
@@ -55,15 +58,15 @@ GameEntityFactory::GameEntityFactory(){
     mScene = nullptr;
 }
 
-EnemySpawner * GameEntityFactory::CreateEnemySpawner(unsigned int type, float delay)
+EnemySpawner* GameEntityFactory::CreateEnemySpawner(unsigned int type, float delay)
 {
     EnemySpawner *gameObject = new EnemySpawner(mScene, type);
     gameObject->body->GetComponent<Component::Spawner>()->delay = delay;
     return gameObject;
 }
 
-Enemy* GameEntityFactory::CreateBasicEnemy(const glm::vec3& origin) {
-    Enemy* gameObject = new Enemy(mScene);
+Rocket* GameEntityFactory::CreateRocket(const glm::vec3& origin) {
+    Rocket* gameObject = new Rocket(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }
@@ -100,6 +103,24 @@ Player2* GameEntityFactory::CreatePlayer2(const glm::vec3& origin) {
 
 GameObject::SpinBoss* GameEntityFactory::CreateSpinBoss(const glm::vec3& origin) {
     SpinBoss* gameObject = new SpinBoss(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::ShieldBoss* GameEntityFactory::CreateShieldBoss(const glm::vec3& origin) {
+    ShieldBoss* gameObject = new ShieldBoss(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::DivideBoss* GameEntityFactory::CreateDivideBoss(const glm::vec3& origin) {
+    DivideBoss* gameObject = new DivideBoss(mScene);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::RingBoss* GameEntityFactory::CreateRingBoss(const glm::vec3& origin) {
+    RingBoss* gameObject = new RingBoss(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }

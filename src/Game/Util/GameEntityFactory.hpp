@@ -15,13 +15,16 @@ namespace GameObject{
     class Player1;
     class Player2;
     class Camera;
-    class Enemy;
+    class Rocket;
+    class Pylon;
     class Cave;
     class Dust;
     class Explosion;
-    class Pylon;
     class Shield;
     class SpinBoss;
+    class ShieldBoss;
+    class DivideBoss;
+    class RingBoss;
     class EnemySpawner;
     class Altar;
     class Pillar;
@@ -52,12 +55,12 @@ class GameEntityFactory {
          */
         GameObject::EnemySpawner* CreateEnemySpawner(unsigned int type, float delay);
         
-        /// Create a basic enemy.
+        /// Create a rocket enemy.
         /**
          * @param origin The enemy's starting position
          * @return The enemy GameObject.
          */
-        GameObject::Enemy* CreateBasicEnemy(const glm::vec3& origin);
+        GameObject::Rocket* CreateRocket(const glm::vec3& origin);
 
         /// Create pylon enemy.
         /**
@@ -96,6 +99,27 @@ class GameEntityFactory {
          * @return The SpinBoss GameObject.
          */
         GameObject::SpinBoss* CreateSpinBoss(const glm::vec3& origin);
+
+        /// Create ShieldBoss.
+        /**
+         * @param origin The ShieldBoss's starting position.
+         * @return The ShieldBoss GameObject.
+         */
+        GameObject::ShieldBoss* CreateShieldBoss(const glm::vec3& origin);
+
+        /// Create DivideBoss.
+        /**
+         * @param origin The DivideBoss's starting position.
+         * @return The DivideBoss GameObject.
+         */
+        GameObject::DivideBoss* CreateDivideBoss(const glm::vec3& origin);
+
+        /// Create RingBoss.
+        /**
+         * @param origin The RingBoss's starting position.
+         * @return The RingBoss GameObject.
+         */
+        GameObject::RingBoss* CreateRingBoss(const glm::vec3& origin);
         
         /// Create Altar.
         /**
