@@ -19,10 +19,14 @@ GridCollideSystem::~GridCollideSystem() {
 
 void GridCollideSystem::Update(Scene& scene, float deltaTime, GameObject::Cave& cave) {
     std::vector<Component::GridCollide*> gridCollideVector = scene.GetAll<Component::GridCollide>();
-    for (auto gridCollideCompoenent : gridCollideVector)
-        if (cave.GridCollide(gridCollideCompoenent->entity, deltaTime))
-            if (gridCollideCompoenent->entity->gameObject != nullptr)
-                gridCollideCompoenent->entity->gameObject->Kill();
-            else
-                gridCollideCompoenent->entity->Kill();
+    for (auto& gridCollideCompoenent : gridCollideVector)
+        if (cave.GridCollide(gridCollideCompoenent->entity, deltaTime)) {
+            gridCollideCompoenent->hasCollided = true;
+            if (gridCollideCompoenent->removeOnImpact) {
+                if (gridCollideCompoenent->entity->gameObject != nullptr)
+                    gridCollideCompoenent->entity->gameObject->Kill();
+                else
+                    gridCollideCompoenent->entity->Kill();
+            }
+        }
 }

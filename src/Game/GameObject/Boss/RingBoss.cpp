@@ -49,7 +49,7 @@ RingBoss::RingBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Spawner>()->faction = 1.f;
     body->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShootClosestPlayer);
 
-    CreateRing(scene);
+    CreateRing();
 }
 
 RingBoss::~RingBoss() {
@@ -65,8 +65,8 @@ glm::vec3 RingBoss::GetPosition() {
     return node->GetComponent<Component::Transform>()->position;
 }
 
-void RingBoss::CreateRing(Scene* scene) {
-    ring.node = scene->CreateEntity();
+void RingBoss::CreateRing() {
+    ring.node = CreateEntity();
     Component::RelativeTransform* transform = ring.node->AddComponent<Component::RelativeTransform>();
     transform->parentEntity = node;
     transform->scale *= 1.8f;
@@ -74,25 +74,25 @@ void RingBoss::CreateRing(Scene* scene) {
     ring.node->AddComponent<Component::Material>();
     ring.node->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::LookAtClosestPlayer);
 
-    ring.midFront = scene->CreateEntity();
+    ring.midFront = CreateEntity();
     CreateRingPart(ring.midFront, glm::vec3(0.f, 0.f, 10.f));
 
-    ring.left = scene->CreateEntity();
+    ring.left = CreateEntity();
     CreateRingPart(ring.left, glm::vec3(8.f, 0.f, 2.f));
 
-    ring.right = scene->CreateEntity();
+    ring.right = CreateEntity();
     CreateRingPart(ring.right, glm::vec3(-8.f,0.f, 2.f));
 
-    ring.leftFront = scene->CreateEntity();
+    ring.leftFront = CreateEntity();
     CreateRingPart(ring.leftFront, glm::vec3(8.f, 0.f, 10.f));
 
-    ring.rightFront = scene->CreateEntity();
+    ring.rightFront = CreateEntity();
     CreateRingPart(ring.rightFront, glm::vec3(-8.f, 0.f, 10.f));
 
-    ring.leftBack = scene->CreateEntity();
+    ring.leftBack = CreateEntity();
     CreateRingPart(ring.leftBack, glm::vec3(7.f, 0.f, -5.f));
 
-    ring.rightBack = scene->CreateEntity();
+    ring.rightBack = CreateEntity();
     CreateRingPart(ring.rightBack, glm::vec3(-7.f, 0.f, -5.f));
 
 }

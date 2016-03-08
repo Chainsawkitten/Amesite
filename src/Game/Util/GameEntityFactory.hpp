@@ -62,6 +62,13 @@ class GameEntityFactory {
          */
         GameObject::Rocket* CreateRocket(const glm::vec3& origin);
 
+        /// Create a mini rocket enemy.
+        /**
+        * @param origin The enemy's starting position
+        * @return The enemy GameObject.
+        */
+        GameObject::Rocket* CreateMiniRocket(const glm::vec3& origin);
+
         /// Create pylon enemy.
         /**
          * @param origin The enemy's starting position

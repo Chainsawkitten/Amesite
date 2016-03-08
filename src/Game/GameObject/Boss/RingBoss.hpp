@@ -55,7 +55,7 @@ namespace GameObject {
             Geometry::OBJModel* mBodyModel;
             Geometry::OBJModel* mRingModel;
 
-            void CreateRing(Scene* scene);
+            void CreateRing();
 
             void CreateRingPart(Entity* entity, glm::vec3 position);
     };

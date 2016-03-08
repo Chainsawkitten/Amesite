@@ -15,6 +15,7 @@
 #include "../Component/Damage.hpp"
 #include "../Component/Health.hpp"
 #include "../Component/LifeTime.hpp"
+#include "../Component/GridCollide.hpp"
 
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
@@ -68,6 +69,20 @@ EnemySpawner* GameEntityFactory::CreateEnemySpawner(unsigned int type, float del
 Rocket* GameEntityFactory::CreateRocket(const glm::vec3& origin) {
     Rocket* gameObject = new Rocket(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+Rocket* GameEntityFactory::CreateMiniRocket(const glm::vec3& origin) {
+    Rocket* gameObject = new Rocket(mScene);
+    Component::Transform* transform = gameObject->node->GetComponent<Component::Transform>();
+    transform->position = origin;
+    transform->scale *= 0.5f;
+    gameObject->node->AddComponent<Component::LifeTime>()->lifeTime = 5.f;
+    gameObject->node->GetComponent<Component::Damage>()->removeOnImpact = true;
+    gameObject->node->GetComponent<Component::GridCollide>()->removeOnImpact = true;
+    Component::Health *healthComp = gameObject->node->GetComponent<Component::Health>();
+    healthComp->maxHealth = healthComp->health = 20.f;
+    healthComp->removeOnLowHealth = true;
     return gameObject;
 }
 

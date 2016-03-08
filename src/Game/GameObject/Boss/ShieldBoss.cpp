@@ -57,9 +57,9 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
 
     mCoverModel = Resources().CreateOBJModel("Resources/ring_segment.obj");
     for (int i = 0; i < 3; i++) {
-        coverArr[i].node = scene->CreateEntity();
-        coverArr[i].leftShield = scene->CreateEntity();
-        coverArr[i].rightShield = scene->CreateEntity();
+        coverArr[i].node = CreateEntity();
+        coverArr[i].leftShield = CreateEntity();
+        coverArr[i].rightShield = CreateEntity();
         CreateCover(&coverArr[i]);
         Component::Transform* transform = coverArr[i].node->GetComponent<Component::Transform>();
         transform->yaw = i * 120.f;
@@ -70,6 +70,9 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
 ShieldBoss::~ShieldBoss() {
     Resources().FreeOBJModel(mBodyModel);
     Resources().FreeOBJModel(mCoverModel);
+    //for (int i = 0; i < 3; i++) {
+    //    coverArr[i].node->Kill();
+    //}
 }
 
 float ShieldBoss::GetHealth() {

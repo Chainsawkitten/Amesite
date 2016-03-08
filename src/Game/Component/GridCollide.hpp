@@ -14,5 +14,17 @@ namespace Component {
             
             /// Destructor.
             ~GridCollide();
+
+            /// Remove Entity to which this %Component corresponds if true.
+            /**
+             * Default: true;
+             */
+            bool removeOnImpact;
+
+            /// True if object has collied with grid.
+            /**
+             * Default: false;
+             */
+            bool hasCollided;
     };
 }

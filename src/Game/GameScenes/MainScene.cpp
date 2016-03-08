@@ -95,7 +95,7 @@ MainScene::MainScene() {
     CaveGenerator::Coordinate SouthWest(5, width - 5);
 
     std::vector<CaveGenerator::Coordinate> bossPositions;
-    bossPositions.push_back(NorthWest);
+    bossPositions.push_back(CaveGenerator::Coordinate(width / 2 + 4, height / 2 + 4));
     bossPositions.push_back(SouthWest);
     bossPositions.push_back(SouthEast);
     bossPositions.push_back(NorthEast);
@@ -118,10 +118,10 @@ MainScene::MainScene() {
     HubInstance().SetPlayer2(player2);
     
     // Create bosses and pillars
-    mBossVector.push_back(GameEntityCreator().CreateShieldBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
-    mBossVector.push_back(GameEntityCreator().CreateDivideBoss(glm::vec3(mCave->scaleFactor*bossPositions[1].x, 0.f, mCave->scaleFactor*bossPositions[1].y)));
+    mBossVector.push_back(GameEntityCreator().CreateDivideBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
+    mBossVector.push_back(GameEntityCreator().CreateShieldBoss(glm::vec3(mCave->scaleFactor*bossPositions[1].x, 0.f, mCave->scaleFactor*bossPositions[1].y)));
     mBossVector.push_back(GameEntityCreator().CreateRingBoss(glm::vec3(mCave->scaleFactor*bossPositions[2].x, 0.f, mCave->scaleFactor*bossPositions[2].y)));
-    mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[3].x, 0.f, mCave->scaleFactor*bossPositions[3].y)));
+    mBossVector.push_back(GameEntityCreator().CreateShieldBoss(glm::vec3(mCave->scaleFactor*bossPositions[3].x, 0.f, mCave->scaleFactor*bossPositions[3].y)));
     int numberOfBossPositions = bossPositions.size();
     for (int i = 0; i < numberOfBossPositions; i++) {
         mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(mPortalPosition.x - 15.f + 15.f * i, -8.f, playerStartZ + 25.f - 2.f * i), mBossVector[i]->GetPosition()));
@@ -161,6 +161,7 @@ MainScene::MainScene() {
     mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
 
     //GameEntityCreator().CreateRingBoss(glm::vec3(mPortalPosition.x, 0.f, mPortalPosition.y + 25.f));
+    GameEntityCreator().CreateEnemySpawner(Component::Spawner::ROCKET, 0.1f);
 
 }
 
@@ -204,17 +205,17 @@ void MainScene::Update(float deltaTime) {
     // Updates model matrices for this frame.
     UpdateModelMatrices();
 
-    // ParticleSystem
+    // ParticleSystems
     System::Particle().Update(*this, deltaTime);
 
     // Check collisions.
     mCollisionSystem.Update(*this);
 
-    // Update enemy spawning
-    mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);
-
     // Check grid collisions.
     mGridCollideSystem.Update(*this, deltaTime, *mCave);
+
+    // Update enemy spawning
+    mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);
 
     // Update health
     mHealthSystem.Update(*this, deltaTime);
@@ -239,7 +240,6 @@ void MainScene::Update(float deltaTime) {
 
     //If all players are disabled, respawn them.
     mCheckpointSystem.Update(deltaTime);
-
     int bossVectorSize = mBossVector.size();
     for (int i = 0; i < bossVectorSize; i++) {
         if (mBossVector[i] != nullptr)

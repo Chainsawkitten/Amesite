@@ -40,7 +40,7 @@ namespace GameObject {
 
             /// How close the players have to come to active the enemy.
             /**
-             * Default: 40.f
+             * Default: 30.f
              */
             float range;
 

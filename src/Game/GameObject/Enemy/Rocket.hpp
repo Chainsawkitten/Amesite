@@ -23,12 +23,8 @@ namespace GameObject {
            
             ~Rocket();
 
-            /// Head relative to node
-            Entity* head;
-            /// Tail relative to node
-            Entity* tail;
-            /// Turret relative to head
-            Entity* turret;
+            /// Body relative to node
+            Entity* body;
 
             /// Activates the enemy.
             void Activate();
@@ -44,8 +40,7 @@ namespace GameObject {
         protected:
             void mUpdateFunction();
         private:
-            Geometry::OBJModel* mEnemyHead;
-            Geometry::OBJModel* mEnemyTail;
+            Geometry::OBJModel* mBodyModel;
 
             Texture2D* mActiveGlow;
             Texture2D* mDeactiveGlow;

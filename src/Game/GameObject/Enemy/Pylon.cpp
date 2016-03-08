@@ -79,7 +79,7 @@ Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
     pylon2->AddComponent<Component::Mesh>()->geometry = mPylon2 = Resources().CreateOBJModel("Resources/Crystal_01.obj");
     pylon2->AddComponent<Component::Material>();
     pylon2->GetComponent<Component::Material>()->SetDiffuse("Resources/Crystal_01_diff.png");
-    pylon2->GetComponent<Component::Material>()->SetSpecular("Resources/Pylon_01_spec.png");
+    pylon2->GetComponent<Component::Material>()->SetSpecular("Resources/Crystal_01_spec.png");
     mDeactiveGlowPylon2 = pylon2->GetComponent<Component::Material>()->glow;
     Component::Animation::AnimationClip* idlePylon2 = pylon2->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idlePylon2->CreateKeyFrame(glm::vec3(0.f, 0.f, -3.f), 0.f, 0.f, 0, 3.f * 0.1f, true, false);
@@ -115,7 +115,6 @@ Pylon::~Pylon() {
         Resources().FreeTexture2D(mActiveGlowPylon1);
         Resources().FreeTexture2D(mActiveGlowPylon2);
     }
-
 }
 
 void Pylon::AddPylonPartilces(Entity* entity) {

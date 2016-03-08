@@ -61,6 +61,12 @@ namespace ControlScheme {
      */
     void LookAtClosestPlayer(Component::Controller* controller, float deltaTime);
 
+    /// Accelerate towards closest player.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void AccelerateTowardsClosestPlayer(Component::Controller* controller, float deltaTime);
     
     /// Rotates the enitity with the AIM input.
     /**

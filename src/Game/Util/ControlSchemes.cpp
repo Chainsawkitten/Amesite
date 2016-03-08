@@ -200,6 +200,50 @@ void ControlScheme::LookAtClosestPlayer(Component::Controller* controller, float
     }
 }
 
+void ControlScheme::AccelerateTowardsClosestPlayer(Component::Controller* controller, float deltaTime) {
+    //Component::Physics* physics = controller->entity->GetComponent<Component::Physics>();
+    //Component::Transform* transform = controller->entity->GetComponent<Component::Transform>();
+    //if (physics != nullptr) {
+    //    glm::vec3 worldDirection = transform->GetWorldDirection();
+    //    /*if (glm::length(physics->acceleration) < 0.01f)
+    //        physics->acceleration = worldDirection * controller->speed * deltaTime;
+    //    else {
+    //        float accelerationFactor = ((glm::dot(worldDirection, glm::normalize(physics->acceleration)) - 1.f) * -1.f) * 20.f + 1.f;
+    //        physics->acceleration += worldDirection * controller->speed * deltaTime * accelerationFactor * accelerationFactor * accelerationFactor;
+    //    }*/
+
+    //    if (glm::length(physics->velocity) < 0.01f)
+    //    physics->velocity = worldDirection * controller->speed * deltaTime;
+    //    else {
+    //    //float accelerationFactor = ((glm::dot(worldDirection, glm::normalize(physics->acceleration)) - 1.f) * -1.f) * 20.f + 1.f;
+    //        physics->velocity += worldDirection * controller->speed * deltaTime;// *accelerationFactor * accelerationFactor * accelerationFactor;
+    //    }
+    //}    
+
+    Component::Transform* transformComponent = controller->entity->GetComponent<Component::Transform>();
+    GameObject::Player1* player1 = HubInstance().GetPlayer1();
+    GameObject::Player2* player2 = HubInstance().GetPlayer2();
+    glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
+    if (player1->Active() || player2->Active()) {
+        glm::vec3 direction;
+        if (player1->Active() && glm::distance(player1->GetPosition(), transformWorldPosition) < glm::distance(player2->GetPosition(), transformWorldPosition))
+            direction = glm::vec3(player1->GetPosition().x - transformWorldPosition.x, 0.f, player1->GetPosition().z - transformWorldPosition.z);
+        else
+            direction = glm::vec3(player2->GetPosition().x - transformWorldPosition.x, 0.f, player2->GetPosition().z - transformWorldPosition.z);
+        if (glm::length(direction) > 0.01f) {
+            Component::Physics* physics = controller->entity->GetComponent<Component::Physics>();
+            if (physics != nullptr) {
+                direction = glm::normalize(direction);
+                if (glm::length(physics->velocity) < 0.01f) {
+                    physics->velocity = direction * controller->speed * deltaTime;
+                } else {
+                    physics->velocity += direction * controller->speed * deltaTime;
+                }
+            }
+        }
+    }
+}
+
 void ControlScheme::AutoRotate(Component::Controller* controller, float deltaTime) {
     Entity* entity = controller->entity;
     

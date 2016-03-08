@@ -17,6 +17,8 @@ SuperBoss::SuperBoss(Scene* scene) : SuperGameObject(scene) {
 
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
+
+    range = 80.f;
 }
 
 SuperBoss::~SuperBoss() {

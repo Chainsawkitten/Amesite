@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SuperBoss.hpp"
+#include <random>
 
 class Scene;
 class Entity;
@@ -41,5 +42,9 @@ namespace GameObject {
             void mUpdateFunction();
         private:
             Geometry::OBJModel* mBodyModel;
+
+            float mNextHpStep;
+
+            std::mt19937 mRNG;
     };
 }

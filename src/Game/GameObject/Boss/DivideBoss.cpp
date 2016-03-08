@@ -14,6 +14,7 @@
 #include "../../Component/Reflect.hpp"
 #include "../../Component/Controller.hpp"
 #include "../../Component/Damage.hpp"
+#include "../../Component/LifeTime.hpp"
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/RelativeTransform.hpp>
 #include <Engine/Component/Mesh.hpp>
@@ -24,11 +25,12 @@
 #include <Engine/Component/Physics.hpp>
 
 #include "../../Util/ControlSchemes.hpp"
+#include "../../Util/GameEntityFactory.hpp"
+#include "../Enemy/Rocket.hpp"
 
 using namespace GameObject;
 
 DivideBoss::DivideBoss(Scene* scene) : SuperBoss(scene) {
-
     node->AddComponent<Component::Transform>()->scale *= 1.f;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&DivideBoss::mUpdateFunction, this);
 
@@ -49,6 +51,8 @@ DivideBoss::DivideBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Health>()->health = body->GetComponent<Component::Health>()->maxHealth = 300.f;
     body->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     body->GetComponent<Component::Physics>()->angularVelocity.y = -0.1f;
+
+    mNextHpStep = 0.9f;
 }
 
 DivideBoss::~DivideBoss() {
@@ -75,6 +79,14 @@ void DivideBoss::mUpdateFunction() {
     SuperBoss::mUpdateFunction();
     Component::Health* heathComp = body->GetComponent<Component::Health>();
     float healthFactor = heathComp->health / heathComp->maxHealth;
+    if (healthFactor < mNextHpStep) {
+        mNextHpStep -= 0.1f;
+        for (int i = 0; i < 5; i++) {
+            std::uniform_int_distribution<uint32_t> randomValue(0, 1);
+            GameObject::Rocket* miniRocket = GameEntityCreator().CreateMiniRocket(body->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(randomValue(mRNG) * 2.f - 1.f, 0.f, randomValue(mRNG) * 2.f - 1.f) * 10.f);
+            miniRocket->range = this->range;
+            miniRocket->node->GetComponent<Component::LifeTime>()->lifeTime = 20.f;
+        }
+    }
     body->GetComponent<Component::Transform>()->scale = glm::vec3(1.f, 1.f, 1.f) * healthFactor + 0.2f;
-    //Create Rocket
 }

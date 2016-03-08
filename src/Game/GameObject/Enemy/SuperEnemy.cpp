@@ -14,7 +14,7 @@ using namespace GameObject;
 SuperEnemy::SuperEnemy(Scene* scene) : SuperGameObject(scene) {
     mActive = false;
     node = CreateEntity();
-    range = 40.f;
+    range = 30.f;
 }
 
 SuperEnemy::~SuperEnemy() {
