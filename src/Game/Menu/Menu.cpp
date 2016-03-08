@@ -72,7 +72,10 @@ void Menu::RenderSelected() {
 }
 
 void Menu::RenderMenuOptions() {
-    /// @todo
+    const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
+    
+    for (MenuOption* menuOption : mMenuOptions)
+        RenderMenuOption(menuOption, screenSize);
 }
 
 void Menu::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize) {
