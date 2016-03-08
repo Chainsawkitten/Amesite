@@ -29,9 +29,9 @@ void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>&
     glm::vec3 cameraPos = glm::vec3(0.f, 0.f, 0.f);
     glm::vec3 min = glm::vec3(std::numeric_limits<float>::max(), 0.f, std::numeric_limits<float>::max());
     glm::vec3 max = glm::vec3(-std::numeric_limits<float>::max(), 0.f, -std::numeric_limits<float>::max());
-    
-    float heightFactor = 3.f;
-    float widthFactor = 2.f;
+
+    float heightFactor = 1.25f;
+    float widthFactor = 0.75f;
     
     for (int i = 0; i < numberOfPlayers; i++) {
         glm::vec3 playerPos = players[i]->GetPosition();
