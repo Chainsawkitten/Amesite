@@ -254,8 +254,14 @@ void MainScene::Update(float deltaTime) {
         ClearKilled();
     }
     
+    if (mMenu.IsActive())
+        mMenu.Update();
+    
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
+    
+    if (mMenu.IsActive())
+        mMenu.RenderSelected();
     
     // Glow.
     mGlowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
@@ -280,6 +286,9 @@ void MainScene::Update(float deltaTime) {
     
     // Render to back buffer.
     mPostProcessing->Render();
+    
+    if (mMenu.IsActive())
+        mMenu.RenderMenuOptions();
     
     mTimer += deltaTime;
     

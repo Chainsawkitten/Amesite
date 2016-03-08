@@ -14,4 +14,13 @@ class Menu {
          * @return Whether the player is currently in the menu.
          */
         bool IsActive() const;
+        
+        /// Update the menu.
+        void Update();
+        
+        /// Render selected menu option.
+        void RenderSelected();
+        
+        /// Render menu options.
+        void RenderMenuOptions();
 };
