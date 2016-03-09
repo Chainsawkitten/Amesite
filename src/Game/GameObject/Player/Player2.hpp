@@ -102,6 +102,9 @@ namespace GameObject {
         // Turret relative to body.
         Entity* mRightTurret;
 
+        // Light under the player.
+        Entity* mBottomLight;
+
         void AddEngine(Entity* entity, glm::vec3 position, glm::vec3 scale);
 
         void AddPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale);
