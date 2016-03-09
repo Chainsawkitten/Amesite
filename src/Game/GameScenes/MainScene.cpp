@@ -130,7 +130,7 @@ MainScene::MainScene() {
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
     // Set menu position.
-    mMenu.SetPosition(glm::vec3(0.f, 5.f, 14.5f));
+    mMenu.SetPosition(glm::vec3(0.f, 4.f, 11.5f));
     mMenu.SetRotation(glm::vec3(0.f, 330.f, 0.f));
     
     // Create bosses and pillars
