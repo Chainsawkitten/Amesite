@@ -98,6 +98,14 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mLight->AddComponent<Component::SpotLight>()->coneAngle = 20.f;
     mLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
 
+    mBottomLight = CreateEntity();
+    mBottomLight->AddComponent<Component::RelativeTransform>()->Move(0.f, -7.f, 0.f);
+    mBottomLight->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
+    mBottomLight->AddComponent<Component::Animation>();
+    mBottomLight->AddComponent<Component::PointLight>();
+    mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 1.f);
+    mBottomLight->GetComponent<Component::PointLight>()->attenuation = 0.8f;
+
     mLeftTurret = CreateEntity();
     mLeftTurret->AddComponent<Component::RelativeTransform>()->Move(2.5f, 0, 13);
     mLeftTurret->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
@@ -247,11 +255,17 @@ void Player2::mUpdateFunction() {
     if (GetHealth() >= 2.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = LIGHTDAMAGE;
         mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
+        mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.f, 1.f);
+        mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
     } else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = MEDIUMDAMAGE;
+        mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.0f, 0.0f);
+        mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;
     } else {
         mState = HEAVYDAMAGE;
+        mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
+        mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mHeavyDamageTexture;
     }
 
