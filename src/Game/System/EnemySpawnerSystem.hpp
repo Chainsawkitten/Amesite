@@ -35,9 +35,15 @@ namespace System {
 
             ///Returns amount of enemies killed.
             /**
-            * @return The amount of enemies killed.
-            */
+             * @return The amount of enemies killed.
+             */
             unsigned int GetEnemiesKilled();
+            
+            /// Get list of all enemies.
+            /**
+             * @return All enemies.
+             */
+            const std::vector<GameObject::SuperEnemy*>& GetEnemies() const;
 
         private:
             // Enemy count.

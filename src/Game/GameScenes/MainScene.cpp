@@ -53,6 +53,7 @@
 #include "../GameObject/Bullet.hpp"
 #include "../GameObject/Altar.hpp"
 #include "../GameObject/Pillar.hpp"
+#include "../GameObject/Enemy/SuperEnemy.hpp"
 
 
 #include "../Game.hpp"
@@ -301,8 +302,13 @@ void MainScene::Update(float deltaTime) {
     mTimer += deltaTime;
     
     // Set music volumes.
-    if (mTimer > 3.f)
-        mTargetMix = 1.f;
+    mTargetMix = 0.f;
+    for (GameObject::SuperEnemy* enemy : mEnemySpawnerSystem.GetEnemies()) {
+        if (enemy->Active()) {
+            mTargetMix = 1.f;
+            break;
+        }
+    }
     
     if (mTargetMix > mMix)
         mMix += deltaTime;
