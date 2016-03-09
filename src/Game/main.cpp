@@ -11,7 +11,7 @@
 
 #include "Game.hpp"
 #include "GameScenes/SplashScene.hpp"
-#include "GameScenes/MainScene.hpp"
+#include "GameScenes/LoadingScene.hpp"
 
 //#define _CRTDBG_MAP_ALLOC
 //#include <stdlib.h>
@@ -48,7 +48,7 @@ int main() {
     if (GameSettings::GetInstance().GetBool("Show Splash Screen"))
         Game::GetInstance().SetScene(new SplashScene());
     else
-        Game::GetInstance().SetScene(new MainScene());
+        Game::GetInstance().SetScene(new LoadingScene());
     
     // Profiling variables.
     bool profiling = false;

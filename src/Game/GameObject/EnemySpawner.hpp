@@ -16,9 +16,9 @@ namespace GameObject {
     public:
         /// Create %Enemy
         /**
-        * @param scene Pointer to which Scene %Enemy Enities' are contained.
-        * @param type of enemy to spawn - documented in Component::Spawner::EnemyType.
-        */
+         * @param scene Pointer to which Scene %Enemy Enities' are contained.
+         * @param type of enemy to spawn - documented in Component::Spawner::EnemyType.
+         */
         EnemySpawner(Scene* scene, unsigned int type);
 
         ~EnemySpawner();

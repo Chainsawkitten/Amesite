@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SuperBoss.hpp"
+#include <random>
 
 class Scene;
 class Entity;
@@ -9,16 +10,16 @@ namespace Geometry {
 }
 
 namespace GameObject {
-    /// A ShieldBoss
-    class ShieldBoss : public SuperBoss {
+    /// A DivideBoss
+    class DivideBoss : public SuperBoss {
         public:
-            /// Create %ShieldBoss
+            /// Create %DivideBoss
             /**
-             * @param scene Pointer to which Scene %ShieldBoss Enities' are contained.
+             * @param scene Pointer to which Scene %DivideBoss Enities' are contained.
              */
-            ShieldBoss(Scene* scene);
+            DivideBoss(Scene* scene);
            
-            ~ShieldBoss();
+            ~DivideBoss();
 
             /// Gets position of boss.
             /**
@@ -37,23 +38,13 @@ namespace GameObject {
              * @return Health of the boss.
              */
             float GetHealth();
-
-            struct Cover {
-                Entity* node = nullptr;
-                Entity* leftShield = nullptr;
-                Entity* rightShield = nullptr;
-            };
-
-            /// Cover relative to node
-            Cover coverArr[3];
         protected:
             void mUpdateFunction();
         private:
             Geometry::OBJModel* mBodyModel;
-            Geometry::OBJModel* mCoverModel;
 
-            void CreateCover(Cover* cover);
+            float mNextHpStep;
 
-            bool moveCoverIn;
+            std::mt19937 mRNG;
     };
 }

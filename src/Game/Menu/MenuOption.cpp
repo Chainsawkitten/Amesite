@@ -2,10 +2,11 @@
 
 #include <Texture/Texture2D.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "../Util/MainCamera.hpp"
 #include <Entity/Entity.hpp>
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
+#include "../Util/Hub.hpp"
+#include "../GameObject/Camera.hpp"
 
 #include <Resources.hpp>
 #include <Shader/Shader.hpp>
@@ -94,9 +95,9 @@ void MenuOption::RenderSelected(const glm::vec2& screenSize, const glm::mat4& me
     
     mSelectedShaderProgram->Use();
     
-    Entity& camera = MainCamera::GetInstance().GetMainCamera();
-    glm::mat4 viewMat = camera.GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera.GetComponent<Component::Transform>()->GetWorldPosition());
-    glm::mat4 projectionMat = camera.GetComponent<Component::Lens>()->GetProjection(screenSize);
+    Entity* camera = Hub().GetMainCamera().body;
+    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     
     glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
     glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
@@ -129,9 +130,9 @@ void MenuOption::Render(const glm::vec2& screenSize, const glm::mat4& menuModelM
     
     mTextShaderProgram->Use();
     
-    Entity& camera = MainCamera::GetInstance().GetMainCamera();
-    glm::mat4 viewMat = camera.GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera.GetComponent<Component::Transform>()->GetWorldPosition());
-    glm::mat4 projectionMat = camera.GetComponent<Component::Lens>()->GetProjection(screenSize);
+    Entity* camera = Hub().GetMainCamera().body;
+    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     
     glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
     glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);

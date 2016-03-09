@@ -23,14 +23,17 @@ namespace GameObject {
            
             ~SpinBoss();
 
-            /// Arms relative to body
-            Entity* armArr[4];
-
             /// Gets position of boss.
             /**
              * @return Position of the boss.
              */
             glm::vec3 GetPosition();
+
+            /// Activates the enemy.
+            void Activate();
+
+            /// Deactivates the enemy.
+            void Deactivate();
 
             /// Gets health of the boss.
             /**
@@ -38,8 +41,11 @@ namespace GameObject {
              */
             float GetHealth();
 
+            /// Arms relative to body
+            Entity* armArr[6];
+        protected:
+            void mUpdateFunction();
         private:
-
             //The boss current state.
             enum BossState {
                 REFLECT = 0,
@@ -57,11 +63,9 @@ namespace GameObject {
 
             int mNrOfArms;
 
-            void CreateArm(Entity* entity, glm::vec3 direction);
+            void CreateArm(Entity* entity);
 
             void ChangePhase(BossPhase phase);
-
-            void mUpdateFunction();
 
             Geometry::OBJModel* mBody;
     };

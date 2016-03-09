@@ -10,7 +10,8 @@
 #include <Texture/Texture2D.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
-#include "../Util/MainCamera.hpp"
+#include "../Util/Hub.hpp"
+#include "../GameObject/Camera.hpp"
 #include <Util/Input.hpp>
 
 #include "MenuOption.hpp"
@@ -62,7 +63,7 @@ void Menu::SetRotation(const glm::vec3& rotation) {
 }
 
 void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
-    Entity& camera = MainCamera::GetInstance().GetMainCamera();
+    Entity* camera = Hub().GetMainCamera().body;
     
     float weight = 1.f;
     
@@ -77,7 +78,7 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
         weight = 1.f - mTimer;
     }
     
-    Component::Transform* cameraTransform = camera.GetComponent<Component::Transform>();
+    Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     cameraTransform->position = (1.f - weight) * cameraTransform->position + weight * (player->GetPosition() + glm::vec3(-3.f, 1.4f, 5.f));
     cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * 60.f;
     cameraTransform->pitch = (1.f - weight) * cameraTransform->pitch + weight * 10.f;
@@ -105,7 +106,7 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
         const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
         
         glm::mat4 viewMat = cameraTransform->worldOrientationMatrix * glm::translate(glm::mat4(), -cameraTransform->GetWorldPosition());
-        glm::mat4 projectionMat = camera.GetComponent<Component::Lens>()->GetProjection(screenSize);
+        glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
         glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
         
         glm::vec3 cameraPosition = cameraTransform->position;

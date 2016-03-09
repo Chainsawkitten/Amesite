@@ -4,6 +4,7 @@
 #include <Engine/Entity/Entity.hpp>
 
 #include "../Component/Reflect.hpp"
+#include "../Component/Damage.hpp"
 #include <Engine/Component/Physics.hpp>
 
 #include <vector>
@@ -18,13 +19,22 @@ ReflectSystem::~ReflectSystem() {
 
 void ReflectSystem::Update(Scene& scene, float deltaTime) {
     std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
-    for (auto collisionX : *collisionVector)
-        if (collisionX->entity->GetComponent<Component::Reflect>() != nullptr)
+    for (auto collisionX : *collisionVector) {
+        Component::Reflect* reflectCompX = collisionX->entity->GetComponent<Component::Reflect>();
+        if (reflectCompX != nullptr) {
             for (auto collisionY : collisionX->intersect) {
-                Component::Physics* physicsY = collisionY->GetComponent<Component::Physics>();
-                if (physicsY != nullptr) {
-                    glm::vec3 normal = glm::normalize(collisionY->GetComponent<Component::Transform>()->GetWorldPosition() - collisionX->entity->GetComponent<Component::Transform>()->GetWorldPosition());
-                    physicsY->velocity -= 2.f*(glm::dot(physicsY->velocity, normal)*normal);
+                Component::Damage* damageCompY = collisionY->GetComponent<Component::Damage>();
+                if (damageCompY != nullptr) {
+                    if (reflectCompX->faction != damageCompY->faction) {
+                        Component::Physics* physicsY = collisionY->GetComponent<Component::Physics>();
+                        if (physicsY != nullptr && damageCompY != nullptr) {
+                            glm::vec3 normal = glm::normalize(collisionY->GetComponent<Component::Transform>()->GetWorldPosition() - collisionX->entity->GetComponent<Component::Transform>()->GetWorldPosition());
+                            physicsY->velocity -= 2.f*(glm::dot(physicsY->velocity, normal)*normal);
+                            damageCompY->faction = reflectCompX->faction;
+                        }
+                    }
                 }
             }
+        }
+    }
 }
