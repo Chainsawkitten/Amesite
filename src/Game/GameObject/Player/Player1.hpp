@@ -116,8 +116,8 @@ namespace GameObject {
             // SpawnNode relative to barrel.
             Entity* mRightSpawnNode;
 
-            // Spotlight pointing down.
-            Entity* mDownSpotlight;
+            // Light under the player.
+            Entity* mBottomLight;
 
             void AddEnginePartilces(Entity* entity);
 

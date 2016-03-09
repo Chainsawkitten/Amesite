@@ -97,13 +97,13 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLight->AddComponent<Component::SpotLight>()->coneAngle = 20.f;
     mLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
 
-    mDownSpotlight = CreateEntity();
-    mDownSpotlight->AddComponent<Component::RelativeTransform>()->Move(0.f, -7.f, 0.f);
-    mDownSpotlight->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
-    mDownSpotlight->AddComponent<Component::Animation>();
-    mDownSpotlight->AddComponent<Component::PointLight>();
-    mDownSpotlight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 1.f);
-    mDownSpotlight->GetComponent<Component::PointLight>()->attenuation = 0.8f;
+    mBottomLight = CreateEntity();
+    mBottomLight->AddComponent<Component::RelativeTransform>()->Move(0.f, -7.f, 0.f);
+    mBottomLight->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
+    mBottomLight->AddComponent<Component::Animation>();
+    mBottomLight->AddComponent<Component::PointLight>();
+    mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 1.f);
+    mBottomLight->GetComponent<Component::PointLight>()->attenuation = 0.8f;
     
 
     mTurretBodyModel = Resources().CreateOBJModel("Resources/player1_turret_body.obj");
@@ -315,17 +315,17 @@ void Player1::mUpdateFunction() {
     if (GetHealth() >= 2.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = LIGHTDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.f, 1.f);
-        mDownSpotlight->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
+        mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
     } else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = MEDIUMDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.0f, 0.0f);
-        mDownSpotlight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 0.f);
+        mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;
     } else {
         mState = HEAVYDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
-        mDownSpotlight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.f, 0.f);
+        mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mHeavyDamageTexture;
     }
 

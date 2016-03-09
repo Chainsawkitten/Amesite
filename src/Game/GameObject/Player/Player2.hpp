@@ -102,8 +102,8 @@ namespace GameObject {
         // Turret relative to body.
         Entity* mRightTurret;
 
-        // Spotlight pointing down.
-        Entity* mDownSpotlight;
+        // Light under the player.
+        Entity* mBottomLight;
 
         void AddEngine(Entity* entity, glm::vec3 position, glm::vec3 scale);
 
