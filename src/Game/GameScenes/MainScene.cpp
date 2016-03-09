@@ -126,7 +126,6 @@ MainScene::MainScene() {
     mPlayers.push_back(GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f)));
     
     // Create main camera
-//    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(300.f, 300.f, 300.f), glm::vec3(0.f, 60.f, 0.f));
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(-3.f, 1.4f, 5.f), glm::vec3(60.f, 10.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
@@ -250,10 +249,14 @@ void MainScene::Update(float deltaTime) {
     // Update sounds.
     System::SoundSystem::GetInstance()->Update(*this);
     
+    // Update camera.
+    Component::Transform* cameraTransform = mMainCamera->body->GetComponent<Component::Transform>();
+    cameraTransform->yaw = 0.f;
+    cameraTransform->pitch = 60.f;
+    cameraTransform->roll = 0.f;
+    mMainCamera->UpdateRelativePosition(mPlayers);
+    
     if (!mMenu.IsActive()) {
-        // Update game logic
-        mMainCamera->UpdateRelativePosition(mPlayers);
-        
         //If all players are disabled, respawn them.
         mCheckpointSystem.Update(deltaTime);
         

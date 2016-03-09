@@ -86,6 +86,8 @@ void Menu::SetRotation(const glm::vec3& rotation) {
 void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
     Entity& camera = MainCamera::GetInstance().GetMainCamera();
     
+    float weight = 1.f;
+    
     // Fly out camera.
     if (mFlyOut) {
         mTimer += deltaTime;
@@ -93,13 +95,15 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
             mTimer = 1.f;
             mActive = false;
         }
+        
+        weight = 1.f - mTimer;
     }
     
     Component::Transform* cameraTransform = camera.GetComponent<Component::Transform>();
-    cameraTransform->position = player->GetPosition() + glm::vec3(-3.f, 1.4f, 5.f);
-    cameraTransform->yaw = 60.f;
-    cameraTransform->pitch = 10.f;
-    cameraTransform->roll = 0.f;
+    cameraTransform->position = (1.f - weight) * cameraTransform->position + weight * (player->GetPosition() + glm::vec3(-3.f, 1.4f, 5.f));
+    cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * 60.f;
+    cameraTransform->pitch = (1.f - weight) * cameraTransform->pitch + weight * 10.f;
+    cameraTransform->roll = (1.f - weight) * cameraTransform->roll + weight * 0.f;
     cameraTransform->UpdateModelMatrix();
     
     // Update model matrix.
@@ -254,7 +258,7 @@ void Menu::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& scree
 }
 
 void Menu::StartGame() {
-    mFlyOut = false;
+    mFlyOut = true;
 }
 
 void Menu::Quit() {
