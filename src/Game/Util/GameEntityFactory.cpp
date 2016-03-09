@@ -16,6 +16,7 @@
 #include "../Component/Health.hpp"
 #include "../Component/LifeTime.hpp"
 #include "../Component/GridCollide.hpp"
+#include "../Component/Explode.hpp"
 
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
@@ -81,6 +82,7 @@ Rocket* GameEntityFactory::CreateMiniRocket(const glm::vec3& origin) {
     gameObject->node->AddComponent<Component::LifeTime>()->lifeTime = 5.f;
     gameObject->node->GetComponent<Component::Damage>()->removeOnImpact = true;
     gameObject->node->GetComponent<Component::GridCollide>()->removeOnImpact = true;
+    gameObject->node->GetComponent<Component::Explode>()->size = 8.f;
     Component::Health *healthComp = gameObject->node->GetComponent<Component::Health>();
     healthComp->maxHealth = healthComp->health = 20.f;
     healthComp->removeOnLowHealth = true;
@@ -173,11 +175,10 @@ GameObject::Portal* GameEntityFactory::CreatePortal(const glm::vec3& origin) {
 }
 
 Bullet* GameEntityFactory::CreatePlayerBullet(const glm::vec3& position, const glm::vec3& direction, int faction) {
-    Bullet* gameObject = new Bullet(mScene);
+    Bullet* gameObject = new Bullet(mScene, 1.2f);
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::Physics>()->velocity = direction;
     gameObject->node->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
-    gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = 1.2f;
     gameObject->node->GetComponent<Component::Damage>()->faction = faction;
     return gameObject;
 }
