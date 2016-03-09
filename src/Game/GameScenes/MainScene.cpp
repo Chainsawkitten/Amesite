@@ -64,11 +64,19 @@ MainScene::MainScene() {
     System::SoundSystem::GetInstance()->SetVolume(static_cast<float>(GameSettings::GetInstance().GetDouble("Audio Volume")));
     
     // Music
-    mMusicSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
-    alGenSources(1, &mSource);
-    alSourcei(mSource, AL_BUFFER, mMusicSoundBuffer->Buffer());
-    alSourcei(mSource, AL_LOOPING, AL_TRUE);
-    alSourcePlay(mSource);
+    mCalmSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
+    alGenSources(1, &mCalmSource);
+    alSourcei(mCalmSource, AL_BUFFER, mCalmSoundBuffer->Buffer());
+    alSourcei(mCalmSource, AL_LOOPING, AL_TRUE);
+    
+    mActionSoundBuffer = Resources().CreateSound("Resources/MusicAction.ogg");
+    alGenSources(1, &mActionSource);
+    alSourcef(mActionSource, AL_GAIN, 0.f);
+    alSourcei(mActionSource, AL_BUFFER, mActionSoundBuffer->Buffer());
+    alSourcei(mActionSource, AL_LOOPING, AL_TRUE);
+    
+    alSourcePlay(mCalmSource);
+    alSourcePlay(mActionSource);
     
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
@@ -170,8 +178,11 @@ MainScene::~MainScene() {
     delete mGlowBlurFilter;
     delete mPostProcessing;
     
-    alDeleteSources(1, &mSource);
-    Resources().FreeSound(mMusicSoundBuffer);
+    alDeleteSources(1, &mCalmSource);
+    Resources().FreeSound(mCalmSoundBuffer);
+    
+    alDeleteSources(1, &mActionSource);
+    Resources().FreeSound(mActionSoundBuffer);
 }
 
 void MainScene::Update(float deltaTime) {
@@ -285,5 +296,8 @@ void MainScene::Update(float deltaTime) {
     mPostProcessing->Render();
 
     mTimer += deltaTime;
-
+    
+    // Set music volumes.
+    alSourcef(mCalmSource, AL_GAIN, 0.f);
+    alSourcef(mActionSource, AL_GAIN, 1.f);
 }

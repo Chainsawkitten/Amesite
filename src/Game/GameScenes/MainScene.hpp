@@ -129,6 +129,8 @@ class MainScene : public Scene {
         std::vector<glm::vec3> mNoSpawnRooms;
 
         // Music.
-        Audio::SoundBuffer* mMusicSoundBuffer;
-        ALuint mSource;
+        Audio::SoundBuffer* mCalmSoundBuffer;
+        ALuint mCalmSource;
+        Audio::SoundBuffer* mActionSoundBuffer;
+        ALuint mActionSource;
 };
