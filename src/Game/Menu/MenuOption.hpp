@@ -14,7 +14,7 @@ class ShaderProgram;
 class MenuOption {
     public:
         Texture2D* prerenderedText;
-        glm::vec3 position;
+        glm::vec3 mPosition;
         glm::vec3 rotation;
         glm::vec2 scale;
         
@@ -26,6 +26,8 @@ class MenuOption {
         glm::mat4 GetModelMatrix() const;
         
         void EmptyCallback() const;
+        
+        bool MouseIntersect(const glm::vec3& cameraPosition, const glm::vec3& ray, const glm::mat4& menuModelMatrix, const glm::vec2& playerScale);
         
         /// Render selection.
         /**

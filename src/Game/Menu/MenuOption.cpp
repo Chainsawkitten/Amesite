@@ -18,7 +18,7 @@
 
 MenuOption::MenuOption(Font* font, const char* text, const glm::vec3& position, const glm::vec3& rotation, float height) {
     prerenderedText = new Texture2D(font, text);
-    this->position = position;
+    mPosition = position;
     this->rotation = rotation;
     scale = glm::vec2(height * static_cast<float>(prerenderedText->GetWidth()) / static_cast<float>(prerenderedText->GetHeight()), height);
     callback = std::bind(&MenuOption::EmptyCallback, this);
@@ -50,7 +50,35 @@ glm::mat4 MenuOption::GetModelMatrix() const {
     orientation = glm::rotate(orientation, glm::radians(rotation.y), glm::vec3(1.f, 0.f, 0.f));
     orientation = glm::rotate(orientation, glm::radians(rotation.z), glm::vec3(0.f, 0.f, 1.f));
     
-    return glm::translate(glm::mat4(), position) * orientation * glm::scale(glm::mat4(), glm::vec3(scale.x, scale.y, 1.f));
+    return glm::translate(glm::mat4(), mPosition) * orientation * glm::scale(glm::mat4(), glm::vec3(scale.x, scale.y, 1.f));
+}
+
+bool MenuOption::MouseIntersect(const glm::vec3& cameraPosition, const glm::vec3& ray, const glm::mat4& menuModelMatrix, const glm::vec2& playerScale) {
+    glm::mat4 modelMatrix(GetModelMatrix());
+    
+    // Plane vectors.
+    glm::mat3 invModelMat(glm::transpose(glm::inverse(menuModelMatrix * modelMatrix)));
+    glm::vec3 normal = glm::normalize(invModelMat * glm::vec3(0.f, 0.f, 1.f));
+    glm::vec3 tangent = glm::normalize(invModelMat * glm::vec3(1.f, 0.f, 0.f));
+    glm::vec3 bitangent = glm::normalize(invModelMat * glm::vec3(0.f, 1.f, 0.f));
+    
+    // Discard if ray and plane are (almost) parallel.
+    float denom = glm::dot(normal, ray);
+    if (denom > -1e-6)
+        return false;
+    
+    glm::vec3 origin(menuModelMatrix * glm::vec4(mPosition, 1.f));
+    float length = glm::dot(origin - cameraPosition, normal) / denom;
+    
+    // World position.
+    glm::vec3 position(cameraPosition + length * ray);
+    
+    // Position relative to origin of the plane.
+    glm::vec3 q = position - origin;
+    
+    glm::vec2 planePosition(glm::dot(q, tangent), glm::dot(q, bitangent));
+    
+    return (fabs(planePosition.x) <= playerScale.x * scale.x * 0.5f && fabs(planePosition.y) <= playerScale.y * scale.y * 0.5f);
 }
 
 void MenuOption::RenderSelected(const glm::vec2& screenSize, const glm::mat4& menuModelMatrix) {

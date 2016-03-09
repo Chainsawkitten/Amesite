@@ -112,29 +112,7 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
         glm::vec3 ray(Picking::CreateWorldRay(mouseCoordinates, viewMat, projectionMat));
         
         for (std::size_t i=0; i < mMenuOptions.size(); ++i) {
-            // Plane vectors.
-            glm::mat3 invModelMat(glm::transpose(glm::inverse(mModelMatrix * mMenuOptions[i]->GetModelMatrix())));
-            glm::vec3 normal = glm::normalize(invModelMat * glm::vec3(0.f, 0.f, 1.f));
-            glm::vec3 tangent = glm::normalize(invModelMat * glm::vec3(1.f, 0.f, 0.f));
-            glm::vec3 bitangent = glm::normalize(invModelMat * glm::vec3(0.f, 1.f, 0.f));
-            
-            // Discard if ray and plane are (almost) parallel.
-            float denom = glm::dot(normal, ray);
-            if (denom > -1e-6)
-                continue;
-            
-            glm::vec3 origin(mModelMatrix * glm::vec4(mMenuOptions[i]->position, 1.f));
-            float length = glm::dot(origin - cameraPosition, normal) / denom;
-            
-            // World position.
-            glm::vec3 position(cameraPosition + length * ray);
-            
-            // Position relative to origin of the plane.
-            glm::vec3 q = position - origin;
-            
-            glm::vec2 planePosition(glm::dot(q, tangent), glm::dot(q, bitangent));
-            
-            if (fabs(planePosition.x) <= playerScale.x * mMenuOptions[i]->scale.x * 0.5f && fabs(planePosition.y) <= playerScale.y * mMenuOptions[i]->scale.y * 0.5f)
+            if (mMenuOptions[i]->MouseIntersect(cameraPosition, ray, mModelMatrix, playerScale))
                 mSelected = i;
         }
         
