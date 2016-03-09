@@ -394,9 +394,7 @@ set(GAME_SRCS
         src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
         src/Game/GameScenes/SplashScene.cpp
-        src/Game/GameScenes/MenuScene.cpp
         src/Game/GameScenes/PontusScene.cpp
-        src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
         src/Game/GameScenes/IvarScene.cpp
         src/Game/GameScenes/JonathanScene.cpp
@@ -426,6 +424,8 @@ set(GAME_SRCS
         src/Game/GameObject/Pillar.cpp
         src/Game/GameObject/PillarBall.cpp
         src/Game/GameObject/Portal.cpp
+        src/Game/Menu/Menu.cpp
+        src/Game/Menu/MenuOption.cpp
     )
 
 set(GAME_HEADERS
@@ -461,9 +461,7 @@ set(GAME_HEADERS
         src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
         src/Game/GameScenes/SplashScene.hpp
-        src/Game/GameScenes/MenuScene.hpp
         src/Game/GameScenes/PontusScene.hpp
-        src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp
         src/Game/GameScenes/IvarScene.hpp
         src/Game/GameScenes/JonathanScene.hpp
@@ -493,6 +491,8 @@ set(GAME_HEADERS
         src/Game/GameObject/Pillar.hpp
         src/Game/GameObject/PillarBall.hpp
         src/Game/GameObject/Portal.hpp
+        src/Game/Menu/Menu.hpp
+        src/Game/Menu/MenuOption.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
