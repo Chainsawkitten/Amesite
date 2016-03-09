@@ -78,6 +78,8 @@ MainScene::MainScene() {
     alSourcePlay(mCalmSource);
     alSourcePlay(mActionSource);
     
+    mMix = 0.f;
+    
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
 
@@ -298,6 +300,9 @@ void MainScene::Update(float deltaTime) {
     mTimer += deltaTime;
     
     // Set music volumes.
-    alSourcef(mCalmSource, AL_GAIN, 0.f);
-    alSourcef(mActionSource, AL_GAIN, 1.f);
+    if (mTimer > 3.f)
+        mMix = 1.f;
+    
+    alSourcef(mCalmSource, AL_GAIN, 1.f - mMix);
+    alSourcef(mActionSource, AL_GAIN, mMix);
 }

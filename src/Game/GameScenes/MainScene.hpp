@@ -133,4 +133,6 @@ class MainScene : public Scene {
         ALuint mCalmSource;
         Audio::SoundBuffer* mActionSoundBuffer;
         ALuint mActionSource;
+        
+        ALfloat mMix;
 };
