@@ -26,6 +26,8 @@
 #include <Util/Log.hpp>
 
 Menu::Menu() {
+    mActive = true;
+    
     // Load font.
     float fontHeight = glm::ceil(MainWindow::GetInstance()->GetSize().y * 0.07f);
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", fontHeight);
@@ -67,7 +69,7 @@ Menu::~Menu() {
 }
 
 bool Menu::IsActive() const {
-    return true;
+    return mActive;
 }
 
 void Menu::Update() {
@@ -210,7 +212,7 @@ void Menu::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& scree
 }
 
 void Menu::StartGame() {
-    /// @todo Start game.
+    mActive = false;
 }
 
 void Menu::Quit() {

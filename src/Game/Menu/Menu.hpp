@@ -35,6 +35,8 @@ class Menu {
         void RenderMenuOptions();
         
     private:
+        bool mActive;
+        
         // Text.
         Font* mFont;
         
