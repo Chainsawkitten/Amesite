@@ -4,7 +4,7 @@
 #include <Texture/Texture2D.hpp>
 #include <MainWindow.hpp>
 #include "../Game.hpp"
-#include "MenuScene.hpp"
+#include "LoadingScene.hpp"
 #include <Font/Font.hpp>
 #include <random>
 #include <time.h>
@@ -74,7 +74,7 @@ void WinScene::Update(float deltaTime) {
 
     // Go to main scene when win screen is over.
     if (mElapsedTime > 10.f)
-        Game::GetInstance().SetScene(new MenuScene());
+        Game::GetInstance().SetScene(new LoadingScene());
 
     // Clear screen.
     glClear(GL_COLOR_BUFFER_BIT);
