@@ -59,17 +59,9 @@ class Menu {
         // Text.
         Font* mFont;
         
-        // Used to render 3D text.
-        Geometry::Plane* mPlane;
-        ShaderProgram* mTextShaderProgram;
-        ShaderProgram* mSelectedShaderProgram;
-        
         // Menu options.
         std::vector<MenuOption*> mMenuOptions;
         int mSelected;
-        
-        void RenderSelectedMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize, const glm::mat4& menuModelMatrix);
-        void RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize, const glm::mat4& menuModelMatrix);
         
         void StartGame();
         void Quit();

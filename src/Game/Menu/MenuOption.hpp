@@ -5,6 +5,10 @@
 
 class Texture2D;
 class Font;
+namespace Geometry {
+    class Plane;
+}
+class ShaderProgram;
 
 /// An option in a menu.
 class MenuOption {
@@ -22,4 +26,25 @@ class MenuOption {
         glm::mat4 GetModelMatrix() const;
         
         void EmptyCallback() const;
+        
+        /// Render selection.
+        /**
+         * Render a black square behind the text of the menu option.
+         * @param screenSize Size of the context to render to.
+         * @param menuModelMatrix Model matrix of the parent menu.
+         */
+        void RenderSelected(const glm::vec2& screenSize, const glm::mat4& menuModelMatrix);
+        
+        /// Render the menu option.
+        /**
+         * @param screenSize Size of the context to render to.
+         * @param menuModelMatrix Model matrix of the parent menu.
+         */
+        void Render(const glm::vec2& screenSize, const glm::mat4& menuModelMatrix);
+        
+    private:
+        // Used to render 3D text.
+        Geometry::Plane* mPlane;
+        ShaderProgram* mTextShaderProgram;
+        ShaderProgram* mSelectedShaderProgram;
 };
