@@ -102,7 +102,7 @@ MainScene::MainScene() {
     // Create scene
     int width;
     int height = width = 90;
-    int seed = 0;
+    int seed = time(0);
     int percent = 50;
     int iterations = 10;
     int threshold = 100;
