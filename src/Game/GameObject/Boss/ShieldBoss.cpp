@@ -38,9 +38,9 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Transform>()->scale *= 1.2f;
     body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond_body.obj");
     body->AddComponent<Component::Material>();
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/Crystal_01_diff.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/Crystal_01_spec.png");
-    body->GetComponent<Component::Material>()->SetGlow("Resources/Crystal_01_glow.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon_diff.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
+    body->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
     body->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
     body->AddComponent<Component::Explode>()->size = 100.f;
     body->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
