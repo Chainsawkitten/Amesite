@@ -3,15 +3,19 @@
 #include <Entity/Entity.hpp>
 #include <GameObject/SuperGameObject.hpp>
 
+#include <../Game/GameObject/DyingLight.hpp>
+
 #include "../Util/GameEntityFactory.hpp"
 
 #include <Component/Physics.hpp>
 #include <Component/ParticleEmitter.hpp>
 #include <Component/Collider2DCircle.hpp>
+#include <Component/PointLight.hpp>
 #include "../Component/Health.hpp"
 #include "../Component/Reflect.hpp"
 #include "../Component/Damage.hpp"
 #include "../Component/Explode.hpp"
+#include "../Component/LifeTime.hpp"
 
 #include <vector>
 
@@ -40,12 +44,29 @@ void DamageSystem::Update(Scene& scene) {
                     if (damageY->faction != HealthX->faction) {
                         // Reduce health by damage.
                         HealthX->health -= damageY->damageAmount;
+                        
+                        if(HealthX->damaged == -1)
+                            HealthX->damaged = 1;
+                        
                         // Remove damage entity if it should be removed on impact
-                        if (damageY->removeOnImpact)
+                        if (damageY->removeOnImpact) {
+
+                            if (damageY->entity->GetComponent<Component::Explode>() != nullptr) {
+
+                                damageY->entity->GetComponent<Component::Explode>()->size *= 10.f;
+                                GameObject::DyingLight* dyingLight = new GameObject::DyingLight(&scene);
+                                dyingLight->node->GetComponent<Component::Transform>()->position = damageY->entity->GetComponent<Component::Transform>()->GetWorldPosition();
+
+                            }
+                                
+
                             if (damageY->entity->gameObject != nullptr)
                                 damageY->entity->gameObject->Kill();
                             else
                                 damageY->entity->Kill();
+
+                        }
+
                     }
                 }
             }
