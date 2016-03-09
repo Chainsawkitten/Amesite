@@ -9,16 +9,16 @@ namespace Geometry {
 }
 
 namespace GameObject {
-    /// A ShieldBoss
-    class ShieldBoss : public SuperBoss {
+    /// A RingBoss
+    class RingBoss : public SuperBoss {
         public:
-            /// Create %ShieldBoss
+            /// Create %RingBoss
             /**
-             * @param scene Pointer to which Scene %ShieldBoss Enities' are contained.
+             * @param scene Pointer to which Scene %RingBoss Enities' are contained.
              */
-            ShieldBoss(Scene* scene);
+            RingBoss(Scene* scene);
            
-            ~ShieldBoss();
+            ~RingBoss();
 
             /// Gets position of boss.
             /**
@@ -38,22 +38,25 @@ namespace GameObject {
              */
             float GetHealth();
 
-            struct Cover {
+            /// Ring relative to node
+            struct Ring {
                 Entity* node = nullptr;
-                Entity* leftShield = nullptr;
-                Entity* rightShield = nullptr;
-            };
-
-            /// Cover relative to node
-            Cover coverArr[3];
+                Entity* midFront = nullptr;
+                Entity* leftFront = nullptr;
+                Entity* rightFront = nullptr;
+                Entity* left = nullptr;
+                Entity* right = nullptr;
+                Entity* leftBack = nullptr;
+                Entity* rightBack = nullptr;
+            } ring;
         protected:
             void mUpdateFunction();
         private:
             Geometry::OBJModel* mBodyModel;
-            Geometry::OBJModel* mCoverModel;
+            Geometry::OBJModel* mRingModel;
 
-            void CreateCover(Cover* cover);
+            void CreateRing();
 
-            bool moveCoverIn;
+            void CreateRingPart(Entity* entity, glm::vec3 position);
     };
 }

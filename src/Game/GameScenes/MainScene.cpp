@@ -37,7 +37,7 @@
 #include <PostProcessing/GammaCorrectionFilter.hpp>
 #include <MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
-#include "../Util/MainCamera.hpp"
+#include "../Util/Hub.hpp"
 #include "../Util/CaveGenerator.hpp"
 #include <Util/Log.hpp>
 
@@ -45,6 +45,9 @@
 #include "../GameObject/Player/Player2.hpp"
 #include "../GameObject/Boss/SuperBoss.hpp"
 #include "../GameObject/Boss/SpinBoss.hpp"
+#include "../GameObject/Boss/ShieldBoss.hpp"
+#include "../GameObject/Boss/DivideBoss.hpp"
+#include "../GameObject/Boss/RingBoss.hpp"
 #include "../GameObject/Cave.hpp"
 #include "../GameObject/Camera.hpp"
 #include "../GameObject/Bullet.hpp"
@@ -75,7 +78,7 @@ MainScene::MainScene() {
     
     // Create main camera
     mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(300.f, 300.f, 300.f), glm::vec3(0.f, 60.f, 0.f));
-    MainCameraInstance().SetMainCamera(mMainCamera->body);
+    HubInstance().SetMainCamera(mMainCamera);
 
     // Create scene
     int width;
@@ -107,13 +110,20 @@ MainScene::MainScene() {
     mPortalPosition = glm::vec2(playerStartX, playerStartZ);
 
     // Create players 
-    mPlayers.push_back(GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f)));
-    mPlayers.push_back(GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f)));
+    Player1* player1 = GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f));
+    Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f));
+    mPlayers.push_back(player1);
+    mPlayers.push_back(player2);
+    HubInstance().SetPlayer1(player1);
+    HubInstance().SetPlayer2(player2);
     
     // Create bosses and pillars
+    mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
+    mBossVector.push_back(GameEntityCreator().CreateShieldBoss(glm::vec3(mCave->scaleFactor*bossPositions[1].x, 0.f, mCave->scaleFactor*bossPositions[1].y)));
+    mBossVector.push_back(GameEntityCreator().CreateRingBoss(glm::vec3(mCave->scaleFactor*bossPositions[2].x, 0.f, mCave->scaleFactor*bossPositions[2].y)));
+    mBossVector.push_back(GameEntityCreator().CreateDivideBoss(glm::vec3(mCave->scaleFactor*bossPositions[3].x, 0.f, mCave->scaleFactor*bossPositions[3].y)));
     int numberOfBossPositions = bossPositions.size();
     for (int i = 0; i < numberOfBossPositions; i++) {
-        mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[i].x, 0.f, mCave->scaleFactor*bossPositions[i].y)));
         mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(mPortalPosition.x - 15.f + 15.f * i, -8.f, playerStartZ + 25.f - 2.f * i), mBossVector[i]->GetPosition()));
         mNoSpawnRooms.push_back(glm::vec3(bossPositions[i].x, 0.f, bossPositions[i].y));
     }
@@ -145,7 +155,8 @@ MainScene::MainScene() {
     mGlowBlurFilter = new GlowBlurFilter();
 
     GameEntityCreator().CreateEnemySpawner(Component::Spawner::PYLON, 2);
-    GameEntityCreator().CreateEnemySpawner(Component::Spawner::BASIC, 5);
+    GameEntityCreator().CreateEnemySpawner(Component::Spawner::ROCKET, 5);
+    GameEntityCreator().CreateEnemySpawner(Component::Spawner::NEST, 2);
 
     // Push boss positions here to avoid spawning enemies.
     mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
@@ -198,11 +209,11 @@ void MainScene::Update(float deltaTime) {
     // Check collisions.
     mCollisionSystem.Update(*this);
 
-    // Update enemy spawning
-    mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);
-
     // Check grid collisions.
     mGridCollideSystem.Update(*this, deltaTime, *mCave);
+
+    // Update enemy spawning
+    mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);
 
     // Update health
     mHealthSystem.Update(*this, deltaTime);
@@ -227,7 +238,6 @@ void MainScene::Update(float deltaTime) {
 
     //If all players are disabled, respawn them.
     mCheckpointSystem.Update(deltaTime);
-
     int bossVectorSize = mBossVector.size();
     for (int i = 0; i < bossVectorSize; i++) {
         if (mBossVector[i] != nullptr)

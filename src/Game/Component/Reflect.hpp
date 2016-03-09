@@ -14,5 +14,11 @@ namespace Component {
             
             /// Destructor.
             ~Reflect();
+
+            /// Faction, ID of the faction this health belongs to (players, enemies).
+            /**
+             * Default: 1
+             */
+            int faction;
     };
 }

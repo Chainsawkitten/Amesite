@@ -14,8 +14,9 @@ namespace Component {
 
             /// Different types of enemy spawners.
             enum EnemyType : unsigned int {
-                BASIC = 0, ///< Basic enemy spawner.
-                PYLON, ///< Pylon enemy spawner.
+                PYLON = 0, ///< Pylon enemy spawner.
+                ROCKET, ///< Rocket enemy spawner.
+                NEST, ///< Nest enemy spawner.
             };
 
             /// Create new spawner.

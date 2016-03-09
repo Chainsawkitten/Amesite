@@ -41,6 +41,9 @@ namespace GameObject {
             virtual float GetHealth() = 0;
 
             /// Returns true if the player is active.
+            /**
+             * @return State of the player (active or not).
+             */
             bool Active();
 
             /// Activates the player.
