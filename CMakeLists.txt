@@ -413,7 +413,6 @@ set(GAME_SRCS
         src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
         src/Game/GameScenes/SplashScene.cpp
-        src/Game/GameScenes/MenuScene.cpp
         src/Game/GameScenes/PontusScene.cpp
         src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
@@ -482,7 +481,6 @@ set(GAME_HEADERS
         src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
         src/Game/GameScenes/SplashScene.hpp
-        src/Game/GameScenes/MenuScene.hpp
         src/Game/GameScenes/PontusScene.hpp
         src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp
