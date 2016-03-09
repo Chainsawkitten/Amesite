@@ -414,7 +414,6 @@ set(GAME_SRCS
         src/Game/GameScenes/MainScene.cpp
         src/Game/GameScenes/SplashScene.cpp
         src/Game/GameScenes/PontusScene.cpp
-        src/Game/GameScenes/AlbinScene.cpp
         src/Game/GameScenes/DanielScene.cpp
         src/Game/GameScenes/IvarScene.cpp
         src/Game/GameScenes/JonathanScene.cpp
@@ -482,7 +481,6 @@ set(GAME_HEADERS
         src/Game/GameScenes/MainScene.hpp
         src/Game/GameScenes/SplashScene.hpp
         src/Game/GameScenes/PontusScene.hpp
-        src/Game/GameScenes/AlbinScene.hpp
         src/Game/GameScenes/DanielScene.hpp
         src/Game/GameScenes/IvarScene.hpp
         src/Game/GameScenes/JonathanScene.hpp
