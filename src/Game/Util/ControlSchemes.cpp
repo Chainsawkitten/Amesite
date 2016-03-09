@@ -144,7 +144,7 @@ void ControlScheme::AlwaysShootClosestPlayer(Component::Controller* controller, 
             if (player1->Active() && player2->Active())
                 if (glm::distance(player1->GetPosition(), transformWorldPosition) < glm::distance(player2->GetPosition(), transformWorldPosition))
                     distance = player1->GetPosition() - transformWorldPosition;
-                else 
+                else
                     distance = player2->GetPosition() - transformWorldPosition;
             else if (player1->Active())
                 distance = player1->GetPosition() - transformWorldPosition;
