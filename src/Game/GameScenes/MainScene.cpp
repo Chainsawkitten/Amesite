@@ -127,8 +127,7 @@ MainScene::MainScene() {
     
     // Create main camera
 //    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(300.f, 300.f, 300.f), glm::vec3(0.f, 60.f, 0.f));
-    glm::vec3 ppp = glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f);
-    mMainCamera = GameEntityCreator().CreateCamera(ppp + glm::vec3(-3.f, 1.4f, 5.f), glm::vec3(60.f, 10.f, 0.f));
+    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(-3.f, 1.4f, 5.f), glm::vec3(60.f, 10.f, 0.f));
     MainCameraInstance().SetMainCamera(mMainCamera->body);
     
     // Set menu position.
@@ -279,7 +278,7 @@ void MainScene::Update(float deltaTime) {
     }
     
     if (mMenu.IsActive())
-        mMenu.Update(mPlayers[0]);
+        mMenu.Update(mPlayers[0], deltaTime);
     
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());

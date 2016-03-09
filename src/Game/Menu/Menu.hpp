@@ -37,8 +37,9 @@ class Menu {
         /// Update the menu.
         /**
          * @param player Player around which to have the menu.
+         * @param deltaTime Time since last frame (in seconds).
          */
-        void Update(GameObject::SuperPlayer* player);
+        void Update(GameObject::SuperPlayer* player, float deltaTime);
         
         /// Render selected menu option.
         void RenderSelected();
@@ -48,6 +49,8 @@ class Menu {
         
     private:
         bool mActive;
+        bool mFlyOut;
+        float mTimer;
         
         glm::vec3 mPosition;
         glm::vec3 mRotation;
