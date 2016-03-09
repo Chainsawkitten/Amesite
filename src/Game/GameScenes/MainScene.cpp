@@ -110,12 +110,12 @@ MainScene::MainScene() {
     mPortalPosition = glm::vec2(playerStartX, playerStartZ);
 
     // Create players 
-    Player1* player1 = GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f));
+    //Player1* player1 = GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f));
     Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f));
-    mPlayers.push_back(player1);
+    //mPlayers.push_back(player1);
     mPlayers.push_back(player2);
-    HubInstance().mPlayers.push_back(player1);
-    HubInstance().mPlayers.push_back(player1);
+    //HubInstance().mPlayers.push_back(player1);
+    HubInstance().mPlayers.push_back(player2);
     
     // Create bosses and pillars
     mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));

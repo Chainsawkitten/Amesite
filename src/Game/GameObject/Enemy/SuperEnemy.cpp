@@ -9,6 +9,8 @@
 #include "../Player/Player1.hpp"
 #include "../Player/Player2.hpp"
 
+#include <Util\Log.hpp>
+
 using namespace GameObject;
 
 SuperEnemy::SuperEnemy(Scene* scene) : SuperGameObject(scene) {
@@ -34,25 +36,21 @@ void SuperEnemy::Deactivate() {
 }
 
 void SuperEnemy::mUpdateFunction() {
-    bool anyPlayerActive = false;
-    for (auto& player : HubInstance().mPlayers) {
-        anyPlayerActive = player->Active();
-        if (anyPlayerActive)
-            break;
-    }
-
-
-
     glm::vec3 transformWorldPosition = node->GetComponent<Component::Transform>()->position;
-    if (!this->Active() && (anyPlayerActive) {
-
-        for (auto& player : HubInstance().mPlayers) {
-            if(player)
+    bool isWithinRange = false;
+    bool isWithinTwiceRange = false;
+    for (auto& player : HubInstance().mPlayers) {
+        if(player->Active()) {
+            float distance = glm::distance(player->GetPosition(), transformWorldPosition);
+            if (distance < range)
+                isWithinRange = true;
+            if (distance < range*2.f)
+                isWithinTwiceRange = true;
         }
-        //if (player1->Active() && glm::distance(player1->GetPosition(), transformWorldPosition) < range) {
-        //    this->Activate();
-        //} else if (glm::distance(player2->GetPosition(), transformWorldPosition) < range) {
-        //    this->Activate();
-        //}
     }
+
+    if (!Active() && isWithinRange)
+        Activate();
+    else if (Active() && !isWithinTwiceRange)
+        Deactivate();
 }
