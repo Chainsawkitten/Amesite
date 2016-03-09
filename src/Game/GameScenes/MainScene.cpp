@@ -203,7 +203,7 @@ void MainScene::Update(float deltaTime) {
     // Updates model matrices for this frame.
     UpdateModelMatrices();
 
-    // ParticleSystems
+    // ParticleSystem
     System::Particle().Update(*this, deltaTime);
 
     // Check collisions.
