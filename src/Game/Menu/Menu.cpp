@@ -24,6 +24,7 @@
 #include <Util/Picking.hpp>
 
 #include <Util/Log.hpp>
+#include "../GameObject/Player/SuperPlayer.hpp"
 
 Menu::Menu() {
     mActive = true;
@@ -46,10 +47,10 @@ Menu::Menu() {
     Resources().FreeShader(fragmentShader);
     
     // Define menu options.
-    mMenuOptions.push_back(new MenuOption(mFont, "START GAME", glm::vec3(0.f, 1.0f, 2.5f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mMenuOptions.push_back(new MenuOption(mFont, "START GAME", glm::vec3(0.f, 1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
     mMenuOptions[0]->callback = std::bind(&Menu::StartGame, this);
-    mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.8f, 2.6f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
-    mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, 0.6f, 2.7f), glm::vec3(0.f, 330.f, 0.f), 0.2f));
+    mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
+    mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
     mMenuOptions[2]->callback = std::bind(&Menu::Quit, this);
     mSelected = 0;
     
@@ -72,7 +73,27 @@ bool Menu::IsActive() const {
     return mActive;
 }
 
-void Menu::Update() {
+void Menu::SetPosition(const glm::vec3& position) {
+    mPosition = position;
+}
+
+void Menu::SetRotation(const glm::vec3& rotation) {
+    mRotation = rotation;
+}
+
+void Menu::Update(GameObject::SuperPlayer* player) {
+    // Update model matrix.
+    Component::Transform* playerTransform = player->GetNodeEntity()->GetComponent<Component::Transform>();
+    glm::mat4 playerModelMatrix(playerTransform->modelMatrix);
+    glm::vec2 playerScale(playerTransform->scale.x, playerTransform->scale.z);
+    
+    glm::mat4 orientation;
+    orientation = glm::rotate(orientation, glm::radians(mRotation.x), glm::vec3(0.f, 1.f, 0.f));
+    orientation = glm::rotate(orientation, glm::radians(mRotation.y), glm::vec3(1.f, 0.f, 0.f));
+    orientation = glm::rotate(orientation, glm::radians(mRotation.z), glm::vec3(0.f, 0.f, 1.f));
+    
+    mModelMatrix = playerModelMatrix * glm::translate(glm::mat4(), mPosition) * orientation;
+    
     // Update menu selection.
     int movement = Input()->Triggered(InputHandler::ANYONE, InputHandler::DOWN) - Input()->Triggered(InputHandler::ANYONE, InputHandler::UP);
     if (mSelected + movement >= 0 && mSelected + movement < static_cast<int>(mMenuOptions.size()))
@@ -90,7 +111,7 @@ void Menu::Update() {
     
     for (std::size_t i=0; i < mMenuOptions.size(); ++i) {
         // Plane vectors.
-        glm::mat3 invModelMat(glm::transpose(glm::inverse(mMenuOptions[i]->GetModelMatrix())));
+        glm::mat3 invModelMat(glm::transpose(glm::inverse(mModelMatrix * mMenuOptions[i]->GetModelMatrix())));
         glm::vec3 normal = glm::normalize(invModelMat * glm::vec3(0.f, 0.f, 1.f));
         glm::vec3 tangent = glm::normalize(invModelMat * glm::vec3(1.f, 0.f, 0.f));
         glm::vec3 bitangent = glm::normalize(invModelMat * glm::vec3(0.f, 1.f, 0.f));
@@ -100,7 +121,7 @@ void Menu::Update() {
         if (denom > -1e-6)
             continue;
         
-        glm::vec3 origin = mMenuOptions[i]->position;
+        glm::vec3 origin(mModelMatrix * glm::vec4(mMenuOptions[i]->position, 1.f));
         float length = glm::dot(origin - cameraPosition, normal) / denom;
         
         // World position.
@@ -111,7 +132,7 @@ void Menu::Update() {
         
         glm::vec2 planePosition(glm::dot(q, tangent), glm::dot(q, bitangent));
         
-        if (fabs(planePosition.x) <= mMenuOptions[i]->scale.x * 0.5f && fabs(planePosition.y) <= mMenuOptions[i]->scale.y * 0.5f)
+        if (fabs(planePosition.x) <= playerScale.x * mMenuOptions[i]->scale.x * 0.5f && fabs(planePosition.y) <= playerScale.y * mMenuOptions[i]->scale.y * 0.5f)
             mSelected = i;
     }
     
@@ -123,17 +144,17 @@ void Menu::Update() {
 void Menu::RenderSelected() {
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
-    RenderSelectedMenuOption(mMenuOptions[mSelected], screenSize);
+    RenderSelectedMenuOption(mMenuOptions[mSelected], screenSize, mModelMatrix);
 }
 
 void Menu::RenderMenuOptions() {
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
     for (MenuOption* menuOption : mMenuOptions)
-        RenderMenuOption(menuOption, screenSize);
+        RenderMenuOption(menuOption, screenSize, mModelMatrix);
 }
 
-void Menu::RenderSelectedMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize) {
+void Menu::RenderSelectedMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize, const glm::mat4& menuModelMatrix) {
     // Blending enabled.
     GLboolean blend = glIsEnabled(GL_BLEND);
     glEnable(GL_BLEND);
@@ -155,7 +176,7 @@ void Menu::RenderSelectedMenuOption(const MenuOption* menuOption, const glm::vec
     
     glBindVertexArray(mPlane->GetVertexArray());
     
-    glm::mat4 modelMat = menuOption->GetModelMatrix();
+    glm::mat4 modelMat = menuModelMatrix * menuOption->GetModelMatrix();
     glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
     glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
     glUniformMatrix3fv(mSelectedShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
@@ -173,7 +194,7 @@ void Menu::RenderSelectedMenuOption(const MenuOption* menuOption, const glm::vec
         glDepthMask(GL_TRUE);
 }
 
-void Menu::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize) {
+void Menu::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize, const glm::mat4& menuModelMatrix) {
     // Blending enabled.
     GLboolean blend = glIsEnabled(GL_BLEND);
     glEnable(GL_BLEND);
@@ -195,7 +216,7 @@ void Menu::RenderMenuOption(const MenuOption* menuOption, const glm::vec2& scree
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, menuOption->prerenderedText->GetTextureID());
     
-    glm::mat4 modelMat = menuOption->GetModelMatrix();
+    glm::mat4 modelMat = menuModelMatrix * menuOption->GetModelMatrix();
     glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
     glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
     glUniformMatrix3fv(mTextShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);

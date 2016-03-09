@@ -92,11 +92,6 @@ MainScene::MainScene() {
     // Set timer to 0
     mTimer = 0.f;
     
-    // Create main camera
-//    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(300.f, 300.f, 300.f), glm::vec3(0.f, 60.f, 0.f));
-    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(-3.f, 1.4f, 5.f), glm::vec3(60.f, 10.f, 0.f));
-    MainCameraInstance().SetMainCamera(mMainCamera->body);
-    
     // Create scene
     int width;
     int height = width = 90;
@@ -129,6 +124,16 @@ MainScene::MainScene() {
     // Create players 
     mPlayers.push_back(GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f)));
     mPlayers.push_back(GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX-1.f, 0.f, playerStartZ-1.f)));
+    
+    // Create main camera
+//    mMainCamera = GameEntityCreator().CreateCamera(glm::vec3(300.f, 300.f, 300.f), glm::vec3(0.f, 60.f, 0.f));
+    glm::vec3 ppp = glm::vec3(playerStartX+1.f, 0.f, playerStartZ+1.f);
+    mMainCamera = GameEntityCreator().CreateCamera(ppp + glm::vec3(-3.f, 1.4f, 5.f), glm::vec3(60.f, 10.f, 0.f));
+    MainCameraInstance().SetMainCamera(mMainCamera->body);
+    
+    // Set menu position.
+    mMenu.SetPosition(glm::vec3(0.f, 5.f, 14.5f));
+    mMenu.SetRotation(glm::vec3(0.f, 330.f, 0.f));
     
     // Create bosses and pillars
     int numberOfBossPositions = bossPositions.size();
@@ -169,7 +174,6 @@ MainScene::MainScene() {
     
     // Push boss positions here to avoid spawning enemies.
     mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
-    
 }
 
 MainScene::~MainScene() {
@@ -275,7 +279,7 @@ void MainScene::Update(float deltaTime) {
     }
     
     if (mMenu.IsActive())
-        mMenu.Update();
+        mMenu.Update(mPlayers[0]);
     
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());

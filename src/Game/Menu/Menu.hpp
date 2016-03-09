@@ -9,6 +9,9 @@ namespace Geometry {
     class Plane;
 }
 class MenuOption;
+namespace GameObject {
+    class SuperPlayer;
+}
 
 /// An interactive menu showing different submenus.
 class Menu {
@@ -25,8 +28,17 @@ class Menu {
          */
         bool IsActive() const;
         
+        /// Set the menu's position.
+        void SetPosition(const glm::vec3& position);
+        
+        /// Set the menu's rotation.
+        void SetRotation(const glm::vec3& rotation);
+        
         /// Update the menu.
-        void Update();
+        /**
+         * @param player Player around which to have the menu.
+         */
+        void Update(GameObject::SuperPlayer* player);
         
         /// Render selected menu option.
         void RenderSelected();
@@ -36,6 +48,10 @@ class Menu {
         
     private:
         bool mActive;
+        
+        glm::vec3 mPosition;
+        glm::vec3 mRotation;
+        glm::mat4 mModelMatrix;
         
         // Text.
         Font* mFont;
@@ -49,8 +65,8 @@ class Menu {
         std::vector<MenuOption*> mMenuOptions;
         int mSelected;
         
-        void RenderSelectedMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize);
-        void RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize);
+        void RenderSelectedMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize, const glm::mat4& menuModelMatrix);
+        void RenderMenuOption(const MenuOption* menuOption, const glm::vec2& screenSize, const glm::mat4& menuModelMatrix);
         
         void StartGame();
         void Quit();
