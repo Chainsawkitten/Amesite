@@ -13,19 +13,12 @@ class ShaderProgram;
 /// An option in a menu.
 class MenuOption {
     public:
-        Texture2D* prerenderedText;
-        glm::vec3 mPosition;
-        glm::vec3 rotation;
-        glm::vec2 scale;
-        
         std::function<void()> callback;
         
         MenuOption(Font* font, const char* text, const glm::vec3& position, const glm::vec3& rotation, float height);
         ~MenuOption();
         
         glm::mat4 GetModelMatrix() const;
-        
-        void EmptyCallback() const;
         
         bool MouseIntersect(const glm::vec3& cameraPosition, const glm::vec3& ray, const glm::mat4& menuModelMatrix, const glm::vec2& playerScale);
         
@@ -49,4 +42,11 @@ class MenuOption {
         Geometry::Plane* mPlane;
         ShaderProgram* mTextShaderProgram;
         ShaderProgram* mSelectedShaderProgram;
+        
+        Texture2D* mPrerenderedText;
+        glm::vec3 mPosition;
+        glm::vec3 mRotation;
+        glm::vec2 mScale;
+        
+        void EmptyCallback() const;
 };

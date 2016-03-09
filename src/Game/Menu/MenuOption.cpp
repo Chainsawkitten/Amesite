@@ -17,10 +17,10 @@
 #include "SingleColor3D.frag.hpp"
 
 MenuOption::MenuOption(Font* font, const char* text, const glm::vec3& position, const glm::vec3& rotation, float height) {
-    prerenderedText = new Texture2D(font, text);
+    mPrerenderedText = new Texture2D(font, text);
     mPosition = position;
-    this->rotation = rotation;
-    scale = glm::vec2(height * static_cast<float>(prerenderedText->GetWidth()) / static_cast<float>(prerenderedText->GetHeight()), height);
+    mRotation = rotation;
+    mScale = glm::vec2(height * static_cast<float>(mPrerenderedText->GetWidth()) / static_cast<float>(mPrerenderedText->GetHeight()), height);
     callback = std::bind(&MenuOption::EmptyCallback, this);
     
     // Initialize shaders.
@@ -37,7 +37,7 @@ MenuOption::MenuOption(Font* font, const char* text, const glm::vec3& position, 
 }
 
 MenuOption::~MenuOption() {
-    delete prerenderedText;
+    delete mPrerenderedText;
     
     Resources().FreePlane();
     Resources().FreeShaderProgram(mTextShaderProgram);
@@ -46,11 +46,11 @@ MenuOption::~MenuOption() {
 
 glm::mat4 MenuOption::GetModelMatrix() const {
     glm::mat4 orientation;
-    orientation = glm::rotate(orientation, glm::radians(rotation.x), glm::vec3(0.f, 1.f, 0.f));
-    orientation = glm::rotate(orientation, glm::radians(rotation.y), glm::vec3(1.f, 0.f, 0.f));
-    orientation = glm::rotate(orientation, glm::radians(rotation.z), glm::vec3(0.f, 0.f, 1.f));
+    orientation = glm::rotate(orientation, glm::radians(mRotation.x), glm::vec3(0.f, 1.f, 0.f));
+    orientation = glm::rotate(orientation, glm::radians(mRotation.y), glm::vec3(1.f, 0.f, 0.f));
+    orientation = glm::rotate(orientation, glm::radians(mRotation.z), glm::vec3(0.f, 0.f, 1.f));
     
-    return glm::translate(glm::mat4(), mPosition) * orientation * glm::scale(glm::mat4(), glm::vec3(scale.x, scale.y, 1.f));
+    return glm::translate(glm::mat4(), mPosition) * orientation * glm::scale(glm::mat4(), glm::vec3(mScale.x, mScale.y, 1.f));
 }
 
 bool MenuOption::MouseIntersect(const glm::vec3& cameraPosition, const glm::vec3& ray, const glm::mat4& menuModelMatrix, const glm::vec2& playerScale) {
@@ -78,7 +78,7 @@ bool MenuOption::MouseIntersect(const glm::vec3& cameraPosition, const glm::vec3
     
     glm::vec2 planePosition(glm::dot(q, tangent), glm::dot(q, bitangent));
     
-    return (fabs(planePosition.x) <= playerScale.x * scale.x * 0.5f && fabs(planePosition.y) <= playerScale.y * scale.y * 0.5f);
+    return (fabs(planePosition.x) <= playerScale.x * mScale.x * 0.5f && fabs(planePosition.y) <= playerScale.y * mScale.y * 0.5f);
 }
 
 void MenuOption::RenderSelected(const glm::vec2& screenSize, const glm::mat4& menuModelMatrix) {
@@ -141,7 +141,7 @@ void MenuOption::Render(const glm::vec2& screenSize, const glm::mat4& menuModelM
     // Texture.
     glUniform1i(mTextShaderProgram->GetUniformLocation("baseImage"), 0);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, prerenderedText->GetTextureID());
+    glBindTexture(GL_TEXTURE_2D, mPrerenderedText->GetTextureID());
     
     glm::mat4 modelMat = menuModelMatrix * GetModelMatrix();
     glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
