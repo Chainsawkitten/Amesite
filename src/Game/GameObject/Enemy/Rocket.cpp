@@ -28,7 +28,7 @@
 using namespace GameObject;
 
 Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
-    mActiveGlow = Resources().CreateTexture2DFromFile("Resources/Crystal_01_glow.png");
+    mActiveGlow = Resources().CreateTexture2DFromFile("Resources/pylon_glow.png");
 
     node->AddComponent<Component::Transform>()->scale *= 0.15f;
     node->AddComponent<Component::Collider2DCircle>()->radius = 8.0f;
