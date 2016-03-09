@@ -135,4 +135,5 @@ class MainScene : public Scene {
         ALuint mActionSource;
         
         ALfloat mMix;
+        ALfloat mTargetMix;
 };
