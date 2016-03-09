@@ -17,7 +17,7 @@
 #include <Engine/Component/Mesh.hpp>
 #include <Engine/Component/Material.hpp>
 #include <Engine/Component/PointLight.hpp>
-#include "Game\Component\Update.hpp"
+#include "Game/Component/Update.hpp"
 
 
 using namespace GameObject;
