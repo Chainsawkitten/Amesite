@@ -27,7 +27,7 @@
 using namespace GameObject;
 
 Nest::Nest(Scene* scene) : SuperEnemy(scene) {
-    mActiveGlowBody = Resources().CreateTexture2DFromFile("Resources/Crystal_01_glow.png");
+    mActiveGlowBody = Resources().CreateTexture2DFromFile("Resources/enemy_glow.png");
 
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
     node->AddComponent<Component::Collider2DCircle>()->radius = 9.f;
@@ -44,10 +44,10 @@ Nest::Nest(Scene* scene) : SuperEnemy(scene) {
 
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/nest_body.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/crystal.obj");
     body->AddComponent<Component::Material>();
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/Crystal_01_diff.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/Crystal_01_spec.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
     mDeactiveGlowBody = body->GetComponent<Component::Material>()->glow;
 
     Deactivate();

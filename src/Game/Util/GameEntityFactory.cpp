@@ -16,6 +16,7 @@
 #include "../Component/Health.hpp"
 #include "../Component/LifeTime.hpp"
 #include "../Component/GridCollide.hpp"
+#include "../Component/Explode.hpp"
 
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
@@ -81,6 +82,7 @@ Rocket* GameEntityFactory::CreateMiniRocket(const glm::vec3& origin) {
     gameObject->node->AddComponent<Component::LifeTime>()->lifeTime = 5.f;
     gameObject->node->GetComponent<Component::Damage>()->removeOnImpact = true;
     gameObject->node->GetComponent<Component::GridCollide>()->removeOnImpact = true;
+    gameObject->node->GetComponent<Component::Explode>()->size = 8.f;
     Component::Health *healthComp = gameObject->node->GetComponent<Component::Health>();
     healthComp->maxHealth = healthComp->health = 20.f;
     healthComp->removeOnLowHealth = true;
