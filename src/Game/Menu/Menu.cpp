@@ -63,7 +63,7 @@ void Menu::SetRotation(const glm::vec3& rotation) {
 }
 
 void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
-    Entity* camera = Hub().GetMainCamera().body;
+    Entity* camera = HubInstance().GetMainCamera().body;
     
     float weight = 1.f;
     

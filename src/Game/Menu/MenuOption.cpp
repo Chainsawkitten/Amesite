@@ -95,7 +95,7 @@ void MenuOption::RenderSelected(const glm::vec2& screenSize, const glm::mat4& me
     
     mSelectedShaderProgram->Use();
     
-    Entity* camera = Hub().GetMainCamera().body;
+    Entity* camera = HubInstance().GetMainCamera().body;
     glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     
@@ -130,7 +130,7 @@ void MenuOption::Render(const glm::vec2& screenSize, const glm::mat4& menuModelM
     
     mTextShaderProgram->Use();
     
-    Entity* camera = Hub().GetMainCamera().body;
+    Entity* camera = HubInstance().GetMainCamera().body;
     glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     
