@@ -82,13 +82,15 @@ set(RESOURCES
         assets/default/DefaultNormal.png
         assets/default/DefaultSpecular.png
         assets/default/DefaultGlow.png
-        assets/default/DefaultGreen.png
-        assets/default/DefaultPurple.png
-        assets/default/DefaultBlue.png
-        assets/default/DefaultYellow.png
-        assets/default/DefaultGray.png
-        assets/default/ground_sand.png
-        assets/default/wall_gray.png
+        assets/color/defaultGreen.png
+        assets/color/defaultBlue.png
+        assets/color/defaultYellow.png
+        assets/color/defaultGray.png
+        assets/color/ground_sand.png
+        assets/color/wall_gray.png
+        assets/color/enemy_diff.png
+        assets/color/enemy_glow.png
+        assets/color/enemy_spec.png
         assets/ParticleAtlas.png
         assets/player1/player1_body_diff_healthy.png
         assets/player1/player1_body_diff_heavy_damage.png
@@ -127,9 +129,6 @@ set(RESOURCES
         assets/spawn/pillar/pillar.obj
         assets/spawn/portal/portal.obj
         assets/diamond/diamond_body.obj
-        assets/crystal/crystal_diff.png
-        assets/crystal/crystal_spec.png
-        assets/crystal/crystal_glow.png
         assets/crystal/crystal.obj
         assets/ring/ring_body.obj
         assets/ringSegment/ring_segment.obj

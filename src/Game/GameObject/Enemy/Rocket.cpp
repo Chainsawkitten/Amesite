@@ -28,17 +28,17 @@
 using namespace GameObject;
 
 Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
-    mActiveGlow = Resources().CreateTexture2DFromFile("Resources/pylon_glow.png");
+    mActiveGlow = Resources().CreateTexture2DFromFile("Resources/enemy_glow.png");
 
     node->AddComponent<Component::Transform>()->scale *= 0.15f;
-    node->AddComponent<Component::Collider2DCircle>()->radius = 8.0f;
+    node->AddComponent<Component::Collider2DCircle>()->radius = 9.0f;
     node->AddComponent<Component::Physics>()->velocityDragFactor = 1.f;
     node->GetComponent<Component::Physics>()->maxAngularVelocity *= 2.f;
     node->AddComponent<Component::Health>()->faction = 1;
     node->GetComponent<Component::Health>()->health = 500.f;
     node->GetComponent<Component::Health>()->removeOnLowHealth = false;
     node->AddComponent<Component::Explode>()->lifeTime = 0.25f;
-    node->GetComponent<Component::Explode>()->size = 8.f;
+    node->GetComponent<Component::Explode>()->size = 20.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     node->GetComponent<Component::Explode>()->sound = true;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&Rocket::mUpdateFunction, this);
@@ -53,8 +53,8 @@ Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
     body->GetComponent<Component::RelativeTransform>()->parentEntity = node;
     body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/rocket_body.obj");
     body->AddComponent<Component::Material>();
-    //body->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_head_crystal_diff.png");
-    //body->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_head_crystal_spec.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
     mDeactiveGlow = body->GetComponent<Component::Material>()->glow;
     Component::Animation::AnimationClip* idleHead = body->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleHead->CreateKeyFrame(glm::vec3(-0.15f, 0.f, 0.f), 0.f, 0.f, 0, 3.f, false, true);
@@ -97,5 +97,5 @@ void Rocket::mUpdateFunction() {
     Component::Physics* physics = node->GetComponent<Component::Physics>();
     float velocityFactor = glm::length(physics->velocity) / glm::length(physics->maxVelocity);
     physics->angularVelocity.y = velocityFactor;
-    node->GetComponent<Component::Transform>()->pitch = -glm::min((2.f * velocityFactor) * 90.f, 90.f);
+    node->GetComponent<Component::Transform>()->pitch = -glm::min((1.f * velocityFactor) * 90.f, 90.f);
 }
