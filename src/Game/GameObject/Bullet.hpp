@@ -4,6 +4,9 @@
 
 class Scene;
 class Entity;
+namespace Component {
+    class PointLight;
+}
 
 namespace GameObject {
     /// A bullet
@@ -13,7 +16,7 @@ namespace GameObject {
             /**
              * @param scene Pointer to which Scene %Bullet Enities' are contained.
              */
-            Bullet(Scene* scene);
+            Bullet(Scene* scene, float lifeTime = 4.f);
            
             ~Bullet();
 
@@ -21,5 +24,8 @@ namespace GameObject {
             Entity* node;
 
             Entity* tail;
+
+        private:
+            void Update(float life);
     };
 }

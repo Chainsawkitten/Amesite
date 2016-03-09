@@ -78,24 +78,20 @@ endif()
 set(RESOURCES
         assets/ABeeZee.ttf
         assets/Mugglorna.png
-        assets/TestTexture.png
-        assets/DefaultDiffuse.png
-        assets/DefaultNormal.png
-        assets/DefaultSpecular.png
-        assets/DefaultGlow.png
+        assets/default/DefaultDiffuse.png
+        assets/default/DefaultNormal.png
+        assets/default/DefaultSpecular.png
+        assets/default/DefaultGlow.png
+        assets/color/defaultGreen.png
+        assets/color/defaultBlue.png
+        assets/color/defaultYellow.png
+        assets/color/defaultGray.png
+        assets/color/ground_sand.png
+        assets/color/wall_gray.png
+        assets/color/enemy_diff.png
+        assets/color/enemy_glow.png
+        assets/color/enemy_spec.png
         assets/ParticleAtlas.png
-        assets/Normal.png
-        assets/Height.png
-        assets/Glow.png
-        assets/Albedo.png
-        assets/enemy_head_crystal_diff.png
-        assets/enemy_head_crystal_spec.png
-        assets/enemy_head_crystal_glow.png
-        assets/enemy_tail_crystal_diff.png
-        assets/enemy_tail_crystal_spec.png
-        assets/enemy_tail_crystal_glow.png
-        assets/enemy_head_crystal.obj
-        assets/enemy_tail_crystal.obj
         assets/player1/player1_body_diff_healthy.png
         assets/player1/player1_body_diff_heavy_damage.png
         assets/player1/player1_body_diff_medium_damage.png
@@ -116,22 +112,15 @@ set(RESOURCES
         assets/player2/player2_body.obj
         assets/player2/player2_engine.obj
         assets/player2/player2_propeller.obj
-        assets/pylon/Pylon_01_spec.png
-        assets/pylon/Pylon_01_glow.png
-        assets/pylon/Pylon_01_diff.png
-        assets/pylon/Pylon_01.obj
-        assets/crystal/Crystal_01_spec.png
-        assets/crystal/Crystal_01_glow.png
-        assets/crystal/Crystal_01_diff.png
-        assets/crystal/Crystal_01.obj
-        assets/shield/Shield_01_diff.png
-        assets/shield/Shield_01_glow.png
-        assets/shield/Shield_01_spec.png
-        assets/shield/Shield_01.obj
-        assets/circle/Circle.obj
-        assets/circle/Circle_red_diff.png
-        assets/circle/Circle_green_diff.png
-        assets/circle/Circle_blue_diff.png
+        assets/pylon/pylon_spec.png
+        assets/pylon/pylon_glow.png
+        assets/pylon/pylon_diff.png
+        assets/pylon/pylon.obj
+        assets/shield/shield_diff.png
+        assets/shield/shield_glow.png
+        assets/shield/shield_spec.png
+        assets/shield/shield.obj
+        assets/circle/circle.obj
         assets/spawn/altar/altar_diff.png
         assets/spawn/altar/altar_glow.png
         assets/spawn/altar/altar.obj
@@ -140,27 +129,19 @@ set(RESOURCES
         assets/spawn/pillar/pillar.obj
         assets/spawn/portal/portal.obj
         assets/diamond/diamond_body.obj
-        assets/nest/nest_body.obj
+        assets/crystal/crystal.obj
         assets/ring/ring_body.obj
         assets/ringSegment/ring_segment.obj
         assets/rocket/rocket_body.obj
-        assets/wall_diff.png
-        assets/wall_norm.png
-        assets/wall2_diff.png
-        assets/wall2_norm.png
-        assets/wall2_spec.png
-        assets/wall_gray.png
-        assets/ground_sand.png
-        assets/GolfBall.obj
-        assets/MusicAction.ogg
-        assets/MusicCalm.ogg
-        assets/Laser.ogg
         assets/SwirlingPortal.png
-        assets/Explosion01.ogg
-        assets/Explosion02.ogg
-        assets/Explosion03.ogg
-        assets/Explosion04.ogg
-        assets/Explosion05.ogg
+        assets/sound/Explosion01.ogg
+        assets/sound/Explosion02.ogg
+        assets/sound/Explosion03.ogg
+        assets/sound/Explosion04.ogg
+        assets/sound/Explosion05.ogg
+        assets/sound/MusicAction.ogg
+        assets/sound/MusicCalm.ogg
+        assets/sound/Laser.ogg
         assets/Loading.png
     )
 
