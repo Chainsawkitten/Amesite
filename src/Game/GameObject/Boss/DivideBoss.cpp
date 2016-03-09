@@ -79,8 +79,8 @@ void DivideBoss::Deactivate() {
 
 void DivideBoss::mUpdateFunction() {
     SuperBoss::mUpdateFunction();
-    Component::Health* heathComp = body->GetComponent<Component::Health>();
-    float healthFactor = heathComp->health / heathComp->maxHealth;
+    Component::Health* healthComp = body->GetComponent<Component::Health>();
+    float healthFactor = healthComp->health / healthComp->maxHealth;
     if (healthFactor < mNextHpStep) {
         mNextHpStep -= 0.1f;
         for (int i = 0; i < 5; i++) {

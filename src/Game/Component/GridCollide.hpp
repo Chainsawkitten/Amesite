@@ -21,7 +21,7 @@ namespace Component {
              */
             bool removeOnImpact;
 
-            /// True if object has collied with grid.
+            /// True if object has collided with grid.
             /**
              * Default: false;
              */
