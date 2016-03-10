@@ -130,7 +130,6 @@ MainScene::MainScene() {
     bossPositions.push_back(SouthWest);
     bossPositions.push_back(NorthEast);
     bossPositions.push_back(SouthEast);
-    
 
     // Create a map.
     mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
@@ -357,6 +356,15 @@ void MainScene::Update(float deltaTime) {
         if (enemy->Active()) {
             mTargetMix = 1.f;
             break;
+        }
+    }
+
+    for (GameObject::SuperBoss* boss : mBossVector) {
+        if (boss != nullptr) {
+            if (boss->Active()) {
+                mTargetMix = 1.f;
+                break;
+            }
         }
     }
 
