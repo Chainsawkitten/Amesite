@@ -16,9 +16,21 @@ class SubMenu {
         virtual ~SubMenu();
         
         /// Set the menu's position.
+        /**
+         * @param position New position.
+         */
         void SetPosition(const glm::vec3& position);
         
+        /// Get the menu's position.
+        /**
+         * @return The menu's position (relative to it's parent menu).
+         */
+        const glm::vec3& GetPosition() const;
+        
         /// Set the menu's rotation.
+        /**
+         * @param rotation New rotation.
+         */
         void SetRotation(const glm::vec3& rotation);
         
         /// Update model matrix.
@@ -39,6 +51,12 @@ class SubMenu {
         
         /// Render menu options.
         void RenderMenuOptions();
+        
+        /// Get position the camera should have (relative to the menu).
+        /**
+         * @return Position of the camera relative to the menu.
+         */
+        virtual glm::vec3 GetCameraPosition() const = 0;
         
     protected:
         /// Add a menu option to the sub menu.

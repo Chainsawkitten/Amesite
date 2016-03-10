@@ -22,6 +22,10 @@ MainMenu::MainMenu(Menu* parentMenu) : SubMenu() {
     glViewport(0, 0, static_cast<int>(screenSize.x), static_cast<int>(screenSize.y));
 }
 
+glm::vec3 MainMenu::GetCameraPosition() const {
+    return glm::vec3(-3.f, -2.6f, -6.5f);
+}
+
 void MainMenu::Quit() {
     MainWindow::GetInstance()->Close();
 }

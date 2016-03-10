@@ -13,6 +13,12 @@ class MainMenu : public SubMenu {
          */
         MainMenu(Menu* parentMenu);
         
+        /// Get position the camera should have (relative to the menu).
+        /**
+         * @return Position of the camera relative to the menu.
+         */
+        glm::vec3 GetCameraPosition() const;
+        
     private:
         void Quit();
 };

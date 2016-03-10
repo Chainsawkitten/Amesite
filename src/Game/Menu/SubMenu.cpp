@@ -39,21 +39,22 @@ void SubMenu::SetPosition(const glm::vec3& position) {
     mPosition = position;
 }
 
+const glm::vec3& SubMenu::GetPosition() const {
+    return mPosition;
+}
+
 void SubMenu::SetRotation(const glm::vec3& rotation) {
     mRotation = rotation;
 }
 
 void SubMenu::UpdateModelMatrix(const glm::mat4& menuModelMatrix) {
-    Entity* camera = HubInstance().GetMainCamera().body;
-    Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
-    
     // Update model matrix.
     glm::mat4 orientation;
     orientation = glm::rotate(orientation, glm::radians(mRotation.x), glm::vec3(0.f, 1.f, 0.f));
     orientation = glm::rotate(orientation, glm::radians(mRotation.y), glm::vec3(1.f, 0.f, 0.f));
     orientation = glm::rotate(orientation, glm::radians(mRotation.z), glm::vec3(0.f, 0.f, 1.f));
     
-    mModelMatrix = menuModelMatrix * glm::translate(glm::mat4(), mPosition) * orientation;  
+    mModelMatrix = menuModelMatrix * glm::translate(glm::mat4(), mPosition) * orientation;
 }
 
 void SubMenu::Update(const glm::vec2& playerScale) {

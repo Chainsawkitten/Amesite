@@ -12,4 +12,10 @@ class OptionsMenu : public SubMenu {
          * @param parentMenu %Menu in which this submenu is contained.
          */
         OptionsMenu(Menu* parentMenu);
+        
+        /// Get position the camera should have (relative to the menu).
+        /**
+         * @return Position of the camera relative to the menu.
+         */
+        glm::vec3 GetCameraPosition() const;
 };

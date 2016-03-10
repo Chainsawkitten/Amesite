@@ -19,3 +19,7 @@ OptionsMenu::OptionsMenu(Menu* parentMenu) : SubMenu() {
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     glViewport(0, 0, static_cast<int>(screenSize.x), static_cast<int>(screenSize.y));
 }
+
+glm::vec3 OptionsMenu::GetCameraPosition() const {
+    return glm::vec3(0.f, 0.f, 0.f);
+}
