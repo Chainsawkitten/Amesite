@@ -64,6 +64,7 @@ namespace GameObject {
             Texture2D* mHealthyTexture;
             Texture2D* mHeavyDamageTexture;
             Texture2D* mMediumDamageTexture;
+            Texture2D* mDeadTexture;
 
             // Node of %Player1.
             Entity* mNode;

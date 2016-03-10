@@ -35,6 +35,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_healthy.png");
     mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_medium_damage.png");
     mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_heavy_damage.png");
+    mDeadTexture = Resources().CreateTexture2DFromFile("Resources/player1_diff_dead.png");
 
     mNode = CreateEntity();
     mNode->AddComponent<Component::Transform>()->scale *= 0.2f;
@@ -85,12 +86,12 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
 
     Resources().FreeTexture2D(mBody->GetComponent<Component::Material>()->diffuse);
     mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
-    mBody->GetComponent<Component::Material>()->SetSpecular("Resources/player1_body_spec.png");
+    mBody->GetComponent<Component::Material>()->SetSpecular("Resources/player1_spec.png");
     mBody->GetComponent<Component::Material>()->SetGlow("Resources/player1_body_glow.png");
     mBody->AddComponent<Component::Animation>();
 
     mLight = CreateEntity();
-    mLight->AddComponent<Component::RelativeTransform>()->Move(0, 1, 0);
+    mLight->AddComponent<Component::RelativeTransform>()->Move(0, 1, 2);
     mLight->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
     mLight->GetComponent<Component::RelativeTransform>()->pitch = 15.f;
     mLight->AddComponent<Component::Animation>();
@@ -105,25 +106,24 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 1.f);
     mBottomLight->GetComponent<Component::PointLight>()->attenuation = 0.8f;
     
-
-    mTurretBodyModel = Resources().CreateOBJModel("Resources/player1_turret_body.obj");
-    mTurretBarrelModel = Resources().CreateOBJModel("Resources/player1_turret_barrel.obj");
+    mTurretBodyModel = Resources().CreateOBJModel("Resources/turret_body.obj");
+    mTurretBarrelModel = Resources().CreateOBJModel("Resources/turret_barrel.obj");
 
     // Left Turret
     mLeftTurretBody = CreateEntity();
     mLeftTurretBody->AddComponent<Component::RelativeTransform>()->parentEntity = mBody;
-    mLeftTurretBody->GetComponent<Component::RelativeTransform>()->Move(3.f, -3.f, 10.f);
+    mLeftTurretBody->GetComponent<Component::RelativeTransform>()->Move(5.f, -5.f, 10.f);
     mLeftTurretBody->GetComponent<Component::RelativeTransform>()->roll = -45.f;
-    mLeftTurretBody->GetComponent<Component::RelativeTransform>()->scale *= 0.6f;
+    mLeftTurretBody->GetComponent<Component::RelativeTransform>()->scale *= 1.f;
     mLeftTurretBody->AddComponent<Component::Animation>();
     mLeftTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
-    mLeftTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
+    mLeftTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
 
     mLeftTurretBarrel = CreateEntity();
     mLeftTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBody;
     mLeftTurretBarrel->AddComponent<Component::Animation>();
     mLeftTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
-    mLeftTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
+    mLeftTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
 
     mLeftSpawnNode = CreateEntity();
     mLeftSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBarrel;
@@ -140,18 +140,18 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     // Right Turret
     mRightTurretBody = CreateEntity();
     mRightTurretBody->AddComponent<Component::RelativeTransform>()->parentEntity = mBody;
-    mRightTurretBody->GetComponent<Component::RelativeTransform>()->Move(-3.f, -3.f, 10.f);
+    mRightTurretBody->GetComponent<Component::RelativeTransform>()->Move(-5.f, -5.f, 10.f);
     mRightTurretBody->GetComponent<Component::RelativeTransform>()->roll = 45.f;
-    mRightTurretBody->GetComponent<Component::RelativeTransform>()->scale *= 0.6f;
+    mRightTurretBody->GetComponent<Component::RelativeTransform>()->scale *= 1.f;
     mRightTurretBody->AddComponent<Component::Animation>();
     mRightTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
-    mRightTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
+    mRightTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
 
     mRightTurretBarrel = CreateEntity();
     mRightTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBody;
     mRightTurretBarrel->AddComponent<Component::Animation>();
     mRightTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
-    mRightTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
+    mRightTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
 
     mRightSpawnNode = CreateEntity();
     mRightSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBarrel;
@@ -164,13 +164,13 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     Entity* pointLight;
     // Engine
     mFrontEngineLeft = CreateEntity();
-    mFrontEngineLeft->AddComponent<Component::RelativeTransform>()->Move(8.5f, 0.f, 8.3f);
+    mFrontEngineLeft->AddComponent<Component::RelativeTransform>()->Move(13.f, -1.f, 6.5f);
     mFrontEngineLeft->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
-    mFrontEngineLeft->GetComponent<Component::RelativeTransform>()->scale *= 1.1f;
+    mFrontEngineLeft->GetComponent<Component::RelativeTransform>()->scale *= 1.8f;
     mFrontEngineLeft->AddComponent<Component::Animation>();
     mFrontEngineLeft->AddComponent<Component::Mesh>()->geometry = mFrontEngineModel = Resources().CreateOBJModel("Resources/player1_frontEngine.obj");
     mFrontEngineLeft->AddComponent<Component::Material>();
-    mFrontEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
+    mFrontEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_frontEngine_diff.png");
     mFrontEngineLeftParticles = CreateEntity();
     mFrontEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
     AddEnginePartilces(mFrontEngineLeftParticles);
@@ -200,14 +200,14 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     emitter->particleType.endAlpha = 0.f;
 
     mFrontEngineRight = CreateEntity();
-    mFrontEngineRight->AddComponent<Component::RelativeTransform>()->Move(-8.5f, 0.f, 8.3f);
+    mFrontEngineRight->AddComponent<Component::RelativeTransform>()->Move(-13.f, -1.f, 6.5f);
     mFrontEngineRight->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
-    mFrontEngineRight->GetComponent<Component::RelativeTransform>()->scale *= 1.1f;
+    mFrontEngineRight->GetComponent<Component::RelativeTransform>()->scale *= 1.8f;
     mFrontEngineRight->GetComponent<Component::RelativeTransform>()->yaw = 180.f;
     mFrontEngineRight->AddComponent<Component::Animation>();
     mFrontEngineRight->AddComponent<Component::Mesh>()->geometry = mFrontEngineModel;
     mFrontEngineRight->AddComponent<Component::Material>();
-    mFrontEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
+    mFrontEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_frontEngine_diff.png");
     mFrontEngineRightParticles = CreateEntity();
     mFrontEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineRight;
     AddEnginePartilces(mFrontEngineRightParticles);
@@ -237,13 +237,13 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     emitter->particleType.endAlpha = 0.f;
 
     mBackEngineLeft = CreateEntity();
-    mBackEngineLeft->AddComponent<Component::RelativeTransform>()->Move(10.5f, 0.f, 0.f);
+    mBackEngineLeft->AddComponent<Component::RelativeTransform>()->Move(15.5f, -2.f, -3.f);
     mBackEngineLeft->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
-    mBackEngineLeft->GetComponent<Component::RelativeTransform>()->scale *= 1.2f;
+    mBackEngineLeft->GetComponent<Component::RelativeTransform>()->scale *= 1.9f;
     mBackEngineLeft->AddComponent<Component::Animation>();
     mBackEngineLeft->AddComponent<Component::Mesh>()->geometry = mBackEngineModel = Resources().CreateOBJModel("Resources/player1_backEngine.obj");
     mBackEngineLeft->AddComponent<Component::Material>();
-    mBackEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
+    mBackEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_backEngine_diff.png");
     mBackEngineLeftParticles = CreateEntity();
     mBackEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineLeft;
     AddEnginePartilces(mBackEngineLeftParticles);
@@ -273,14 +273,14 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     emitter->particleType.endAlpha = 0.f;
 
     mBackEngineRight = CreateEntity();
-    mBackEngineRight->AddComponent<Component::RelativeTransform>()->Move(-10.5f, 0.f, 0.f);
+    mBackEngineRight->AddComponent<Component::RelativeTransform>()->Move(-15.5f, -2.f, -3.f);
     mBackEngineRight->GetComponent<Component::RelativeTransform>()->parentEntity = mBody;
-    mBackEngineRight->GetComponent<Component::RelativeTransform>()->scale *= 1.2f;
+    mBackEngineRight->GetComponent<Component::RelativeTransform>()->scale *= 1.9f;
     mBackEngineRight->GetComponent<Component::RelativeTransform>()->yaw = 180.f;
     mBackEngineRight->AddComponent<Component::Animation>();
     mBackEngineRight->AddComponent<Component::Mesh>()->geometry = mBackEngineModel;
     mBackEngineRight->AddComponent<Component::Material>();
-    mBackEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_engine_diff.png");
+    mBackEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_backEngine_diff.png");
     mBackEngineRightParticles = CreateEntity();
     mBackEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineRight;
     AddEnginePartilces(mBackEngineRightParticles);
@@ -318,6 +318,8 @@ Player1::~Player1() {
         Resources().FreeTexture2D(mMediumDamageTexture);
     if (mState != HEAVYDAMAGE)
         Resources().FreeTexture2D(mHeavyDamageTexture);
+    if (mState != DEAD)
+        Resources().FreeTexture2D(mDeadTexture);
     Resources().FreeSound(mShootSound);
 
     Resources().FreeOBJModel(mBodyModel);
@@ -352,6 +354,7 @@ void Player1::Activate() {
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = true;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = false;
+    mNode->GetComponent<Component::Health>()->regenAmount = 1.f;
 }
 
 void Player1::Deactivate() {
@@ -362,7 +365,7 @@ void Player1::Deactivate() {
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = false;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = true;
     mNode->GetComponent<Component::Physics>()->acceleration = glm::vec3(0, 0, 0);
-
+    mNode->GetComponent<Component::Health>()->regenAmount = 0.f;
 }
 
 void Player1::AddEnginePartilces(Entity* entity) {
@@ -405,17 +408,24 @@ void Player1::mUpdateFunction() {
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;
-    } else {
+    } else if (GetHealth() >= 0.01f)  {
         mState = HEAVYDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
-        mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.f, 0.f);
+        mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.32f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mHeavyDamageTexture;
-
         mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
         mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
         mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
         mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
-
+    } else {
+        mState = DEAD;
+        mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
+        mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.f, 0.f);
+        mBody->GetComponent<Component::Material>()->diffuse = mDeadTexture;
+        mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
     }
 
     glm::vec3 velocity = mNode->GetComponent<Component::Physics>()->velocity;

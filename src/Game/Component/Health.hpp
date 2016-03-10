@@ -41,7 +41,7 @@ namespace Component {
 
             /// Regen amount, amount of health regenerated each secound (hp/sec).
             /**
-             * Default: 20.f
+             * Default: 1.f
              */
             float regenAmount;
 
