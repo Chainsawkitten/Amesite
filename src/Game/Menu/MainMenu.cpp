@@ -10,6 +10,7 @@ MainMenu::MainMenu(Menu* parentMenu) : SubMenu() {
     menuOption->callback = std::bind(&Menu::ResumeGame, parentMenu);
     AddMenuOption(menuOption);
     menuOption = new MenuOption(GetFont(), "OPTIONS", glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f);
+    menuOption->callback = std::bind(&Menu::Transition, parentMenu, 1);
     AddMenuOption(menuOption);
     menuOption = new MenuOption(GetFont(), "QUIT", glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f);
     menuOption->callback = std::bind(&MainMenu::Quit, this);

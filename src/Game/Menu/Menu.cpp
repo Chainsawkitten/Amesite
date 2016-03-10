@@ -128,3 +128,7 @@ void Menu::RenderMenuOptions() {
 void Menu::ResumeGame() {
     mFlyOut = true;
 }
+
+void Menu::Transition(int subMenuIndex) {
+    mSelected = subMenuIndex;
+}

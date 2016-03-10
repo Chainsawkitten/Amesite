@@ -50,6 +50,12 @@ class Menu {
         /// Pan out camera and resume game.
         void ResumeGame();
         
+        /// Transition from current submenu to another.
+        /**
+         * @param subMenuIndex Index of the sub menu to transition to.
+         */
+        void Transition(int subMenuIndex);
+        
     private:
         bool mActive;
         bool mFlyOut;
