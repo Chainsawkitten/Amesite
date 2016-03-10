@@ -8,7 +8,6 @@ class ShaderProgram;
 namespace Geometry {
     class Plane;
 }
-class MenuOption;
 class SubMenu;
 namespace GameObject {
     class SuperPlayer;
@@ -60,12 +59,9 @@ class Menu {
         // Text.
         Font* mFont;
         
-        // Menu options.
-        std::vector<MenuOption*> mMenuOptions;
-        int mSelected;
-        
         // Sub menus.
         std::vector<SubMenu*> mSubMenus;
+        int mSelected;
         
         void StartGame();
         void Quit();

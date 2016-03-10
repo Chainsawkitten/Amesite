@@ -14,7 +14,6 @@
 #include "../GameObject/Camera.hpp"
 #include <Util/Input.hpp>
 
-#include "MenuOption.hpp"
 #include "SubMenu.hpp"
 #include <Util/Picking.hpp>
 
@@ -31,12 +30,8 @@ Menu::Menu() {
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", fontHeight);
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
-    // Define menu options.
-    mMenuOptions.push_back(new MenuOption(mFont, "START GAME", glm::vec3(0.f, 1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
-    mMenuOptions[0]->callback = std::bind(&Menu::StartGame, this);
-    mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
-    mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
-    mMenuOptions[2]->callback = std::bind(&Menu::Quit, this);
+    // Define submenus.
+    mSubMenus.push_back(new SubMenu());
     mSelected = 0;
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
@@ -45,9 +40,6 @@ Menu::Menu() {
 
 Menu::~Menu() {
     Resources().FreeFont(mFont);
-    
-    for (MenuOption* menuOption : mMenuOptions)
-        delete menuOption;
     
     for (SubMenu* subMenu : mSubMenus)
         delete subMenu;
@@ -102,41 +94,17 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
     
     // Update menu selection.
     if (!mFlyOut) {
-        int movement = Input()->Triggered(InputHandler::ANYONE, InputHandler::DOWN) - Input()->Triggered(InputHandler::ANYONE, InputHandler::UP);
-        if (mSelected + movement >= 0 && mSelected + movement < static_cast<int>(mMenuOptions.size()))
-            mSelected += movement;
-        
-        const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
-        
-        glm::mat4 viewMat = cameraTransform->worldOrientationMatrix * glm::translate(glm::mat4(), -cameraTransform->GetWorldPosition());
-        glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
-        glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
-        
-        glm::vec3 cameraPosition = cameraTransform->position;
-        glm::vec3 ray(Picking::CreateWorldRay(mouseCoordinates, viewMat, projectionMat));
-        
-        for (std::size_t i=0; i < mMenuOptions.size(); ++i) {
-            if (mMenuOptions[i]->MouseIntersect(cameraPosition, ray, mModelMatrix, playerScale))
-                mSelected = i;
-        }
-        
-        // Handle pressed menu option.
-        if (Input()->Triggered(InputHandler::ANYONE, InputHandler::SHOOT))
-            mMenuOptions[mSelected]->callback();
+        mSubMenus[mSelected]->Update(mModelMatrix, playerScale);
     }
 }
 
 void Menu::RenderSelected() {
-    const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
-    
-    mMenuOptions[mSelected]->RenderSelected(screenSize, mModelMatrix);
+    mSubMenus[mSelected]->RenderSelected();
 }
 
 void Menu::RenderMenuOptions() {
-    const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
-    
-    for (MenuOption* menuOption : mMenuOptions)
-        menuOption->Render(screenSize, mModelMatrix);
+    for (SubMenu* subMenu : mSubMenus)
+        subMenu->RenderMenuOptions();
 }
 
 void Menu::StartGame() {
