@@ -425,6 +425,7 @@ set(GAME_SRCS
         src/Game/GameObject/PillarBall.cpp
         src/Game/GameObject/Portal.cpp
         src/Game/Menu/Menu.cpp
+        src/Game/Menu/SubMenu.cpp
         src/Game/Menu/MenuOption.cpp
     )
 
@@ -492,6 +493,7 @@ set(GAME_HEADERS
         src/Game/GameObject/PillarBall.hpp
         src/Game/GameObject/Portal.hpp
         src/Game/Menu/Menu.hpp
+        src/Game/Menu/SubMenu.hpp
         src/Game/Menu/MenuOption.hpp
     )
 
