@@ -81,7 +81,7 @@ void RingBoss::CreateRing() {
     CreateRingPart(ring.left, glm::vec3(8.f, 0.f, 2.f));
 
     ring.right = CreateEntity();
-    CreateRingPart(ring.right, glm::vec3(-8.f,0.f, 2.f));
+    CreateRingPart(ring.right, glm::vec3(-8.f, 0.f, 2.f));
 
     ring.leftFront = CreateEntity();
     CreateRingPart(ring.leftFront, glm::vec3(8.f, 0.f, 10.f));

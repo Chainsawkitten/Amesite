@@ -116,4 +116,5 @@ namespace ControlScheme {
      * @param deltaTime Time since last frame (in seconds).
      */
     void Shield(Component::Controller* controller, float deltaTime);
+
 }

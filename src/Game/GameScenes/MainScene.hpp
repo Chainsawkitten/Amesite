@@ -1,21 +1,22 @@
 #pragma once
-#include <Engine/Scene/Scene.hpp>
+#include <Scene/Scene.hpp>
 
 #include <System/RenderSystem.hpp>
 #include <System/PhysicsSystem.hpp>
 #include <System/CollisionSystem.hpp>
 #include <System/AnimationSystem.hpp>
-#include "Game/System/CheckpointSystem.hpp"
-#include "Game/System/HealthSystem.hpp"
-#include "Game/System/DamageSystem.hpp"
-#include "Game/System/ControllerSystem.hpp"
-#include "Game/System/LifeTimeSystem.hpp"
-#include "Game/System/ReflectSystem.hpp"
-#include "Game/System/ExplodeSystem.hpp"
-#include "Game/System/GridCollideSystem.hpp"
-#include "Game/System/EnemySpawnerSystem.hpp"
-#include "Game/System/UpdateSystem.hpp"
-#include "Game/System/SpawnerSystem.hpp"
+#include "../System/CheckpointSystem.hpp"
+#include "../System/HealthSystem.hpp"
+#include "../System/DamageSystem.hpp"
+#include "../System/ControllerSystem.hpp"
+#include "../System/LifeTimeSystem.hpp"
+#include "../System/ReflectSystem.hpp"
+#include "../System/ExplodeSystem.hpp"
+#include "../System/GridCollideSystem.hpp"
+#include "../System/EnemySpawnerSystem.hpp"
+#include "../System/UpdateSystem.hpp"
+#include "../System/SpawnerSystem.hpp"
+#include "../Menu/Menu.hpp"
 
 #include <AL/al.h>
 
@@ -124,11 +125,19 @@ class MainScene : public Scene {
         int mBossCounter;
         float mTimer;
         glm::vec2 mPortalPosition;
+        
+        // Menu
+        Menu mMenu;
 
         // Used to exclude enemy spawning from certain areas.
         std::vector<glm::vec3> mNoSpawnRooms;
 
         // Music.
-        Audio::SoundBuffer* mMusicSoundBuffer;
-        ALuint mSource;
+        Audio::SoundBuffer* mCalmSoundBuffer;
+        ALuint mCalmSource;
+        Audio::SoundBuffer* mActionSoundBuffer;
+        ALuint mActionSource;
+        
+        ALfloat mMix;
+        ALfloat mTargetMix;
 };
