@@ -15,6 +15,7 @@
 #include <Util/Input.hpp>
 
 #include "MenuOption.hpp"
+#include "SubMenu.hpp"
 #include <Util/Picking.hpp>
 
 #include <Util/Log.hpp>
@@ -45,9 +46,11 @@ Menu::Menu() {
 Menu::~Menu() {
     Resources().FreeFont(mFont);
     
-    for (MenuOption* menuOption : mMenuOptions) {
+    for (MenuOption* menuOption : mMenuOptions)
         delete menuOption;
-    }
+    
+    for (SubMenu* subMenu : mSubMenus)
+        delete subMenu;
 }
 
 bool Menu::IsActive() const {

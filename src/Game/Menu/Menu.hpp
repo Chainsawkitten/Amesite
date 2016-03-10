@@ -9,6 +9,7 @@ namespace Geometry {
     class Plane;
 }
 class MenuOption;
+class SubMenu;
 namespace GameObject {
     class SuperPlayer;
 }
@@ -62,6 +63,9 @@ class Menu {
         // Menu options.
         std::vector<MenuOption*> mMenuOptions;
         int mSelected;
+        
+        // Sub menus.
+        std::vector<SubMenu*> mSubMenus;
         
         void StartGame();
         void Quit();
