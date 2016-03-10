@@ -128,9 +128,10 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
         if (!GridCollide(point)) {
 
-            GameObject::Rock* rock = GameEntityCreator().CreateRock(point);
-            rock->node->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
-            mRockVector.push_back(rock);
+            GameObject::Scenery* scenery = GameEntityCreator().CreateScenery(point);
+            scenery->node->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+            scenery->node->GetComponent<Component::Transform>()->scale *= 1 - ((rand() % 1000) / 1000.f) / 2.f;
+            mSceneryVector.push_back(scenery);
 
         }
         else i--;

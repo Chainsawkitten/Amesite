@@ -162,8 +162,13 @@ GameObject::Pillar* GameEntityFactory::CreatePillar(const glm::vec3& origin, glm
     return gameObject;
 }
 
-GameObject::Rock* GameEntityFactory::CreateRock(const glm::vec3& origin) {
-    Rock* gameObject = new Rock(mScene);
+GameObject::Scenery* GameEntityFactory::CreateScenery(const glm::vec3& origin) {
+
+    char* diffuse = "Resources/player1_body_diff_healthy.png";
+    char* specular = "Resources/player1_body_spec.png";
+    char* glow = "Resources/player1_body_glow.png";
+
+    GameObject::Scenery* gameObject = new GameObject::Scenery(mScene, "Resources/player1_body.obj", diffuse, specular, glow);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }

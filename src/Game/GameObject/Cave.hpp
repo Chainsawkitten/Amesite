@@ -16,7 +16,7 @@ namespace Geometry {
 }
 
 namespace GameObject {
-    class Rock;
+    class Scenery;
 }
 
 namespace GameObject {
@@ -90,7 +90,7 @@ namespace GameObject {
             Entity* heightMap;
 
             /// Rocks vector
-            std::vector<GameObject::Rock*> mRockVector;
+            std::vector<GameObject::Scenery*> mSceneryVector;
 
             /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;

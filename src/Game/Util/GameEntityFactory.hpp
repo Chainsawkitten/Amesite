@@ -31,7 +31,7 @@ namespace GameObject{
     class Pillar;
     class PillarBall;
     class Portal;
-    class Rock;
+    class Scenery;
 }
 
 /// Factory responsible for creating prefab entities.
@@ -172,7 +172,7 @@ class GameEntityFactory {
          * @param origin The Rock's starting position.
          * @return The Rock GameObject.
          */
-        GameObject::Rock* CreateRock(const glm::vec3& origin);
+        GameObject::Scenery* CreateScenery(const glm::vec3& origin);
 
         /// Create player bullet.
         /**
