@@ -36,7 +36,6 @@ class SubMenu {
         /// Update model matrix.
         /**
          * @param menuModelMatrix Model matrix of the parent menu.
-         * @param menuModelMatrix
          */
         void UpdateModelMatrix(const glm::mat4& menuModelMatrix);
         
@@ -57,6 +56,12 @@ class SubMenu {
          * @return Position of the camera relative to the menu.
          */
         virtual glm::vec3 GetCameraPosition() const = 0;
+        
+        /// Get direction the camera should have.
+        /**
+         * @return Direction of the camera.
+         */
+        virtual glm::vec3 GetCameraDirection() const = 0;
         
     protected:
         /// Add a menu option to the sub menu.

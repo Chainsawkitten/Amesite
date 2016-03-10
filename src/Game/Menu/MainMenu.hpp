@@ -19,6 +19,12 @@ class MainMenu : public SubMenu {
          */
         glm::vec3 GetCameraPosition() const;
         
+        /// Get direction the camera should have.
+        /**
+         * @return Direction of the camera.
+         */
+        glm::vec3 GetCameraDirection() const;
+        
     private:
         void Quit();
 };

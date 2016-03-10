@@ -23,3 +23,7 @@ OptionsMenu::OptionsMenu(Menu* parentMenu) : SubMenu() {
 glm::vec3 OptionsMenu::GetCameraPosition() const {
     return glm::vec3(0.f, 0.f, 0.f);
 }
+
+glm::vec3 OptionsMenu::GetCameraDirection() const {
+    return glm::vec3(0.f, 0.f, 0.f);
+}

@@ -18,4 +18,10 @@ class OptionsMenu : public SubMenu {
          * @return Position of the camera relative to the menu.
          */
         glm::vec3 GetCameraPosition() const;
+        
+        /// Get direction the camera should have.
+        /**
+         * @return Direction of the camera.
+         */
+        glm::vec3 GetCameraDirection() const;
 };

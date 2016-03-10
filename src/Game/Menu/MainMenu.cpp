@@ -26,6 +26,10 @@ glm::vec3 MainMenu::GetCameraPosition() const {
     return glm::vec3(-3.f, -2.6f, -6.5f);
 }
 
+glm::vec3 MainMenu::GetCameraDirection() const {
+    return glm::vec3(60.f, 10.f, 0.f);
+}
+
 void MainMenu::Quit() {
     MainWindow::GetInstance()->Close();
 }

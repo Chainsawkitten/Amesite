@@ -89,9 +89,10 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
     
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     cameraTransform->position = (1.f - weight) * cameraTransform->position + weight * (player->GetPosition() + mSubMenus[0]->GetPosition() + mSubMenus[0]->GetCameraPosition());
-    cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * 60.f;
-    cameraTransform->pitch = (1.f - weight) * cameraTransform->pitch + weight * 10.f;
-    cameraTransform->roll = (1.f - weight) * cameraTransform->roll + weight * 0.f;
+    glm::vec3 direction(mSubMenus[0]->GetCameraDirection());
+    cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * direction.x;
+    cameraTransform->pitch = (1.f - weight) * cameraTransform->pitch + weight * direction.y;
+    cameraTransform->roll = (1.f - weight) * cameraTransform->roll + weight * direction.z;
     cameraTransform->UpdateModelMatrix();
     
     // Update model matrix.
