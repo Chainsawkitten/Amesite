@@ -114,7 +114,7 @@ MainScene::MainScene() {
     // Create scene
     int width;
     int height = width = 90;
-    int seed = 0;
+    int seed = time(0);
     int percent = 50;
     int iterations = 10;
     int threshold = 100;
@@ -145,8 +145,8 @@ MainScene::MainScene() {
     Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f));
     mPlayers.push_back(player1);
     mPlayers.push_back(player2);
-    HubInstance().SetPlayer1(player1);
-    HubInstance().SetPlayer2(player2);
+    HubInstance().mPlayers.push_back(player1);
+    HubInstance().mPlayers.push_back(player2);
     
     // Set menu position.
     mMenu.SetPosition(glm::vec3(0.f, 4.f, 11.5f));
