@@ -23,7 +23,7 @@
 
 #include "../Util/ControlSchemes.hpp"
 
-#include "Game/GameObject/Rock.hpp"
+#include "Game/GameObject/Scenery.hpp"
 
 
 

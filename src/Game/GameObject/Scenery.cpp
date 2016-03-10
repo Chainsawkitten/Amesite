@@ -1,4 +1,4 @@
-#include "Rock.hpp"
+#include "Scenery.hpp"
 
 #include <Engine/Scene/Scene.hpp>
 #include <Engine/Entity/Entity.hpp>

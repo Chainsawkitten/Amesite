@@ -48,7 +48,7 @@
 #include "../GameObject/Pillar.hpp"
 #include "../GameObject/PillarBall.hpp"
 #include "../GameObject/Portal.hpp"
-#include "../GameObject/Rock.hpp"
+#include "../GameObject/Scenery.hpp"
 
 using namespace GameObject;
 
