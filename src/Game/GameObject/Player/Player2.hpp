@@ -56,6 +56,8 @@ namespace GameObject {
         Geometry::OBJModel* mBodyModel;
         Geometry::OBJModel* mEngineModel;
         Geometry::OBJModel* mPropellerModel;
+        Geometry::OBJModel* mTurretBodyModel;
+        Geometry::OBJModel* mTurretBarrelModel;
 
         Audio::SoundBuffer* mShootSound;
 
@@ -81,6 +83,9 @@ namespace GameObject {
         // Engine relative to body.
         Entity* mBackEngineRight;
 
+        // Propeller relative to body.
+        Entity* mMidPropeller;
+
         // Propeller relative to engine.
         Entity* mFrontPropellerLeft;
 
@@ -97,15 +102,29 @@ namespace GameObject {
         Entity* mLight;
 
         // Turret relative to body.
-        Entity* mLeftTurret;
+        Entity* mLeftTurretBody;
 
         // Turret relative to body.
-        Entity* mRightTurret;
+        Entity* mRightTurretBody;
+
+        // Barrel relative to turret.
+        Entity* mLeftTurretBarrel;
+
+        // Barrel relative to turret.
+        Entity* mRightTurretBarrel;
+
+        // SpawnNode relative to barrel.
+        Entity* mLeftSpawnNode;
+
+        // SpawnNode relative to barrel.
+        Entity* mRightSpawnNode;
 
         // Light under the player.
         Entity* mBottomLight;
 
         void AddEngine(Entity* entity, glm::vec3 position, glm::vec3 scale);
+
+        void AddMidPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale);
 
         void AddPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale);
 

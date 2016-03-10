@@ -95,23 +95,29 @@ set(RESOURCES
         assets/player1/player1_body_diff_healthy.png
         assets/player1/player1_body_diff_heavy_damage.png
         assets/player1/player1_body_diff_medium_damage.png
-        assets/player1/player1_body_spec.png
+        assets/player1/player1_body_diff_dead.png
+        assets/player1/player1_spec.png
         assets/player1/player1_body_glow.png
-        assets/player1/player1_engine_diff.png
+        assets/player1/player1_frontEngine_diff.png
+        assets/player1/player1_backEngine_diff.png
         assets/player1/player1_body.obj
         assets/player1/player1_frontEngine.obj
         assets/player1/player1_backEngine.obj
-        assets/player1/player1_turret_barrel.obj
-        assets/player1/player1_turret_body.obj
         assets/player2/player2_diff.png
         assets/player2/player2_diff_medium_damage.png
         assets/player2/player2_diff_heavy_damage.png
+        assets/player2/player2_diff_dead.png
         assets/player2/player2_glow.png
         assets/player2/player2_norm.png
         assets/player2/player2_spec.png
+        assets/player2/player2_rest_diff.png
         assets/player2/player2_body.obj
         assets/player2/player2_engine.obj
         assets/player2/player2_propeller.obj
+        assets/turret/turret_diff.png
+        assets/turret/turret_spec.png
+        assets/turret/turret_barrel.obj
+        assets/turret/turret_body.obj
         assets/pylon/pylon_spec.png
         assets/pylon/pylon_glow.png
         assets/pylon/pylon_diff.png
