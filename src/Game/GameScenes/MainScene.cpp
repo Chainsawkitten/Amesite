@@ -176,12 +176,12 @@ MainScene::MainScene() {
         mCheckpointSystem.AddPlayer(player);
     }
     
-    // Directional light.
-    Entity* dirLight = CreateEntity();
-    dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
-    dirLight->AddComponent<Component::DirectionalLight>();
-    dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.0000001f, 0.0000001f, 0.0000001f);
-    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.005f;
+    //// Directional light.
+    //Entity* dirLight = CreateEntity();
+    //dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
+    //dirLight->AddComponent<Component::DirectionalLight>();
+    //dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.0000001f, 0.0000001f, 0.0000001f);
+    //dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.005f;
     
     mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     mFxaaFilter = new FXAAFilter();
