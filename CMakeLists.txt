@@ -427,6 +427,7 @@ set(GAME_SRCS
         src/Game/Menu/Menu.cpp
         src/Game/Menu/SubMenu.cpp
         src/Game/Menu/MainMenu.cpp
+        src/Game/Menu/OptionsMenu.cpp
         src/Game/Menu/MenuOption.cpp
     )
 
@@ -496,6 +497,7 @@ set(GAME_HEADERS
         src/Game/Menu/Menu.hpp
         src/Game/Menu/SubMenu.hpp
         src/Game/Menu/MainMenu.hpp
+        src/Game/Menu/OptionsMenu.hpp
         src/Game/Menu/MenuOption.hpp
     )
 

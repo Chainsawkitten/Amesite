@@ -16,6 +16,7 @@
 
 #include "SubMenu.hpp"
 #include "MainMenu.hpp"
+#include "OptionsMenu.hpp"
 #include <Util/Picking.hpp>
 
 #include <Util/Log.hpp>
@@ -35,9 +36,16 @@ Menu::Menu() {
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
     // Define submenus.
-    mSubMenus.push_back(new MainMenu(this));
-    mSubMenus[0]->SetPosition(glm::vec3(0.f, 4.f, 11.5f));
-    mSubMenus[0]->SetRotation(glm::vec3(0.f, 330.f, 0.f));
+    SubMenu* subMenu = new MainMenu(this);
+    subMenu->SetPosition(glm::vec3(0.f, 4.f, 11.5f));
+    subMenu->SetRotation(glm::vec3(0.f, 330.f, 0.f));
+    mSubMenus.push_back(subMenu);
+    
+    subMenu = new OptionsMenu(this);
+    subMenu->SetPosition(glm::vec3(0.f, 4.f, 12.f));
+    subMenu->SetRotation(glm::vec3(0.f, 330.f, 0.f));
+    mSubMenus.push_back(subMenu);
+    
     mSelected = 0;
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
@@ -98,9 +106,12 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
     
     mModelMatrix = playerModelMatrix * glm::translate(glm::mat4(), mPosition) * orientation;
     
+    for (SubMenu* subMenu : mSubMenus)
+        subMenu->UpdateModelMatrix(mModelMatrix);
+    
     // Update menu selection.
     if (!mFlyOut) {
-        mSubMenus[mSelected]->Update(mModelMatrix, playerScale);
+        mSubMenus[mSelected]->Update(playerScale);
     }
 }
 

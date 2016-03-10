@@ -43,7 +43,7 @@ void SubMenu::SetRotation(const glm::vec3& rotation) {
     mRotation = rotation;
 }
 
-void SubMenu::Update(const glm::mat4& menuModelMatrix, const glm::vec2& playerScale) {
+void SubMenu::UpdateModelMatrix(const glm::mat4& menuModelMatrix) {
     Entity* camera = HubInstance().GetMainCamera().body;
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     
@@ -53,7 +53,12 @@ void SubMenu::Update(const glm::mat4& menuModelMatrix, const glm::vec2& playerSc
     orientation = glm::rotate(orientation, glm::radians(mRotation.y), glm::vec3(1.f, 0.f, 0.f));
     orientation = glm::rotate(orientation, glm::radians(mRotation.z), glm::vec3(0.f, 0.f, 1.f));
     
-    mModelMatrix = menuModelMatrix * glm::translate(glm::mat4(), mPosition) * orientation;
+    mModelMatrix = menuModelMatrix * glm::translate(glm::mat4(), mPosition) * orientation;  
+}
+
+void SubMenu::Update(const glm::vec2& playerScale) {
+    Entity* camera = HubInstance().GetMainCamera().body;
+    Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     
     // Update menu selection.
     int movement = Input()->Triggered(InputHandler::ANYONE, InputHandler::DOWN) - Input()->Triggered(InputHandler::ANYONE, InputHandler::UP);

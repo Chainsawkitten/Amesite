@@ -15,6 +15,9 @@ MainMenu::MainMenu(Menu* parentMenu) : SubMenu() {
     menuOption->callback = std::bind(&MainMenu::Quit, this);
     AddMenuOption(menuOption);
     
+    //menuOption = new MenuOption(GetFont(), "MODERSHIP", glm::vec3(11.f, 3.f, 2.5f), glm::vec3(270.f, 0.f, 330.f), 4.f);
+    //AddMenuOption(menuOption);
+    
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     glViewport(0, 0, static_cast<int>(screenSize.x), static_cast<int>(screenSize.y));
 }
