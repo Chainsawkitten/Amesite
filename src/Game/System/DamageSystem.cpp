@@ -58,7 +58,6 @@ void DamageSystem::Update(Scene& scene) {
                                 dyingLight->node->GetComponent<Component::Transform>()->position = damageY->entity->GetComponent<Component::Transform>()->GetWorldPosition();
 
                             }
-                                
 
                             if (damageY->entity->gameObject != nullptr)
                                 damageY->entity->gameObject->Kill();
