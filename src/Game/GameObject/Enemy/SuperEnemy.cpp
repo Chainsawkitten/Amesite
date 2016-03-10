@@ -8,6 +8,7 @@
 #include "../../Util/Hub.hpp"
 #include "../Player/Player1.hpp"
 #include "../Player/Player2.hpp"
+#include "../../Component/Health.hpp"
 
 #include <Util\Log.hpp>
 
@@ -16,7 +17,7 @@ using namespace GameObject;
 SuperEnemy::SuperEnemy(Scene* scene) : SuperGameObject(scene) {
     mActive = false;
     node = CreateEntity();
-    range = 30.f;
+    range = 35.f;
 }
 
 SuperEnemy::~SuperEnemy() {
@@ -49,7 +50,7 @@ void SuperEnemy::mUpdateFunction() {
         }
     }
 
-    if (!Active() && isWithinRange)
+    if (!Active() && (isWithinRange || node->GetComponent<Component::Health>()->damaged != -1))
         Activate();
     else if (Active() && !isWithinTwiceRange)
         Deactivate();
