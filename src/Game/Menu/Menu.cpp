@@ -42,8 +42,8 @@ Menu::Menu() {
     mSubMenus.push_back(subMenu);
     
     subMenu = new OptionsMenu(this);
-    subMenu->SetPosition(glm::vec3(0.f, 4.f, 12.f));
-    subMenu->SetRotation(glm::vec3(0.f, 330.f, 0.f));
+    subMenu->SetPosition(glm::vec3(-8.f, 0.f, 0.f));
+    subMenu->SetRotation(glm::vec3(270.f, 330.f, 0.f));
     mSubMenus.push_back(subMenu);
     
     mSelected = 0;
@@ -88,8 +88,8 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
     }
     
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
-    cameraTransform->position = (1.f - weight) * cameraTransform->position + weight * (player->GetPosition() + mSubMenus[0]->GetPosition() + mSubMenus[0]->GetCameraPosition());
-    glm::vec3 direction(mSubMenus[0]->GetCameraDirection());
+    cameraTransform->position = (1.f - weight) * cameraTransform->position + weight * (player->GetPosition() + mSubMenus[mSelected]->GetPosition() + mSubMenus[mSelected]->GetCameraPosition());
+    glm::vec3 direction(mSubMenus[mSelected]->GetCameraDirection());
     cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * direction.x;
     cameraTransform->pitch = (1.f - weight) * cameraTransform->pitch + weight * direction.y;
     cameraTransform->roll = (1.f - weight) * cameraTransform->roll + weight * direction.z;
