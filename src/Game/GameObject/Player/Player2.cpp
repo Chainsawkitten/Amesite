@@ -35,6 +35,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff.png");
     mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_medium_damage.png");
     mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_heavy_damage.png");
+    mDeadTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_dead.png");
 
     mNode = CreateEntity();
     mNode->AddComponent<Component::Transform>()->scale *= 0.33f;
@@ -222,6 +223,8 @@ Player2::~Player2() {
         Resources().FreeTexture2D(mMediumDamageTexture);
     if (mState != HEAVYDAMAGE)
         Resources().FreeTexture2D(mHeavyDamageTexture);
+    if (mState != DEAD)
+        Resources().FreeTexture2D(mDeadTexture);
     Resources().FreeSound(mShootSound);
 
     Resources().FreeOBJModel(mBodyModel);
@@ -256,7 +259,7 @@ void Player2::Activate() {
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = true;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = false;
-    mNode->GetComponent<Component::Health>()->regenAmount = 20.f;
+    mNode->GetComponent<Component::Health>()->regenAmount = 1.f;
 }
 
 void Player2::Deactivate() {
@@ -316,12 +319,17 @@ void Player2::mUpdateFunction() {
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;
-    } else {
+    } else if (GetHealth() >= 0.01f) {
         mState = HEAVYDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
-        mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.f, 0.f);
+        mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.32f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mHeavyDamageTexture;
-    }
+    } else {
+         mState = DEAD;
+         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
+         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.f, 0.f);
+         mBody->GetComponent<Component::Material>()->diffuse = mDeadTexture;
+ }
 
     glm::vec3 velocity = mNode->GetComponent<Component::Physics>()->velocity;
 

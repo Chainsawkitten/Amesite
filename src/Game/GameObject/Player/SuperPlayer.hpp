@@ -60,7 +60,8 @@ namespace GameObject {
             enum PlayerState {
                 LIGHTDAMAGE = 0,
                 MEDIUMDAMAGE,
-                HEAVYDAMAGE
+                HEAVYDAMAGE,
+                DEAD
             } mState;
 
             bool mActive;
