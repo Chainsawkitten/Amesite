@@ -53,6 +53,7 @@
 #include "../GameObject/Bullet.hpp"
 #include "../GameObject/Altar.hpp"
 #include "../GameObject/Pillar.hpp"
+#include "../GameObject/Enemy/SuperEnemy.hpp"
 
 
 #include "../Game.hpp"
@@ -83,11 +84,22 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
     
     // Music
-    mMusicSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
-    alGenSources(1, &mSource);
-    alSourcei(mSource, AL_BUFFER, mMusicSoundBuffer->Buffer());
-    alSourcei(mSource, AL_LOOPING, AL_TRUE);
-    alSourcePlay(mSource);
+    mCalmSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
+    alGenSources(1, &mCalmSource);
+    alSourcei(mCalmSource, AL_BUFFER, mCalmSoundBuffer->Buffer());
+    alSourcei(mCalmSource, AL_LOOPING, AL_TRUE);
+    
+    mActionSoundBuffer = Resources().CreateSound("Resources/MusicAction.ogg");
+    alGenSources(1, &mActionSource);
+    alSourcef(mActionSource, AL_GAIN, 0.f);
+    alSourcei(mActionSource, AL_BUFFER, mActionSoundBuffer->Buffer());
+    alSourcei(mActionSource, AL_LOOPING, AL_TRUE);
+    
+    alSourcePlay(mCalmSource);
+    alSourcePlay(mActionSource);
+    
+    mMix = 0.f;
+    mTargetMix = 0.f;
     
     // Bind scene to gameEntityCreator
     GameEntityCreator().SetScene(this);
@@ -192,8 +204,11 @@ MainScene::~MainScene() {
     delete mGlowBlurFilter;
     delete mPostProcessing;
     
-    alDeleteSources(1, &mSource);
-    Resources().FreeSound(mMusicSoundBuffer);
+    alDeleteSources(1, &mCalmSource);
+    Resources().FreeSound(mCalmSoundBuffer);
+    
+    alDeleteSources(1, &mActionSource);
+    Resources().FreeSound(mActionSoundBuffer);
 }
 
 void MainScene::Update(float deltaTime) {
@@ -329,4 +344,22 @@ void MainScene::Update(float deltaTime) {
     
     mTimer += deltaTime;
     
+    // Set music volumes.
+    mTargetMix = 0.f;
+    for (GameObject::SuperEnemy* enemy : mEnemySpawnerSystem.GetEnemies()) {
+        if (enemy->Active()) {
+            mTargetMix = 1.f;
+            break;
+        }
+    }
+    
+    if (mTargetMix > mMix)
+        mMix += deltaTime;
+    else if (mTargetMix < mMix)
+        mMix -= deltaTime;
+    
+    mMix = mMix < 0.f ? 0.f : (mMix > 1.f ? 1.f : mMix);
+    
+    alSourcef(mCalmSource, AL_GAIN, 1.f - mMix);
+    alSourcef(mActionSource, AL_GAIN, mMix);
 }

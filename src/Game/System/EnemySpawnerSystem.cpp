@@ -75,6 +75,10 @@ unsigned int EnemySpawnerSystem::GetEnemiesKilled() {
     return mEnemiesKilled;
 }
 
+const std::vector<GameObject::SuperEnemy*>& EnemySpawnerSystem::GetEnemies() const {
+    return mEnemies;
+}
+
 glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) const {
 
     glm::vec3 mMapScale = cave->map->GetComponent<Component::Transform>()->GetWorldScale();
