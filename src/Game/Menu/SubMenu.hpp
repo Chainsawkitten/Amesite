@@ -4,20 +4,16 @@
 #include <vector>
 
 class MenuOption;
-class Menu;
 class Font;
 
 /// A sub menu inside a menu.
 class SubMenu {
     public:
         /// Create new sub menu.
-        /**
-         * @param parentMenu %Menu in which this submenu is contained.
-         */
-        SubMenu(Menu* parentMenu);
+        SubMenu();
         
         /// Destructor.
-        ~SubMenu();
+        virtual ~SubMenu();
         
         /// Set the menu's position.
         void SetPosition(const glm::vec3& position);
@@ -38,6 +34,19 @@ class SubMenu {
         /// Render menu options.
         void RenderMenuOptions();
         
+    protected:
+        /// Add a menu option to the sub menu.
+        /**
+         * @param menuOption %Menu option to add.
+         */
+        void AddMenuOption(MenuOption* menuOption);
+        
+        /// Get the menu's font.
+        /**
+         * @return The menu's font.
+         */
+        Font* GetFont() const;
+        
     private:
         glm::vec3 mPosition;
         glm::vec3 mRotation;
@@ -49,6 +58,4 @@ class SubMenu {
         // Menu options.
         std::vector<MenuOption*> mMenuOptions;
         int mSelected;
-        
-        void Quit();
 };

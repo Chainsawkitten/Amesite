@@ -15,6 +15,7 @@
 #include <Util/Input.hpp>
 
 #include "SubMenu.hpp"
+#include "MainMenu.hpp"
 #include <Util/Picking.hpp>
 
 #include <Util/Log.hpp>
@@ -31,7 +32,7 @@ Menu::Menu() {
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
     // Define submenus.
-    mSubMenus.push_back(new SubMenu(this));
+    mSubMenus.push_back(new MainMenu(this));
     mSelected = 0;
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();

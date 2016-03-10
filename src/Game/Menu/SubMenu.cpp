@@ -16,7 +16,7 @@
 #include <Util/Input.hpp>
 #include <Util/Picking.hpp>
 
-SubMenu::SubMenu(Menu* parentMenu) {
+SubMenu::SubMenu() {
     mPosition = glm::vec3(0.f, 0.f, 0.f);
     mRotation = glm::vec3(0.f, 0.f, 0.f);
     
@@ -25,16 +25,7 @@ SubMenu::SubMenu(Menu* parentMenu) {
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", fontHeight);
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
-    // Define menu options.
-    mMenuOptions.push_back(new MenuOption(mFont, "START GAME", glm::vec3(0.f, 1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
-    mMenuOptions[0]->callback = std::bind(&Menu::ResumeGame, parentMenu);
-    mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
-    mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
-    mMenuOptions[2]->callback = std::bind(&SubMenu::Quit, this);
     mSelected = 0;
-    
-    const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
-    glViewport(0, 0, static_cast<int>(screenSize.x), static_cast<int>(screenSize.y));
 }
 
 SubMenu::~SubMenu() {
@@ -101,6 +92,10 @@ void SubMenu::RenderMenuOptions() {
         menuOption->Render(screenSize, mModelMatrix);
 }
 
-void SubMenu::Quit() {
-    MainWindow::GetInstance()->Close();
+void SubMenu::AddMenuOption(MenuOption* menuOption) {
+    mMenuOptions.push_back(menuOption);
+}
+
+Font* SubMenu::GetFont() const {
+    return mFont;
 }
