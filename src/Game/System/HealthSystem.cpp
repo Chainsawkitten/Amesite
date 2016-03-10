@@ -33,5 +33,12 @@ void HealthSystem::Update(Scene& scene, float deltaTime) {
                     healthComponent->entity->gameObject->Kill();
                 else
                     healthComponent->entity->Kill();
-        }
+
+        //Update damaged
+        if (healthComponent->damaged != -1) {
+
+            healthComponent->damaged--;
+
+        } 
+    }
 }
