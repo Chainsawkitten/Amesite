@@ -167,7 +167,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
 Cave::~Cave() {
     
-    for (int i = 0; i < mHeight - 1; i++)
+    for (int i = 0; i < mHeight; i++)
         delete[] mMap[i];
     delete[] mMap;
 
