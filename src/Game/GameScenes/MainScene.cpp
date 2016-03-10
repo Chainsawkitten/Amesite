@@ -352,6 +352,14 @@ void MainScene::Update(float deltaTime) {
             break;
         }
     }
+    for (GameObject::SuperBoss* boss : mBossVector) {
+        if (boss != nullptr) {
+            if (boss->Active()) {
+                mTargetMix = 1.f;
+                break;
+            }
+        }
+    }
     
     if (mTargetMix > mMix)
         mMix += deltaTime;
