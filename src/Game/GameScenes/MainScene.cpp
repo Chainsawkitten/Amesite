@@ -120,10 +120,10 @@ MainScene::MainScene() {
     int threshold = 100;
     
     CaveGenerator::Coordinate playerPosition(width/2, height/2);
-    CaveGenerator::Coordinate NorthWest(5, 5);
-    CaveGenerator::Coordinate SouthEast(height-5, width-5);
-    CaveGenerator::Coordinate NorthEast(height-5, 5);
-    CaveGenerator::Coordinate SouthWest(5, width - 5);
+    CaveGenerator::Coordinate NorthWest(10, 10);
+    CaveGenerator::Coordinate SouthEast(height-10, width-10);
+    CaveGenerator::Coordinate NorthEast(height-10, 10);
+    CaveGenerator::Coordinate SouthWest(10, width - 10);
     
     std::vector<CaveGenerator::Coordinate> bossPositions;
     bossPositions.push_back(NorthWest);
