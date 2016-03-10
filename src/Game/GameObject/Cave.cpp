@@ -30,7 +30,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mHeight = height;
     mMap = nullptr;
 
-    mBossRadius = 7;
+    mBossRadius = 9;
 
     scaleFactor = 5.f;
 
