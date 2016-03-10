@@ -51,14 +51,15 @@ void DamageSystem::Update(Scene& scene) {
                         // Remove damage entity if it should be removed on impact
                         if (damageY->removeOnImpact) {
 
-                            if (damageY->entity->GetComponent<Component::Explode>() != nullptr) {
+                            Component::Explode* explosionComponent = damageY->entity->GetComponent<Component::Explode>();
 
-                                damageY->entity->GetComponent<Component::Explode>()->size += 10.f;
+                            if ( explosionComponent != nullptr) {
+
+                                explosionComponent->size += 10.f;
                                 GameObject::DyingLight* dyingLight = new GameObject::DyingLight(&scene);
                                 dyingLight->node->GetComponent<Component::Transform>()->position = damageY->entity->GetComponent<Component::Transform>()->GetWorldPosition();
 
                             }
-                                
 
                             if (damageY->entity->gameObject != nullptr)
                                 damageY->entity->gameObject->Kill();

@@ -34,11 +34,11 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mHeight = height;
     mMap = nullptr;
 
-    mBossRadius = 7;
+    mBossRadius = 9;
 
     scaleFactor = 5.f;
 
-    caveMap = new CaveGenerator::CaveMap(height, width, seed);
+    caveMap = new CaveGenerator::CaveMap(height, width, 1457620528);
 
     caveMap->GenerateCaveMap(percent);
 
@@ -196,7 +196,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
 Cave::~Cave() {
     
-    for (int i = 0; i < mHeight - 1; i++)
+    for (int i = 0; i < mHeight; i++)
         delete[] mMap[i];
     delete[] mMap;
 
@@ -221,8 +221,8 @@ bool ** Cave::GetCaveData() const {
 }
 
 glm::vec3 Cave::PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime) {
-    unsigned int x = glm::floor((point + velocity * deltaTime).x / scaleFactor);
-    unsigned int z = glm::floor((point + velocity * deltaTime).z / scaleFactor);
+    unsigned int x = static_cast<unsigned int>(glm::floor((point + velocity * deltaTime).x / scaleFactor));
+    unsigned int z = static_cast<unsigned int>(glm::floor((point + velocity * deltaTime).z / scaleFactor));
     
     return CellCollide(((point + velocity * deltaTime).x) / scaleFactor - x, ((point + velocity * deltaTime).z) / scaleFactor - z, x, z);
 }

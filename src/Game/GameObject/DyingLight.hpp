@@ -21,8 +21,9 @@ namespace GameObject {
 
             /// Node of the %DyingLight.
             Entity* node;
+    private:
 
-            void mUpdateFunction();
+            void updateFunction();
 
     };
 }

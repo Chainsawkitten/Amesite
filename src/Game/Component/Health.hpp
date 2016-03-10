@@ -63,7 +63,7 @@ namespace Component {
              */
             bool removeOnLowHealth;
 
-            /// Is greater than 0 if it was recently damaged
+            /// Is greater than -1 if it was recently damaged
             /**
              * -1 = not damaged.
              * 0 = damaged last frame.

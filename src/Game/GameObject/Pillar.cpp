@@ -80,7 +80,7 @@ void Pillar::mUpdateFunction() {
         Component::Spawner* spawnerComponent = node->GetComponent<Component::Spawner>();
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay * 2.f) {
             glm::vec3 velocity = mBossPosition - node->GetComponent<Component::Transform>()->position;
-            GameObject::PillarBall* ball = GameEntityCreator().CreatePillarBall(node->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(0.f, 40.f, 0.f), velocity/10.f);
+            GameObject::PillarBall* ball = GameEntityCreator().CreatePillarBall(node->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(0.f, 20.f, 0.f), velocity/10.f);
             ball->node->GetComponent<Component::Transform>()->scale *= 0.2;
             spawnerComponent->timeSinceSpawn = 0.0f;
         }

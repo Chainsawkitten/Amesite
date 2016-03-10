@@ -89,10 +89,10 @@ void Bullet::Update(float life) {
     
     float factor;
 
-    if ((life - remainingLifeTime)*4.f < 1.0f)
-        factor = (life - remainingLifeTime)*4.f;
+    if ((life - remainingLifeTime) * 4.f < 1.0f)
+        factor = (life - remainingLifeTime) * 4.f;
     else
         factor = remainingLifeTime / life;
 
-    light->color = glm::vec3(1.f,1.f,1.f)*factor;
+    light->color = glm::vec3(1.f, 1.f, 1.f) * factor;
 }

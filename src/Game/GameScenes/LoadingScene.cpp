@@ -1,7 +1,7 @@
 #include "LoadingScene.hpp"
 
 #include "../Game.hpp"
-#include "MenuScene.hpp"
+#include "MainScene.hpp"
 
 #include <Resources.hpp>
 #include <Texture/Texture2D.hpp>
@@ -18,7 +18,7 @@ LoadingScene::~LoadingScene() {
 
 void LoadingScene::Update(float deltaTime) {
     if (mShown)
-        Game::GetInstance().SetScene(new MenuScene());
+        Game::GetInstance().SetScene(new MainScene());
     
     mShown = true;
     
