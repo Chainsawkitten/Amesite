@@ -53,6 +53,7 @@
 #include "../GameObject/Bullet.hpp"
 #include "../GameObject/Altar.hpp"
 #include "../GameObject/Pillar.hpp"
+#include "../GameObject/Rock.hpp"
 
 
 #include "../Game.hpp"

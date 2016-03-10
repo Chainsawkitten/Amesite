@@ -48,6 +48,7 @@
 #include "../GameObject/Pillar.hpp"
 #include "../GameObject/PillarBall.hpp"
 #include "../GameObject/Portal.hpp"
+#include "../GameObject/Rock.hpp"
 
 using namespace GameObject;
 
@@ -157,6 +158,12 @@ GameObject::Altar* GameEntityFactory::CreateAltar(const glm::vec3& origin) {
 
 GameObject::Pillar* GameEntityFactory::CreatePillar(const glm::vec3& origin, glm::vec3 bossPosition) {
     Pillar* gameObject = new Pillar(mScene, bossPosition);
+    gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    return gameObject;
+}
+
+GameObject::Rock* GameEntityFactory::CreateRock(const glm::vec3& origin) {
+    Rock* gameObject = new Rock(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
 }

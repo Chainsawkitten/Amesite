@@ -34,6 +34,7 @@ namespace GameObject {
     class SuperBoss;
     class Altar;
     class Pillar;
+    class Rock;
 }
 namespace Audio {
     class SoundBuffer;

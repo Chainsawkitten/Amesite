@@ -16,6 +16,10 @@ namespace Geometry {
 }
 
 namespace GameObject {
+    class Rock;
+}
+
+namespace GameObject {
     /// A Cave
     class Cave : public SuperGameObject {
         public:
@@ -56,11 +60,18 @@ namespace GameObject {
 
             /// Grid collision
             /**
-             * @param entity The minimum room size in tiles.
-             * @param deltaTime Where the players start.
-             * @return Returns true if collision with map, else false.
-             */
+            * @param entity The minimum room size in tiles.
+            * @param deltaTime Where the players start.
+            * @return Returns true if collision with map, else false.
+            */
             bool GridCollide(Entity* entity, float deltaTime);
+
+            /// Grid collision
+            /**
+            * @param point to check.
+            * @return Returns true if collision with map, else false.
+            */
+            bool GridCollide(glm::vec3 point);
 
             /// Gets bool grid of cave.
             /**
@@ -77,6 +88,9 @@ namespace GameObject {
             /// Map of the %Cave
             Entity* map;
             Entity* heightMap;
+
+            /// Rocks vector
+            std::vector<GameObject::Rock*> mRockVector;
 
             /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;
