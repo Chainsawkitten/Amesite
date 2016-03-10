@@ -19,14 +19,14 @@ DyingLight::DyingLight(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::Transform>();
     node->AddComponent<Component::LifeTime>()->lifeTime = 0.5f;
 
-    node->AddComponent<Component::Update>()->updateFunction = std::bind(&DyingLight::mUpdateFunction, this);
+    node->AddComponent<Component::Update>()->updateFunction = std::bind(&DyingLight::updateFunction, this);
 
 }
 
 DyingLight::~DyingLight() {
 }
 
-void DyingLight::mUpdateFunction() {
+void DyingLight::updateFunction() {
 
     node->GetComponent<Component::PointLight>()->attenuation *= 1.10f;
 
