@@ -21,6 +21,13 @@ class SubMenu {
         /// Set the menu's rotation.
         void SetRotation(const glm::vec3& rotation);
         
+        /// Update the menu.
+        /**
+         * @param menuModelMatrix Model matrix of the parent menu.
+         * @param playerScale Scale of the player.
+         */
+        void Update(const glm::mat4& menuModelMatrix, const glm::vec2& playerScale);
+        
         /// Render selected menu option.
         void RenderSelected();
         
