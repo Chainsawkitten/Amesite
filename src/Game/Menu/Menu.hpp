@@ -47,6 +47,9 @@ class Menu {
         /// Render menu options.
         void RenderMenuOptions();
         
+        /// Pan out camera and resume game.
+        void ResumeGame();
+        
     private:
         bool mActive;
         bool mFlyOut;
@@ -62,7 +65,4 @@ class Menu {
         // Sub menus.
         std::vector<SubMenu*> mSubMenus;
         int mSelected;
-        
-        void StartGame();
-        void Quit();
 };

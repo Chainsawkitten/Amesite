@@ -10,12 +10,13 @@
 #include <Component/Lens.hpp>
 #include "../GameObject/Camera.hpp"
 
+#include "Menu.hpp"
 #include <MainWindow.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <Util/Input.hpp>
 #include <Util/Picking.hpp>
 
-SubMenu::SubMenu() {
+SubMenu::SubMenu(Menu* parentMenu) {
     mPosition = glm::vec3(0.f, 0.f, 0.f);
     mRotation = glm::vec3(0.f, 0.f, 0.f);
     
@@ -26,10 +27,10 @@ SubMenu::SubMenu() {
     
     // Define menu options.
     mMenuOptions.push_back(new MenuOption(mFont, "START GAME", glm::vec3(0.f, 1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
-    //mMenuOptions[0]->callback = std::bind(&Menu::StartGame, this);
+    mMenuOptions[0]->callback = std::bind(&Menu::ResumeGame, parentMenu);
     mMenuOptions.push_back(new MenuOption(mFont, "OPTIONS", glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
     mMenuOptions.push_back(new MenuOption(mFont, "QUIT", glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f));
-    //mMenuOptions[2]->callback = std::bind(&Menu::Quit, this);
+    mMenuOptions[2]->callback = std::bind(&SubMenu::Quit, this);
     mSelected = 0;
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
@@ -98,4 +99,8 @@ void SubMenu::RenderMenuOptions() {
     
     for (MenuOption* menuOption : mMenuOptions)
         menuOption->Render(screenSize, mModelMatrix);
+}
+
+void SubMenu::Quit() {
+    MainWindow::GetInstance()->Close();
 }

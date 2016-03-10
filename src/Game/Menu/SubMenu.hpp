@@ -4,13 +4,17 @@
 #include <vector>
 
 class MenuOption;
+class Menu;
 class Font;
 
 /// A sub menu inside a menu.
 class SubMenu {
     public:
         /// Create new sub menu.
-        SubMenu();
+        /**
+         * @param parentMenu %Menu in which this submenu is contained.
+         */
+        SubMenu(Menu* parentMenu);
         
         /// Destructor.
         ~SubMenu();
@@ -45,4 +49,6 @@ class SubMenu {
         // Menu options.
         std::vector<MenuOption*> mMenuOptions;
         int mSelected;
+        
+        void Quit();
 };

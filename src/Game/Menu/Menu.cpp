@@ -31,7 +31,7 @@ Menu::Menu() {
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
     // Define submenus.
-    mSubMenus.push_back(new SubMenu());
+    mSubMenus.push_back(new SubMenu(this));
     mSelected = 0;
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
@@ -107,10 +107,6 @@ void Menu::RenderMenuOptions() {
         subMenu->RenderMenuOptions();
 }
 
-void Menu::StartGame() {
+void Menu::ResumeGame() {
     mFlyOut = true;
-}
-
-void Menu::Quit() {
-    MainWindow::GetInstance()->Close();
 }
