@@ -7,6 +7,9 @@
 #include <MainWindow.hpp>
 
 SubMenu::SubMenu() {
+    mPosition = glm::vec3(0.f, 0.f, 0.f);
+    mRotation = glm::vec3(0.f, 0.f, 0.f);
+    
     // Load font.
     float fontHeight = glm::ceil(MainWindow::GetInstance()->GetSize().y * 0.07f);
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", fontHeight);
@@ -29,6 +32,14 @@ SubMenu::~SubMenu() {
     
     for (MenuOption* menuOption : mMenuOptions)
         delete menuOption;
+}
+
+void SubMenu::SetPosition(const glm::vec3& position) {
+    mPosition = position;
+}
+
+void SubMenu::SetRotation(const glm::vec3& rotation) {
+    mRotation = rotation;
 }
 
 void SubMenu::RenderSelected() {

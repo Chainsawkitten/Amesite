@@ -15,6 +15,12 @@ class SubMenu {
         /// Destructor.
         ~SubMenu();
         
+        /// Set the menu's position.
+        void SetPosition(const glm::vec3& position);
+        
+        /// Set the menu's rotation.
+        void SetRotation(const glm::vec3& rotation);
+        
         /// Render selected menu option.
         void RenderSelected();
         
