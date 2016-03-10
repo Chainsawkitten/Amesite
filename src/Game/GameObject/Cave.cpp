@@ -192,8 +192,8 @@ bool ** Cave::GetCaveData() const {
 }
 
 glm::vec3 Cave::PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime) {
-    unsigned int x = glm::floor((point + velocity * deltaTime).x / scaleFactor);
-    unsigned int z = glm::floor((point + velocity * deltaTime).z / scaleFactor);
+    unsigned int x = static_cast<unsigned int>(glm::floor((point + velocity * deltaTime).x / scaleFactor));
+    unsigned int z = static_cast<unsigned int>(glm::floor((point + velocity * deltaTime).z / scaleFactor));
     
     return CellCollide(((point + velocity * deltaTime).x) / scaleFactor - x, ((point + velocity * deltaTime).z) / scaleFactor - z, x, z);
 }
