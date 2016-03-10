@@ -22,6 +22,9 @@
 #include "../GameObject/Player/SuperPlayer.hpp"
 
 Menu::Menu() {
+    mPosition = glm::vec3(0.f, 0.f, 0.f);
+    mRotation = glm::vec3(0.f, 0.f, 0.f);
+    
     mActive = true;
     mFlyOut = false;
     mTimer = 0.f;
@@ -33,6 +36,8 @@ Menu::Menu() {
     
     // Define submenus.
     mSubMenus.push_back(new MainMenu(this));
+    mSubMenus[0]->SetPosition(glm::vec3(0.f, 4.f, 11.5f));
+    mSubMenus[0]->SetRotation(glm::vec3(0.f, 330.f, 0.f));
     mSelected = 0;
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();

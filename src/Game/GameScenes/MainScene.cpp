@@ -148,10 +148,6 @@ MainScene::MainScene() {
     HubInstance().SetPlayer1(player1);
     HubInstance().SetPlayer2(player2);
     
-    // Set menu position.
-    mMenu.SetPosition(glm::vec3(0.f, 4.f, 11.5f));
-    mMenu.SetRotation(glm::vec3(0.f, 330.f, 0.f));
-    
     // Create bosses and pillars
     mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
     mBossVector.push_back(GameEntityCreator().CreateShieldBoss(glm::vec3(mCave->scaleFactor*bossPositions[1].x, 0.f, mCave->scaleFactor*bossPositions[1].y)));
