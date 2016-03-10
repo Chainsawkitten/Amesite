@@ -62,5 +62,14 @@ namespace Component {
              * Default: true
              */
             bool removeOnLowHealth;
+
+            /// Is greater than -1 if it was recently damaged
+            /**
+             * -1 = not damaged.
+             * 0 = damaged last frame.
+             * 1 = damaged this frame.
+             */
+            int damaged;
+
     };
 }

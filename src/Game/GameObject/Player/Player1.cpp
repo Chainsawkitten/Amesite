@@ -179,6 +179,25 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
     pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
     pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
+    emitter = mFrontEngineLeft->AddComponent<Component::ParticleEmitter>();
+    emitter->emitterType = Component::ParticleEmitter::POINT;
+    emitter->maxEmitTime = 0.02;
+    emitter->minEmitTime = 0.016;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 5.0;
+    emitter->enabled = false;
+    emitter->particleType.textureIndex = Component::ParticleEmitter::DUST;
+    emitter->particleType.minLifetime = 0.2f;
+    emitter->particleType.maxLifetime = 0.5f;
+    emitter->particleType.minVelocity = glm::vec3(-.3f, 2.f, -.3f);
+    emitter->particleType.maxVelocity = glm::vec3(.3f, 3.f, .3f);
+    emitter->particleType.minSize = glm::vec2(.5f, .5f);
+    emitter->particleType.maxSize = glm::vec2(.7f, .7f);
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::vec3(.2f, .2f, .2f);
+    emitter->particleType.startAlpha = 1.f;
+    emitter->particleType.midAlpha = 1.f;
+    emitter->particleType.endAlpha = 0.f;
 
     mFrontEngineRight = CreateEntity();
     mFrontEngineRight->AddComponent<Component::RelativeTransform>()->Move(-13.f, -1.f, 6.5f);
@@ -197,6 +216,25 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
     pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineRight;
     pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
+    emitter = mFrontEngineRight->AddComponent<Component::ParticleEmitter>();
+    emitter->emitterType = Component::ParticleEmitter::POINT;
+    emitter->maxEmitTime = 0.02;
+    emitter->minEmitTime = 0.016;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 5.0;
+    emitter->enabled = false;
+    emitter->particleType.textureIndex = Component::ParticleEmitter::DUST;
+    emitter->particleType.minLifetime = 0.2f;
+    emitter->particleType.maxLifetime = 0.5f;
+    emitter->particleType.minVelocity = glm::vec3(-.3f, 2.f, -.3f);
+    emitter->particleType.maxVelocity = glm::vec3(.3f, 3.f, .3f);
+    emitter->particleType.minSize = glm::vec2(.5f, .5f);
+    emitter->particleType.maxSize = glm::vec2(.7f, .7f);
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::vec3(.2f, .2f, .2f);
+    emitter->particleType.startAlpha = 1.f;
+    emitter->particleType.midAlpha = 1.f;
+    emitter->particleType.endAlpha = 0.f;
 
     mBackEngineLeft = CreateEntity();
     mBackEngineLeft->AddComponent<Component::RelativeTransform>()->Move(15.5f, -2.f, -3.f);
@@ -214,6 +252,25 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     //pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
     //pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
     //pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
+    emitter = mBackEngineLeft->AddComponent<Component::ParticleEmitter>();
+    emitter->emitterType = Component::ParticleEmitter::POINT;
+    emitter->maxEmitTime = 0.02;
+    emitter->minEmitTime = 0.016;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 5.0;
+    emitter->enabled = false;
+    emitter->particleType.textureIndex = Component::ParticleEmitter::DUST;
+    emitter->particleType.minLifetime = 0.2f;
+    emitter->particleType.maxLifetime = 0.5f;
+    emitter->particleType.minVelocity = glm::vec3(-.3f, 2.f, -.3f);
+    emitter->particleType.maxVelocity = glm::vec3(.3f, 3.f, .3f);
+    emitter->particleType.minSize = glm::vec2(.5f, .5f);
+    emitter->particleType.maxSize = glm::vec2(.7f, .7f);
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::vec3(.2f, .2f, .2f);
+    emitter->particleType.startAlpha = 1.f;
+    emitter->particleType.midAlpha = 1.f;
+    emitter->particleType.endAlpha = 0.f;
 
     mBackEngineRight = CreateEntity();
     mBackEngineRight->AddComponent<Component::RelativeTransform>()->Move(-15.5f, -2.f, -3.f);
@@ -232,6 +289,26 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     //pointLight->GetComponent<Component::PointLight>()->attenuation = 5.f;
     //pointLight->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineRight;
     //pointLight->GetComponent<Component::RelativeTransform>()->Move(0, 10, 0);
+    emitter = mBackEngineRight->AddComponent<Component::ParticleEmitter>();
+    emitter->emitterType = Component::ParticleEmitter::POINT;
+    emitter->maxEmitTime = 0.02;
+    emitter->minEmitTime = 0.016;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 5.0;
+    emitter->enabled = false;
+    emitter->particleType.textureIndex = Component::ParticleEmitter::DUST;
+    emitter->particleType.minLifetime = 0.2f;
+    emitter->particleType.maxLifetime = 0.5f;
+    emitter->particleType.minVelocity = glm::vec3(-.3f, 2.f, -.3f);
+    emitter->particleType.maxVelocity = glm::vec3(.3f, 3.f, .3f);
+    emitter->particleType.minSize = glm::vec2(.5f, .5f);
+    emitter->particleType.maxSize = glm::vec2(.7f, .7f);
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::vec3(.2f, .2f, .2f);
+    emitter->particleType.startAlpha = 1.f;
+    emitter->particleType.midAlpha = 1.f;
+    emitter->particleType.endAlpha = 0.f;
+
 }
 
 Player1::~Player1() {
@@ -320,6 +397,12 @@ void Player1::mUpdateFunction() {
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.f, 1.f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
+
+        mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = false;
+
     } else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = MEDIUMDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.0f, 0.0f);
@@ -330,11 +413,19 @@ void Player1::mUpdateFunction() {
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.32f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mHeavyDamageTexture;
+        mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
     } else {
         mState = DEAD;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mDeadTexture;
+        mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
     }
 
     glm::vec3 velocity = mNode->GetComponent<Component::Physics>()->velocity;

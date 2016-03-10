@@ -11,6 +11,7 @@ Health::Health(Entity* entity) : SuperComponent(entity) {
     cooldown = 0.f;
     faction = 0;
     removeOnLowHealth = true;
+    damaged = -1;
 }
 
 Health::~Health() {

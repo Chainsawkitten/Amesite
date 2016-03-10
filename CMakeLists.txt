@@ -418,6 +418,7 @@ set(GAME_SRCS
         src/Game/GameObject/Cave.cpp
         src/Game/GameObject/Dust.cpp
         src/Game/GameObject/Explosion.cpp
+        src/Game/GameObject/DyingLight.cpp
         src/Game/GameObject/Shield.cpp
         src/Game/GameObject/EnemySpawner.cpp
         src/Game/GameObject/Enemy/SuperEnemy.cpp
@@ -485,6 +486,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Cave.hpp
         src/Game/GameObject/Dust.hpp
         src/Game/GameObject/Explosion.hpp
+        src/Game/GameObject/DyingLight.hpp
         src/Game/GameObject/Shield.hpp
         src/Game/GameObject/EnemySpawner.hpp
         src/Game/GameObject/Enemy/SuperEnemy.hpp
