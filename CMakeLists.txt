@@ -432,7 +432,6 @@ set(GAME_SRCS
         src/Game/GameObject/Boss/RingBoss.cpp
         src/Game/GameObject/Altar.cpp
         src/Game/GameObject/Pillar.cpp
-        src/Game/GameObject/Scenery.cpp
         src/Game/GameObject/PillarBall.cpp
         src/Game/GameObject/Portal.cpp
         src/Game/Menu/Menu.cpp
@@ -501,7 +500,6 @@ set(GAME_HEADERS
         src/Game/GameObject/Boss/RingBoss.hpp
         src/Game/GameObject/Altar.hpp
         src/Game/GameObject/Pillar.hpp
-        src/Game/GameObject/Scenery.hpp
         src/Game/GameObject/PillarBall.hpp
         src/Game/GameObject/Portal.hpp
         src/Game/Menu/Menu.hpp

@@ -8,6 +8,7 @@
 #include <Geometry/Cube.hpp>
 #include <Geometry/Map.hpp>
 #include "Geometry/Plane.hpp"
+#include <Geometry/OBJModel.hpp>
 
 #include "../Component/Controller.hpp"
 #include "../Component/Health.hpp"
@@ -22,10 +23,6 @@
 #include "../Util/CaveGenerator.hpp"
 
 #include "../Util/ControlSchemes.hpp"
-
-#include "Game/GameObject/Scenery.hpp"
-
-
 
 using namespace GameObject;
 
@@ -109,34 +106,19 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width)/2.f)+1.f, -11.f, scaleFactor*(static_cast<float>(height) / 2.f) + 1.f));
     heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
 
-    Geometry::Terrain* terrain = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
+    mTerrain = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
 
-    heightMap->GetComponent<Component::Mesh>()->geometry = terrain;
+    heightMap->GetComponent<Component::Mesh>()->geometry = mTerrain;
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/defaultYellow.png");
     heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/defaultYellow.png");
 
-    //Spawn rocks
-    for (int i = 0; i < 100; i++) {
+    //Place scenery
+    for (int i = 0; i < 1; i++)
+        PlaceScenery(GameEntityCreator().CreateCrashSite());
 
-        float x = ((rand() % 1000) / 1000.f) * scaleFactor * mWidth;
-        float z = ((rand() % 1000) / 1000.f) * scaleFactor * mWidth;
+    for (int i = 0; i < 100; i++)
+        PlaceScenery(GameEntityCreator().CreateStone());
 
-        unsigned int xOnGrid = glm::floor(x / scaleFactor);
-        unsigned int zOnGrid = glm::floor(z / scaleFactor);
-
-        glm::vec3 point = glm::vec3(x, terrain->GetY(x, z) - 11.f, z);
-
-        if (!GridCollide(point)) {
-
-            GameObject::Scenery* scenery = GameEntityCreator().CreateScenery(point);
-            scenery->node->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
-            scenery->node->GetComponent<Component::Transform>()->scale *= 1 - ((rand() % 1000) / 1000.f) / 2.f;
-            mSceneryVector.push_back(scenery);
-
-        }
-        else i--;
-
-    }
 
     for (int i = 0; i < mHeight; i++)
         delete[] floatMap[i];
@@ -202,6 +184,28 @@ Cave::~Cave() {
 
     delete caveMap;
     delete mBorder;
+    delete mTerrain;
+
+}
+
+void Cave::PlaceScenery(Entity* scenery) {
+
+    float x = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
+    float z = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
+
+    unsigned int xOnGrid = glm::floor(x / scaleFactor);
+    unsigned int zOnGrid = glm::floor(z / scaleFactor);
+
+    glm::vec3 point = glm::vec3(x, mTerrain->GetY(xOnGrid, zOnGrid) - 11.f, z);
+
+    if (!GridCollide(point)) {
+
+        scenery->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+        scenery->GetComponent<Component::Transform>()->scale *= 1 - ((rand() % 1000) / 1000.f) / 2.f;
+        scenery->GetComponent<Component::Transform>()->position = point;
+        mSceneryVector.push_back(scenery);
+
+    }
 
 }
 

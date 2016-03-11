@@ -13,6 +13,7 @@ namespace CaveGenerator {
 
 namespace Geometry {
     class Plane;
+    class Terrain;
 }
 
 namespace GameObject {
@@ -79,6 +80,12 @@ namespace GameObject {
              */
             bool** GetCaveData() const;
 
+            /// Place an entity randomly into the world
+            /**
+             * @param The entity to place
+             */
+            void PlaceScenery(Entity* scenery);
+
             /// Map of all walls in the cave system.
             bool** mMap;
             
@@ -90,7 +97,7 @@ namespace GameObject {
             Entity* heightMap;
 
             /// Rocks vector
-            std::vector<GameObject::Scenery*> mSceneryVector;
+            std::vector<Entity*> mSceneryVector;
 
             /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;
@@ -131,8 +138,11 @@ namespace GameObject {
             /// radius of a boss room.
             int mBossRadius;
 
-            ///The border geometry
+            /// The border geometry
             Geometry::Plane* mBorder;
+
+            /// The terrain geometry
+            Geometry::Terrain* mTerrain;
 
             ///The four border entites
             Entity* mTopBorder;

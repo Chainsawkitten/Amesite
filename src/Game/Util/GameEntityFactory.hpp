@@ -167,12 +167,17 @@ class GameEntityFactory {
          */
         GameObject::Portal* CreatePortal(const glm::vec3& origin);
 
-        /// Create Pillar.
+        /// Create crash site.
         /**
-         * @param origin The Rock's starting position.
-         * @return The Rock GameObject.
-         */
-        GameObject::Scenery* CreateScenery(const glm::vec3& origin);
+        * @return The crash entity.
+        */
+        Entity* CreateCrashSite();
+ 
+        /// Create stone.
+        /**
+        * @return The stone entity.
+        */
+        Entity* CreateStone();
 
         /// Create player bullet.
         /**
