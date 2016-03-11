@@ -179,6 +179,18 @@ class GameEntityFactory {
         */
         Entity* CreateStone();
 
+        /// Create crystal light.
+        /**
+        * @return The crystal entity.
+        */
+        Entity* CreateCrystalLight();
+
+        /// Create fallen pillar.
+        /**
+        * @return The pillar entity.
+        */
+        Entity* CreateFallenPillar();
+
         /// Create player bullet.
         /**
          * @param position The bullet's starting position.

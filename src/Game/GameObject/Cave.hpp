@@ -84,7 +84,7 @@ namespace GameObject {
             /**
              * @param The entity to place
              */
-            void PlaceScenery(Entity* scenery);
+            void PlaceScenery(Entity* scenery, bool rotate);
 
             /// Map of all walls in the cave system.
             bool** mMap;

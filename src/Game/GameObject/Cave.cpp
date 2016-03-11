@@ -114,10 +114,16 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     //Place scenery
     for (int i = 0; i < 1; i++)
-        PlaceScenery(GameEntityCreator().CreateCrashSite());
+        PlaceScenery(GameEntityCreator().CreateCrashSite(), true);
 
-    for (int i = 0; i < 100; i++)
-        PlaceScenery(GameEntityCreator().CreateStone());
+    for (int i = 0; i < 50; i++)
+        PlaceScenery(GameEntityCreator().CreateStone(), true);
+
+    for (int i = 0; i < 20; i++)
+        PlaceScenery(GameEntityCreator().CreateCrystalLight(), false);
+
+    for (int i = 0; i < 10; i++)
+        PlaceScenery(GameEntityCreator().CreateFallenPillar(), true);
 
 
     for (int i = 0; i < mHeight; i++)
@@ -188,7 +194,7 @@ Cave::~Cave() {
 
 }
 
-void Cave::PlaceScenery(Entity* scenery) {
+void Cave::PlaceScenery(Entity* scenery, bool rotate) {
 
     float x = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
     float z = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
@@ -196,11 +202,13 @@ void Cave::PlaceScenery(Entity* scenery) {
     unsigned int xOnGrid = glm::floor(x / scaleFactor);
     unsigned int zOnGrid = glm::floor(z / scaleFactor);
 
-    glm::vec3 point = glm::vec3(x, mTerrain->GetY(xOnGrid, zOnGrid) - 11.f, z);
+    glm::vec3 point = glm::vec3(x, mTerrain->GetY(xOnGrid, zOnGrid) - 10.f, z);
 
     if (!GridCollide(point)) {
-
-        scenery->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+        
+        if(rotate)
+            scenery->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+    
         scenery->GetComponent<Component::Transform>()->scale *= 1 - ((rand() % 1000) / 1000.f) / 2.f;
         scenery->GetComponent<Component::Transform>()->position = point;
         mSceneryVector.push_back(scenery);
