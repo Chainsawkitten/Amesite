@@ -49,7 +49,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth = 30.f;
     mNode->GetComponent<Component::Health>()->maxCooldown = 1.f;
     //Regain full health after 5 seconds.
-    mNode->GetComponent<Component::Health>()->regainAmount = mRegainAmount = mNode->GetComponent<Component::Health>()->maxHealth / 5.f * mNode->GetComponent<Component::Health>()->maxCooldown;
+    mNode->GetComponent<Component::Health>()->regainAmount = mRegainAmount = mNode->GetComponent<Component::Health>()->maxHealth / 5.f;
     mNode->GetComponent<Component::Health>()->faction = 0;
     mNode->AddComponent<Component::Collider2DCircle>()->radius = 10.f;
     mNode->AddComponent<Component::Animation>();

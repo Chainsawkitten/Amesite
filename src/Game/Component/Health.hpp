@@ -26,12 +26,6 @@ namespace Component {
              * Default: 100.f
              */
             float maxHealth;
-
-            /// Toughness, percent of damage taken.
-            /**
-             * Default: 1.f
-             */
-            float toughness;
             
             /// Regen cooldown, time until entity will regain health (in seconds).
             /**
@@ -41,7 +35,7 @@ namespace Component {
 
             /// Regen amount, amount of health regenerated each secound (hp/sec).
             /**
-             * Default: 1.f
+             * Default: 0.f
              */
             float regainAmount;
 

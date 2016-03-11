@@ -33,7 +33,7 @@ Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
     node->AddComponent<Component::Transform>()->scale *= 0.15f;
     node->AddComponent<Component::Collider2DCircle>()->radius = 9.0f;
     node->AddComponent<Component::Physics>()->velocityDragFactor = 1.f;
-    node->GetComponent<Component::Physics>()->maxVelocity *= 2.f;
+    node->GetComponent<Component::Physics>()->maxVelocity *= 1.3f;
     node->AddComponent<Component::Health>()->faction = 1;
     node->GetComponent<Component::Health>()->health = 500.f;
     node->GetComponent<Component::Health>()->removeOnLowHealth = false;
