@@ -144,10 +144,12 @@ void ControlScheme::AlwaysShootClosestPlayer(Component::Controller* controller, 
 
             glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
             for (auto& player : HubInstance().mPlayers) {
-                float distanceToPlayer = glm::distance(player->GetPosition(), transformWorldPosition);
-                if(distanceToPlayer < minimumDistance) {
-                    minimumDistance = distanceToPlayer;
-                    targetPlayerPosition = player->GetPosition();
+                if (player->Active()) {
+                    float distanceToPlayer = glm::distance(player->GetPosition(), transformWorldPosition);
+                    if (distanceToPlayer < minimumDistance) {
+                        minimumDistance = distanceToPlayer;
+                        targetPlayerPosition = player->GetPosition();
+                    }
                 }
             }
 
@@ -183,10 +185,12 @@ void ControlScheme::LookAtClosestPlayer(Component::Controller* controller, float
 
     glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
     for (auto& player : HubInstance().mPlayers) {
-        float distanceToPlayer = glm::distance(player->GetPosition(), transformWorldPosition);
-        if (distanceToPlayer < minimumDistance) {
-            minimumDistance = distanceToPlayer;
-            targetPlayerPosition = player->GetPosition();
+        if (player->Active()) {
+            float distanceToPlayer = glm::distance(player->GetPosition(), transformWorldPosition);
+            if (distanceToPlayer < minimumDistance) {
+                minimumDistance = distanceToPlayer;
+                targetPlayerPosition = player->GetPosition();
+            }
         }
     }
 
@@ -208,10 +212,12 @@ void ControlScheme::AccelerateTowardsClosestPlayer(Component::Controller* contro
 
     glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
     for (auto& player : HubInstance().mPlayers) {
-        float distanceToPlayer = glm::distance(player->GetPosition(), transformWorldPosition);
-        if (distanceToPlayer < minimumDistance) {
-            minimumDistance = distanceToPlayer;
-            targetPlayerPosition = player->GetPosition();
+        if (player->Active()) {
+            float distanceToPlayer = glm::distance(player->GetPosition(), transformWorldPosition);
+            if (distanceToPlayer < minimumDistance) {
+                minimumDistance = distanceToPlayer;
+                targetPlayerPosition = player->GetPosition();
+            }
         }
     }
 
