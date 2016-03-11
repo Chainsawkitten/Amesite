@@ -22,6 +22,7 @@
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/Animation.hpp>
 #include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/PointLight.hpp>
 
 #include "../../Util/ControlSchemes.hpp"
 
@@ -47,6 +48,7 @@ Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
     node->AddComponent<Component::GridCollide>()->removeOnImpact = false;
     node->AddComponent<Component::Damage>()->faction = 1;
     node->GetComponent<Component::Damage>()->removeOnImpact = false;
+    node->AddComponent<Component::PointLight>()->color = glm::vec3(0.67f, 0.f, 0.72f);
 
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->Move(0, 0, 5.5f);
@@ -102,6 +104,7 @@ void Rocket::Activate() {
     SuperEnemy::Activate();
     node->GetComponent<Component::Controller>()->enabled = true;
     body->GetComponent<Component::Material>()->glow = mActiveGlow;
+    node->GetComponent<Component::PointLight>()->intensity = 10.f;
 }
 
 void Rocket::Deactivate() {
@@ -109,6 +112,7 @@ void Rocket::Deactivate() {
     node->GetComponent<Component::Controller>()->enabled = false;
     body->GetComponent<Component::Material>()->glow = mDeactiveGlow;
     node->GetComponent<Component::Physics>()->acceleration = glm::vec3(0.f, 0.f, 0.f);
+    node->GetComponent<Component::PointLight>()->intensity = 0.f;
 }
 
 void Rocket::mUpdateFunction() {
