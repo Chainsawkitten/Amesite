@@ -48,13 +48,15 @@ DivideBoss::DivideBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Explode>()->sound = true;
     body->AddComponent<Component::Health>()->faction = 1;
     body->GetComponent<Component::Health>()->removeOnLowHealth = false;
+    body->GetComponent<Component::Health>()->maxCooldown = 0.f;
     body->GetComponent<Component::Health>()->health = body->GetComponent<Component::Health>()->maxHealth = 300.f;
+    body->GetComponent<Component::Health>()->regenAmount = body->GetComponent<Component::Health>()->maxHealth / 10.f;
     body->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     body->GetComponent<Component::Physics>()->angularVelocity.y = -0.1f;
     body->AddComponent<Component::Damage>()->faction = 1.f;
     body->GetComponent<Component::Damage>()->removeOnImpact = false;
 
-    mNextHpStep = 0.9f;
+    mLastHpStep = 0.9f;
 }
 
 DivideBoss::~DivideBoss() {
@@ -81,9 +83,12 @@ void DivideBoss::mUpdateFunction() {
     SuperBoss::mUpdateFunction();
     Component::Health* healthComp = body->GetComponent<Component::Health>();
     float healthFactor = healthComp->health / healthComp->maxHealth;
-    if (healthFactor < mNextHpStep) {
-        mNextHpStep -= 0.1f;
-        for (int i = 0; i < 5; i++) {
+    if (healthFactor > mLastHpStep + 0.1)
+        mLastHpStep += 0.1f;
+    float nextHpStep = mLastHpStep - 0.1f;
+    if (healthFactor < nextHpStep) {
+        mLastHpStep = nextHpStep;
+        for (int i = 0; i < 8; i++) {
             std::uniform_int_distribution<uint32_t> randomValue(0, 1);
             GameObject::Rocket* miniRocket = GameEntityCreator().CreateMiniRocket(body->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(randomValue(mRNG) * 2.f - 1.f, 0.f, randomValue(mRNG) * 2.f - 1.f) * 10.f);
             miniRocket->range = this->range;
@@ -91,4 +96,5 @@ void DivideBoss::mUpdateFunction() {
         }
     }
     body->GetComponent<Component::Transform>()->scale = glm::vec3(1.f, 1.f, 1.f) * healthFactor + 0.2f;
+    mLastHealthFactor = healthFactor;
 }
