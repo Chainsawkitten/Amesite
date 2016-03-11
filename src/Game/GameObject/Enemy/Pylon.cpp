@@ -12,13 +12,16 @@
 #include "../../Component/Explode.hpp"
 #include "../../Component/Controller.hpp"
 #include "../../Component/Update.hpp"
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/RelativeTransform.hpp>
-#include <Engine/Component/Mesh.hpp>
-#include <Engine/Component/Material.hpp>
-#include <Engine/Component/Collider2DCircle.hpp>
-#include <Engine/Component/Animation.hpp>
-#include <Engine/Component/ParticleEmitter.hpp>
+#include "../../Component/GridCollide.hpp"
+#include <Component/Physics.hpp>
+#include <Component/Transform.hpp>
+#include <Component/RelativeTransform.hpp>
+#include <Component/Mesh.hpp>
+#include <Component/Material.hpp>
+#include <Component/Collider2DCircle.hpp>
+#include <Component/Animation.hpp>
+#include <Component/ParticleEmitter.hpp>
+
 
 #include "../../Util/ControlSchemes.hpp"
 
@@ -39,6 +42,11 @@ Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     node->GetComponent<Component::Explode>()->sound = true;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&Pylon::mUpdateFunction, this);
+    node->AddComponent<Component::Physics>();
+    node->AddComponent<Component::GridCollide>();
+    node->GetComponent<Component::GridCollide>()->removeOnImpact = false;
+    node->AddComponent<Component::Controller>();
+    node->GetComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::AccelerateTowardsClosestPlayer);
 
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
@@ -144,6 +152,7 @@ float Pylon::GetHealth() {
 
 void Pylon::Activate() {
     SuperEnemy::Activate();
+    node->GetComponent<Component::Controller>()->enabled = true;
     turret->GetComponent<Component::Controller>()->enabled = true;
     pylon1->GetComponent<Component::Controller>()->enabled = true;
     pylon2->GetComponent<Component::Controller>()->enabled = true;
@@ -156,6 +165,8 @@ void Pylon::Activate() {
 
 void Pylon::Deactivate() {
     SuperEnemy::Deactivate();
+    node->GetComponent<Component::Controller>()->enabled = false;
+    node->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f,0.f,0.f);
     turret->GetComponent<Component::Controller>()->enabled = false;
     pylon1->GetComponent<Component::Controller>()->enabled = false;
     pylon2->GetComponent<Component::Controller>()->enabled = false;
