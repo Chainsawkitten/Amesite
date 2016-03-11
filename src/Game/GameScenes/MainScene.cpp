@@ -10,6 +10,7 @@
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
 #include <Component/Mesh.hpp>
+#include <Component/Material.hpp>
 #include <Component/RelativeTransform.hpp>
 #include <Component/DirectionalLight.hpp>
 #include <Component/SpotLight.hpp>
@@ -55,9 +56,10 @@
 #include "../GameObject/Pillar.hpp"
 #include "../GameObject/Enemy/SuperEnemy.hpp"
 
-
 #include "../Game.hpp"
 #include "WinScene.hpp"
+
+#include "Geometry/OBJModel.hpp"
 
 using namespace GameObject;
 
