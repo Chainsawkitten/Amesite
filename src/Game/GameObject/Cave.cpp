@@ -7,6 +7,8 @@
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
 #include <Geometry/Map.hpp>
+#include "Geometry/Plane.hpp"
+#include <Geometry/OBJModel.hpp>
 
 #include "../Component/Controller.hpp"
 #include "../Component/Health.hpp"
@@ -17,11 +19,10 @@
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/SpotLight.hpp>
 #include <Engine/Geometry/Terrain.hpp>
+#include <Game/Util/GameEntityFactory.hpp>
 #include "../Util/CaveGenerator.hpp"
 
 #include "../Util/ControlSchemes.hpp"
-
-#include "Geometry/Plane.hpp"
 
 using namespace GameObject;
 
@@ -105,9 +106,25 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width)/2.f)+1.f, -11.f, scaleFactor*(static_cast<float>(height) / 2.f) + 1.f));
     heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 7.f, (static_cast<float>(height) / 2.f) * 10);
 
-    heightMap->GetComponent<Component::Mesh>()->geometry = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
+    mTerrain = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
+
+    heightMap->GetComponent<Component::Mesh>()->geometry = mTerrain;
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/defaultYellow.png");
     heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/defaultYellow.png");
+
+    //Place scenery
+    for (int i = 0; i < 1; i++)
+        PlaceScenery(GameEntityCreator().CreateCrashSite(), true);
+
+    for (int i = 0; i < 50; i++)
+        PlaceScenery(GameEntityCreator().CreateStone(), true);
+
+    for (int i = 0; i < 20; i++)
+        PlaceScenery(GameEntityCreator().CreateCrystalLight(), false);
+
+    for (int i = 0; i < 10; i++)
+        PlaceScenery(GameEntityCreator().CreateFallenPillar(), true);
+
 
     for (int i = 0; i < mHeight; i++)
         delete[] floatMap[i];
@@ -173,6 +190,30 @@ Cave::~Cave() {
 
     delete caveMap;
     delete mBorder;
+    delete mTerrain;
+
+}
+
+void Cave::PlaceScenery(Entity* scenery, bool rotate) {
+
+    float x = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
+    float z = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
+
+    unsigned int xOnGrid = glm::floor(x / scaleFactor);
+    unsigned int zOnGrid = glm::floor(z / scaleFactor);
+
+    glm::vec3 point = glm::vec3(x, mTerrain->GetY(xOnGrid, zOnGrid) - 10.f, z);
+
+    if (!GridCollide(point)) {
+        
+        if(rotate)
+            scenery->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+    
+        scenery->GetComponent<Component::Transform>()->scale *= 1 - ((rand() % 1000) / 1000.f) / 2.f;
+        scenery->GetComponent<Component::Transform>()->position = point;
+        mSceneryVector.push_back(scenery);
+
+    }
 
 }
 
@@ -219,6 +260,9 @@ glm::vec3 Cave::CellCollide(float xPos, float yPos, int x, int y) {
             if (!(yPos <= 1.5f - xPos))
                 return glm::vec3(-1, 0, -1);
             break;
+        case 5:
+                return glm::vec3(-1, -1, -1);
+            break;
         case 6:
             if (xPos >= 0.5f)
                 return glm::vec3(-1, 0, 0);
@@ -234,6 +278,9 @@ glm::vec3 Cave::CellCollide(float xPos, float yPos, int x, int y) {
         case 9:
             if (xPos <= 0.5f)
                 return glm::vec3(1, 0, 0);
+            break;
+        case 10:
+                return glm::vec3(-1, -1, -1);
             break;
         case 11:
             if (yPos <= 1.5f - xPos)
@@ -258,7 +305,7 @@ glm::vec3 Cave::CellCollide(float xPos, float yPos, int x, int y) {
 
         }
 
-    return glm::vec3(0, 0, 0);
+    return glm::vec3(0, -1, 0);
 
 }
 
@@ -282,15 +329,15 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
     n = PointCollide(transform->CalculateWorldPosition() + height + width, velocity, deltaTime);
 
-    if (n != glm::vec3(0, 0, 0)) {
+    if (n != glm::vec3(0, -1, 0)) {
 
         n = glm::normalize(n);
         glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
 
-        bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+        bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime).y == -1;
+        bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime).y == -1;
+        bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime).y == -1;
+        bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime).y == -1;
 
         if (c0 && c1 && c2 && c3) {
 
@@ -311,7 +358,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
     n = PointCollide(transform->CalculateWorldPosition() + height - width, velocity, deltaTime);
 
-    if (n != glm::vec3(0, 0, 0)) {
+    if (n != glm::vec3(0, -1, 0)) {
 
         n = glm::normalize(n);
         glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
@@ -340,7 +387,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
     n = PointCollide(transform->CalculateWorldPosition() - height - width, velocity, deltaTime);
 
-    if (n != glm::vec3(0, 0, 0)) {
+    if (n != glm::vec3(0, -1, 0)) {
 
         n = glm::normalize(n);
         glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
@@ -369,7 +416,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
     n = PointCollide(transform->CalculateWorldPosition() - height + width, velocity, deltaTime);
 
-    if (n != glm::vec3(0, 0, 0)) {
+    if (n != glm::vec3(0, -1, 0)) {
 
         n = glm::normalize(n);
         glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
@@ -397,5 +444,86 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
     }
 
     return false;
+
+}
+
+bool Cave::GridCollide(glm::vec3 point) {
+
+    unsigned int x = glm::floor(point.x / scaleFactor);
+    unsigned int z = glm::floor(point.z / scaleFactor);
+
+    float xPos = point.x / scaleFactor - x;
+    float zPos = point.z / scaleFactor - z;
+    
+    if (x >= 0 && z >= 0 && x < 89 && z < 89) {
+
+        switch (this->mTypeMap[x][z]) {
+
+        case 1:
+            if (zPos <= 0.5f - xPos)
+                return true;
+            break;
+        case 2:
+            if (xPos >= 0.5f + zPos)
+                return true;
+            break;
+        case 3:
+            if (zPos <= 0.5f)
+                return true;
+            break;
+        case 4:
+            if (!(zPos <= 1.5f - xPos))
+                return true;
+            break;
+        case 5:
+                return true;
+            break;
+        case 6:
+            if (xPos >= 0.5f)
+                return true;
+            break;
+        case 7:
+            if (zPos <= xPos + 0.5f)
+                return true;
+            break;
+        case 8:
+            if (!(zPos <= xPos + 0.5f))
+                return true;
+            break;
+        case 9:
+            if (xPos <= 0.5f)
+                return true;
+            break;
+        case 10:
+                return true;
+            break;
+        case 11:
+            if (zPos <= 1.5f - xPos)
+                return true;
+            break;
+        case 12:
+            if (zPos >= 0.5f)
+                return true;
+            break;
+        case 13:
+            if (!(xPos >= 0.5f + zPos))
+                return true;
+            break;
+        case 14:
+            if (!(zPos <= 0.5f - xPos))
+                return true;
+            break;
+        case 15:
+            return true;
+            break;
+
+        }
+
+        return false;
+
+    }
+
+
+    return true;
 
 }
