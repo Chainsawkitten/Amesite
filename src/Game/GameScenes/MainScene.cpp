@@ -156,7 +156,7 @@ MainScene::MainScene() {
     mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
     mBossVector.push_back(GameEntityCreator().CreateShieldBoss(glm::vec3(mCave->scaleFactor*bossPositions[1].x, 0.f, mCave->scaleFactor*bossPositions[1].y)));
     mBossVector.push_back(GameEntityCreator().CreateRingBoss(glm::vec3(mCave->scaleFactor*bossPositions[2].x, 0.f, mCave->scaleFactor*bossPositions[2].y)));
-    mBossVector.push_back(GameEntityCreator().CreateDivideBoss(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 15.f)/*glm::vec3(mCave->scaleFactor*bossPositions[3].x, 0.f, mCave->scaleFactor*bossPositions[3].y)*/));
+    mBossVector.push_back(GameEntityCreator().CreateDivideBoss(glm::vec3(mCave->scaleFactor*bossPositions[3].x, 0.f, mCave->scaleFactor*bossPositions[3].y)));
     int numberOfBossPositions = bossPositions.size();
 
     glm::vec3 pillarOrigin(mPortalPosition.x - 15.f, -0.f, mPortalPosition.y - 15.f);

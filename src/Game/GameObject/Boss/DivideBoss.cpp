@@ -34,7 +34,7 @@ DivideBoss::DivideBoss(Scene* scene) : SuperBoss(scene) {
     node->AddComponent<Component::Transform>()->scale *= 1.f;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&DivideBoss::mUpdateFunction, this);
 
-    body->GetComponent<Component::Transform>()->scale *= 1.2f;
+    body->GetComponent<Component::Transform>()->scale *= 1.5f;
     body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond_body.obj");
     body->AddComponent<Component::Material>();
     body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon_diff.png");
@@ -95,6 +95,6 @@ void DivideBoss::mUpdateFunction() {
             miniRocket->node->GetComponent<Component::LifeTime>()->lifeTime = 20.f;
         }
     }
-    body->GetComponent<Component::Transform>()->scale = glm::vec3(1.f, 1.f, 1.f) * healthFactor + 0.2f;
+    body->GetComponent<Component::Transform>()->scale = glm::vec3(1.f, 1.f, 1.f) * healthFactor + 0.5f;
     mLastHealthFactor = healthFactor;
 }
