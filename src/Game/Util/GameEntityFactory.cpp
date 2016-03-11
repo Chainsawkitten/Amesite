@@ -216,9 +216,19 @@ Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime
     Explosion* gameObject = new Explosion(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
-    gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
-    gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
+    gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size*0.5f;
+    gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size*0.5f;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
+
+    gameObject->tail->GetComponent<Component::Transform>()->position = position;
+    gameObject->tail->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
+    gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
+    gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
+
+    gameObject->body->GetComponent<Component::Transform>()->position = position;
+    gameObject->body->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
     return gameObject;
 }
 
