@@ -46,8 +46,10 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     mNode->AddComponent<Component::Health>()->removeOnLowHealth = false;
-    mNode->GetComponent<Component::Health>()->health = 30.f;
-    mNode->GetComponent<Component::Health>()->maxHealth = 30.f;
+    mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth = 30.f;
+    mNode->GetComponent<Component::Health>()->maxCooldown = 1.f;
+    //Regain full health after 5 seconds.
+    mNode->GetComponent<Component::Health>()->regainAmount = mRegainAmount = mNode->GetComponent<Component::Health>()->maxHealth / 5.f * mNode->GetComponent<Component::Health>()->maxCooldown;
     mNode->GetComponent<Component::Health>()->faction = 0;
     mNode->AddComponent<Component::Collider2DCircle>()->radius = 10.f;
     mNode->AddComponent<Component::Animation>();
@@ -354,7 +356,7 @@ void Player1::Activate() {
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = true;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = false;
-    mNode->GetComponent<Component::Health>()->regenAmount = 1.f;
+    mNode->GetComponent<Component::Health>()->regainAmount = mRegainAmount;
 }
 
 void Player1::Deactivate() {
@@ -365,7 +367,7 @@ void Player1::Deactivate() {
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = false;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = true;
     mNode->GetComponent<Component::Physics>()->acceleration = glm::vec3(0, 0, 0);
-    mNode->GetComponent<Component::Health>()->regenAmount = 0.f;
+    mNode->GetComponent<Component::Health>()->regainAmount = 0.f;
 }
 
 void Player1::AddEnginePartilces(Entity* entity) {

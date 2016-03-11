@@ -43,7 +43,7 @@ namespace Component {
             /**
              * Default: 1.f
              */
-            float regenAmount;
+            float regainAmount;
 
             /// Cooldown, time left until regaining health again. If cooldown < 0.f entity regain health;
             /**

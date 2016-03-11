@@ -26,7 +26,7 @@ void HealthSystem::Update(Scene& scene, float deltaTime) {
         healthComponent->cooldown = std::fmaxf(healthComponent->cooldown - deltaTime, 0.f);
         // Update hp
         if (healthComponent->cooldown < 0.01f) {
-            healthComponent->health = std::fminf(healthComponent->health + healthComponent->regenAmount * deltaTime, healthComponent->maxHealth);
+            healthComponent->health = std::fminf(healthComponent->health + healthComponent->regainAmount, healthComponent->maxHealth);
             healthComponent->cooldown = healthComponent->maxCooldown;
         }
         if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth)

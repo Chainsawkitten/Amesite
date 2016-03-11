@@ -50,7 +50,7 @@ DivideBoss::DivideBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Health>()->removeOnLowHealth = false;
     body->GetComponent<Component::Health>()->maxCooldown = 0.f;
     body->GetComponent<Component::Health>()->health = body->GetComponent<Component::Health>()->maxHealth = 300.f;
-    body->GetComponent<Component::Health>()->regenAmount = body->GetComponent<Component::Health>()->maxHealth / 10.f;
+    body->GetComponent<Component::Health>()->regainAmount = body->GetComponent<Component::Health>()->maxHealth / 10.f;
     body->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     body->GetComponent<Component::Physics>()->angularVelocity.y = -0.1f;
     body->AddComponent<Component::Damage>()->faction = 1.f;
