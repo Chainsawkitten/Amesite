@@ -40,7 +40,7 @@ DivideBoss::DivideBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon_diff.png");
     body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
     body->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
-    body->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
+    body->AddComponent<Component::Collider2DCircle>()->radius = 8.f;
     body->AddComponent<Component::Explode>()->size = 100.f;
     body->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     body->GetComponent<Component::Explode>()->lifeTime = 1.5f;
@@ -50,7 +50,7 @@ DivideBoss::DivideBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Health>()->removeOnLowHealth = false;
     body->GetComponent<Component::Health>()->maxCooldown = 0.f;
     body->GetComponent<Component::Health>()->health = body->GetComponent<Component::Health>()->maxHealth = 300.f;
-    body->GetComponent<Component::Health>()->regainAmount = body->GetComponent<Component::Health>()->maxHealth / 8.f;
+    body->GetComponent<Component::Health>()->regainAmount = body->GetComponent<Component::Health>()->maxHealth / 10.f;
     body->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     body->GetComponent<Component::Physics>()->angularVelocity.y = -0.1f;
     body->AddComponent<Component::Damage>()->faction = 1.f;

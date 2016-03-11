@@ -111,6 +111,7 @@ set(RESOURCES
         assets/player2/player2_norm.png
         assets/player2/player2_spec.png
         assets/player2/player2_rest_diff.png
+        assets/player2/player2_rest_spec.png
         assets/player2/player2_body.obj
         assets/player2/player2_engine.obj
         assets/player2/player2_propeller.obj
