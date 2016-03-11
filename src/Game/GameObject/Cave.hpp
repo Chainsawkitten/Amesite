@@ -13,6 +13,11 @@ namespace CaveGenerator {
 
 namespace Geometry {
     class Plane;
+    class Terrain;
+}
+
+namespace GameObject {
+    class Scenery;
 }
 
 namespace GameObject {
@@ -50,8 +55,8 @@ namespace GameObject {
 
             /// Gets radius of the boss room.
             /**
-            * @return Radius of the boss room.
-            */
+             * @return Radius of the boss room.
+             */
             int GetBossRoomRadius() const;
 
             /// Grid collision
@@ -62,11 +67,24 @@ namespace GameObject {
              */
             bool GridCollide(Entity* entity, float deltaTime);
 
+            /// Grid collision
+            /**
+             * @param point to check.
+             * @return Returns true if collision with map, else false.
+             */
+            bool GridCollide(glm::vec3 point);
+
             /// Gets bool grid of cave.
             /**
              * @return 2D bool array of the cave grid.
              */
             bool** GetCaveData() const;
+
+            /// Place an entity randomly into the world
+            /**
+             * @param The entity to place
+             */
+            void PlaceScenery(Entity* scenery, bool rotate);
 
             /// Map of all walls in the cave system.
             bool** mMap;
@@ -77,6 +95,9 @@ namespace GameObject {
             /// Map of the %Cave
             Entity* map;
             Entity* heightMap;
+
+            /// Rocks vector
+            std::vector<Entity*> mSceneryVector;
 
             /// CaveMap instance.
             CaveGenerator::CaveMap* caveMap;
@@ -117,8 +138,11 @@ namespace GameObject {
             /// radius of a boss room.
             int mBossRadius;
 
-            ///The border geometry
+            /// The border geometry
             Geometry::Plane* mBorder;
+
+            /// The terrain geometry
+            Geometry::Terrain* mTerrain;
 
             ///The four border entites
             Entity* mTopBorder;

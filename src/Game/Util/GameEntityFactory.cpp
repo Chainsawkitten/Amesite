@@ -11,6 +11,7 @@
 #include <Component/SpotLight.hpp>
 #include <Component/PointLight.hpp>
 #include <Component/ParticleEmitter.hpp>
+#include <Component/Material.hpp>
 #include "../Component/Spawner.hpp"
 #include "../Component/Controller.hpp"
 #include "../Component/Damage.hpp"
@@ -21,6 +22,7 @@
 
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
+#include <Geometry/OBJModel.hpp>
 
 #include <Texture/Texture2D.hpp>
 
@@ -163,6 +165,62 @@ GameObject::Pillar* GameEntityFactory::CreatePillar(const glm::vec3& origin, glm
     Pillar* gameObject = new Pillar(mScene, bossPosition);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
     return gameObject;
+}
+
+Entity* GameEntityFactory::CreateCrashSite() {
+
+    Entity* crash = mScene->CreateEntity();
+    crash->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/player1_body.obj");
+    crash->AddComponent<Component::Material>()->SetDiffuse("Resources/player1_body_diff_dead.png");
+    crash->GetComponent<Component::Material>()->SetSpecular("Resources/player1_body_spec.png");
+    crash->GetComponent<Component::Material>()->SetGlow("Resources/player1_body_glow.png");
+    crash->AddComponent<Component::Transform>()->scale *= 0.3f;
+
+    return crash;
+
+}
+
+Entity* GameEntityFactory::CreateStone() {
+
+    Entity* stone = mScene->CreateEntity();
+    stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+    stone->AddComponent<Component::Material>()->SetDiffuse("Resources/DefaultGray.png");
+    stone->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    stone->GetComponent<Component::Material>()->SetGlow("Resources/stone_01_glow.png");
+    stone->AddComponent<Component::Transform>()->scale *= 0.3f;
+
+    return stone;
+
+}
+
+Entity* GameEntityFactory::CreateFallenPillar() {
+
+    Entity* pillar = mScene->CreateEntity();
+    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/pillar.obj");
+    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/pillar_diff.png");
+    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    pillar->GetComponent<Component::Material>()->SetGlow("Resources/pillar_glow.png");
+    pillar->AddComponent<Component::Transform>();
+
+    return pillar;
+
+}
+
+Entity* GameEntityFactory::CreateCrystalLight() {
+
+    Entity* crystal = mScene->CreateEntity();
+    crystal->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/crystal.obj");
+    crystal->AddComponent<Component::Material>()->SetDiffuse("Resources/DefaultBlue.png");
+    crystal->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    crystal->GetComponent<Component::Material>()->SetGlow("Resources/DefaultSpecular.png");
+    crystal->AddComponent<Component::Transform>()->scale *= 0.2f;
+
+    crystal->AddComponent<Component::PointLight>();
+    crystal->GetComponent<Component::PointLight>()->attenuation = 0.8f;
+    crystal->GetComponent<Component::PointLight>()->color = glm::vec3(109.f, 242.f, 207.f) * 0.01f;
+
+    return crystal;
+
 }
 
 GameObject::PillarBall* GameEntityFactory::CreatePillarBall(const glm::vec3& origin, const glm::vec3& velocity) {
