@@ -38,7 +38,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mDeadTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_dead.png");
 
     mNode = CreateEntity();
-    mNode->AddComponent<Component::Transform>()->scale *= 0.33f; //0.25f
+    mNode->AddComponent<Component::Transform>()->scale *= 0.25f;
     mNode->AddComponent<Component::Controller>()->speed = 5000.f;
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
