@@ -370,6 +370,32 @@ void Player2::AddMidPropeller(Entity* entity, glm::vec3 position, glm::vec3 scal
     entity->AddComponent<Component::Mesh>()->geometry = mPropellerModel;
     entity->AddComponent<Component::Material>();
     entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_rest_diff.png");
+    entity->GetComponent<Component::Material>()->SetGlow("Resources/player2_rest_glow.png");
+    for (int i = 0; i < 4; i++) {
+        mMidPropellerParticles[i] = CreateEntity();
+        Component::RelativeTransform* transform = mMidPropellerParticles[i]->AddComponent<Component::RelativeTransform>();
+        transform->parentEntity = entity;
+        transform->yaw = i * 360.f / 4;
+        transform->position = transform->GetWorldDirection() + glm::vec3(0.f, 0.25f, 0.f);
+        mMidPropellerParticles[i]->AddComponent<Component::Animation>();
+        Component::ParticleEmitter* emitter = mMidPropellerParticles[i]->AddComponent<Component::ParticleEmitter>();
+        emitter->emitterType = Component::ParticleEmitter::POINT;
+        emitter->maxEmitTime = emitter->minEmitTime = 0.0016;
+        emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+        emitter->lifetime = 0.0;
+        emitter->particleType.textureIndex = Component::ParticleEmitter::BLUE;
+        emitter->particleType.minLifetime = 0.04f * 3.f;
+        emitter->particleType.maxLifetime = 0.04f * 3.f;
+        emitter->particleType.minVelocity = glm::vec3(0.f, 0.f, 0.f);
+        emitter->particleType.maxVelocity = glm::vec3(0.f, 0.f, 0.f);
+        emitter->particleType.minSize = glm::vec2(.5f, .5f);
+        emitter->particleType.maxSize = glm::vec2(.7f, .7f);
+        emitter->particleType.uniformScaling = true;
+        emitter->particleType.color = glm::vec3(.8f, .8f, .8f);
+        emitter->particleType.startAlpha = 1.f;
+        emitter->particleType.midAlpha = 1.f;
+        emitter->particleType.endAlpha = 0.f;
+    }
 }
 
 void Player2::AddPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale) {
@@ -390,17 +416,28 @@ void Player2::mUpdateFunction() {
         mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.f, 1.f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
-
         mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
         mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = false;
         mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
         mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mMidPropellerParticles[0]->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mMidPropellerParticles[1]->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mMidPropellerParticles[2]->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mMidPropellerParticles[3]->GetComponent<Component::ParticleEmitter>()->enabled = true;
 
     } else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = MEDIUMDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;
+        mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mMidPropellerParticles[0]->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mMidPropellerParticles[1]->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mMidPropellerParticles[2]->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mMidPropellerParticles[3]->GetComponent<Component::ParticleEmitter>()->enabled = true;
     } else if (GetHealth() >= 0.01f) {
         mState = HEAVYDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
@@ -409,7 +446,11 @@ void Player2::mUpdateFunction() {
         mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
         mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
         mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
-        mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mMidPropellerParticles[0]->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mMidPropellerParticles[1]->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mMidPropellerParticles[2]->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mMidPropellerParticles[3]->GetComponent<Component::ParticleEmitter>()->enabled = true;
     } else {
          mState = DEAD;
          mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
@@ -419,6 +460,10 @@ void Player2::mUpdateFunction() {
          mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
          mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
          mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
+         mMidPropellerParticles[0]->GetComponent<Component::ParticleEmitter>()->enabled = false;
+         mMidPropellerParticles[1]->GetComponent<Component::ParticleEmitter>()->enabled = false;
+         mMidPropellerParticles[2]->GetComponent<Component::ParticleEmitter>()->enabled = false;
+         mMidPropellerParticles[3]->GetComponent<Component::ParticleEmitter>()->enabled = true;
  }
 
     glm::vec3 velocity = mNode->GetComponent<Component::Physics>()->velocity;
@@ -427,13 +472,13 @@ void Player2::mUpdateFunction() {
     float velocityFactor = glm::length(mNode->GetComponent<Component::Physics>()->velocity) / mNode->GetComponent<Component::Physics>()->maxVelocity;
     float pitchFactor = 0.f;
     float rollFactor = 0.f;
+    glm::vec3 frontDirection = mNode->GetComponent<Component::Transform>()->GetWorldDirection();
+    glm::vec3 sideDirection = glm::cross(frontDirection, glm::vec3(0.f, 1.f, 0.f));
+    glm::vec3 upDirection = glm::cross(sideDirection, frontDirection);
     if (glm::length(velocity) > 0.01f) {
-        pitchFactor = glm::dot(glm::normalize(velocity), mNode->GetComponent<Component::Transform>()->GetWorldDirection());
-        rollFactor = glm::dot(glm::normalize(velocity), glm::cross(mNode->GetComponent<Component::Transform>()->GetWorldDirection(), glm::vec3(0.f, 1.f, 0.f)));
+        pitchFactor = glm::dot(glm::normalize(velocity), frontDirection);
+        rollFactor = glm::dot(glm::normalize(velocity), sideDirection);
     }
-
-    //Update midpropeller
-    mMidPropeller->GetComponent<Component::Physics>()->angularVelocity.y = velocityFactor * 2.f + 0.2f;
 
     //Update propeller
     mBackPropellerRight->GetComponent<Component::Physics>()->angularVelocity.y = velocityFactor * 2.f + 1.2f;
@@ -454,6 +499,14 @@ void Player2::mUpdateFunction() {
     //Update body
     mBody->GetComponent<Component::Transform>()->pitch = pitchFactor * 10.f * velocityFactor;
     mBody->GetComponent<Component::Transform>()->roll = rollFactor * 25.f * velocityFactor;
+
+    //Update midpropeller
+    mMidPropeller->GetComponent<Component::Physics>()->angularVelocity.y = velocityFactor * 1.2f + 0.6f;
+    for (int i = 0; i < 4; i++) {
+        Component::ParticleEmitter* emitter = mMidPropellerParticles[i]->GetComponent<Component::ParticleEmitter>();
+        emitter->particleType.minLifetime = emitter->particleType.maxLifetime = velocityFactor * (0.02f - 0.16f) + 0.16f; //0.16 -> 0.02
+        emitter->maxEmitTime = emitter->minEmitTime = velocityFactor * (0.0002f - 0.016f) + 0.016f; // 0.016 -> 0.0002
+    }
 
     // Update turrets
     float recoilFactor;
