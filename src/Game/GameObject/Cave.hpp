@@ -55,23 +55,23 @@ namespace GameObject {
 
             /// Gets radius of the boss room.
             /**
-            * @return Radius of the boss room.
-            */
+             * @return Radius of the boss room.
+             */
             int GetBossRoomRadius() const;
 
             /// Grid collision
             /**
-            * @param entity The minimum room size in tiles.
-            * @param deltaTime Where the players start.
-            * @return Returns true if collision with map, else false.
-            */
+             * @param entity The minimum room size in tiles.
+             * @param deltaTime Where the players start.
+             * @return Returns true if collision with map, else false.
+             */
             bool GridCollide(Entity* entity, float deltaTime);
 
             /// Grid collision
             /**
-            * @param point to check.
-            * @return Returns true if collision with map, else false.
-            */
+             * @param point to check.
+             * @return Returns true if collision with map, else false.
+             */
             bool GridCollide(glm::vec3 point);
 
             /// Gets bool grid of cave.
