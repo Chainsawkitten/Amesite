@@ -504,7 +504,7 @@ void Player2::mUpdateFunction() {
     mMidPropeller->GetComponent<Component::Physics>()->angularVelocity.y = velocityFactor * 1.2f + 0.6f;
     for (int i = 0; i < 4; i++) {
         Component::ParticleEmitter* emitter = mMidPropellerParticles[i]->GetComponent<Component::ParticleEmitter>();
-        emitter->particleType.minLifetime = emitter->particleType.maxLifetime = velocityFactor * (0.02f - 0.16f) + 0.16f; //0.16 -> 0.02
+        emitter->particleType.minLifetime = emitter->particleType.maxLifetime = velocityFactor * (0.02f - 0.1f) + 0.1f; //0.1 -> 0.02
         emitter->maxEmitTime = emitter->minEmitTime = velocityFactor * (0.0002f - 0.016f) + 0.016f; // 0.016 -> 0.0002
     }
 
