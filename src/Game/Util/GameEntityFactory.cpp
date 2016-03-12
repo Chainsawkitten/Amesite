@@ -32,6 +32,7 @@
 #include "../Util/CaveGenerator.hpp"
 
 #include "../GameObject/Bullet.hpp"
+#include "../GameObject/Player/SuperPlayer.hpp"
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
 #include "../GameObject/Camera.hpp"
@@ -51,6 +52,7 @@
 #include "../GameObject/Pillar.hpp"
 #include "../GameObject/PillarBall.hpp"
 #include "../GameObject/Portal.hpp"
+#include "../GameObject/ReviveCircle.hpp"
 
 using namespace GameObject;
 
@@ -278,6 +280,11 @@ Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
+    return gameObject;
+}
+
+ReviveCircle* GameEntityFactory::CreateReviveCircle(SuperPlayer* player) {
+    ReviveCircle* gameObject = new ReviveCircle(mScene, player);
     return gameObject;
 }
 
