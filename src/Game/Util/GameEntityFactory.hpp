@@ -12,6 +12,7 @@ namespace CaveGenerator {
 
 namespace GameObject{
     class Bullet;
+    class SuperPlayer;
     class Player1;
     class Player2;
     class Camera;
@@ -32,6 +33,7 @@ namespace GameObject{
     class PillarBall;
     class Portal;
     class Scenery;
+    class ReviveCircle;
 }
 
 /// Factory responsible for creating prefab entities.
@@ -232,6 +234,13 @@ class GameEntityFactory {
          * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
          */
         GameObject::Explosion* CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex);
+
+        /// Creates a ReviveCircle.
+        /**
+         * @param position Position of the revive circle.
+         * @param player Player which this reive circle corresponds to.
+         */
+        GameObject::ReviveCircle* CreateReviveCircle(GameObject::SuperPlayer* player);
 
         /// Sets scene that the factory is coupled to.
         /**
