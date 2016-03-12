@@ -90,7 +90,6 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
     mBody->GetComponent<Component::Material>()->SetSpecular("Resources/player2_spec.png");
     mBody->GetComponent<Component::Material>()->SetGlow("Resources/player2_glow.png");
-    mBody->GetComponent<Component::Material>()->SetNormal("Resources/player2_norm.png");
     mBody->AddComponent<Component::Animation>();
 
     mLight = CreateEntity();
@@ -121,12 +120,14 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mLeftTurretBody->AddComponent<Component::Animation>();
     mLeftTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
     mLeftTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mLeftTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mLeftTurretBarrel = CreateEntity();
     mLeftTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBody;
     mLeftTurretBarrel->AddComponent<Component::Animation>();
     mLeftTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
     mLeftTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mLeftTurretBarrel->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mLeftSpawnNode = CreateEntity();
     mLeftSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBarrel;
@@ -149,12 +150,14 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mRightTurretBody->AddComponent<Component::Animation>();
     mRightTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
     mRightTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mRightTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mRightTurretBarrel = CreateEntity();
     mRightTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBody;
     mRightTurretBarrel->AddComponent<Component::Animation>();
     mRightTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
     mRightTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mRightTurretBarrel->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mRightSpawnNode = CreateEntity();
     mRightSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBarrel;
@@ -360,6 +363,7 @@ void Player2::AddEngine(Entity* entity, glm::vec3 position, glm::vec3 scale) {
     entity->AddComponent<Component::Mesh>()->geometry = mEngineModel;
     entity->AddComponent<Component::Material>();
     entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_rest_diff.png");
+    entity->GetComponent<Component::Material>()->SetSpecular("Resources/player2_rest_spec.png");
 }
 
 void Player2::AddMidPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale) {
@@ -372,6 +376,7 @@ void Player2::AddMidPropeller(Entity* entity, glm::vec3 position, glm::vec3 scal
     entity->AddComponent<Component::Mesh>()->geometry = mPropellerModel;
     entity->AddComponent<Component::Material>();
     entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_rest_diff.png");
+    entity->GetComponent<Component::Material>()->SetSpecular("Resources/player2_rest_spec.png");
 }
 
 void Player2::AddPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale) {
@@ -383,6 +388,7 @@ void Player2::AddPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale) 
     entity->AddComponent<Component::Mesh>()->geometry = mPropellerModel;
     entity->AddComponent<Component::Material>();
     entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_rest_diff.png");
+    entity->GetComponent<Component::Material>()->SetSpecular("Resources/player2_rest_spec.png");
 }
 
 void Player2::mUpdateFunction() {

@@ -120,12 +120,14 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLeftTurretBody->AddComponent<Component::Animation>();
     mLeftTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
     mLeftTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mLeftTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mLeftTurretBarrel = CreateEntity();
     mLeftTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBody;
     mLeftTurretBarrel->AddComponent<Component::Animation>();
     mLeftTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
     mLeftTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mLeftTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mLeftSpawnNode = CreateEntity();
     mLeftSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBarrel;
@@ -148,12 +150,14 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mRightTurretBody->AddComponent<Component::Animation>();
     mRightTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
     mRightTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mRightTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mRightTurretBarrel = CreateEntity();
     mRightTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBody;
     mRightTurretBarrel->AddComponent<Component::Animation>();
     mRightTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
     mRightTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mRightTurretBarrel->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mRightSpawnNode = CreateEntity();
     mRightSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBarrel;
@@ -173,6 +177,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mFrontEngineLeft->AddComponent<Component::Mesh>()->geometry = mFrontEngineModel = Resources().CreateOBJModel("Resources/player1_frontEngine.obj");
     mFrontEngineLeft->AddComponent<Component::Material>();
     mFrontEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_frontEngine_diff.png");
+    mFrontEngineLeft->GetComponent<Component::Material>()->SetSpecular("Resources/player1_spec.png");
     mFrontEngineLeftParticles = CreateEntity();
     mFrontEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
     AddEnginePartilces(mFrontEngineLeftParticles);
@@ -210,6 +215,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mFrontEngineRight->AddComponent<Component::Mesh>()->geometry = mFrontEngineModel;
     mFrontEngineRight->AddComponent<Component::Material>();
     mFrontEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_frontEngine_diff.png");
+    mFrontEngineRight->GetComponent<Component::Material>()->SetSpecular("Resources/player1_spec.png");
     mFrontEngineRightParticles = CreateEntity();
     mFrontEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineRight;
     AddEnginePartilces(mFrontEngineRightParticles);
@@ -246,6 +252,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mBackEngineLeft->AddComponent<Component::Mesh>()->geometry = mBackEngineModel = Resources().CreateOBJModel("Resources/player1_backEngine.obj");
     mBackEngineLeft->AddComponent<Component::Material>();
     mBackEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_backEngine_diff.png");
+    mBackEngineLeft->GetComponent<Component::Material>()->SetSpecular("Resources/player1_spec.png");
     mBackEngineLeftParticles = CreateEntity();
     mBackEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineLeft;
     AddEnginePartilces(mBackEngineLeftParticles);
@@ -283,6 +290,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mBackEngineRight->AddComponent<Component::Mesh>()->geometry = mBackEngineModel;
     mBackEngineRight->AddComponent<Component::Material>();
     mBackEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_backEngine_diff.png");
+    mBackEngineRight->GetComponent<Component::Material>()->SetSpecular("Resources/player1_spec.png");
     mBackEngineRightParticles = CreateEntity();
     mBackEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineRight;
     AddEnginePartilces(mBackEngineRightParticles);
