@@ -10,6 +10,10 @@ namespace CaveGenerator {
     class Coordinate;
 }
 
+namespace Component {
+    class Explode;
+}
+
 namespace GameObject{
     class Bullet;
     class Player1;
@@ -197,7 +201,7 @@ class GameEntityFactory {
          * @param amount The amount of shrapnel.
          * @return The shrapnel entity.
          */
-        Entity* CreateShrapnel(glm::vec3 position, unsigned int amount);
+        Entity* CreateShrapnel(glm::vec3 position, unsigned int amount, Component::Explode* explodeComponent = nullptr);
 
         /// Create player bullet.
         /**
@@ -239,7 +243,7 @@ class GameEntityFactory {
          * @param size Size of the explosion.
          * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
          */
-        GameObject::Explosion* CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex);
+        GameObject::Explosion* CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex, Component::Explode* explodeComponent = nullptr);
 
         /// Sets scene that the factory is coupled to.
         /**

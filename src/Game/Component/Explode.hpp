@@ -43,5 +43,13 @@ namespace Component {
             
             /// Whether to play an explosion sound when it explodes.
             bool sound;
+
+            /**
+             * Default: TYPE::CAVE
+             */
+            enum TYPE {
+                CAVE = 0,
+                ENEMY,
+            } type;
     };
 }

@@ -41,6 +41,7 @@ Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
     node->GetComponent<Component::Explode>()->size = 8.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     node->GetComponent<Component::Explode>()->sound = true;
+    node->GetComponent<Component::Explode>()->type = Component::Explode::ENEMY;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&Pylon::mUpdateFunction, this);
     node->AddComponent<Component::Physics>();
     node->AddComponent<Component::GridCollide>();

@@ -220,12 +220,32 @@ Entity* GameEntityFactory::CreateCrystalLight() {
 
 }
 
-Entity* GameEntityFactory::CreateShrapnel(glm::vec3 position, unsigned int amount) {
+Entity* GameEntityFactory::CreateShrapnel(glm::vec3 position, unsigned int amount, Component::Explode* explodeComponent) {
     for (unsigned int i = 0; i < amount; i++) {
         Entity* shrapnel = mScene->CreateEntity();
-        shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
-        shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/wall_gray.png");
-        shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+        if (explodeComponent != nullptr) {
+            switch (explodeComponent->type) {
+            case Component::Explode::CAVE: 
+                shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+                shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/wall_gray.png");
+                shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+                break;
+            case Component::Explode::ENEMY:
+                shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+                shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
+                shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+                shrapnel->GetComponent<Component::Material>()->SetGlow("Resources/enemy_glow.png");
+                break;
+            default:
+                shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+                shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/wall_gray.png");
+                shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+            }
+        } else {
+            shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+            shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/wall_gray.png");
+            shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+        }
         shrapnel->AddComponent<Component::Transform>()->scale *= 0.03f;
         shrapnel->GetComponent<Component::Transform>()->position = position;
         shrapnel->AddComponent<Component::Physics>()->gravityFactor = 5.f;
@@ -289,14 +309,14 @@ Dust* GameEntityFactory::CreateDust(Entity * object, int particleTextureIndex) {
     return gameObject;
 }
 
-Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex) {
+Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex, Component::Explode* explodeComponent) {
     Explosion* gameObject = new Explosion(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
-    CreateShrapnel(position, 2);
+    CreateShrapnel(position, 2, explodeComponent);
     return gameObject;
 }
 
