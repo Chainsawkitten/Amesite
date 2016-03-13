@@ -3,17 +3,17 @@
 #include <Component/SuperComponent.hpp>
 
 namespace Component {
-    /// %Component checking collision with cave
-    class GridCollide : public SuperComponent {
+    /// %Component checking collision with terrain
+    class GroundCollide : public SuperComponent {
         public:
-            /// Create %GridCollide.
+            /// Create %GroundCollide.
             /**
              * @param entity Pointer to which Entity this %Component corresponds.
              */
-            GridCollide(Entity* entity);
+            GroundCollide(Entity* entity);
             
             /// Destructor.
-            ~GridCollide();
+            ~GroundCollide();
 
             /// Remove Entity to which this %Component corresponds if true.
             /**
@@ -21,7 +21,7 @@ namespace Component {
              */
             bool removeOnImpact;
 
-            /// True if object has collided with grid.
+            /// True if object has collided with terrain.
             /**
              * Default: false
              */

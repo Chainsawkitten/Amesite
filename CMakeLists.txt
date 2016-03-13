@@ -390,6 +390,7 @@ set(GAME_SRCS
         src/Game/System/EnemySpawnerSystem.cpp
         src/Game/System/UpdateSystem.cpp
         src/Game/System/GridCollideSystem.cpp
+        src/Game/System/GroundCollideSystem.cpp
         src/Game/System/SpawnerSystem.cpp
         src/Game/Component/Controller.cpp
         src/Game/Component/Spawner.cpp
@@ -400,6 +401,7 @@ set(GAME_SRCS
         src/Game/Component/Reflect.cpp
         src/Game/Component/Update.cpp
         src/Game/Component/GridCollide.cpp
+        src/Game/Component/GroundCollide.cpp
         src/Game/Component/AI/WalkerAI.cpp
         src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
@@ -458,6 +460,7 @@ set(GAME_HEADERS
         src/Game/System/EnemySpawnerSystem.hpp
         src/Game/System/UpdateSystem.hpp
         src/Game/System/GridCollideSystem.hpp
+        src/Game/System/GroundCollideSystem.hpp
         src/Game/System/SpawnerSystem.hpp
         src/Game/Component/Controller.hpp
         src/Game/Component/Spawner.hpp
@@ -468,6 +471,7 @@ set(GAME_HEADERS
         src/Game/Component/Reflect.hpp
         src/Game/Component/Update.hpp
         src/Game/Component/GridCollide.hpp
+        src/Game/Component/GroundCollide.hpp
         src/Game/Component/AI/WalkerAI.hpp
         src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp

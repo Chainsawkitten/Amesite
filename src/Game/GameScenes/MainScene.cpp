@@ -261,6 +261,9 @@ void MainScene::Update(float deltaTime) {
         // Update enemy spawning
         mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);
 
+        // Check ground collisions.
+        mGroundCollideSystem.Update(*this, deltaTime, *mCave);
+
         // Check grid collisions.
         mGridCollideSystem.Update(*this, deltaTime, *mCave);
 

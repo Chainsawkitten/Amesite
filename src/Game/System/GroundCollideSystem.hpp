@@ -7,14 +7,14 @@ namespace GameObject {
 }
 
 namespace System {
-    /// %System to check if entity collide with map
-    class GridCollideSystem {
+    /// %System to check if entity collide with terrain
+    class GroundCollideSystem {
     public:
-        /// Create grid collide system.
-        GridCollideSystem();
+        /// Create ground collide system.
+        GroundCollideSystem();
         
         /// Destructor.
-        ~GridCollideSystem();
+        ~GroundCollideSystem();
         
         /// Update Scene containing entities.
         /**
