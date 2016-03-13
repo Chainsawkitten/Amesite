@@ -9,7 +9,7 @@ Explode::Explode(Entity* entity) : SuperComponent(entity) {
     particleTextureIndex = Component::ParticleEmitter::FIRE;
     offset = glm::vec3(0.f, 0.f, 0.f);
     sound = false;
-    type = TYPE::CAVE;
+    type = TYPE::NONE;
 }
 
 Explode::~Explode() {

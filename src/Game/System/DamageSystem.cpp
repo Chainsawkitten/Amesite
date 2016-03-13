@@ -58,7 +58,7 @@ void DamageSystem::Update(Scene& scene) {
                                 explosionComponent->size += 10.f;
                                 GameObject::DyingLight* dyingLight = new GameObject::DyingLight(&scene);
                                 dyingLight->node->GetComponent<Component::Transform>()->position = damageY->entity->GetComponent<Component::Transform>()->GetWorldPosition();
-
+                                explosionComponent->type = Component::Explode::TYPE::ENEMY;
                             }
 
                             if (damageY->entity->gameObject != nullptr)

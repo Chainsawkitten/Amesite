@@ -44,11 +44,13 @@ namespace Component {
             /// Whether to play an explosion sound when it explodes.
             bool sound;
 
+            /// Type of shrapnel when it explodes.
             /**
-             * Default: TYPE::CAVE
+             * Default: TYPE::NONE
              */
             enum TYPE {
-                CAVE = 0,
+                NONE = 0,
+                CAVE,
                 ENEMY,
             } type;
     };
