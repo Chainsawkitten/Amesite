@@ -397,6 +397,59 @@ void ControlScheme::AutoAimedFire(Component::Controller* controller, float delta
     }
 }
 
+void ControlScheme::CameraAuto(Component::Controller* controller, float deltaTime) {
+    std::vector<GameObject::SuperPlayer*>& players = HubInstance().mPlayers;
+    int numberOfPlayers = players.size();
+    glm::vec3 cameraPos = glm::vec3(0.f, 0.f, 0.f);
+    glm::vec3 min = glm::vec3(std::numeric_limits<float>::max(), 0.f, std::numeric_limits<float>::max());
+    glm::vec3 max = glm::vec3(-std::numeric_limits<float>::max(), 0.f, -std::numeric_limits<float>::max());
+
+    float heightFactor = 1.25f;
+    float widthFactor = 0.75f;
+
+    for (int i = 0; i < numberOfPlayers; i++) {
+        glm::vec3 playerPos = players[i]->GetPosition();
+
+        // Find min/max player positions
+        if (playerPos.x*widthFactor > max.x)
+            max.x = playerPos.x*widthFactor;
+        if (playerPos.x*widthFactor < min.x)
+            min.x = playerPos.x*widthFactor;
+
+        if ((playerPos.z*heightFactor) > max.z)
+            max.z = playerPos.z*heightFactor;
+        if ((playerPos.z*heightFactor) < min.z)
+            min.z = playerPos.z*heightFactor;
+
+        cameraPos.x += playerPos.x;
+        cameraPos.z += playerPos.z;
+    }
+    float playerFactor = 1.f / static_cast<float>(numberOfPlayers);
+
+    cameraPos.x *= playerFactor;
+    cameraPos.z *= playerFactor;
+
+    // Calculate how far away the camera should be.
+    float distance = glm::distance(min, max) * 1.20f;
+
+    distance = glm::clamp(distance, 80.f, 140.f);
+
+    Component::Transform* transform = controller->entity->GetComponent<Component::Transform>();
+
+    // Transpose camera back the distance.
+    const glm::mat4& viewMatrix = transform->modelMatrix;
+    glm::vec3 direction = glm::vec3(viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2]);
+    cameraPos += direction * distance;
+    Component::Physics* physics = controller->entity->GetComponent<Component::Physics>();
+    if (physics != nullptr) {
+        physics->velocity = (cameraPos - transform->position) * 3.f;
+    } else {
+        transform->position = cameraPos;
+    }
+
+    transform->UpdateModelMatrix();
+}
+
 void ControlScheme::Boost(Component::Controller* controller, float deltaTime) {
 
     //Entity* entity = controller->entity;

@@ -103,6 +103,14 @@ namespace ControlScheme {
      */
     void MouseRotate(Component::Controller* controller, float deltaTime);
 
+
+    /// Camera auto controll.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void CameraAuto(Component::Controller* controller, float deltaTime);
+
     /// Boost.
     /**
      * @param controller Component to control.

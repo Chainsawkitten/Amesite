@@ -25,6 +25,7 @@ Menu::Menu() {
     mFlyOut = false;
     mTimer = 0.f;
     
+    
     // Load font.
     float fontHeight = glm::ceil(MainWindow::GetInstance()->GetSize().y * 0.07f);
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", fontHeight);
@@ -73,6 +74,7 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
         if (mTimer > 1.f) {
             mTimer = 1.f;
             mActive = false;
+            HubInstance().GetMainCamera().autoControll = true;
         }
         
         weight = 1.f - mTimer;
