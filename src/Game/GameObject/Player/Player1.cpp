@@ -105,7 +105,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mBottomLight->AddComponent<Component::PointLight>();
     mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 1.f);
     mBottomLight->GetComponent<Component::PointLight>()->attenuation = 0.8f;
-    
+
     mTurretBodyModel = Resources().CreateOBJModel("Resources/turret_body.obj");
     mTurretBarrelModel = Resources().CreateOBJModel("Resources/turret_barrel.obj");
 
@@ -119,14 +119,13 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLeftTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
     mLeftTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
 
-    mLeftTurretBarrel = CreateEntity();
-    mLeftTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBody;
-    mLeftTurretBarrel->AddComponent<Component::Animation>();
-    mLeftTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
-    mLeftTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mLeftTurretBarrel.node = CreateEntity();
+    mLeftTurretBarrel.node->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBody;
+    mLeftTurretBarrel.node->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, -1.5f);
+    CreateBarrel(&mLeftTurretBarrel);
 
     mLeftSpawnNode = CreateEntity();
-    mLeftSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBarrel;
+    mLeftSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBarrel.node;
     mLeftSpawnNode->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, 10.f);
     mLeftSpawnNode->AddComponent<Component::Animation>();
     mLeftSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
@@ -147,14 +146,13 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mRightTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
     mRightTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
 
-    mRightTurretBarrel = CreateEntity();
-    mRightTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBody;
-    mRightTurretBarrel->AddComponent<Component::Animation>();
-    mRightTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
-    mRightTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mRightTurretBarrel.node = CreateEntity();
+    mRightTurretBarrel.node->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBody;
+    mRightTurretBarrel.node->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, -0.5f);
+    CreateBarrel(&mRightTurretBarrel);
 
     mRightSpawnNode = CreateEntity();
-    mRightSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBarrel;
+    mRightSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBarrel.node;
     mRightSpawnNode->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, 10.f);
     mRightSpawnNode->AddComponent<Component::Animation>();
     mRightSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
@@ -390,6 +388,24 @@ void Player1::AddEnginePartilces(Entity* entity) {
     emitter->particleType.endAlpha = 0.f;
 }
 
+void Player1::CreateBarrel(Barrel* barrel) {
+    barrel->node->AddComponent<Component::Animation>();
+
+    barrel->barrel[0] = CreateEntity();
+    barrel->barrel[0]->AddComponent<Component::RelativeTransform>()->parentEntity = barrel->node;
+    barrel->barrel[0]->GetComponent<Component::Transform>()->Move(1.f, 0.f, 0.f);
+    barrel->barrel[0]->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
+    barrel->barrel[0]->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    barrel->barrel[0]->AddComponent<Component::Animation>();
+
+    barrel->barrel[1] = CreateEntity();
+    barrel->barrel[1]->AddComponent<Component::RelativeTransform>()->parentEntity = barrel->node;
+    barrel->barrel[1]->GetComponent<Component::Transform>()->Move(-1.f, 0.f, 0.f);
+    barrel->barrel[1]->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
+    barrel->barrel[1]->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    barrel->barrel[1]->AddComponent<Component::Animation>();
+}
+
 void Player1::mUpdateFunction() {
     // Update health texture
     if (GetHealth() >= 2.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
@@ -463,9 +479,15 @@ void Player1::mUpdateFunction() {
     mBody->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
 
     // Update turrets
-    float recoilFactor;
+    float recoilFactor; //[0,1]
+    float factor = 3.f;
     recoilFactor = glm::min(1.f, mLeftSpawnNode->GetComponent<Component::Spawner>()->timeSinceSpawn / mLeftSpawnNode->GetComponent<Component::Spawner>()->delay);
-    mLeftTurretBarrel->GetComponent<Component::Transform>()->position.z = recoilFactor * 3.f - 3.f;
+    mLeftTurretBarrel.barrel[0]->GetComponent<Component::Transform>()->position.z = (0.5f * recoilFactor + 0.5f) * factor - factor; //[0.5,1]
+    mLeftTurretBarrel.barrel[1]->GetComponent<Component::Transform>()->position.z = (recoilFactor / 2.f) * factor - factor; //[0,0.5]
+    mLeftTurretBarrel.node->GetComponent<Component::Transform>()->roll = -180 * recoilFactor;
+
     recoilFactor = glm::min(1.f, mRightSpawnNode->GetComponent<Component::Spawner>()->timeSinceSpawn / mRightSpawnNode->GetComponent<Component::Spawner>()->delay);
-    mRightTurretBarrel->GetComponent<Component::Transform>()->position.z = recoilFactor * 3.f - 3.f;
+    mRightTurretBarrel.barrel[1]->GetComponent<Component::Transform>()->position.z = (0.5f * recoilFactor + 0.5f) * factor - factor; //[0.5,1]
+    mRightTurretBarrel.barrel[0]->GetComponent<Component::Transform>()->position.z = (recoilFactor / 2.f) * factor - factor; //[0,0.5]
+    mRightTurretBarrel.node->GetComponent<Component::Transform>()->roll = 180 * recoilFactor;
 }
