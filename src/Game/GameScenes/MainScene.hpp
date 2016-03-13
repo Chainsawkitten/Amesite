@@ -13,7 +13,6 @@
 #include "../System/ReflectSystem.hpp"
 #include "../System/ExplodeSystem.hpp"
 #include "../System/GridCollideSystem.hpp"
-#include "../System/GroundCollideSystem.hpp"
 #include "../System/EnemySpawnerSystem.hpp"
 #include "../System/UpdateSystem.hpp"
 #include "../System/SpawnerSystem.hpp"
@@ -96,9 +95,6 @@ class MainScene : public Scene {
 
         // The grid collide system
         System::GridCollideSystem mGridCollideSystem;
-
-        // The ground collide system
-        System::GroundCollideSystem mGroundCollideSystem;
 
         // The enemy spawner system
         System::EnemySpawnerSystem mEnemySpawnerSystem;

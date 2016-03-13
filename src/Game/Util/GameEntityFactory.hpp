@@ -169,27 +169,35 @@ class GameEntityFactory {
 
         /// Create crash site.
         /**
-        * @return The crash entity.
-        */
+         * @return The crash entity.
+         */
         Entity* CreateCrashSite();
  
         /// Create stone.
         /**
-        * @return The stone entity.
-        */
+         * @return The stone entity.
+         */
         Entity* CreateStone();
 
         /// Create crystal light.
         /**
-        * @return The crystal entity.
-        */
+         * @return The crystal entity.
+         */
         Entity* CreateCrystalLight();
 
         /// Create fallen pillar.
         /**
-        * @return The pillar entity.
-        */
+         * @return The pillar entity.
+         */
         Entity* CreateFallenPillar();
+
+        /// Create shrapnel.
+        /**
+         * @param position The Shrapnel's starting position.
+         * @param amount The amount of shrapnel.
+         * @return The shrapnel entity.
+         */
+        Entity* CreateShrapnel(glm::vec3 position, unsigned int amount);
 
         /// Create player bullet.
         /**

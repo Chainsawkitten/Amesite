@@ -220,6 +220,24 @@ Entity* GameEntityFactory::CreateCrystalLight() {
 
 }
 
+Entity* GameEntityFactory::CreateShrapnel(glm::vec3 position, unsigned int amount) {
+    for (unsigned int i = 0; i < amount; i++) {
+        Entity* shrapnel = mScene->CreateEntity();
+        shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+        shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/wall_gray.png");
+        shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+        shrapnel->AddComponent<Component::Transform>()->scale *= 0.03f;
+        shrapnel->GetComponent<Component::Transform>()->position = position;
+        shrapnel->AddComponent<Component::Physics>()->gravityFactor = 5.f;
+        shrapnel->GetComponent<Component::Physics>()->velocity = 20.f * glm::vec3(rand() % 20 / 10.f - 1.f, rand() % 20 / 10.f - 1.f, rand() % 20 / 10.f - 1.f);
+        shrapnel->GetComponent<Component::Physics>()->maxVelocity = glm::length(shrapnel->GetComponent<Component::Physics>()->velocity);
+        shrapnel->AddComponent<Component::GridCollide>()->removeOnImpact = false;
+        shrapnel->AddComponent<Component::LifeTime>()->lifeTime = 2.f;
+        shrapnel->AddComponent<Component::Collider2DCircle>()->radius = 2.f;
+    }
+    return nullptr;
+}
+
 GameObject::PillarBall* GameEntityFactory::CreatePillarBall(const glm::vec3& origin, const glm::vec3& velocity) {
     PillarBall* gameObject = new PillarBall(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
@@ -278,6 +296,7 @@ Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
+    CreateShrapnel(position, 2);
     return gameObject;
 }
 
