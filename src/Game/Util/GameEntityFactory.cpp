@@ -242,7 +242,7 @@ Entity* GameEntityFactory::CreateShrapnel(glm::vec3 position, unsigned int amoun
         shrapnel->GetComponent<Component::Transform>()->position = position;
         shrapnel->AddComponent<Component::Physics>()->gravityFactor = 5.f;
         shrapnel->GetComponent<Component::Physics>()->velocity = 20.f * glm::vec3(rand() % 20 / 10.f - 1.f, rand() % 20 / 10.f - 1.f, rand() % 20 / 10.f - 1.f);
-        shrapnel->GetComponent<Component::Physics>()->maxVelocity = glm::length(shrapnel->GetComponent<Component::Physics>()->velocity);
+        shrapnel->GetComponent<Component::Physics>()->maxVelocity = 10.f * glm::length(shrapnel->GetComponent<Component::Physics>()->velocity);
         shrapnel->AddComponent<Component::GridCollide>()->removeOnImpact = false;
         shrapnel->AddComponent<Component::LifeTime>()->lifeTime = 2.f;
         shrapnel->AddComponent<Component::Collider2DCircle>()->radius = 2.f;
