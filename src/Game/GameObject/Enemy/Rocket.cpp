@@ -51,8 +51,7 @@ Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
     node->AddComponent<Component::PointLight>()->color = glm::vec3(0.67f, 0.f, 0.72f);
 
     body = CreateEntity();
-    body->AddComponent<Component::RelativeTransform>()->Move(0, 0, 5.5f);
-    body->GetComponent<Component::RelativeTransform>()->parentEntity = node;
+    body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/rocket_body.obj");
     body->AddComponent<Component::Material>();
     body->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
@@ -105,6 +104,7 @@ void Rocket::Activate() {
     node->GetComponent<Component::Controller>()->enabled = true;
     body->GetComponent<Component::Material>()->glow = mActiveGlow;
     node->GetComponent<Component::PointLight>()->intensity = 10.f;
+    body->GetComponent<Component::ParticleEmitter>()->enabled = true;
 }
 
 void Rocket::Deactivate() {
@@ -113,6 +113,7 @@ void Rocket::Deactivate() {
     body->GetComponent<Component::Material>()->glow = mDeactiveGlow;
     node->GetComponent<Component::Physics>()->acceleration = glm::vec3(0.f, 0.f, 0.f);
     node->GetComponent<Component::PointLight>()->intensity = 0.f;
+    body->GetComponent<Component::ParticleEmitter>()->enabled = false;
 }
 
 void Rocket::mUpdateFunction() {
