@@ -40,13 +40,13 @@ Menu::Menu() {
     
     // Define submenus.
     SubMenu* subMenu = new MainMenu(this);
-    subMenu->SetPosition(glm::vec3(0.f, 4.f, 11.5f));
-    subMenu->SetRotation(glm::vec3(0.f, 330.f, 0.f));
+    subMenu->SetPosition(glm::vec3(0.f, 3.1f, 8.6f));
+    subMenu->SetRotation(glm::vec3(0.f, 314.f, 0.f));
     mSubMenus.push_back(subMenu);
     
     subMenu = new OptionsMenu(this);
-    subMenu->SetPosition(glm::vec3(-8.f, 0.f, 0.f));
-    subMenu->SetRotation(glm::vec3(270.f, 330.f, 0.f));
+    subMenu->SetPosition(glm::vec3(-20.2f, 0.f, -4.f));
+    subMenu->SetRotation(glm::vec3(270.f, 0.f, 0.f));
     mSubMenus.push_back(subMenu);
     
     mSelected = 0;
@@ -78,7 +78,7 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
     Entity* camera = HubInstance().GetMainCamera().body;
     
     // Transition.
-    glm::vec3 subMenuPosition(player->GetPosition() + mSubMenus[mSelected]->GetPosition() + mSubMenus[mSelected]->GetCameraPosition());
+    glm::vec3 subMenuPosition(mSubMenus[mSelected]->GetPosition() + mSubMenus[mSelected]->GetCameraPosition());
     glm::vec3 subMenuRotation(mSubMenus[mSelected]->GetCameraDirection());
     if (mTransition) {
         mTransitionTimer += deltaTime;
@@ -88,11 +88,15 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
             mSelected = mNextSubMenu;
         }
         
-        glm::vec3 newPosition(player->GetPosition() + mSubMenus[mNextSubMenu]->GetPosition() + mSubMenus[mNextSubMenu]->GetCameraPosition());
+        glm::vec3 newPosition(mSubMenus[mNextSubMenu]->GetPosition() + mSubMenus[mNextSubMenu]->GetCameraPosition());
         glm::vec3 newRotation(mSubMenus[mNextSubMenu]->GetCameraDirection());
         subMenuPosition = (1.f - mTransitionTimer) * subMenuPosition + mTransitionTimer * newPosition;
         subMenuRotation = (1.f - mTransitionTimer) * subMenuRotation + mTransitionTimer * newRotation;
     }
+    
+    Component::Transform* playerTransform = player->GetNodeEntity()->GetComponent<Component::Transform>();
+    glm::mat4 playerModelMatrix(playerTransform->modelMatrix);
+    subMenuPosition = glm::vec3(playerModelMatrix * glm::vec4(subMenuPosition, 1.f));
     
     // Fly out camera.
     float weight = 1.f;
@@ -114,8 +118,6 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
     cameraTransform->UpdateModelMatrix();
     
     // Update model matrix.
-    Component::Transform* playerTransform = player->GetNodeEntity()->GetComponent<Component::Transform>();
-    glm::mat4 playerModelMatrix(playerTransform->modelMatrix);
     glm::vec2 playerScale(playerTransform->scale.x, playerTransform->scale.z);
     
     glm::mat4 orientation;

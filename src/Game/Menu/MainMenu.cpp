@@ -6,13 +6,13 @@
 
 MainMenu::MainMenu(Menu* parentMenu) : SubMenu() {
     // Define menu options.
-    MenuOption* menuOption = new MenuOption(GetFont(), "START GAME", glm::vec3(0.f, 1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f);
+    MenuOption* menuOption = new MenuOption(GetFont(), "START GAME", glm::vec3(0.f, 1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 2.f);
     menuOption->callback = std::bind(&Menu::ResumeGame, parentMenu);
     AddMenuOption(menuOption);
-    menuOption = new MenuOption(GetFont(), "OPTIONS", glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f);
+    menuOption = new MenuOption(GetFont(), "OPTIONS", glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 2.f);
     menuOption->callback = std::bind(&Menu::Transition, parentMenu, 1);
     AddMenuOption(menuOption);
-    menuOption = new MenuOption(GetFont(), "QUIT", glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 1.f);
+    menuOption = new MenuOption(GetFont(), "QUIT", glm::vec3(0.f, -2.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 2.f);
     menuOption->callback = std::bind(&MainMenu::Quit, this);
     AddMenuOption(menuOption);
     
@@ -24,7 +24,7 @@ MainMenu::MainMenu(Menu* parentMenu) : SubMenu() {
 }
 
 glm::vec3 MainMenu::GetCameraPosition() const {
-    return glm::vec3(-3.f, -2.6f, -6.5f);
+    return glm::vec3(-23.f, 4.6f, 23.5f);
 }
 
 glm::vec3 MainMenu::GetCameraDirection() const {
