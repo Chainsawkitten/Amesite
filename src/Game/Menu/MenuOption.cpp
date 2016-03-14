@@ -2,11 +2,6 @@
 
 #include <Texture/Texture2D.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <Entity/Entity.hpp>
-#include <Component/Transform.hpp>
-#include <Component/Lens.hpp>
-#include "../Util/Hub.hpp"
-#include "../GameObject/Camera.hpp"
 
 MenuOption::MenuOption(Font* font, const char* text, const glm::vec3& position, const glm::vec3& rotation, float height) : SuperMenuOption(position, rotation) {
     mPrerenderedText = new Texture2D(font, text);
