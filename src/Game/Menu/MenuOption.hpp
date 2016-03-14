@@ -3,15 +3,10 @@
 #include "SuperMenuOption.hpp"
 #include <functional>
 
-class Texture2D;
 class Font;
-namespace Geometry {
-    class Plane;
-}
-class ShaderProgram;
 
 /// An option in a menu.
-class MenuOption : SuperMenuOption {
+class MenuOption : public SuperMenuOption {
     public:
         /// Function to call when pressed.
         std::function<void()> callback;
@@ -35,40 +30,14 @@ class MenuOption : SuperMenuOption {
          */
         glm::vec2 GetScale() const;
         
-        /// Get whether the mouse cursor intersects the menu option.
+        /// Get prerendered text texture.
         /**
-         * @param cameraPosition The main camera's position.
-         * @param ray The mouse ray as projected in the world.
-         * @param menuModelMatrix Model matrix of the parent menu.
-         * @param playerScale Scale of the player model.
-         * @return Whether the mouse cursor intersects the menu option.
+         * @return The prerendered texture.
          */
-        bool MouseIntersect(const glm::vec3& cameraPosition, const glm::vec3& ray, const glm::mat4& menuModelMatrix, const glm::vec2& playerScale);
-        
-        /// Render selection.
-        /**
-         * Render a black square behind the text of the menu option.
-         * @param screenSize Size of the context to render to.
-         * @param menuModelMatrix Model matrix of the parent menu.
-         */
-        void RenderSelected(const glm::vec2& screenSize, const glm::mat4& menuModelMatrix);
-        
-        /// Render the menu option.
-        /**
-         * @param screenSize Size of the context to render to.
-         * @param menuModelMatrix Model matrix of the parent menu.
-         */
-        void Render(const glm::vec2& screenSize, const glm::mat4& menuModelMatrix);
+        Texture2D* GetTexture() const;
         
     private:
-        // Used to render 3D text.
-        Geometry::Plane* mPlane;
-        ShaderProgram* mTextShaderProgram;
-        ShaderProgram* mSelectedShaderProgram;
-        
         Texture2D* mPrerenderedText;
-        glm::vec3 mPosition;
-        glm::vec3 mRotation;
         glm::vec2 mScale;
         
         void EmptyCallback() const;
