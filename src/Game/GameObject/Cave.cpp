@@ -112,10 +112,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/defaultYellow.png");
     heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/defaultYellow.png");
 
-    //Place scenery
-    for (int i = 0; i < 1; i++)
-        PlaceScenery(GameEntityCreator().CreateCrashSite(), true);
-
     for (int i = 0; i < 50; i++)
         PlaceScenery(GameEntityCreator().CreateStone(), true);
 

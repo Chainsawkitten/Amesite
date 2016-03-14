@@ -1,5 +1,6 @@
 #include "CheckpointSystem.hpp"
 #include "../GameObject/Player/SuperPlayer.hpp"
+#include <Game/Util/GameEntityFactory.hpp>
 
 #include "../Component/Health.hpp"
 
