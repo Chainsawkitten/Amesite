@@ -37,9 +37,9 @@ SpinBoss::SpinBoss(Scene* scene) : SuperBoss(scene) {
     node->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
 
     mNoReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon_glow.png");
-    mReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon1_spec.png");
+    mReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon_spec.png");
 
-    body->AddComponent<Component::Damage>()->faction = 1.f;
+    body->AddComponent<Component::Damage>()->faction = 1;
     body->GetComponent<Component::Damage>()->removeOnImpact = false;
     body->AddComponent<Component::Mesh>()->geometry = mBody = Resources().CreateOBJModel("Resources/pylon.obj");
     body->AddComponent<Component::Material>();
@@ -94,7 +94,7 @@ SpinBoss::~SpinBoss() {
 }
 
 void SpinBoss::CreateArm(Entity* entity) {
-    entity->AddComponent<Component::Damage>()->faction = 1.f;
+    entity->AddComponent<Component::Damage>()->faction = 1;
     entity->GetComponent<Component::Damage>()->removeOnImpact = false;
     entity->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
     entity->AddComponent<Component::Health>()->removeOnLowHealth = false;

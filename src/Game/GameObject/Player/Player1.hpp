@@ -64,6 +64,7 @@ namespace GameObject {
             Texture2D* mHealthyTexture;
             Texture2D* mHeavyDamageTexture;
             Texture2D* mMediumDamageTexture;
+            Texture2D* mDeadTexture;
 
             // Node of %Player1.
             Entity* mNode;
@@ -104,11 +105,18 @@ namespace GameObject {
             // Turret relative to body.
             Entity* mRightTurretBody;
 
-            // Barrel relative to turret.
-            Entity* mLeftTurretBarrel;
+            struct Barrel {
+                Entity* barrel[2];
+                Entity* node;
+            };
+
+            void CreateBarrel(Barrel* barrel);
 
             // Barrel relative to turret.
-            Entity* mRightTurretBarrel;
+            Barrel mLeftTurretBarrel;
+
+            // Barrel relative to turret.
+            Barrel mRightTurretBarrel;
 
             // SpawnNode relative to barrel.
             Entity* mLeftSpawnNode;
@@ -122,5 +130,8 @@ namespace GameObject {
             void AddEnginePartilces(Entity* entity);
 
             void mUpdateFunction();
+
+            private:
+                float mRegainAmount;
     };
 }

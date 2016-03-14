@@ -95,23 +95,30 @@ set(RESOURCES
         assets/player1/player1_body_diff_healthy.png
         assets/player1/player1_body_diff_heavy_damage.png
         assets/player1/player1_body_diff_medium_damage.png
-        assets/player1/player1_body_spec.png
+        assets/player1/player1_body_diff_dead.png
+        assets/player1/player1_spec.png
         assets/player1/player1_body_glow.png
-        assets/player1/player1_engine_diff.png
+        assets/player1/player1_frontEngine_diff.png
+        assets/player1/player1_backEngine_diff.png
         assets/player1/player1_body.obj
         assets/player1/player1_frontEngine.obj
         assets/player1/player1_backEngine.obj
-        assets/player1/player1_turret_barrel.obj
-        assets/player1/player1_turret_body.obj
         assets/player2/player2_diff.png
         assets/player2/player2_diff_medium_damage.png
         assets/player2/player2_diff_heavy_damage.png
+        assets/player2/player2_diff_dead.png
         assets/player2/player2_glow.png
         assets/player2/player2_norm.png
         assets/player2/player2_spec.png
+        assets/player2/player2_rest_diff.png
+        assets/player2/player2_rest_spec.png
         assets/player2/player2_body.obj
         assets/player2/player2_engine.obj
         assets/player2/player2_propeller.obj
+        assets/turret/turret_diff.png
+        assets/turret/turret_spec.png
+        assets/turret/turret_barrel.obj
+        assets/turret/turret_body.obj
         assets/pylon/pylon_spec.png
         assets/pylon/pylon_glow.png
         assets/pylon/pylon_diff.png
@@ -120,7 +127,10 @@ set(RESOURCES
         assets/shield/shield_glow.png
         assets/shield/shield_spec.png
         assets/shield/shield.obj
-        assets/circle/circle.obj
+        assets/reviveCircle/reviveCircle_diff.png
+        assets/reviveCircle/reviveCircle_glow.png
+        assets/reviveCircle/reviveCircle_circle.obj
+        assets/reviveCircle/reviveCircle_ring.obj
         assets/spawn/altar/altar_diff.png
         assets/spawn/altar/altar_glow.png
         assets/spawn/altar/altar.obj
@@ -128,6 +138,10 @@ set(RESOURCES
         assets/spawn/pillar/pillar_glow.png
         assets/spawn/pillar/pillar.obj
         assets/spawn/portal/portal.obj
+        assets/stones/stone_01_glow.png
+        assets/stones/stone_01.obj
+        assets/stones/stone_02.obj
+        assets/stones/stone_03.obj
         assets/diamond/diamond_body.obj
         assets/crystal/crystal.obj
         assets/ring/ring_body.obj
@@ -409,6 +423,7 @@ set(GAME_SRCS
         src/Game/GameObject/Cave.cpp
         src/Game/GameObject/Dust.cpp
         src/Game/GameObject/Explosion.cpp
+        src/Game/GameObject/DyingLight.cpp
         src/Game/GameObject/Shield.cpp
         src/Game/GameObject/EnemySpawner.cpp
         src/Game/GameObject/Enemy/SuperEnemy.cpp
@@ -424,6 +439,7 @@ set(GAME_SRCS
         src/Game/GameObject/Pillar.cpp
         src/Game/GameObject/PillarBall.cpp
         src/Game/GameObject/Portal.cpp
+        src/Game/GameObject/ReviveCircle.cpp
         src/Game/Menu/Menu.cpp
         src/Game/Menu/SubMenu.cpp
         src/Game/Menu/MainMenu.cpp
@@ -479,6 +495,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Cave.hpp
         src/Game/GameObject/Dust.hpp
         src/Game/GameObject/Explosion.hpp
+        src/Game/GameObject/DyingLight.hpp
         src/Game/GameObject/Shield.hpp
         src/Game/GameObject/EnemySpawner.hpp
         src/Game/GameObject/Enemy/SuperEnemy.hpp
@@ -494,6 +511,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Pillar.hpp
         src/Game/GameObject/PillarBall.hpp
         src/Game/GameObject/Portal.hpp
+        src/Game/GameObject/ReviveCircle.hpp
         src/Game/Menu/Menu.hpp
         src/Game/Menu/SubMenu.hpp
         src/Game/Menu/MainMenu.hpp

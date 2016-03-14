@@ -1,5 +1,6 @@
 #include "CheckpointSystem.hpp"
 #include "../GameObject/Player/SuperPlayer.hpp"
+#include <Game/Util/GameEntityFactory.hpp>
 
 #include "../Component/Health.hpp"
 
@@ -15,17 +16,17 @@ void System::CheckpointSystem::Update(float deltaTime) {
             //If the other player isn't this player and isn't active, and the players are close enough, start healing.
             if (thisPlayer != otherPlayer) {
                 if (thisPlayer->Active() && !otherPlayer->Active() && glm::distance(thisPlayer->GetPosition(), otherPlayer->GetPosition()) < 15.f) {
-                    otherPlayer->mRespawnTimer -= deltaTime;
+                    otherPlayer->respawnTimeLeft -= deltaTime;
                     otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
                 }
                 else {
                     otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
-                    otherPlayer->mRespawnTimer = 5;
+                    otherPlayer->respawnTimeLeft = glm::min(otherPlayer->initalRespawnTime, otherPlayer->respawnTimeLeft + deltaTime);
                 }
             }
         }
         //If the players respawn timer is < 0, then the player should be activated.
-        if (thisPlayer->mRespawnTimer < 0.001f) {
+        if (thisPlayer->respawnTimeLeft < 0.001f) {
             thisPlayer->Activate();
         }
     }
@@ -47,6 +48,19 @@ void System::CheckpointSystem::AddPlayer(GameObject::SuperPlayer* player) {
 }
 
 void System::CheckpointSystem::RespawnPlayers() {
+
+    Entity* site1 = GameEntityCreator().CreateCrashSite1();
+
+    site1->GetComponent<Component::Transform>()->position = mPlayers[0]->GetPosition();
+    site1->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
+    site1->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+
+    Entity* site2 = GameEntityCreator().CreateCrashSite2();
+
+    site2->GetComponent<Component::Transform>()->position = mPlayers[1]->GetPosition();
+    site2->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
+    site2->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+
     for (auto &player : mPlayers) {
         player->SetPosition(glm::vec3(mPosition.x, 0.f, mPosition.y));
         player->GetNodeEntity()->GetComponent<Component::Health>()->health = player->GetNodeEntity()->GetComponent<Component::Health>()->maxHealth;

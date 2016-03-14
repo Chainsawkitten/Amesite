@@ -52,15 +52,25 @@ namespace GameObject {
             /// Deactivates the player.
             virtual void Deactivate() = 0;
 
-            /// How long the player has been respawning
-            float mRespawnTimer;
+            /// The initial time the player has to been respawned (in seconds).
+            /**
+             * Default: 5.f
+             */
+            float initalRespawnTime;
+
+            /// How long time the player has left to be respawned (in seconds).
+            float respawnTimeLeft;
+            /**
+             * Default: initalRespawnTime (5.f)
+             */
 
         protected:
             //The players current state.
             enum PlayerState {
                 LIGHTDAMAGE = 0,
                 MEDIUMDAMAGE,
-                HEAVYDAMAGE
+                HEAVYDAMAGE,
+                DEAD
             } mState;
 
             bool mActive;
