@@ -156,6 +156,7 @@ set(RESOURCES
         assets/sound/MusicAction.ogg
         assets/sound/MusicCalm.ogg
         assets/sound/Laser.ogg
+        assets/sound/LowHPBeep.ogg
         assets/Loading.png
     )
 
