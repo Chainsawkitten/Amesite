@@ -32,7 +32,11 @@ Bullet::Bullet(Scene* scene, float lifeTime) : SuperGameObject(scene) {
     node->AddComponent<Component::Collider2DCircle>()->radius = 0.5f;
     node->AddComponent<Component::GridCollide>();
     node->AddComponent<Component::Physics>();
-    node->AddComponent<Component::LifeTime>()->lifeTime = lifeTime;
+    Component::LifeTime* lifeTimeComponent = node->AddComponent<Component::LifeTime>();
+    lifeTimeComponent->lifeTime = lifeTimeComponent->initialLifeTime = lifeTime;
+
+    node->AddComponent<Component::Update>()->updateFunction = std::bind(&Bullet::mUpdateFunction, this);
+
     Component::ParticleEmitter* emitter = node->AddComponent<Component::ParticleEmitter>();
     emitter->emitterType = Component::ParticleEmitter::POINT;
     emitter->maxEmitTime = 0.02;
@@ -53,7 +57,7 @@ Bullet::Bullet(Scene* scene, float lifeTime) : SuperGameObject(scene) {
     emitter->particleType.endAlpha = 0.f;
 
     auto light = node->AddComponent<Component::PointLight>();
-    light->attenuation = 0.8f;
+    light->attenuation = 1.f;
 
     // Second emitter - blue
     tail = CreateEntity();
@@ -76,23 +80,20 @@ Bullet::Bullet(Scene* scene, float lifeTime) : SuperGameObject(scene) {
     emitter->particleType.startAlpha = .5f;
     emitter->particleType.midAlpha = 1.f;
     emitter->particleType.endAlpha = 0.f;
-
-    node->AddComponent<Component::Update>()->updateFunction = std::bind(&Bullet::Update, this, lifeTime);
 }
 
 Bullet::~Bullet() {
 }
 
-void Bullet::Update(float life) {
-    auto light = node->GetComponent<Component::PointLight>();
-    float remainingLifeTime = node->GetComponent<Component::LifeTime>()->lifeTime;
-    
-    float factor;
-
-    if ((life - remainingLifeTime) * 4.f < 1.0f)
-        factor = (life - remainingLifeTime) * 4.f;
-    else
-        factor = remainingLifeTime / life;
-
-    light->color = glm::vec3(1.f, 1.f, 1.f) * factor;
+void Bullet::mUpdateFunction() {
+    Component::LifeTime* lifeTimeComponent = node->GetComponent<Component::LifeTime>();
+    float lifeTimeFactor = 1.f - lifeTimeComponent->lifeTime / lifeTimeComponent->initialLifeTime;
+    float maxIntensity = 15.f;
+    float timeLimFactor = 0.1f / lifeTimeComponent->initialLifeTime;
+    if (lifeTimeFactor < timeLimFactor) {
+        node->GetComponent<Component::PointLight>()->intensity = maxIntensity / timeLimFactor * lifeTimeFactor;
+    } else {
+        node->GetComponent<Component::PointLight>()->intensity = maxIntensity / (timeLimFactor - 1.f) * (lifeTimeFactor - 1.f);
+    }
+       
 }

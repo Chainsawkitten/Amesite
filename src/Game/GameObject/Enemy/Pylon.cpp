@@ -21,6 +21,7 @@
 #include <Component/Collider2DCircle.hpp>
 #include <Component/Animation.hpp>
 #include <Component/ParticleEmitter.hpp>
+#include <Component/PointLight.hpp>
 
 
 #include "../../Util/ControlSchemes.hpp"
@@ -42,11 +43,12 @@ Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     node->GetComponent<Component::Explode>()->sound = true;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&Pylon::mUpdateFunction, this);
-    node->AddComponent<Component::Physics>();
+    node->AddComponent<Component::Physics>()->maxVelocity *= 0.95f;
     node->AddComponent<Component::GridCollide>();
     node->GetComponent<Component::GridCollide>()->removeOnImpact = false;
     node->AddComponent<Component::Controller>();
     node->GetComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::AccelerateTowardsClosestPlayer);
+    node->AddComponent<Component::PointLight>()->color = glm::vec3(0.67f, 0.f, 0.72f);
 
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
@@ -161,6 +163,7 @@ void Pylon::Activate() {
     pylon2->GetComponent<Component::Material>()->glow = mActiveGlowPylon2;
     pylon1->GetComponent<Component::ParticleEmitter>()->enabled = true;
     pylon2->GetComponent<Component::ParticleEmitter>()->enabled = true;
+    node->GetComponent<Component::PointLight>()->intensity = 10.f;
 }
 
 void Pylon::Deactivate() {
@@ -175,6 +178,7 @@ void Pylon::Deactivate() {
     pylon2->GetComponent<Component::Material>()->glow = mDeactiveGlowPylon2;
     pylon1->GetComponent<Component::ParticleEmitter>()->enabled = false;
     pylon2->GetComponent<Component::ParticleEmitter>()->enabled = false;
+    node->GetComponent<Component::PointLight>()->intensity = 0.f;
 }
 
 void Pylon::mUpdateFunction() {
