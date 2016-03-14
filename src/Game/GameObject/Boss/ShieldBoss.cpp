@@ -42,7 +42,7 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
     body->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
     body->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
-    body->AddComponent<Component::Explode>()->size = 100.f;
+    body->AddComponent<Component::Explode>()->size = 30.f;
     body->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     body->GetComponent<Component::Explode>()->lifeTime = 1.5f;
     body->GetComponent<Component::Explode>()->offset.y = 5.0f;

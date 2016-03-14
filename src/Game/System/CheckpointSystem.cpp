@@ -71,6 +71,15 @@ void System::CheckpointSystem::RespawnPlayers() {
     site2->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
 
     for (auto &player : mPlayers) {
+        Entity* site;
+        if (typeid(*player).name() == typeid(GameObject::Player1).name())
+            site = GameEntityCreator().CreateCrashSite1();
+        else if (typeid(*player).name() == typeid(GameObject::Player2).name())
+            site = GameEntityCreator().CreateCrashSite2();
+        site->GetComponent<Component::Transform>()->position = player->GetPosition();
+        site->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
+        site->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+
         player->SetPosition(glm::vec3(mPosition.x, 0.f, mPosition.y));
         player->GetNodeEntity()->GetComponent<Component::Health>()->health = player->GetNodeEntity()->GetComponent<Component::Health>()->maxHealth;
         player->Activate();
