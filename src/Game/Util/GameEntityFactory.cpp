@@ -325,11 +325,31 @@ Dust* GameEntityFactory::CreateDust(Entity * object, int particleTextureIndex) {
 
 Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex, Component::Explode* explodeComponent) {
     Explosion* gameObject = new Explosion(mScene);
+
+    if (explodeComponent != nullptr) {
+        if (explodeComponent->type == Component::Explode::NONE) {
+            gameObject->node->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            gameObject->tail->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            gameObject->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        }
+    }
+
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
+
+    gameObject->tail->GetComponent<Component::Transform>()->position = position;
+    gameObject->tail->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
+    gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
+    gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
+
+    gameObject->body->GetComponent<Component::Transform>()->position = position;
+    gameObject->body->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
+
     CreateShrapnel(position, 2, explodeComponent);
     return gameObject;
 }

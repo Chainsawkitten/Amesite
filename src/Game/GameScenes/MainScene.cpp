@@ -233,7 +233,7 @@ void MainScene::Update(float deltaTime) {
             if (player->GetHealth() < 0.01f && player->Active()) {
                 player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
                 player->Deactivate();
-                GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
+                GameEntityCreator().CreateExplosion(player->GetPosition(), 1.f, 10.f, Component::ParticleEmitter::BLUE);
                 GameEntityCreator().CreateReviveCircle(player);
             }
             glm::vec2 playerPosition(player->GetPosition().x, player->GetPosition().z);
