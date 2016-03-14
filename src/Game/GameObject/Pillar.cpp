@@ -38,7 +38,7 @@ Pillar::Pillar(Scene* scene, glm::vec3 bossPosition) : SuperGameObject(scene) {
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&Pillar::mUpdateFunction, this);
     node->AddComponent<Component::Spawner>()->delay = 1.5f;
 
-    mState = State::ACTIVE;
+    mState = State::DEACTIVATED;
     mLastState = State::DEACTIVATED;
 
     mLightModel = Resources().CreateOBJModel("Resources/pylon.obj");
@@ -101,6 +101,7 @@ void Pillar::CreateLight() {
     mLight->GetComponent<Component::Material>()->SetGlow("Resources/DefaultSpecular.png");
     mLight->AddComponent<Component::Mesh>()->geometry = mLightModel;
     mLight->AddComponent<Component::PointLight>()->attenuation = 1.f;
+    mLight->GetComponent<Component::PointLight>()->color = glm::vec3(109.f, 242.f, 207.f) * 0.01f;
     Component::Animation::AnimationClip* idleNode = mLight->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleNode->CreateKeyFrame(glm::vec3(0.f, 0.f, 0.f), 0.f, 0.f, 0, 1.5f, false, true);
     idleNode->CreateKeyFrame(glm::vec3(0.f, 0.5f, 0.f), 0.f, 0.f, 0.f, 1.5f, false, true);
