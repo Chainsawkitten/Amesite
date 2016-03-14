@@ -144,16 +144,13 @@ MainScene::MainScene() {
 
     // Create players 
     Player1* player1 = GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f));
-    Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f));
+    Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX - 4.f, 0.f, playerStartZ - 6.f));
     mPlayers.push_back(player1);
     mPlayers.push_back(player2);
+    
     HubInstance().mPlayers.push_back(player1);
     HubInstance().mPlayers.push_back(player2);
-
-    // Set menu position.
-    mMenu.SetPosition(glm::vec3(0.f, 4.f, 11.5f));
-    mMenu.SetRotation(glm::vec3(0.f, 330.f, 0.f));
-
+    
     // Create bosses and pillars
     mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
     mBossVector.push_back(GameEntityCreator().CreateShieldBoss(glm::vec3(mCave->scaleFactor*bossPositions[1].x, 0.f, mCave->scaleFactor*bossPositions[1].y)));
@@ -184,12 +181,12 @@ MainScene::MainScene() {
         mCheckpointSystem.AddPlayer(player);
     }
 
-    //// Directional light.
-    //Entity* dirLight = CreateEntity();
-    //dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
-    //dirLight->AddComponent<Component::DirectionalLight>();
-    //dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.0000001f, 0.0000001f, 0.0000001f);
-    //dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.005f;
+    // Directional light.
+//    Entity* dirLight = CreateEntity();
+//    dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
+//    dirLight->AddComponent<Component::DirectionalLight>();
+//    dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.0000001f, 0.0000001f, 0.0000001f);
+//    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.05f;
 
     mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     mFxaaFilter = new FXAAFilter();
@@ -356,11 +353,24 @@ void MainScene::Update(float deltaTime) {
     // Set music volumes.
     mTargetMix = 0.f;
     for (GameObject::SuperEnemy* enemy : mEnemySpawnerSystem.GetEnemies()) {
+
+        if (mCheckpointSystem.mRespawn) {
+
+            if (glm::distance(enemy->node->GetComponent<Component::Transform>()->GetWorldPosition(), mPlayers[0]->GetPosition()) < 10) {
+
+                enemy->node->GetComponent<Component::Health>()->health = 0;
+
+            }
+
+        }
+
         if (enemy->Active()) {
             mTargetMix = 1.f;
             break;
         }
     }
+
+    mCheckpointSystem.mRespawn = false;
 
     for (GameObject::SuperBoss* boss : mBossVector) {
         if (boss != nullptr) {

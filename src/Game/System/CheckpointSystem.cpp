@@ -10,6 +10,12 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+System::CheckpointSystem::CheckpointSystem() {
+
+    mRespawn = false;
+
+}
+
 void System::CheckpointSystem::Update(float deltaTime) {
     for (auto& thisPlayer : mPlayers) {
         for (auto& otherPlayer : mPlayers) {
@@ -28,6 +34,7 @@ void System::CheckpointSystem::Update(float deltaTime) {
         //If the players respawn timer is < 0, then the player should be activated.
         if (thisPlayer->respawnTimeLeft < 0.001f) {
             thisPlayer->Activate();
+            thisPlayer->respawnTimeLeft = thisPlayer->initalRespawnTime;
         }
     }
 
@@ -48,6 +55,20 @@ void System::CheckpointSystem::AddPlayer(GameObject::SuperPlayer* player) {
 }
 
 void System::CheckpointSystem::RespawnPlayers() {
+
+    mRespawn = true;
+
+    Entity* site1 = GameEntityCreator().CreateCrashSite1();
+
+    site1->GetComponent<Component::Transform>()->position = mPlayers[0]->GetPosition();
+    site1->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
+    site1->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+
+    Entity* site2 = GameEntityCreator().CreateCrashSite2();
+
+    site2->GetComponent<Component::Transform>()->position = mPlayers[1]->GetPosition();
+    site2->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
+    site2->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
 
     for (auto &player : mPlayers) {
         Entity* site;
