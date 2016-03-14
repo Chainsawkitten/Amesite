@@ -40,7 +40,7 @@ void ExplodeSystem::Update(Scene& scene) {
             Component::Explode* explodeComp = entity->GetComponent<Component::Explode>();
             if (explodeComp != nullptr) {
                 GameEntityCreator().SetScene(&scene);
-                GameObject::Explosion* explosion = GameEntityCreator().CreateExplosion(entity->GetComponent<Component::Transform>()->GetWorldPosition() + explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex);
+                GameObject::Explosion* explosion = GameEntityCreator().CreateExplosion(entity->GetComponent<Component::Transform>()->GetWorldPosition() + explodeComp->offset, explodeComp->lifeTime, explodeComp->size, explodeComp->particleTextureIndex, explodeComp);
                 
                 // Create temporary sound.
                 if (explodeComp->sound) {
