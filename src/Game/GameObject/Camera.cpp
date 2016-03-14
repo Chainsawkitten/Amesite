@@ -30,8 +30,7 @@ Camera::Camera(Scene* scene) : SuperGameObject(scene) {
     body->GetComponent<Component::Controller>()->enabled = false;
     body->GetComponent<Component::Controller>()->playerID = InputHandler::ANYONE;
     body->AddComponent<Component::Update>()->updateFunction = std::bind(&Camera::mUpdateFunction, this);
-    state = CameraState::AUTO;
-    mLastState = state;
+    mLastState = state = CameraState::AUTO;
 }
 
 Camera::~Camera() {
@@ -50,12 +49,14 @@ void Camera::mUpdateFunction() {
             vec->erase(std::remove(vec->begin(), vec->end(), ControlScheme::CameraAuto), vec->end());
         } else {
             // remove free
+            vec->erase(std::remove(vec->begin(), vec->end(), ControlScheme::CameraFree), vec->end());
         }
         if (state == CameraState::AUTO) {
             // Add auto
             body->GetComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::CameraAuto);
         } else {
             // Add free
+            body->GetComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::CameraFree);
         }
         mLastState = state;
     }

@@ -432,7 +432,7 @@ void ControlScheme::CameraAuto(Component::Controller* controller, float deltaTim
     // Calculate how far away the camera should be.
     float distance = glm::distance(min, max) * 1.20f;
 
-    distance = glm::clamp(distance, 80.f, 140.f);
+    distance = glm::clamp(distance, 80.f, 100.f);
 
     Component::Transform* transform = controller->entity->GetComponent<Component::Transform>();
 
@@ -456,6 +456,40 @@ void ControlScheme::CameraChangeControl(Component::Controller* controller, float
             HubInstance().GetMainCamera().state = GameObject::Camera::CameraState::FREE;
         else
             HubInstance().GetMainCamera().state = GameObject::Camera::CameraState::AUTO;
+}
+
+void ControlScheme::CameraFree(Component::Controller* controller, float deltaTime) {
+    // Move the camera
+    double x = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_X);
+    double z = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_Z);
+    glm::vec2 direction = glm::vec2(x, z);
+
+    if (glm::length(direction)<Input()->MoveDeadzone()) {
+        x = Input()->ButtonValue(controller->playerID, InputHandler::CAMRIGHT) - Input()->ButtonValue(controller->playerID, InputHandler::CAMLEFT);
+        z = Input()->ButtonValue(controller->playerID, InputHandler::CAMDOWN) - Input()->ButtonValue(controller->playerID, InputHandler::CAMUP);
+        direction = glm::vec2(x, z);
+    }
+
+    // Zoom
+    double y = 0.0;
+    y += Input()->ButtonValue(controller->playerID, InputHandler::CAMRIGHT);
+    y -= Input()->ButtonValue(controller->playerID, InputHandler::CAMLEFT);
+    glm::vec3 zoomVector = controller->entity->GetComponent<Component::Transform>()->GetWorldDirection() * static_cast<float>(y);
+
+    glm::vec3 speedVec = glm::vec3(x * controller->speed * deltaTime, 0, z * controller->speed * deltaTime) + zoomVector;
+
+    Component::Physics* physicsComponent = controller->entity->GetComponent<Component::Physics>();
+
+    // If there's a physics component attached we use it to move.
+    if (physicsComponent != nullptr) {
+        if (glm::length(direction)>Input()->MoveDeadzone())
+            physicsComponent->acceleration = speedVec;
+        else
+            physicsComponent->acceleration = glm::vec3(0, 0, 0);
+    }
+    else if (glm::length(direction)>Input()->MoveDeadzone()) {
+        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->speed, 0, z * deltaTime) + zoomVector);
+    }
 }
 
 void ControlScheme::Boost(Component::Controller* controller, float deltaTime) {

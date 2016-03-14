@@ -79,12 +79,19 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
 
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::CHANGECAMERACONTROL, InputHandler::KEYBOARD, GLFW_KEY_SPACE);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
+
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::CHANGECAMERACONTROL, InputHandler::KEYBOARD, GLFW_KEY_SPACE);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::CAMUP, InputHandler::KEYBOARD, GLFW_KEY_KP_8);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::CAMDOWN, InputHandler::KEYBOARD, GLFW_KEY_KP_2);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::CAMRIGHT, InputHandler::KEYBOARD, GLFW_KEY_KP_6);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::CAMLEFT, InputHandler::KEYBOARD, GLFW_KEY_KP_4);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::CAMIN, InputHandler::KEYBOARD, GLFW_KEY_KP_7);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::CAMOUT, InputHandler::KEYBOARD, GLFW_KEY_KP_9);
 
     // Music
     mCalmSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");

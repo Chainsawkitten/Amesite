@@ -370,7 +370,6 @@ void Player2::AddMidPropeller(Entity* entity, glm::vec3 position, glm::vec3 scal
     entity->AddComponent<Component::Material>();
     entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_rest_diff.png");
     entity->GetComponent<Component::Material>()->SetSpecular("Resources/player2_rest_spec.png");
-    entity->GetComponent<Component::Material>()->SetGlow("Resources/player2_rest_glow.png");
 
     for (int i = 0; i < 4; i++) {
         mMidPropellerParticles[i] = CreateEntity();

@@ -117,6 +117,13 @@ namespace ControlScheme {
      */
     void CameraChangeControl(Component::Controller* controller, float deltaTime);
 
+    /// Camera free control.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void CameraFree(Component::Controller* controller, float deltaTime);
+
     /// Boost.
     /**
      * @param controller Component to control.

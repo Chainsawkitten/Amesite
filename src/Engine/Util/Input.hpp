@@ -54,6 +54,12 @@ class InputHandler {
             DOWN, ///< Move down
             RIGHT, ///< Move right
             LEFT, ///< Move left
+            CAMUP, ///< Move camera up
+            CAMDOWN, ///< Move camera down
+            CAMRIGHT, ///< Move camera right
+            CAMLEFT, ///< Move camera left
+            CAMIN, ///< Move camera in
+            CAMOUT, ///< Move camera out
             CHANGECAMERACONTROL, ///< Changes camera control.
             PROFILE, ///< Run profiling.
             BUTTONS, ///< Total number of inputs
