@@ -6,6 +6,7 @@
 namespace GameObject {
     class SuperPlayer;
     class Camera;
+    class SuperBoss;
 }
 
 class Scene;
@@ -25,9 +26,11 @@ namespace GameObject {
 
             /// Update position of the camera
             /**
-             * @param players Vector of SuperPlayer's which the camera will be relative to.
+             * @param players Vector of SuperPlayers which the camera will be relative to.
+             * @param players Vector of SuperBosses which the camera will be relative to.
+             * @param deltaTime Time since last frame (in seconds).
              */
-            void UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>& players, float deltaTime);
+            void UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>& players, const std::vector<GameObject::SuperBoss*>& bosses, float deltaTime);
 
             /// Body of camera
             Entity* body;
