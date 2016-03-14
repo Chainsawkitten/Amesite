@@ -16,6 +16,7 @@
 #include "../Component/Damage.hpp"
 #include "../Component/Explode.hpp"
 #include "../Component/LifeTime.hpp"
+#include "../Component/GridCollide.hpp"
 
 #include <vector>
 
@@ -45,12 +46,11 @@ void DamageSystem::Update(Scene& scene) {
                         // Reduce health by damage.
                         HealthX->health -= damageY->damageAmount;
                         HealthX->cooldown = HealthX->maxCooldown;
-                        if(HealthX->damaged == -1)
+                        if (HealthX->damaged == -1)
                             HealthX->damaged = 1;
                         
                         // Remove damage entity if it should be removed on impact
                         if (damageY->removeOnImpact) {
-
                             Component::Explode* explosionComponent = damageY->entity->GetComponent<Component::Explode>();
 
                             if ( explosionComponent != nullptr) {
@@ -67,7 +67,11 @@ void DamageSystem::Update(Scene& scene) {
                                 damageY->entity->Kill();
 
                         }
-
+                        
+                        // Set the damage entity to have collided if it has a GridCollide component.
+                        Component::GridCollide* gridCollide = collisionY->GetComponent<Component::GridCollide>();
+                        if (gridCollide != nullptr)
+                            gridCollide->hasCollided = true;
                     }
                 }
             }
