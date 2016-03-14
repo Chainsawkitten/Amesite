@@ -385,8 +385,8 @@ void Player2::AddMidPropeller(Entity* entity, glm::vec3 position, glm::vec3 scal
         emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
         emitter->lifetime = 0.0;
         emitter->particleType.textureIndex = Component::ParticleEmitter::BLUE;
-        emitter->particleType.minLifetime = 0.04f * 3.f;
-        emitter->particleType.maxLifetime = 0.04f * 3.f;
+        emitter->particleType.minLifetime = 0.01f * 3.f;
+        emitter->particleType.maxLifetime = 0.01f * 3.f;
         emitter->particleType.minVelocity = glm::vec3(0.f, 0.f, 0.f);
         emitter->particleType.maxVelocity = glm::vec3(0.f, 0.f, 0.f);
         emitter->particleType.minSize = glm::vec2(.5f, .5f);
@@ -522,11 +522,6 @@ void Player2::mUpdateFunction() {
 
     //Update midpropeller
     mMidPropeller->GetComponent<Component::Physics>()->angularVelocity.y = velocityFactor * 1.2f + 0.6f;
-    for (int i = 0; i < 4; i++) {
-        Component::ParticleEmitter* emitter = mMidPropellerParticles[i]->GetComponent<Component::ParticleEmitter>();
-        emitter->particleType.minLifetime = emitter->particleType.maxLifetime = velocityFactor * (0.02f - 0.1f) + 0.1f; //0.1 -> 0.02
-        emitter->maxEmitTime = emitter->minEmitTime = velocityFactor * (0.0002f - 0.016f) + 0.016f; // 0.016 -> 0.0002
-    }
 
     // Update turrets
     float recoilFactor; //[0,1]
