@@ -268,10 +268,12 @@ Entity* GameEntityFactory::CreateShrapnel(glm::vec3 position, unsigned int amoun
     return nullptr;
 }
 
-GameObject::PillarBall* GameEntityFactory::CreatePillarBall(const glm::vec3& origin, const glm::vec3& velocity) {
+GameObject::PillarBall* GameEntityFactory::CreatePillarBall(const glm::vec3& origin, const glm::vec3& destination) {
     PillarBall* gameObject = new PillarBall(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
-    gameObject->node->GetComponent<Component::Physics>()->velocity = velocity;
+    gameObject->startPosition = glm::vec2(origin.x, origin.z);
+    gameObject->destination = glm::vec2(destination.x, destination.z);
+    gameObject->startHeight = origin.y;
     return gameObject;
 }
 
