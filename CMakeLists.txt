@@ -380,6 +380,7 @@ set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Game.cpp
         src/Game/Util/GameSettings.cpp
+        src/Game/Util/PerlinNoise.cpp
         src/Game/Util/GameEntityFactory.cpp
         src/Game/Util/ControlSchemes.cpp
         src/Game/Util/Hub.cpp
@@ -448,6 +449,7 @@ set(GAME_SRCS
 set(GAME_HEADERS
         src/Game/Game.hpp
         src/Game/Util/GameSettings.hpp
+        src/Game/Util/PerlinNoise.hpp
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameEntityFactory.hpp
         src/Game/Util/ControlSchemes.hpp
