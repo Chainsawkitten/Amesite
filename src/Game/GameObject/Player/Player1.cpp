@@ -376,16 +376,14 @@ void Player1::Deactivate() {
 }
 
 void Player1::AddEnginePartilces(Entity* entity) {
-    entity->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
+    entity->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.2f, 0.f);
     Component::ParticleEmitter* emitter = entity->AddComponent<Component::ParticleEmitter>();
     emitter->emitterType = Component::ParticleEmitter::POINT;
-    emitter->maxEmitTime = 0.02 / 10.f;
-    emitter->minEmitTime = 0.016 / 10.f;
+    emitter->maxEmitTime = emitter->minEmitTime = 0.02 / 20.f;
     emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
     emitter->lifetime = 0.0;
     emitter->particleType.textureIndex = Component::ParticleEmitter::BLUE;
-    emitter->particleType.minLifetime = .04f;
-    emitter->particleType.maxLifetime = .08f;
+    emitter->particleType.minLifetime = emitter->particleType.maxLifetime = .08f;
     emitter->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f);
     emitter->particleType.maxVelocity = glm::vec3(.3f, -15.f, .3f);
     emitter->particleType.minSize = glm::vec2(.5f, .5f) * 2.f;
@@ -404,7 +402,6 @@ void Player1::mUpdateFunction() {
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(0.f, 1.f, 0.f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
-
         mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
         mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = false;
         mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
@@ -415,12 +412,16 @@ void Player1::mUpdateFunction() {
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;
+        mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = false;
     } else if (GetHealth() >= 0.01f)  {
         mState = HEAVYDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.32f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mHeavyDamageTexture;
-        mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
         mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
         mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
         mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
@@ -456,14 +457,15 @@ void Player1::mUpdateFunction() {
     mBackEngineLeft->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
     mFrontEngineRight->GetComponent<Component::Transform>()->roll = rollFactor * -15.f * velocityFactor;
     mFrontEngineLeft->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
-    mBackEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
-    mBackEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
-    mBackEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
-    mBackEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
-    mFrontEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
-    mFrontEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
-    mFrontEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
-    mFrontEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
+    float particlesFactor = 20.f + velocityFactor * 2.f;
+    Component::ParticleEmitter* emitter = mBackEngineRightParticles->GetComponent<Component::ParticleEmitter>();
+    emitter->particleType.minVelocity = emitter->particleType.maxVelocity = particlesFactor * glm::vec3(0.f, -1.f , 0.f);
+    emitter = mBackEngineLeftParticles->GetComponent<Component::ParticleEmitter>();
+    emitter->particleType.minVelocity = emitter->particleType.maxVelocity = particlesFactor * glm::vec3(0.f, -1.f, 0.f);
+    emitter = mFrontEngineRightParticles->GetComponent<Component::ParticleEmitter>();
+    emitter->particleType.minVelocity = emitter->particleType.maxVelocity = particlesFactor * glm::vec3(0.f, -1.f, 0.f);
+    emitter = mFrontEngineLeftParticles->GetComponent<Component::ParticleEmitter>();
+    emitter->particleType.minVelocity = emitter->particleType.maxVelocity = particlesFactor * glm::vec3(0.f, -1.f, 0.f);
 
     // Update body
     mBody->GetComponent<Component::Transform>()->pitch = pitchFactor * 10.f * velocityFactor;
