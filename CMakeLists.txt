@@ -111,6 +111,7 @@ set(RESOURCES
         assets/player2/player2_norm.png
         assets/player2/player2_spec.png
         assets/player2/player2_rest_diff.png
+        assets/player2/player2_rest_spec.png
         assets/player2/player2_body.obj
         assets/player2/player2_engine.obj
         assets/player2/player2_propeller.obj
@@ -126,7 +127,10 @@ set(RESOURCES
         assets/shield/shield_glow.png
         assets/shield/shield_spec.png
         assets/shield/shield.obj
-        assets/circle/circle.obj
+        assets/reviveCircle/reviveCircle_diff.png
+        assets/reviveCircle/reviveCircle_glow.png
+        assets/reviveCircle/reviveCircle_circle.obj
+        assets/reviveCircle/reviveCircle_ring.obj
         assets/spawn/altar/altar_diff.png
         assets/spawn/altar/altar_glow.png
         assets/spawn/altar/altar.obj
@@ -435,6 +439,7 @@ set(GAME_SRCS
         src/Game/GameObject/Pillar.cpp
         src/Game/GameObject/PillarBall.cpp
         src/Game/GameObject/Portal.cpp
+        src/Game/GameObject/ReviveCircle.cpp
         src/Game/Menu/Menu.cpp
         src/Game/Menu/MenuOption.cpp
     )
@@ -503,6 +508,7 @@ set(GAME_HEADERS
         src/Game/GameObject/Pillar.hpp
         src/Game/GameObject/PillarBall.hpp
         src/Game/GameObject/Portal.hpp
+        src/Game/GameObject/ReviveCircle.hpp
         src/Game/Menu/Menu.hpp
         src/Game/Menu/MenuOption.hpp
     )

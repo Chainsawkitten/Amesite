@@ -16,17 +16,17 @@ void System::CheckpointSystem::Update(float deltaTime) {
             //If the other player isn't this player and isn't active, and the players are close enough, start healing.
             if (thisPlayer != otherPlayer) {
                 if (thisPlayer->Active() && !otherPlayer->Active() && glm::distance(thisPlayer->GetPosition(), otherPlayer->GetPosition()) < 15.f) {
-                    otherPlayer->mRespawnTimer -= deltaTime;
+                    otherPlayer->respawnTimeLeft -= deltaTime;
                     otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.3f, 1.f, 0.3f);
                 }
                 else {
                     otherPlayer->GetNodeEntity()->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.01f, 0.01f, 0.01f);
-                    otherPlayer->mRespawnTimer = 5;
+                    otherPlayer->respawnTimeLeft = glm::min(otherPlayer->initalRespawnTime, otherPlayer->respawnTimeLeft + deltaTime);
                 }
             }
         }
         //If the players respawn timer is < 0, then the player should be activated.
-        if (thisPlayer->mRespawnTimer < 0.001f) {
+        if (thisPlayer->respawnTimeLeft < 0.001f) {
             thisPlayer->Activate();
         }
     }

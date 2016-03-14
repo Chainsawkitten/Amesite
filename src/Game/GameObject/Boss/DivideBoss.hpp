@@ -43,7 +43,8 @@ namespace GameObject {
         private:
             Geometry::OBJModel* mBodyModel;
 
-            float mNextHpStep;
+            float mLastHealthFactor;
+            float mLastHpStep;
 
             std::mt19937 mRNG;
     };
