@@ -25,6 +25,12 @@ namespace GameObject {
 
             Entity* tail;
 
+            /// How bright it shines
+            /**
+            * @default 1.f
+            */
+            float lightIntensity;
+
         private:
             void mUpdateFunction();
     };

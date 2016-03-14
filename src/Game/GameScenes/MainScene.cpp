@@ -230,7 +230,7 @@ void MainScene::Update(float deltaTime) {
             if (player->GetHealth() < 0.01f && player->Active()) {
                 player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
                 player->Deactivate();
-                GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
+                GameEntityCreator().CreateExplosion(player->GetPosition(), 1.f, 10.f, Component::ParticleEmitter::BLUE);
                 GameEntityCreator().CreateReviveCircle(player);
             }
             glm::vec2 playerPosition(player->GetPosition().x, player->GetPosition().z);
@@ -353,11 +353,24 @@ void MainScene::Update(float deltaTime) {
     // Set music volumes.
     mTargetMix = 0.f;
     for (GameObject::SuperEnemy* enemy : mEnemySpawnerSystem.GetEnemies()) {
+
+        if (mCheckpointSystem.mRespawn) {
+
+            if (glm::distance(enemy->node->GetComponent<Component::Transform>()->GetWorldPosition(), mPlayers[0]->GetPosition()) < 10) {
+
+                enemy->node->GetComponent<Component::Health>()->health = 0;
+
+            }
+
+        }
+
         if (enemy->Active()) {
             mTargetMix = 1.f;
             break;
         }
     }
+
+    mCheckpointSystem.mRespawn = false;
 
     for (GameObject::SuperBoss* boss : mBossVector) {
         if (boss != nullptr) {

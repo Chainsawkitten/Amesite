@@ -10,6 +10,12 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+System::CheckpointSystem::CheckpointSystem() {
+
+    mRespawn = false;
+
+}
+
 void System::CheckpointSystem::Update(float deltaTime) {
     for (auto& thisPlayer : mPlayers) {
         for (auto& otherPlayer : mPlayers) {
@@ -28,6 +34,7 @@ void System::CheckpointSystem::Update(float deltaTime) {
         //If the players respawn timer is < 0, then the player should be activated.
         if (thisPlayer->respawnTimeLeft < 0.001f) {
             thisPlayer->Activate();
+            thisPlayer->respawnTimeLeft = thisPlayer->initalRespawnTime;
         }
     }
 
@@ -49,6 +56,8 @@ void System::CheckpointSystem::AddPlayer(GameObject::SuperPlayer* player) {
 
 void System::CheckpointSystem::RespawnPlayers() {
 
+    mRespawn = true;
+
     Entity* site1 = GameEntityCreator().CreateCrashSite1();
 
     site1->GetComponent<Component::Transform>()->position = mPlayers[0]->GetPosition();
@@ -62,6 +71,15 @@ void System::CheckpointSystem::RespawnPlayers() {
     site2->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
 
     for (auto &player : mPlayers) {
+        Entity* site;
+        if (typeid(*player).name() == typeid(GameObject::Player1).name())
+            site = GameEntityCreator().CreateCrashSite1();
+        else if (typeid(*player).name() == typeid(GameObject::Player2).name())
+            site = GameEntityCreator().CreateCrashSite2();
+        site->GetComponent<Component::Transform>()->position = player->GetPosition();
+        site->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
+        site->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+
         player->SetPosition(glm::vec3(mPosition.x, 0.f, mPosition.y));
         player->GetNodeEntity()->GetComponent<Component::Health>()->health = player->GetNodeEntity()->GetComponent<Component::Health>()->maxHealth;
         player->Activate();

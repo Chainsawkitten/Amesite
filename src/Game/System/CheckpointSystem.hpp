@@ -10,6 +10,9 @@ namespace System {
     ///Class that handles respawning players and manipulating checkpoint
     class CheckpointSystem {
         public:
+
+            CheckpointSystem();
+
             ///Checks if all players are dead. If they are, respawn them.
             /**
              * @param deltaTime time since last frame.
@@ -27,10 +30,14 @@ namespace System {
              * @param player Player to add.
              */
             void AddPlayer(GameObject::SuperPlayer* player);
+            
+            /// Did we respawn this frame
+            bool mRespawn;
 
         private:
             void RespawnPlayers();
             std::vector<GameObject::SuperPlayer*> mPlayers;
             glm::vec2 mPosition;
+
     };
 }
