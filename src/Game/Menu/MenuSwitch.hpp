@@ -1,6 +1,8 @@
 #pragma once
 
 #include "SuperMenuOption.hpp"
+#include <vector>
+#include <string>
 
 class Font;
 
@@ -11,11 +13,12 @@ class MenuSwitch : public SuperMenuOption {
         /**
          * @param font %Font to use to render the text.
          * @param text Text to display.
+         * @param options Options to cycle through.
          * @param position Position of the menu option (relative in the menu).
          * @param rotation Rotation of the menu option (relative to the menu).
          * @param height How tall the menu option should be (width will be scaled accordingly).
          */
-        MenuSwitch(Font* font, const char* text, const glm::vec3& position, const glm::vec3& rotation, float height);
+        MenuSwitch(Font* font, const std::string& text, std::vector<std::string>& options, const glm::vec3& position, const glm::vec3& rotation, float height);
         
         /// Destructor.
         ~MenuSwitch();
@@ -34,4 +37,11 @@ class MenuSwitch : public SuperMenuOption {
         
         /// Press the menu option.
         void Press();
+        
+    private:
+        std::vector<std::string> mOptions;
+        Texture2D** mPrerenderedTexts;
+        std::size_t mSelected;
+        
+        float mHeight;
 };
