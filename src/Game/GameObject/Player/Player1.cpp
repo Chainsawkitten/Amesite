@@ -35,10 +35,10 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_healthy.png");
     mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_medium_damage.png");
     mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_heavy_damage.png");
-    mDeadTexture = Resources().CreateTexture2DFromFile("Resources/player1_diff_dead.png");
+    mDeadTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_dead.png");
 
     mNode = CreateEntity();
-    mNode->AddComponent<Component::Transform>()->scale *= 0.2f;
+    mNode->AddComponent<Component::Transform>()->scale *= 0.2f; //0.15f
     mNode->AddComponent<Component::Controller>()->speed = 5000.f;
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
@@ -46,8 +46,10 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     mNode->AddComponent<Component::Health>()->removeOnLowHealth = false;
-    mNode->GetComponent<Component::Health>()->health = 30.f;
-    mNode->GetComponent<Component::Health>()->maxHealth = 30.f;
+    mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth = 30.f;
+    mNode->GetComponent<Component::Health>()->maxCooldown = 1.f;
+    //Regain full health after 5 seconds.
+    mNode->GetComponent<Component::Health>()->regainAmount = mRegainAmount = mNode->GetComponent<Component::Health>()->maxHealth / 5.f;
     mNode->GetComponent<Component::Health>()->faction = 0;
     mNode->AddComponent<Component::Collider2DCircle>()->radius = 10.f;
     mNode->AddComponent<Component::Animation>();
@@ -118,12 +120,14 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLeftTurretBody->AddComponent<Component::Animation>();
     mLeftTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
     mLeftTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mLeftTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mLeftTurretBarrel = CreateEntity();
     mLeftTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBody;
     mLeftTurretBarrel->AddComponent<Component::Animation>();
     mLeftTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
     mLeftTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mLeftTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mLeftSpawnNode = CreateEntity();
     mLeftSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBarrel;
@@ -146,12 +150,14 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mRightTurretBody->AddComponent<Component::Animation>();
     mRightTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
     mRightTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mRightTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mRightTurretBarrel = CreateEntity();
     mRightTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBody;
     mRightTurretBarrel->AddComponent<Component::Animation>();
     mRightTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
     mRightTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    mRightTurretBarrel->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
     mRightSpawnNode = CreateEntity();
     mRightSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBarrel;
@@ -171,6 +177,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mFrontEngineLeft->AddComponent<Component::Mesh>()->geometry = mFrontEngineModel = Resources().CreateOBJModel("Resources/player1_frontEngine.obj");
     mFrontEngineLeft->AddComponent<Component::Material>();
     mFrontEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_frontEngine_diff.png");
+    mFrontEngineLeft->GetComponent<Component::Material>()->SetSpecular("Resources/player1_spec.png");
     mFrontEngineLeftParticles = CreateEntity();
     mFrontEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineLeft;
     AddEnginePartilces(mFrontEngineLeftParticles);
@@ -208,6 +215,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mFrontEngineRight->AddComponent<Component::Mesh>()->geometry = mFrontEngineModel;
     mFrontEngineRight->AddComponent<Component::Material>();
     mFrontEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_frontEngine_diff.png");
+    mFrontEngineRight->GetComponent<Component::Material>()->SetSpecular("Resources/player1_spec.png");
     mFrontEngineRightParticles = CreateEntity();
     mFrontEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mFrontEngineRight;
     AddEnginePartilces(mFrontEngineRightParticles);
@@ -244,6 +252,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mBackEngineLeft->AddComponent<Component::Mesh>()->geometry = mBackEngineModel = Resources().CreateOBJModel("Resources/player1_backEngine.obj");
     mBackEngineLeft->AddComponent<Component::Material>();
     mBackEngineLeft->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_backEngine_diff.png");
+    mBackEngineLeft->GetComponent<Component::Material>()->SetSpecular("Resources/player1_spec.png");
     mBackEngineLeftParticles = CreateEntity();
     mBackEngineLeftParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineLeft;
     AddEnginePartilces(mBackEngineLeftParticles);
@@ -281,6 +290,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mBackEngineRight->AddComponent<Component::Mesh>()->geometry = mBackEngineModel;
     mBackEngineRight->AddComponent<Component::Material>();
     mBackEngineRight->GetComponent<Component::Material>()->SetDiffuse("Resources/player1_backEngine_diff.png");
+    mBackEngineRight->GetComponent<Component::Material>()->SetSpecular("Resources/player1_spec.png");
     mBackEngineRightParticles = CreateEntity();
     mBackEngineRightParticles->AddComponent<Component::RelativeTransform>()->parentEntity = mBackEngineRight;
     AddEnginePartilces(mBackEngineRightParticles);
@@ -354,7 +364,7 @@ void Player1::Activate() {
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = true;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = false;
-    mNode->GetComponent<Component::Health>()->regenAmount = 1.f;
+    mNode->GetComponent<Component::Health>()->regainAmount = mRegainAmount;
 }
 
 void Player1::Deactivate() {
@@ -365,7 +375,7 @@ void Player1::Deactivate() {
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = false;
     mNode->GetComponent<Component::ParticleEmitter>()->enabled = true;
     mNode->GetComponent<Component::Physics>()->acceleration = glm::vec3(0, 0, 0);
-    mNode->GetComponent<Component::Health>()->regenAmount = 0.f;
+    mNode->GetComponent<Component::Health>()->regainAmount = 0.f;
 }
 
 void Player1::AddEnginePartilces(Entity* entity) {
