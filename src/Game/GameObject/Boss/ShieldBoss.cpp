@@ -59,9 +59,6 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Health>()->regainAmount = body->GetComponent<Component::Health>()->health / 3.f;
     body->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     body->GetComponent<Component::Physics>()->angularVelocity.y = -0.1f;
-    //body->AddComponent<Component::Spawner>()->delay = 0.2;
-    //body->GetComponent<Component::Spawner>()->faction = 1.f;
-    //body->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShoot);
 
     mCoverModel = Resources().CreateOBJModel("Resources/ring_segment.obj");
     for (int i = 0; i < 3; i++) {
