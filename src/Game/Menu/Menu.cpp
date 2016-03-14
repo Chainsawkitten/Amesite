@@ -78,12 +78,20 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
     Entity* camera = HubInstance().GetMainCamera().body;
     
     // Transition.
+    glm::vec3 subMenuPosition(player->GetPosition() + mSubMenus[mSelected]->GetPosition() + mSubMenus[mSelected]->GetCameraPosition());
+    glm::vec3 subMenuRotation(mSubMenus[mSelected]->GetCameraDirection());
     if (mTransition) {
         mTransitionTimer += deltaTime;
         if (mTransitionTimer > 1.f) {
+            mTransitionTimer = 1.f;
             mTransition = false;
             mSelected = mNextSubMenu;
         }
+        
+        glm::vec3 newPosition(player->GetPosition() + mSubMenus[mNextSubMenu]->GetPosition() + mSubMenus[mNextSubMenu]->GetCameraPosition());
+        glm::vec3 newRotation(mSubMenus[mNextSubMenu]->GetCameraDirection());
+        subMenuPosition = (1.f - mTransitionTimer) * subMenuPosition + mTransitionTimer * newPosition;
+        subMenuRotation = (1.f - mTransitionTimer) * subMenuRotation + mTransitionTimer * newRotation;
     }
     
     // Fly out camera.
@@ -99,11 +107,10 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
     }
     
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
-    cameraTransform->position = (1.f - weight) * cameraTransform->position + weight * (player->GetPosition() + mSubMenus[mSelected]->GetPosition() + mSubMenus[mSelected]->GetCameraPosition());
-    glm::vec3 direction(mSubMenus[mSelected]->GetCameraDirection());
-    cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * direction.x;
-    cameraTransform->pitch = (1.f - weight) * cameraTransform->pitch + weight * direction.y;
-    cameraTransform->roll = (1.f - weight) * cameraTransform->roll + weight * direction.z;
+    cameraTransform->position = (1.f - weight) * cameraTransform->position + weight * subMenuPosition;
+    cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * subMenuRotation.x;
+    cameraTransform->pitch = (1.f - weight) * cameraTransform->pitch + weight * subMenuRotation.y;
+    cameraTransform->roll = (1.f - weight) * cameraTransform->roll + weight * subMenuRotation.z;
     cameraTransform->UpdateModelMatrix();
     
     // Update model matrix.
