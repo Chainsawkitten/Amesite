@@ -92,6 +92,7 @@ set(RESOURCES
         assets/color/enemy_glow.png
         assets/color/enemy_spec.png
         assets/ParticleAtlas.png
+        assets/ParticleAtlasOne.png
         assets/player1/player1_body_diff_healthy.png
         assets/player1/player1_body_diff_heavy_damage.png
         assets/player1/player1_body_diff_medium_damage.png
