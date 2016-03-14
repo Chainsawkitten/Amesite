@@ -32,6 +32,7 @@
 #include "../Util/CaveGenerator.hpp"
 
 #include "../GameObject/Bullet.hpp"
+#include "../GameObject/Player/SuperPlayer.hpp"
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
 #include "../GameObject/Camera.hpp"
@@ -51,6 +52,7 @@
 #include "../GameObject/Pillar.hpp"
 #include "../GameObject/PillarBall.hpp"
 #include "../GameObject/Portal.hpp"
+#include "../GameObject/ReviveCircle.hpp"
 
 using namespace GameObject;
 
@@ -223,6 +225,36 @@ Entity* GameEntityFactory::CreateCrystalLight() {
 
 }
 
+Entity* GameEntityFactory::CreateShrapnel(glm::vec3 position, unsigned int amount, Component::Explode* explodeComponent) {
+    for (unsigned int i = 0; i < amount; i++) {
+        Entity* shrapnel = mScene->CreateEntity();
+        if (explodeComponent != nullptr) {
+            switch (explodeComponent->type) {
+                case Component::Explode::CAVE: 
+                    shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+                    shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/wall_gray.png");
+                    shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+                    break;
+                case Component::Explode::ENEMY:
+                    shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+                    shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
+                    shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+                    shrapnel->GetComponent<Component::Material>()->SetGlow("Resources/enemy_glow.png");
+                    break;
+            }
+        }
+        shrapnel->AddComponent<Component::Transform>()->scale *= 0.03f;
+        shrapnel->GetComponent<Component::Transform>()->position = position;
+        shrapnel->AddComponent<Component::Physics>()->gravityFactor = 5.f;
+        shrapnel->GetComponent<Component::Physics>()->velocity = 20.f * glm::vec3(rand() % 20 / 10.f - 1.f, rand() % 20 / 10.f - 1.f, rand() % 20 / 10.f - 1.f);
+        shrapnel->GetComponent<Component::Physics>()->maxVelocity = 10.f * glm::length(shrapnel->GetComponent<Component::Physics>()->velocity);
+        shrapnel->AddComponent<Component::GridCollide>()->removeOnImpact = false;
+        shrapnel->AddComponent<Component::LifeTime>()->lifeTime = 2.f;
+        shrapnel->AddComponent<Component::Collider2DCircle>()->radius = 2.f;
+    }
+    return nullptr;
+}
+
 GameObject::PillarBall* GameEntityFactory::CreatePillarBall(const glm::vec3& origin, const glm::vec3& velocity) {
     PillarBall* gameObject = new PillarBall(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
@@ -241,8 +273,9 @@ Bullet* GameEntityFactory::CreatePlayerBullet(const glm::vec3& position, const g
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::Physics>()->velocity = direction;
     gameObject->node->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
-    gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = 1.0f;
+    gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = gameObject->node->GetComponent<Component::LifeTime>()->initialLifeTime = 1.0f;
     gameObject->node->GetComponent<Component::Damage>()->faction = faction;
+    gameObject->node->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
     return gameObject;
 }
 
@@ -257,6 +290,7 @@ Bullet* GameEntityFactory::CreateEnemyBullet(const glm::vec3& position, const gl
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= 1.9f;
     gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= 1.5f;
     gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= 1.8f;
+    gameObject->node->GetComponent<Component::PointLight>()->color = glm::vec3(0.67f, 0.f, 0.72f);
     return gameObject;
 }
 
@@ -274,13 +308,19 @@ Dust* GameEntityFactory::CreateDust(Entity * object, int particleTextureIndex) {
     return gameObject;
 }
 
-Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex) {
+Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex, Component::Explode* explodeComponent) {
     Explosion* gameObject = new Explosion(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
+    CreateShrapnel(position, 2, explodeComponent);
+    return gameObject;
+}
+
+ReviveCircle* GameEntityFactory::CreateReviveCircle(SuperPlayer* player) {
+    ReviveCircle* gameObject = new ReviveCircle(mScene, player);
     return gameObject;
 }
 

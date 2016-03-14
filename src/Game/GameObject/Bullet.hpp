@@ -26,6 +26,6 @@ namespace GameObject {
             Entity* tail;
 
         private:
-            void Update(float life);
+            void mUpdateFunction();
     };
 }

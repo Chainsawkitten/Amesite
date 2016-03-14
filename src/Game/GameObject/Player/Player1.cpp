@@ -27,11 +27,6 @@
 using namespace GameObject;
 
 Player1::Player1(Scene* scene) : SuperPlayer(scene) {
-    mActive = true;
-    mRespawnTimer = 5;
-
-    mState = LIGHTDAMAGE;
-
     mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_healthy.png");
     mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_medium_damage.png");
     mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_heavy_damage.png");
@@ -99,6 +94,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLight->AddComponent<Component::Animation>();
     mLight->AddComponent<Component::SpotLight>()->coneAngle = 20.f;
     mLight->GetComponent<Component::SpotLight>()->attenuation = 0.1f;
+    mLight->GetComponent<Component::SpotLight>()->intensity = 3.f;
 
     mBottomLight = CreateEntity();
     mBottomLight->AddComponent<Component::RelativeTransform>()->Move(0.f, -7.f, 0.f);
@@ -107,6 +103,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mBottomLight->AddComponent<Component::PointLight>();
     mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 1.f);
     mBottomLight->GetComponent<Component::PointLight>()->attenuation = 0.8f;
+    mBottomLight->GetComponent<Component::PointLight>()->intensity = 3.f;
     
     mTurretBodyModel = Resources().CreateOBJModel("Resources/turret_body.obj");
     mTurretBarrelModel = Resources().CreateOBJModel("Resources/turret_barrel.obj");
@@ -122,15 +119,13 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLeftTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
     mLeftTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
-    mLeftTurretBarrel = CreateEntity();
-    mLeftTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBody;
-    mLeftTurretBarrel->AddComponent<Component::Animation>();
-    mLeftTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
-    mLeftTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
-    mLeftTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
+    mLeftTurretBarrel.node = CreateEntity();
+    mLeftTurretBarrel.node->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBody;
+    mLeftTurretBarrel.node->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, -1.5f);
+    CreateBarrel(&mLeftTurretBarrel);
 
     mLeftSpawnNode = CreateEntity();
-    mLeftSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBarrel;
+    mLeftSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBarrel.node;
     mLeftSpawnNode->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, 10.f);
     mLeftSpawnNode->AddComponent<Component::Animation>();
     mLeftSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
@@ -152,15 +147,13 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mRightTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
     mRightTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
 
-    mRightTurretBarrel = CreateEntity();
-    mRightTurretBarrel->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBody;
-    mRightTurretBarrel->AddComponent<Component::Animation>();
-    mRightTurretBarrel->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
-    mRightTurretBarrel->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
-    mRightTurretBarrel->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
+    mRightTurretBarrel.node = CreateEntity();
+    mRightTurretBarrel.node->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBody;
+    mRightTurretBarrel.node->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, -0.5f);
+    CreateBarrel(&mRightTurretBarrel);
 
     mRightSpawnNode = CreateEntity();
-    mRightSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBarrel;
+    mRightSpawnNode->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBarrel.node;
     mRightSpawnNode->GetComponent<Component::RelativeTransform>()->Move(0.f, 0.f, 10.f);
     mRightSpawnNode->AddComponent<Component::Animation>();
     mRightSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
@@ -379,16 +372,14 @@ void Player1::Deactivate() {
 }
 
 void Player1::AddEnginePartilces(Entity* entity) {
-    entity->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.f, 0.f);
+    entity->GetComponent<Component::RelativeTransform>()->Move(0.f, -1.2f, 0.f);
     Component::ParticleEmitter* emitter = entity->AddComponent<Component::ParticleEmitter>();
     emitter->emitterType = Component::ParticleEmitter::POINT;
-    emitter->maxEmitTime = 0.02 / 10.f;
-    emitter->minEmitTime = 0.016 / 10.f;
+    emitter->maxEmitTime = emitter->minEmitTime = 0.02 / 20.f;
     emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
     emitter->lifetime = 0.0;
     emitter->particleType.textureIndex = Component::ParticleEmitter::BLUE;
-    emitter->particleType.minLifetime = .04f;
-    emitter->particleType.maxLifetime = .08f;
+    emitter->particleType.minLifetime = emitter->particleType.maxLifetime = .08f;
     emitter->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f);
     emitter->particleType.maxVelocity = glm::vec3(.3f, -15.f, .3f);
     emitter->particleType.minSize = glm::vec2(.5f, .5f) * 2.f;
@@ -400,14 +391,31 @@ void Player1::AddEnginePartilces(Entity* entity) {
     emitter->particleType.endAlpha = 0.f;
 }
 
+void Player1::CreateBarrel(Barrel* barrel) {
+    barrel->node->AddComponent<Component::Animation>();
+
+    barrel->barrel[0] = CreateEntity();
+    barrel->barrel[0]->AddComponent<Component::RelativeTransform>()->parentEntity = barrel->node;
+    barrel->barrel[0]->GetComponent<Component::Transform>()->Move(1.f, 0.f, 0.f);
+    barrel->barrel[0]->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
+    barrel->barrel[0]->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    barrel->barrel[0]->AddComponent<Component::Animation>();
+
+    barrel->barrel[1] = CreateEntity();
+    barrel->barrel[1]->AddComponent<Component::RelativeTransform>()->parentEntity = barrel->node;
+    barrel->barrel[1]->GetComponent<Component::Transform>()->Move(-1.f, 0.f, 0.f);
+    barrel->barrel[1]->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
+    barrel->barrel[1]->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    barrel->barrel[1]->AddComponent<Component::Animation>();
+}
+
 void Player1::mUpdateFunction() {
     // Update health texture
     if (GetHealth() >= 2.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = LIGHTDAMAGE;
-        mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.f, 1.f);
+        mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(0.f, 1.f, 0.f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
-
         mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
         mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = false;
         mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
@@ -418,12 +426,16 @@ void Player1::mUpdateFunction() {
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mMediumDamageTexture;
+        mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = false;
     } else if (GetHealth() >= 0.01f)  {
         mState = HEAVYDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.32f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mHeavyDamageTexture;
-        mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
+        mFrontEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = false;
         mFrontEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
         mBackEngineLeft->GetComponent<Component::ParticleEmitter>()->enabled = true;
         mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
@@ -459,23 +471,30 @@ void Player1::mUpdateFunction() {
     mBackEngineLeft->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
     mFrontEngineRight->GetComponent<Component::Transform>()->roll = rollFactor * -15.f * velocityFactor;
     mFrontEngineLeft->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
-    mBackEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
-    mBackEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
-    mBackEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
-    mBackEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
-    mFrontEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
-    mFrontEngineRightParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
-    mFrontEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.minVelocity = glm::vec3(0.f, -10.f, 0.f) * (1 + velocityFactor);
-    mFrontEngineLeftParticles->GetComponent<Component::ParticleEmitter>()->particleType.maxVelocity = glm::vec3(0.3f, -15.f, 0.3f) * (1 + velocityFactor);
+    float particlesFactor = 20.f + velocityFactor * 2.f;
+    Component::ParticleEmitter* emitter = mBackEngineRightParticles->GetComponent<Component::ParticleEmitter>();
+    emitter->particleType.minVelocity = emitter->particleType.maxVelocity = particlesFactor * glm::vec3(0.f, -1.f , 0.f);
+    emitter = mBackEngineLeftParticles->GetComponent<Component::ParticleEmitter>();
+    emitter->particleType.minVelocity = emitter->particleType.maxVelocity = particlesFactor * glm::vec3(0.f, -1.f, 0.f);
+    emitter = mFrontEngineRightParticles->GetComponent<Component::ParticleEmitter>();
+    emitter->particleType.minVelocity = emitter->particleType.maxVelocity = particlesFactor * glm::vec3(0.f, -1.f, 0.f);
+    emitter = mFrontEngineLeftParticles->GetComponent<Component::ParticleEmitter>();
+    emitter->particleType.minVelocity = emitter->particleType.maxVelocity = particlesFactor * glm::vec3(0.f, -1.f, 0.f);
 
     // Update body
     mBody->GetComponent<Component::Transform>()->pitch = pitchFactor * 10.f * velocityFactor;
     mBody->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
 
     // Update turrets
-    float recoilFactor;
+    float recoilFactor; //[0,1]
+    float factor = 3.f;
     recoilFactor = glm::min(1.f, mLeftSpawnNode->GetComponent<Component::Spawner>()->timeSinceSpawn / mLeftSpawnNode->GetComponent<Component::Spawner>()->delay);
-    mLeftTurretBarrel->GetComponent<Component::Transform>()->position.z = recoilFactor * 3.f - 3.f;
+    mLeftTurretBarrel.barrel[0]->GetComponent<Component::Transform>()->position.z = (0.5f * recoilFactor + 0.5f) * factor - factor; //[0.5,1]
+    mLeftTurretBarrel.barrel[1]->GetComponent<Component::Transform>()->position.z = (recoilFactor / 2.f) * factor - factor; //[0,0.5]
+    mLeftTurretBarrel.node->GetComponent<Component::Transform>()->roll = -180 * recoilFactor;
+
     recoilFactor = glm::min(1.f, mRightSpawnNode->GetComponent<Component::Spawner>()->timeSinceSpawn / mRightSpawnNode->GetComponent<Component::Spawner>()->delay);
-    mRightTurretBarrel->GetComponent<Component::Transform>()->position.z = recoilFactor * 3.f - 3.f;
+    mRightTurretBarrel.barrel[1]->GetComponent<Component::Transform>()->position.z = (0.5f * recoilFactor + 0.5f) * factor - factor; //[0.5,1]
+    mRightTurretBarrel.barrel[0]->GetComponent<Component::Transform>()->position.z = (recoilFactor / 2.f) * factor - factor; //[0,0.5]
+    mRightTurretBarrel.node->GetComponent<Component::Transform>()->roll = 180 * recoilFactor;
 }
