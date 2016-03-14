@@ -2,6 +2,8 @@
 
 #include <Engine/GameObject/SuperGameObject.hpp>
 
+#include <glm/glm.hpp>
+
 class Scene;
 class Entity;
 namespace Geometry {
@@ -28,6 +30,9 @@ namespace GameObject {
 
             /// Ball2 relative to Node
             Entity* ball2;
+
+            glm::vec2 startPosition;
+            glm::vec2 destination;
 
         private:
             Geometry::OBJModel* mBallModel;

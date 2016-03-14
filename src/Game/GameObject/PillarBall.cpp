@@ -55,6 +55,19 @@ PillarBall::~PillarBall() {
 }
 
 void PillarBall::mUpdateFunction() {
+    Component::Transform* transform = node->GetComponent<Component::Transform>();
+    Component::Physics* physcis = node->GetComponent<Component::Physics>();
+    glm::vec2 position = glm::vec2(transform->position.x, transform->position.z);
+    float maxheight = 5.f;
+    float heightFactor = glm::distance(position, startPosition) / glm::distance(destination, startPosition);
+    if (heightFactor > 0.5f)
+        heightFactor = 1.f - heightFactor;
+    float y = maxheight * glm::sqrt(2 * heightFactor);
+
+    Component::LifeTime* lifeTimeComp = node->GetComponent<Component::LifeTime>();
+    //float lifeTimeFactor = 
+    //float x = 
+
     //float speedFactor = (10.f - node->GetComponent<Component::LifeTime>()->lifeTime);
     //node->GetComponent<Component::Physics>()->velocity.y = 5.f + speedFactor * 20.f;
     //node->GetComponent<Component::Physics>()->angularAcceleration.y = 0.1f + 0.1f * speedFactor;
