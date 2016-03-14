@@ -48,10 +48,10 @@ Explosion::Explosion(Scene* scene) : SuperGameObject(scene) {
     smokeEmitter->particleType.textureIndex = Component::ParticleEmitter::STAR;
     smokeEmitter->particleType.minLifetime = .01f * 20.f;
     smokeEmitter->particleType.maxLifetime = .02f * 20.f;
-    smokeEmitter->particleType.minVelocity = glm::vec3(-15.f, 15.f, -15.f);
-    smokeEmitter->particleType.maxVelocity = glm::vec3(15.f, -15.f, 15.f);
-    smokeEmitter->particleType.minSize = glm::vec2(.08f, .08f)*2.f;
-    smokeEmitter->particleType.maxSize = glm::vec2(.19f, .19f)*2.f;
+    smokeEmitter->particleType.minVelocity = glm::vec3(-25.f, 25.f, -25.f);
+    smokeEmitter->particleType.maxVelocity = glm::vec3(25.f, -25.f, 25.f);
+    smokeEmitter->particleType.minSize = glm::vec2(.08f, .08f)*1.f;
+    smokeEmitter->particleType.maxSize = glm::vec2(.19f, .19f)*1.f;
     smokeEmitter->particleType.uniformScaling = true;
     smokeEmitter->particleType.color = glm::vec3(.1f, .1f, .1f);
     smokeEmitter->particleType.startAlpha = 0.f;
