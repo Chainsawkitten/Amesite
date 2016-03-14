@@ -31,7 +31,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mHeight = height;
     mMap = nullptr;
 
-    mBossRadius = 45;
+    mBossRadius = 9;
 
     scaleFactor = 10.f;
 
@@ -112,13 +112,13 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/defaultYellow.png");
     heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/defaultYellow.png");
 
-    for (int i = 0; i < 50; i++)
+    for (int i = 0; i <  200; i++)
         PlaceScenery(GameEntityCreator().CreateStone(), true);
 
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 80; i++)
         PlaceScenery(GameEntityCreator().CreateCrystalLight(), false);
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 40; i++)
         PlaceScenery(GameEntityCreator().CreateFallenPillar(), true);
 
 
