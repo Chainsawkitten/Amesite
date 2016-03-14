@@ -16,7 +16,7 @@ namespace System {
         /// Destructor.
         ~GridCollideSystem();
         
-        /// Update Scene containing entities. Updates life time components.
+        /// Update Scene containing entities.
         /**
          * @param scene The scene to update.
          * @param deltaTime Time since last frame (in seconds).

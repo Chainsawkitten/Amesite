@@ -82,9 +82,18 @@ namespace GameObject {
 
             /// Place an entity randomly into the world
             /**
-             * @param The entity to place
+             * @param scenery The entity to place
+             * @param rotate Rotation of the entity to place
              */
             void PlaceScenery(Entity* scenery, bool rotate);
+
+            /// Returns height value of the terrain
+            /**
+             * @param x The x-position in the world to check terrian height (world space)
+             * @param z The z-position in the world to check terrian height (world space)
+             * @return Returns y-position of terrian height (world space) 
+             */
+            float GetTerrainHeight(float x, float z);
 
             /// Map of all walls in the cave system.
             bool** mMap;

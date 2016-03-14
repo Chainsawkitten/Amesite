@@ -17,13 +17,13 @@ namespace Component {
 
             /// Remove Entity to which this %Component corresponds if true.
             /**
-             * Default: true;
+             * Default: true
              */
             bool removeOnImpact;
 
             /// True if object has collided with grid.
             /**
-             * Default: false;
+             * Default: false
              */
             bool hasCollided;
     };
