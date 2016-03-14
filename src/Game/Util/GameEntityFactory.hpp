@@ -175,14 +175,14 @@ class GameEntityFactory {
 
         /// Create crash site.
         /**
-        * @return The crash entity.
-        */
+         * @return The crash entity.
+         */
         Entity* CreateCrashSite1();
 
         /// Create crash site.
         /**
-        * @return The crash entity.
-        */
+         * @return The crash entity.
+         */
         Entity* CreateCrashSite2();
 
         /// Create stone.
