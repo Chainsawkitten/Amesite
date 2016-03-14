@@ -19,6 +19,7 @@
 #include <Engine/Component/Collider2DCircle.hpp>
 #include <Engine/Component/Animation.hpp>
 #include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/PointLight.hpp>
 
 #include "../../Util/ControlSchemes.hpp"
 #include "../../Util/GameEntityFactory.hpp"
@@ -40,6 +41,7 @@ Nest::Nest(Scene* scene) : SuperEnemy(scene) {
     node->GetComponent<Component::Explode>()->sound = true;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&Nest::mUpdateFunction, this);
     node->AddComponent<Component::Spawner>()->delay = 0.75f;
+    node->AddComponent<Component::PointLight>()->color = glm::vec3(0.67f, 0.f, 0.72f);
    
 
     body = CreateEntity();
@@ -69,11 +71,13 @@ float Nest::GetHealth() {
 void Nest::Activate() {
     SuperEnemy::Activate();
     body->GetComponent<Component::Material>()->glow = mActiveGlowBody;
+    node->GetComponent<Component::PointLight>()->intensity = 10.f;
 }
 
 void Nest::Deactivate() {
     SuperEnemy::Deactivate();
     body->GetComponent<Component::Material>()->glow = mDeactiveGlowBody;
+    node->GetComponent<Component::PointLight>()->intensity = 0.f;
 }
 
 void Nest::mUpdateFunction() {

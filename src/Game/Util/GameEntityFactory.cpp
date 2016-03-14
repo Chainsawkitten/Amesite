@@ -241,8 +241,9 @@ Bullet* GameEntityFactory::CreatePlayerBullet(const glm::vec3& position, const g
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::Physics>()->velocity = direction;
     gameObject->node->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
-    gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = 1.0f;
+    gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = gameObject->node->GetComponent<Component::LifeTime>()->initialLifeTime = 1.0f;
     gameObject->node->GetComponent<Component::Damage>()->faction = faction;
+    gameObject->node->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
     return gameObject;
 }
 
@@ -257,6 +258,7 @@ Bullet* GameEntityFactory::CreateEnemyBullet(const glm::vec3& position, const gl
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= 1.9f;
     gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= 1.5f;
     gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= 1.8f;
+    gameObject->node->GetComponent<Component::PointLight>()->color = glm::vec3(0.67f, 0.f, 0.72f);
     return gameObject;
 }
 
