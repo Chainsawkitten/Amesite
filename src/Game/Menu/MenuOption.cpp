@@ -128,6 +128,10 @@ void MenuOption::Render(const glm::vec2& screenSize, const glm::mat4& menuModelM
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
+    // Disable backface culling.
+    GLboolean backfaceCulling = glIsEnabled(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
+    
     mTextShaderProgram->Use();
     
     Entity* camera = HubInstance().GetMainCamera().body;
@@ -158,6 +162,9 @@ void MenuOption::Render(const glm::vec2& screenSize, const glm::mat4& menuModelM
     // Reset blending.
     if (!blend)
         glDisable(GL_BLEND);
+    
+    if (backfaceCulling)
+        glEnable(GL_CULL_FACE);
 }
 
 void MenuOption::EmptyCallback() const {
