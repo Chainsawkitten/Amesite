@@ -49,7 +49,7 @@ SpinBoss::SpinBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Material>()->glow = mReflectTexture;
     body->AddComponent<Component::Reflect>();
     body->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
-    body->AddComponent<Component::Explode>()->size = 100.f;
+    body->AddComponent<Component::Explode>()->size = 30.f;
     body->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     body->GetComponent<Component::Explode>()->lifeTime = 1.5f;
     body->GetComponent<Component::Explode>()->offset.y = 5.0f;
@@ -106,7 +106,7 @@ void SpinBoss::CreateArm(Entity* entity) {
     entity->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
     entity->AddComponent<Component::Spawner>()->faction = 1;
     entity->GetComponent<Component::Spawner>()->delay = 0.2f;
-    entity->AddComponent<Component::Explode>()->size = 50.f;
+    entity->AddComponent<Component::Explode>()->size = 30.f;
     entity->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
     entity->GetComponent<Component::Explode>()->lifeTime = 0.5f;
     entity->GetComponent<Component::Explode>()->offset.y = 5.0f;
