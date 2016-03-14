@@ -53,7 +53,9 @@ namespace GameObject {
             Geometry::OBJModel* mCoverModel;
 
             void CreateCover(Cover* cover);
+            
+            void FireBullets();
 
-            bool moveCoverIn;
+            int mOffsetAngle;
     };
 }

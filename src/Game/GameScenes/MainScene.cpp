@@ -203,6 +203,8 @@ MainScene::MainScene() {
 
     // Push boss positions here to avoid spawning enemies.
     mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
+
+    GameEntityCreator().CreateShieldBoss(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 25.f));
 }
 
 MainScene::~MainScene() {
