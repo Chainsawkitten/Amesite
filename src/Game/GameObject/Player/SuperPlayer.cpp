@@ -4,7 +4,7 @@ using namespace GameObject;
 
 SuperPlayer::SuperPlayer(Scene* scene) : SuperGameObject(scene){
     mActive = true;
-    mRespawnTimer = 5.f;
+    initalRespawnTime = respawnTimeLeft = 5.f;
     mState = LIGHTDAMAGE;
 }
 

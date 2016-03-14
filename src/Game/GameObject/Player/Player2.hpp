@@ -87,6 +87,9 @@ namespace GameObject {
         // Propeller relative to body.
         Entity* mMidPropeller;
 
+        // Particles relative to mid propeller;
+        Entity* mMidPropellerParticles[4];
+
         // Propeller relative to engine.
         Entity* mFrontPropellerLeft;
 
@@ -108,11 +111,18 @@ namespace GameObject {
         // Turret relative to body.
         Entity* mRightTurretBody;
 
-        // Barrel relative to turret.
-        Entity* mLeftTurretBarrel;
+        struct Barrel {
+            Entity* barrel[2];
+            Entity* node;
+        };
+
+        void CreateBarrel(Barrel* barrel);
 
         // Barrel relative to turret.
-        Entity* mRightTurretBarrel;
+        Barrel mLeftTurretBarrel;
+
+        // Barrel relative to turret.
+        Barrel mRightTurretBarrel;
 
         // SpawnNode relative to barrel.
         Entity* mLeftSpawnNode;
@@ -130,5 +140,8 @@ namespace GameObject {
         void AddPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale);
 
         void mUpdateFunction();
+
+        private:
+            float mRegainAmount;
     };
 }
