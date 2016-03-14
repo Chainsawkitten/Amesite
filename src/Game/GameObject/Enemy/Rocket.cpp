@@ -33,7 +33,7 @@ Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
     node->AddComponent<Component::Transform>()->scale *= 0.15f;
     node->AddComponent<Component::Collider2DCircle>()->radius = 9.0f;
     node->AddComponent<Component::Physics>()->velocityDragFactor = 1.f;
-    node->GetComponent<Component::Physics>()->maxAngularVelocity *= 2.f;
+    node->GetComponent<Component::Physics>()->maxVelocity *= 1.3f;
     node->AddComponent<Component::Health>()->faction = 1;
     node->GetComponent<Component::Health>()->health = 500.f;
     node->GetComponent<Component::Health>()->removeOnLowHealth = false;
@@ -60,6 +60,25 @@ Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
     idleHead->CreateKeyFrame(glm::vec3(-0.15f, 0.f, 0.f), 0.f, 0.f, 0, 3.f, false, true);
     idleHead->CreateKeyFrame(glm::vec3(0.15f, 0.f, 0.f), 0.f, 0.f, 0.f, 3.f, false, true);
     body->GetComponent<Component::Animation>()->Start("idle");
+
+    Component::ParticleEmitter* emitter = body->AddComponent<Component::ParticleEmitter>();
+    emitter->emitterType = Component::ParticleEmitter::POINT;
+    emitter->maxEmitTime = 0.02;
+    emitter->minEmitTime = 0.016;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 0.0;
+    emitter->particleType.textureIndex = Component::ParticleEmitter::PURPLE;
+    emitter->particleType.minLifetime = .01f * 40.f;
+    emitter->particleType.maxLifetime = .02f * 40.f;
+    emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -.2f);
+    emitter->particleType.maxVelocity = glm::vec3(.3f, 0.f, .2f);
+    emitter->particleType.minSize = glm::vec2(.5f, .5f) * 8.f;
+    emitter->particleType.maxSize = glm::vec2(.7f, .7f) * 8.f;
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::vec3(.8f, .8f, .8f);
+    emitter->particleType.startAlpha = 1.f;
+    emitter->particleType.midAlpha = 1.f;
+    emitter->particleType.endAlpha = 0.f;
 
     Deactivate();
 }

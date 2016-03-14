@@ -130,5 +130,8 @@ namespace GameObject {
         void AddPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale);
 
         void mUpdateFunction();
+
+        private:
+            float mRegainAmount;
     };
 }
