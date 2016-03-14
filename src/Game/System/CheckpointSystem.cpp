@@ -10,6 +10,12 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+System::CheckpointSystem::CheckpointSystem() {
+
+    mRespawn = false;
+
+}
+
 void System::CheckpointSystem::Update(float deltaTime) {
     for (auto& thisPlayer : mPlayers) {
         for (auto& otherPlayer : mPlayers) {
@@ -48,6 +54,8 @@ void System::CheckpointSystem::AddPlayer(GameObject::SuperPlayer* player) {
 }
 
 void System::CheckpointSystem::RespawnPlayers() {
+
+    mRespawn = true;
 
     Entity* site1 = GameEntityCreator().CreateCrashSite1();
 
