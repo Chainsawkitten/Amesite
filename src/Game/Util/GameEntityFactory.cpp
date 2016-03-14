@@ -325,6 +325,15 @@ Dust* GameEntityFactory::CreateDust(Entity * object, int particleTextureIndex) {
 
 Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex, Component::Explode* explodeComponent) {
     Explosion* gameObject = new Explosion(mScene);
+
+    if (explodeComponent != nullptr) {
+        if (explodeComponent->type == Component::Explode::NONE) {
+            gameObject->node->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            gameObject->tail->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            gameObject->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        }
+    }
+
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
