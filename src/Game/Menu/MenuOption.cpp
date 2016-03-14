@@ -17,7 +17,7 @@
 #include "Text3D.frag.hpp"
 #include "SingleColor3D.frag.hpp"
 
-MenuOption::MenuOption(Font* font, const char* text, const glm::vec3& position, const glm::vec3& rotation, float height) {
+MenuOption::MenuOption(Font* font, const char* text, const glm::vec3& position, const glm::vec3& rotation, float height) : SuperMenuOption(position, rotation) {
     mPrerenderedText = new Texture2D(font, text);
     mPosition = position;
     mRotation = rotation;
@@ -45,13 +45,8 @@ MenuOption::~MenuOption() {
     Resources().FreeShaderProgram(mSelectedShaderProgram);
 }
 
-glm::mat4 MenuOption::GetModelMatrix() const {
-    glm::mat4 orientation;
-    orientation = glm::rotate(orientation, glm::radians(mRotation.x), glm::vec3(0.f, 1.f, 0.f));
-    orientation = glm::rotate(orientation, glm::radians(mRotation.y), glm::vec3(1.f, 0.f, 0.f));
-    orientation = glm::rotate(orientation, glm::radians(mRotation.z), glm::vec3(0.f, 0.f, 1.f));
-    
-    return glm::translate(glm::mat4(), mPosition) * orientation * glm::scale(glm::mat4(), glm::vec3(mScale.x, mScale.y, 1.f));
+glm::vec2 MenuOption::GetScale() const {
+    return mScale;
 }
 
 bool MenuOption::MouseIntersect(const glm::vec3& cameraPosition, const glm::vec3& ray, const glm::mat4& menuModelMatrix, const glm::vec2& playerScale) {

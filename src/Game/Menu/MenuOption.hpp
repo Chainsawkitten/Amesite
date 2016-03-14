@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "SuperMenuOption.hpp"
 #include <functional>
 
 class Texture2D;
@@ -11,7 +11,7 @@ namespace Geometry {
 class ShaderProgram;
 
 /// An option in a menu.
-class MenuOption {
+class MenuOption : SuperMenuOption {
     public:
         /// Function to call when pressed.
         std::function<void()> callback;
@@ -29,11 +29,11 @@ class MenuOption {
         /// Destructor.
         ~MenuOption();
         
-        /// Get the menu option's model matrix.
+        /// Get the scale of the menu option.
         /**
-         * @return The menu option's model matrix.
+         * @return Scale of the menu option.
          */
-        glm::mat4 GetModelMatrix() const;
+        glm::vec2 GetScale() const;
         
         /// Get whether the mouse cursor intersects the menu option.
         /**
