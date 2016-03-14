@@ -14,6 +14,7 @@
 #include <Engine/Component/Material.hpp>
 #include <Engine/Component/PointLight.hpp>
 #include <Engine/Component/Physics.hpp>
+#include <Engine/Component/Animation.hpp>
 #include "../Component/Update.hpp"
 #include "../Component/Spawner.hpp"
 #include "../Component/LifeTime.hpp"
@@ -40,7 +41,7 @@ Pillar::Pillar(Scene* scene, glm::vec3 bossPosition) : SuperGameObject(scene) {
     mState = State::DEACTIVATED;
     mLastState = State::DEACTIVATED;
 
-    mLightModel = Resources().CreateOBJModel("Resources/portal.obj");
+    mLightModel = Resources().CreateOBJModel("Resources/pylon.obj");
 
 }
 
@@ -73,14 +74,16 @@ void Pillar::mUpdateFunction() {
     if (mState == State::ACTIVE) {
         Component::Spawner* spawnerComponent = node->GetComponent<Component::Spawner>();
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay) {
-            GameEntityCreator().CreatePillarBall(node->GetComponent<Component::Transform>()->GetWorldPosition() - glm::vec3(0.f, 10.f, 0.f), glm::vec3(0.f, 10.f, 0.f));
+            float maxHeight = 200.f;
+            GameObject::PillarBall* ball = GameEntityCreator().CreatePillarBall(node->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(0.f, 7.f, 0.f), node->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(0.f, maxHeight, 0.f));
+            ball->maxHeight = maxHeight;
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     } else {
         Component::Spawner* spawnerComponent = node->GetComponent<Component::Spawner>();
         if (spawnerComponent->timeSinceSpawn >= spawnerComponent->delay * 2.f) {
-            glm::vec3 velocity = mBossPosition - node->GetComponent<Component::Transform>()->position;
-            GameObject::PillarBall* ball = GameEntityCreator().CreatePillarBall(node->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(0.f, 20.f, 0.f), velocity/10.f);
+            GameObject::PillarBall* ball = GameEntityCreator().CreatePillarBall(node->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(0.f, 7.f, 0.f), mBossPosition);
+            ball->maxHeight = 20.f;
             ball->node->GetComponent<Component::Transform>()->scale *= 0.2;
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
@@ -91,8 +94,16 @@ void Pillar::CreateLight() {
     mLight = CreateEntity();
     mLight->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     mLight->GetComponent<Component::RelativeTransform>()->Move(0.f, 8.f, 0.f);
-    mLight->GetComponent<Component::RelativeTransform>()->scale *= 0.2f;
+    mLight->GetComponent<Component::RelativeTransform>()->scale *= 0.17f;
     mLight->AddComponent<Component::Material>();
+    mLight->GetComponent<Component::Material>()->SetDiffuse("Resources/DefaultBlue.png");
+    mLight->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    mLight->GetComponent<Component::Material>()->SetGlow("Resources/DefaultSpecular.png");
     mLight->AddComponent<Component::Mesh>()->geometry = mLightModel;
     mLight->AddComponent<Component::PointLight>()->attenuation = 1.f;
+    mLight->GetComponent<Component::PointLight>()->color = glm::vec3(109.f, 242.f, 207.f) * 0.01f;
+    Component::Animation::AnimationClip* idleNode = mLight->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
+    idleNode->CreateKeyFrame(glm::vec3(0.f, 0.f, 0.f), 0.f, 0.f, 0, 1.5f, false, true);
+    idleNode->CreateKeyFrame(glm::vec3(0.f, 0.5f, 0.f), 0.f, 0.f, 0.f, 1.5f, false, true);
+    mLight->GetComponent<Component::Animation>()->Start("idle");
 }
