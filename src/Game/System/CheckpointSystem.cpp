@@ -49,17 +49,16 @@ void System::CheckpointSystem::AddPlayer(GameObject::SuperPlayer* player) {
 
 void System::CheckpointSystem::RespawnPlayers() {
 
-    Entity* site1 = GameEntityCreator().CreateCrashSite1();
-
-    site1->GetComponent<Component::Transform>()->position = mPlayers[0]->GetPosition();
-    site1->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
-    site1->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
-
-    Entity* site2 = GameEntityCreator().CreateCrashSite2();
-
-    site2->GetComponent<Component::Transform>()->position = mPlayers[1]->GetPosition();
-    site2->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
-    site2->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+    for (auto &player : mPlayers) {
+        Entity* site;
+        if (typeid(*player).name() == typeid(GameObject::Player1).name())
+            site = GameEntityCreator().CreateCrashSite1();
+        else if (typeid(*player).name() == typeid(GameObject::Player2).name())
+            site = GameEntityCreator().CreateCrashSite2();
+        site->GetComponent<Component::Transform>()->position = player->GetPosition();
+        site->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
+        site->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+    }
 
     for (auto &player : mPlayers) {
         player->SetPosition(glm::vec3(mPosition.x, 0.f, mPosition.y));
