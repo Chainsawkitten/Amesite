@@ -356,11 +356,24 @@ void MainScene::Update(float deltaTime) {
     // Set music volumes.
     mTargetMix = 0.f;
     for (GameObject::SuperEnemy* enemy : mEnemySpawnerSystem.GetEnemies()) {
+
+        if (mCheckpointSystem.mRespawn) {
+
+            if (glm::distance(enemy->node->GetComponent<Component::Transform>()->GetWorldPosition(), mPlayers[0]->GetPosition()) < 10) {
+
+                enemy->node->GetComponent<Component::Health>()->health = 0;
+
+            }
+
+        }
+
         if (enemy->Active()) {
             mTargetMix = 1.f;
             break;
         }
     }
+
+    mCheckpointSystem.mRespawn = false;
 
     for (GameObject::SuperBoss* boss : mBossVector) {
         if (boss != nullptr) {
