@@ -44,7 +44,7 @@ void DamageSystem::Update(Scene& scene) {
                     if (damageY->faction != HealthX->faction) {
                         // Reduce health by damage.
                         HealthX->health -= damageY->damageAmount;
-                        
+                        HealthX->cooldown = HealthX->maxCooldown;
                         if(HealthX->damaged == -1)
                             HealthX->damaged = 1;
                         
@@ -58,7 +58,7 @@ void DamageSystem::Update(Scene& scene) {
                                 explosionComponent->size += 10.f;
                                 GameObject::DyingLight* dyingLight = new GameObject::DyingLight(&scene);
                                 dyingLight->node->GetComponent<Component::Transform>()->position = damageY->entity->GetComponent<Component::Transform>()->GetWorldPosition();
-
+                                explosionComponent->type = Component::Explode::TYPE::ENEMY;
                             }
 
                             if (damageY->entity->gameObject != nullptr)

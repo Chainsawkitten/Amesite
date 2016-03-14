@@ -9,7 +9,9 @@
 #include <Component/Collider2DRectangle.hpp>
 #include <Component/Physics.hpp>
 #include <Component/SpotLight.hpp>
+#include <Component/PointLight.hpp>
 #include <Component/ParticleEmitter.hpp>
+#include <Component/Material.hpp>
 #include "../Component/Spawner.hpp"
 #include "../Component/Controller.hpp"
 #include "../Component/Damage.hpp"
@@ -20,6 +22,7 @@
 
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
+#include <Geometry/OBJModel.hpp>
 
 #include <Texture/Texture2D.hpp>
 
@@ -29,6 +32,7 @@
 #include "../Util/CaveGenerator.hpp"
 
 #include "../GameObject/Bullet.hpp"
+#include "../GameObject/Player/SuperPlayer.hpp"
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
 #include "../GameObject/Camera.hpp"
@@ -48,6 +52,7 @@
 #include "../GameObject/Pillar.hpp"
 #include "../GameObject/PillarBall.hpp"
 #include "../GameObject/Portal.hpp"
+#include "../GameObject/ReviveCircle.hpp"
 
 using namespace GameObject;
 
@@ -76,13 +81,16 @@ Rocket* GameEntityFactory::CreateRocket(const glm::vec3& origin) {
 
 Rocket* GameEntityFactory::CreateMiniRocket(const glm::vec3& origin) {
     Rocket* gameObject = new Rocket(mScene);
+    float scaleFactor = 0.25f;
     Component::Transform* transform = gameObject->node->GetComponent<Component::Transform>();
     transform->position = origin;
-    transform->scale *= 0.25f;
+    transform->scale *= scaleFactor;
     gameObject->node->AddComponent<Component::LifeTime>()->lifeTime = 5.f;
     gameObject->node->GetComponent<Component::Damage>()->removeOnImpact = true;
     gameObject->node->GetComponent<Component::GridCollide>()->removeOnImpact = true;
-    gameObject->node->GetComponent<Component::Explode>()->size = 8.f;
+    gameObject->node->GetComponent<Component::Explode>()->size *= scaleFactor;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= scaleFactor;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= scaleFactor;
     Component::Health *healthComp = gameObject->node->GetComponent<Component::Health>();
     healthComp->maxHealth = healthComp->health = 20.f;
     healthComp->removeOnLowHealth = true;
@@ -161,10 +169,111 @@ GameObject::Pillar* GameEntityFactory::CreatePillar(const glm::vec3& origin, glm
     return gameObject;
 }
 
-GameObject::PillarBall* GameEntityFactory::CreatePillarBall(const glm::vec3& origin, const glm::vec3& velocity) {
+Entity* GameEntityFactory::CreateCrashSite1() {
+
+    Entity* crash = mScene->CreateEntity();
+    crash->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/player1_body.obj");
+    crash->AddComponent<Component::Material>()->SetDiffuse("Resources/player1_body_diff_dead.png");
+    crash->GetComponent<Component::Material>()->SetSpecular("Resources/player1_body_spec.png");
+    crash->GetComponent<Component::Material>()->SetGlow("Resources/player1_body_glow.png");
+    crash->AddComponent<Component::Transform>()->scale *= 0.25f;
+
+    return crash;
+
+}
+
+Entity* GameEntityFactory::CreateCrashSite2() {
+
+    Entity* crash = mScene->CreateEntity();
+    crash->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/player2_body.obj");
+    crash->AddComponent<Component::Material>()->SetDiffuse("Resources/player2_diff_dead.png");
+    crash->GetComponent<Component::Material>()->SetSpecular("Resources/player2_spec.png");
+    crash->GetComponent<Component::Material>()->SetGlow("Resources/player2_glow.png");
+    crash->AddComponent<Component::Transform>()->scale *= 0.25f;
+
+    return crash;
+
+}
+
+Entity* GameEntityFactory::CreateStone() {
+
+    Entity* stone = mScene->CreateEntity();
+    stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+    stone->AddComponent<Component::Material>()->SetDiffuse("Resources/DefaultGray.png");
+    stone->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    stone->GetComponent<Component::Material>()->SetGlow("Resources/stone_01_glow.png");
+    stone->AddComponent<Component::Transform>()->scale *= 0.3f;
+
+    return stone;
+
+}
+
+Entity* GameEntityFactory::CreateFallenPillar() {
+
+    Entity* pillar = mScene->CreateEntity();
+    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/pillar.obj");
+    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/pillar_diff.png");
+    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    pillar->GetComponent<Component::Material>()->SetGlow("Resources/pillar_glow.png");
+    pillar->AddComponent<Component::Transform>();
+
+    return pillar;
+
+}
+
+Entity* GameEntityFactory::CreateCrystalLight() {
+
+    Entity* crystal = mScene->CreateEntity();
+    crystal->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/crystal.obj");
+    crystal->AddComponent<Component::Material>()->SetDiffuse("Resources/DefaultBlue.png");
+    crystal->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    crystal->GetComponent<Component::Material>()->SetGlow("Resources/DefaultSpecular.png");
+    crystal->AddComponent<Component::Transform>()->scale *= 0.2f;
+
+    crystal->AddComponent<Component::PointLight>();
+    crystal->GetComponent<Component::PointLight>()->attenuation = 0.8f;
+    crystal->GetComponent<Component::PointLight>()->color = glm::vec3(109.f, 242.f, 207.f) * 0.01f;
+
+    return crystal;
+
+}
+
+Entity* GameEntityFactory::CreateShrapnel(glm::vec3 position, unsigned int amount, Component::Explode* explodeComponent) {
+    for (unsigned int i = 0; i < amount; i++) {
+        Entity* shrapnel = mScene->CreateEntity();
+        if (explodeComponent != nullptr) {
+            switch (explodeComponent->type) {
+                case Component::Explode::CAVE: 
+                    shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+                    shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/wall_gray.png");
+                    shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+                    break;
+                case Component::Explode::ENEMY:
+                    shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+                    shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
+                    shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+                    shrapnel->GetComponent<Component::Material>()->SetGlow("Resources/enemy_glow.png");
+                    break;
+            }
+        }
+        shrapnel->AddComponent<Component::Transform>()->scale *= 0.03f;
+        shrapnel->GetComponent<Component::Transform>()->position = position;
+        shrapnel->AddComponent<Component::Physics>()->gravityFactor = 5.f;
+        shrapnel->GetComponent<Component::Physics>()->velocity = 20.f * glm::vec3(rand() % 20 / 10.f - 1.f, rand() % 20 / 10.f - 1.f, rand() % 20 / 10.f - 1.f);
+        shrapnel->GetComponent<Component::Physics>()->maxVelocity = 10.f * glm::length(shrapnel->GetComponent<Component::Physics>()->velocity);
+        shrapnel->AddComponent<Component::GridCollide>()->removeOnImpact = false;
+        shrapnel->AddComponent<Component::LifeTime>()->lifeTime = 2.f;
+        shrapnel->AddComponent<Component::Collider2DCircle>()->radius = 2.f;
+    }
+    return nullptr;
+}
+
+GameObject::PillarBall* GameEntityFactory::CreatePillarBall(const glm::vec3& origin, const glm::vec3& destination) {
     PillarBall* gameObject = new PillarBall(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
-    gameObject->node->GetComponent<Component::Physics>()->velocity = velocity;
+    gameObject->startPosition = glm::vec2(origin.x, origin.z);
+    gameObject->destination = glm::vec2(destination.x, destination.z);
+    gameObject->startHeight = origin.y;
     return gameObject;
 }
 
@@ -179,8 +288,9 @@ Bullet* GameEntityFactory::CreatePlayerBullet(const glm::vec3& position, const g
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::Physics>()->velocity = direction;
     gameObject->node->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
-    gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = 1.0f;
+    gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = gameObject->node->GetComponent<Component::LifeTime>()->initialLifeTime = 1.0f;
     gameObject->node->GetComponent<Component::Damage>()->faction = faction;
+    gameObject->node->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
     return gameObject;
 }
 
@@ -195,6 +305,7 @@ Bullet* GameEntityFactory::CreateEnemyBullet(const glm::vec3& position, const gl
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= 1.9f;
     gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= 1.5f;
     gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= 1.8f;
+    gameObject->node->GetComponent<Component::PointLight>()->color = glm::vec3(0.67f, 0.f, 0.72f);
     return gameObject;
 }
 
@@ -212,13 +323,19 @@ Dust* GameEntityFactory::CreateDust(Entity * object, int particleTextureIndex) {
     return gameObject;
 }
 
-Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex) {
+Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex, Component::Explode* explodeComponent) {
     Explosion* gameObject = new Explosion(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
+    CreateShrapnel(position, 2, explodeComponent);
+    return gameObject;
+}
+
+ReviveCircle* GameEntityFactory::CreateReviveCircle(SuperPlayer* player) {
+    ReviveCircle* gameObject = new ReviveCircle(mScene, player);
     return gameObject;
 }
 

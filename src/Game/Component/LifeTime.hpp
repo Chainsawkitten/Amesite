@@ -20,5 +20,11 @@ namespace Component {
              * Default: 10.f
              */
             float lifeTime;
+
+            /// How much time the Entity, to which this component corresponds, had at the beginning of it's life time (in seconds)
+            /**
+             * Default: lifeTime (10.f)
+             */
+            float initialLifeTime;
     };
 }

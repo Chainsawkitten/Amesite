@@ -10,8 +10,13 @@ namespace CaveGenerator {
     class Coordinate;
 }
 
+namespace Component {
+    class Explode;
+}
+
 namespace GameObject{
     class Bullet;
+    class SuperPlayer;
     class Player1;
     class Player2;
     class Camera;
@@ -31,6 +36,8 @@ namespace GameObject{
     class Pillar;
     class PillarBall;
     class Portal;
+    class Scenery;
+    class ReviveCircle;
 }
 
 /// Factory responsible for creating prefab entities.
@@ -157,7 +164,7 @@ class GameEntityFactory {
          * @param velocity The PillarBall's velocity.
          * @return The PillarBall GameObject.
          */
-        GameObject::PillarBall* CreatePillarBall(const glm::vec3& origin, const glm::vec3& velocity);
+        GameObject::PillarBall* CreatePillarBall(const glm::vec3& origin, const glm::vec3& destination);
 
         /// Create Portal.
         /**
@@ -165,6 +172,44 @@ class GameEntityFactory {
          * @return The Portal GameObject.
          */
         GameObject::Portal* CreatePortal(const glm::vec3& origin);
+
+        /// Create crash site.
+        /**
+         * @return The crash entity.
+         */
+        Entity* CreateCrashSite1();
+
+        /// Create crash site.
+        /**
+         * @return The crash entity.
+         */
+        Entity* CreateCrashSite2();
+
+        /// Create stone.
+        /**
+         * @return The stone entity.
+         */
+        Entity* CreateStone();
+
+        /// Create crystal light.
+        /**
+         * @return The crystal entity.
+         */
+        Entity* CreateCrystalLight();
+
+        /// Create fallen pillar.
+        /**
+         * @return The pillar entity.
+         */
+        Entity* CreateFallenPillar();
+
+        /// Create shrapnel.
+        /**
+         * @param position The Shrapnel's starting position.
+         * @param amount The amount of shrapnel.
+         * @return The shrapnel entity.
+         */
+        Entity* CreateShrapnel(glm::vec3 position, unsigned int amount, Component::Explode* explodeComponent = nullptr);
 
         /// Create player bullet.
         /**
@@ -206,7 +251,14 @@ class GameEntityFactory {
          * @param size Size of the explosion.
          * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
          */
-        GameObject::Explosion* CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex);
+        GameObject::Explosion* CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex, Component::Explode* explodeComponent = nullptr);
+
+        /// Creates a ReviveCircle.
+        /**
+         * @param position Position of the revive circle.
+         * @param player Player which this reive circle corresponds to.
+         */
+        GameObject::ReviveCircle* CreateReviveCircle(GameObject::SuperPlayer* player);
 
         /// Sets scene that the factory is coupled to.
         /**
