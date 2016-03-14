@@ -30,6 +30,9 @@ Menu::Menu() {
     mFlyOut = false;
     mTimer = 0.f;
     
+    // Transition.
+    mTransition = false;
+    
     // Load font.
     float fontHeight = glm::ceil(MainWindow::GetInstance()->GetSize().y * 0.07f);
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", fontHeight);
@@ -74,9 +77,17 @@ void Menu::SetRotation(const glm::vec3& rotation) {
 void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
     Entity* camera = HubInstance().GetMainCamera().body;
     
-    float weight = 1.f;
+    // Transition.
+    if (mTransition) {
+        mTransitionTimer += deltaTime;
+        if (mTransitionTimer > 1.f) {
+            mTransition = false;
+            mSelected = mNextSubMenu;
+        }
+    }
     
     // Fly out camera.
+    float weight = 1.f;
     if (mFlyOut) {
         mTimer += deltaTime;
         if (mTimer > 1.f) {
@@ -107,12 +118,14 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
     
     mModelMatrix = playerModelMatrix * glm::translate(glm::mat4(), mPosition) * orientation;
     
-    for (SubMenu* subMenu : mSubMenus)
-        subMenu->UpdateModelMatrix(mModelMatrix);
-    
-    // Update menu selection.
-    if (!mFlyOut) {
-        mSubMenus[mSelected]->Update(playerScale);
+    if (!mTransition) {
+        for (SubMenu* subMenu : mSubMenus)
+            subMenu->UpdateModelMatrix(mModelMatrix);
+        
+        // Update menu selection.
+        if (!mFlyOut) {
+            mSubMenus[mSelected]->Update(playerScale);
+        }
     }
 }
 
@@ -130,5 +143,7 @@ void Menu::ResumeGame() {
 }
 
 void Menu::Transition(int subMenuIndex) {
-    mSelected = subMenuIndex;
+    mTransition = true;
+    mNextSubMenu = subMenuIndex;
+    mTransitionTimer = 0.f;
 }

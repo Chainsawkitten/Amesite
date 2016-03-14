@@ -65,6 +65,11 @@ class Menu {
         glm::vec3 mRotation;
         glm::mat4 mModelMatrix;
         
+        // Transition between submenus.
+        bool mTransition;
+        int mNextSubMenu;
+        float mTransitionTimer;
+        
         // Text.
         Font* mFont;
         
