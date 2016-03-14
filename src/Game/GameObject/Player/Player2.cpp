@@ -27,11 +27,6 @@
 using namespace GameObject;
 
 Player2::Player2(Scene* scene) : SuperPlayer(scene) {
-    mActive = true;
-    mRespawnTimer = 5;
-
-    mState = LIGHTDAMAGE;
-
     mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff.png");
     mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_medium_damage.png");
     mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_heavy_damage.png");
