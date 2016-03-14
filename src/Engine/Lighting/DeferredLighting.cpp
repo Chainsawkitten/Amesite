@@ -198,7 +198,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         if (transform != nullptr) {
             glm::vec4 direction = viewMat * glm::vec4(transform->GetWorldDirection(), 0.f);
             glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &light->color[0]);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &(light->color * light->intensity)[0]);
             glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), light->attenuation);
             glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), light->ambientCoefficient);
             glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), light->coneAngle);
@@ -228,7 +228,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             modelMat = glm::translate(glm::mat4(), transform->GetWorldPosition()) * glm::scale(glm::mat4(), glm::vec3(1.f, 1.f, 1.f) * scale);
             
             glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &light->color[0]);
+            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &(light->color * light->intensity)[0]);
             glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), light->attenuation);
             glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), light->ambientCoefficient);
             glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 180.f);

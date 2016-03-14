@@ -87,6 +87,9 @@ namespace GameObject {
         // Propeller relative to body.
         Entity* mMidPropeller;
 
+        // Particles relative to mid propeller;
+        Entity* mMidPropellerParticles[4];
+
         // Propeller relative to engine.
         Entity* mFrontPropellerLeft;
 

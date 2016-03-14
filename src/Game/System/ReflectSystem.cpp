@@ -5,6 +5,7 @@
 
 #include "../Component/Reflect.hpp"
 #include "../Component/Damage.hpp"
+#include "../Component/LifeTime.hpp"
 #include <Engine/Component/Physics.hpp>
 
 #include <vector>
@@ -31,6 +32,9 @@ void ReflectSystem::Update(Scene& scene, float deltaTime) {
                             glm::vec3 normal = glm::normalize(collisionY->GetComponent<Component::Transform>()->GetWorldPosition() - collisionX->entity->GetComponent<Component::Transform>()->GetWorldPosition());
                             physicsY->velocity -= 2.f*(glm::dot(physicsY->velocity, normal)*normal);
                             damageCompY->faction = reflectCompX->faction;
+                            Component::LifeTime* lifeTimeComponent = collisionY->GetComponent<Component::LifeTime>();
+                            if (lifeTimeComponent != nullptr)
+                                lifeTimeComponent->lifeTime = lifeTimeComponent->initialLifeTime;
                         }
                     }
                 }
