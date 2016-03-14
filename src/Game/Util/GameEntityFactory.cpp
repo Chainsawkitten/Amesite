@@ -169,14 +169,27 @@ GameObject::Pillar* GameEntityFactory::CreatePillar(const glm::vec3& origin, glm
     return gameObject;
 }
 
-Entity* GameEntityFactory::CreateCrashSite() {
+Entity* GameEntityFactory::CreateCrashSite1() {
 
     Entity* crash = mScene->CreateEntity();
     crash->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/player1_body.obj");
     crash->AddComponent<Component::Material>()->SetDiffuse("Resources/player1_body_diff_dead.png");
     crash->GetComponent<Component::Material>()->SetSpecular("Resources/player1_body_spec.png");
     crash->GetComponent<Component::Material>()->SetGlow("Resources/player1_body_glow.png");
-    crash->AddComponent<Component::Transform>()->scale *= 0.3f;
+    crash->AddComponent<Component::Transform>()->scale *= 0.25f;
+
+    return crash;
+
+}
+
+Entity* GameEntityFactory::CreateCrashSite2() {
+
+    Entity* crash = mScene->CreateEntity();
+    crash->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/player2_body.obj");
+    crash->AddComponent<Component::Material>()->SetDiffuse("Resources/player2_diff_dead.png");
+    crash->GetComponent<Component::Material>()->SetSpecular("Resources/player2_spec.png");
+    crash->GetComponent<Component::Material>()->SetGlow("Resources/player2_glow.png");
+    crash->AddComponent<Component::Transform>()->scale *= 0.25f;
 
     return crash;
 
