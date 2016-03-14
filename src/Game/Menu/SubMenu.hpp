@@ -70,6 +70,14 @@ class SubMenu {
          */
         void AddMenuOption(MenuOption* menuOption);
         
+        /// Set title option.
+        /**
+         * Sets a menu option to display as the title of the menu.
+         * This menu option can't be interacted with.
+         * @param titleOption %Menu option to display as title.
+         */
+        void SetTitleOption(MenuOption* titleOption);
+        
         /// Get the menu's font.
         /**
          * @return The menu's font.
@@ -87,4 +95,6 @@ class SubMenu {
         // Menu options.
         std::vector<MenuOption*> mMenuOptions;
         int mSelected;
+        
+        MenuOption* mTitleOption;
 };

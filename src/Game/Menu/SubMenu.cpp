@@ -26,6 +26,8 @@ SubMenu::SubMenu() {
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
     mSelected = 0;
+    
+    mTitleOption = nullptr;
 }
 
 SubMenu::~SubMenu() {
@@ -33,6 +35,9 @@ SubMenu::~SubMenu() {
     
     for (MenuOption* menuOption : mMenuOptions)
         delete menuOption;
+    
+    if (mTitleOption != nullptr)
+        delete mTitleOption;
 }
 
 void SubMenu::SetPosition(const glm::vec3& position) {
@@ -96,10 +101,17 @@ void SubMenu::RenderMenuOptions() {
     
     for (MenuOption* menuOption : mMenuOptions)
         menuOption->Render(screenSize, mModelMatrix);
+    
+    if (mTitleOption != nullptr)
+        mTitleOption->Render(screenSize, mModelMatrix);
 }
 
 void SubMenu::AddMenuOption(MenuOption* menuOption) {
     mMenuOptions.push_back(menuOption);
+}
+
+void SubMenu::SetTitleOption(MenuOption* titleOption) {
+    mTitleOption = titleOption;
 }
 
 Font* SubMenu::GetFont() const {
