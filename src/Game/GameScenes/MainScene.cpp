@@ -91,7 +91,7 @@ MainScene::MainScene() {
     alSourcei(mCalmSource, AL_BUFFER, mCalmSoundBuffer->Buffer());
     alSourcei(mCalmSource, AL_LOOPING, AL_TRUE);
 
-    mActionSoundBuffer = Resources().CreateSound("Resources/MusicAction.ogg");
+    mActionSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
     alGenSources(1, &mActionSource);
     alSourcef(mActionSource, AL_GAIN, 0.f);
     alSourcei(mActionSource, AL_BUFFER, mActionSoundBuffer->Buffer());
@@ -143,11 +143,11 @@ MainScene::MainScene() {
     mPortalPosition = glm::vec2(playerStartX, playerStartZ);
 
     // Create players 
-    Player1* player1 = GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f));
+    //Player1* player1 = GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f));
     Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f));
-    mPlayers.push_back(player1);
+    //mPlayers.push_back(player1);
     mPlayers.push_back(player2);
-    HubInstance().mPlayers.push_back(player1);
+    //HubInstance().mPlayers.push_back(player1);
     HubInstance().mPlayers.push_back(player2);
 
     // Set menu position.

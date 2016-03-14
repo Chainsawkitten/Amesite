@@ -9,6 +9,10 @@
 #include <Entity/Entity.hpp>
 #include <glm/glm.hpp>
 #include <vector>
+#include <System/SoundSystem.hpp>
+#include <Audio/SoundBuffer.hpp>
+#include <Resources.hpp>
+#include "Game/GameObject/Player/SuperPlayer.hpp"
 
 void System::CheckpointSystem::Update(float deltaTime) {
     for (auto& thisPlayer : mPlayers) {
@@ -31,12 +35,39 @@ void System::CheckpointSystem::Update(float deltaTime) {
         }
     }
 
+    bool anyPlayerHit = false;
+    for (auto &player : mPlayers) {
+        if (player->mState == 2) {
+            anyPlayerHit = true;
+            break;
+        }
+    }
+
+    if (anyPlayerHit && !mPlayingBeepSound) {
+        alSourcePlay(mBeepSource);
+        mPlayingBeepSound = true;
+    }
+
+
     for (auto &player : mPlayers) {
         if (player->Active())
             return;
     }
 
     RespawnPlayers();
+}
+
+System::CheckpointSystem::CheckpointSystem() {
+    mLowHPSoundBuffer = Resources().CreateSound("Resources/LowHPBeep.ogg");
+    alGenSources(1, &mBeepSource);
+    alSourcei(mBeepSource, AL_BUFFER, mLowHPSoundBuffer->Buffer());
+    alSourcei(mBeepSource, AL_LOOPING, AL_TRUE);
+    mPlayingBeepSound = false;
+}
+
+System::CheckpointSystem::~CheckpointSystem() {
+    alDeleteSources(1, &mBeepSource);
+    Resources().FreeSound(mLowHPSoundBuffer);
 }
 
 void System::CheckpointSystem::MoveCheckpoint(glm::vec2 position) {
