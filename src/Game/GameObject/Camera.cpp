@@ -24,7 +24,7 @@ Camera::Camera(Scene* scene) : SuperGameObject(scene) {
 Camera::~Camera() {
 }
 
-void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>& players) {
+void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>& players, float deltaTime) {
     int numberOfPlayers = players.size();
     glm::vec3 cameraPos = glm::vec3(0.f, 0.f, 0.f);
     glm::vec3 min = glm::vec3(std::numeric_limits<float>::max(), 0.f, std::numeric_limits<float>::max());
@@ -66,7 +66,7 @@ void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>&
     const glm::mat4& viewMatrix = transform->modelMatrix;
     glm::vec3 direction = glm::vec3(viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2]);
     cameraPos += direction * distance;
-
-    body->GetComponent<Component::Transform>()->position = cameraPos;
+    glm::vec3 velocity = (cameraPos - transform->position) * 3.f;
+    transform->position += velocity * deltaTime;
     transform->UpdateModelMatrix();
 }
