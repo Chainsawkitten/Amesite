@@ -2,6 +2,11 @@
 
 #include <glm/glm.hpp>
 
+namespace Geometry {
+    class Plane;
+}
+class ShaderProgram;
+
 /// Menu option interface.
 class SuperMenuOption {
     public:
@@ -28,6 +33,11 @@ class SuperMenuOption {
         virtual glm::vec2 GetScale() const = 0;
         
     private:
+        // Used to render 3D text.
+        Geometry::Plane* mPlane;
+        ShaderProgram* mTextShaderProgram;
+        ShaderProgram* mSelectedShaderProgram;
+        
         glm::vec3 mPosition;
         glm::vec3 mRotation;
 };
