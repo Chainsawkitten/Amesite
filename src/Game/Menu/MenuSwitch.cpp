@@ -29,4 +29,5 @@ Texture2D* MenuSwitch::GetTexture() const {
 
 void MenuSwitch::Press() {
     mSelected = (mSelected + 1) % mOptions.size();
+    callback(mOptions[mSelected]);
 }

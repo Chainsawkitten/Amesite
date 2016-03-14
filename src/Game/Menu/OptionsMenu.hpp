@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SubMenu.hpp"
+#include <string>
 
 class Menu;
 
@@ -24,4 +25,8 @@ class OptionsMenu : public SubMenu {
          * @return Direction of the camera.
          */
         glm::vec3 GetCameraDirection() const;
+        
+    private:
+        void Fullscreen(std::string option);
+        void FXAA(std::string option);
 };

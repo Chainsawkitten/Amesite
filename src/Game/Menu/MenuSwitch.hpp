@@ -3,12 +3,15 @@
 #include "SuperMenuOption.hpp"
 #include <vector>
 #include <string>
+#include <functional>
 
 class Font;
 
 /// Switch for the options menu.
 class MenuSwitch : public SuperMenuOption {
     public:
+        std::function<void(std::string)> callback;
+        
         /// Create new menu option.
         /**
          * @param font %Font to use to render the text.
