@@ -34,6 +34,7 @@ void System::CheckpointSystem::Update(float deltaTime) {
         //If the players respawn timer is < 0, then the player should be activated.
         if (thisPlayer->respawnTimeLeft < 0.001f) {
             thisPlayer->Activate();
+            thisPlayer->respawnTimeLeft = thisPlayer->initalRespawnTime;
         }
     }
 
