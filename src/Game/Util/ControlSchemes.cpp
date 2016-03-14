@@ -226,12 +226,11 @@ void ControlScheme::AccelerateTowardsClosestPlayer(Component::Controller* contro
     if (glm::length(targetDirection) > 0.001f) {
         Component::Physics* physics = controller->entity->GetComponent<Component::Physics>();
         if (physics != nullptr) {
-            transformComponent->Move(transformComponent->GetWorldDirection() * 0.01f * controller->speed * deltaTime);
             if (glm::length(physics->acceleration) < 0.01f) {
-                physics->acceleration = targetDirection * controller->speed * deltaTime;
+                physics->acceleration = (targetDirection * controller->speed) * deltaTime;
             } else {
                 float accelerationFactor = ((glm::dot(glm::normalize(targetDirection), glm::normalize(physics->acceleration)) - 1.f) * -1.f) * 20.f + 1.f;
-                physics->acceleration += targetDirection * controller->speed * deltaTime * accelerationFactor * accelerationFactor * accelerationFactor;
+                physics->acceleration += targetDirection * controller->speed * deltaTime * accelerationFactor * accelerationFactor * accelerationFactor - 1500.f*physics->velocity;
             }
         }
     }
