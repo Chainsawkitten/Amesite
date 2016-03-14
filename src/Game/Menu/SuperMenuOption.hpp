@@ -39,6 +39,9 @@ class SuperMenuOption {
          */
         virtual Texture2D* GetTexture() const = 0;
         
+        /// Press the menu option.
+        virtual void Press();
+        
         /// Get whether the mouse cursor intersects the menu option.
         /**
          * @param cameraPosition The main camera's position.

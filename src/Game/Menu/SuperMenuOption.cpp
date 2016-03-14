@@ -50,6 +50,10 @@ glm::mat4 SuperMenuOption::GetModelMatrix() const {
     return glm::translate(glm::mat4(), mPosition) * orientation * glm::scale(glm::mat4(), glm::vec3(GetScale().x, GetScale().y, 1.f));
 }
 
+void SuperMenuOption::Press() {
+    
+}
+
 bool SuperMenuOption::MouseIntersect(const glm::vec3& cameraPosition, const glm::vec3& ray, const glm::mat4& menuModelMatrix, const glm::vec2& playerScale) {
     glm::mat4 modelMatrix(GetModelMatrix());
     

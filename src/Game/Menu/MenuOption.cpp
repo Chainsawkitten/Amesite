@@ -26,6 +26,10 @@ Texture2D* MenuOption::GetTexture() const {
     return mPrerenderedText;
 }
 
+void MenuOption::Press() {
+    callback();
+}
+
 void MenuOption::EmptyCallback() const {
     
 }

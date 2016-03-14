@@ -1,8 +1,8 @@
 #pragma once
 
-#include "MenuOption.hpp"
+#include "SuperMenuOption.hpp"
 
-class MenuSwitch : public MenuOption {
+class MenuSwitch : public SuperMenuOption {
     public:
         
 };

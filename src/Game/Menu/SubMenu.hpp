@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-class MenuOption;
+class SuperMenuOption;
 class Font;
 
 /// A sub menu inside a menu.
@@ -68,7 +68,7 @@ class SubMenu {
         /**
          * @param menuOption %Menu option to add.
          */
-        void AddMenuOption(MenuOption* menuOption);
+        void AddMenuOption(SuperMenuOption* menuOption);
         
         /// Get the menu's font.
         /**
@@ -85,6 +85,6 @@ class SubMenu {
         Font* mFont;
         
         // Menu options.
-        std::vector<MenuOption*> mMenuOptions;
+        std::vector<SuperMenuOption*> mMenuOptions;
         int mSelected;
 };

@@ -36,6 +36,9 @@ class MenuOption : public SuperMenuOption {
          */
         Texture2D* GetTexture() const;
         
+        /// Press the menu option.
+        void Press();
+        
     private:
         Texture2D* mPrerenderedText;
         glm::vec2 mScale;

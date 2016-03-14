@@ -1,6 +1,6 @@
 #include "SubMenu.hpp"
 
-#include "MenuOption.hpp"
+#include "SuperMenuOption.hpp"
 #include <Resources.hpp>
 #include <Font/Font.hpp>
 
@@ -31,7 +31,7 @@ SubMenu::SubMenu() {
 SubMenu::~SubMenu() {
     Resources().FreeFont(mFont);
     
-    for (MenuOption* menuOption : mMenuOptions)
+    for (SuperMenuOption* menuOption : mMenuOptions)
         delete menuOption;
 }
 
@@ -82,7 +82,7 @@ void SubMenu::Update(const glm::vec2& playerScale) {
     
     // Handle pressed menu option.
     if (Input()->Triggered(InputHandler::ANYONE, InputHandler::SHOOT))
-        mMenuOptions[mSelected]->callback();
+        mMenuOptions[mSelected]->Press();
 }
 
 void SubMenu::RenderSelected() {
@@ -94,11 +94,11 @@ void SubMenu::RenderSelected() {
 void SubMenu::RenderMenuOptions() {
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
-    for (MenuOption* menuOption : mMenuOptions)
+    for (SuperMenuOption* menuOption : mMenuOptions)
         menuOption->Render(screenSize, mModelMatrix);
 }
 
-void SubMenu::AddMenuOption(MenuOption* menuOption) {
+void SubMenu::AddMenuOption(SuperMenuOption* menuOption) {
     mMenuOptions.push_back(menuOption);
 }
 
