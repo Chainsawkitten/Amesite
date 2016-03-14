@@ -288,6 +288,8 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     emitter->particleType.startAlpha = 1.f;
     emitter->particleType.midAlpha = 1.f;
     emitter->particleType.endAlpha = 0.f;
+    
+    mUpdateFunction();
 }
 
 Player2::~Player2() {

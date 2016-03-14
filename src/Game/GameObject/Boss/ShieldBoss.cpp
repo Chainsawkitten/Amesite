@@ -23,17 +23,22 @@
 #include <Engine/Component/ParticleEmitter.hpp>
 #include <Engine/Component/Physics.hpp>
 
+#include "../Bullet.hpp"
+
 #include "../../Util/ControlSchemes.hpp"
+#include "../../Util/GameEntityFactory.hpp"
 
 using namespace GameObject;
 
 ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
 
-    moveCoverIn = false;
+    mOffsetAngle = 0;
 
     node->AddComponent<Component::Transform>()->scale *= 0.7f;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&ShieldBoss::mUpdateFunction, this);
-    node->AddComponent<Component::Spawner>()->delay = 0.8f;
+    node->AddComponent<Component::Spawner>()->delay = 2.f;
+    node->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
+    node->GetComponent<Component::Physics>()->angularVelocity.y = 0.15f;
 
     body->GetComponent<Component::Transform>()->scale *= 1.2f;
     body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond_body.obj");
@@ -47,13 +52,13 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Explode>()->lifeTime = 1.5f;
     body->GetComponent<Component::Explode>()->offset.y = 5.0f;
     body->GetComponent<Component::Explode>()->sound = true;
-    body->AddComponent<Component::Health>()->faction = 1;
-    body->GetComponent<Component::Health>()->removeOnLowHealth = false;
+    body->AddComponent<Component::Health>()->removeOnLowHealth = false;
+    body->GetComponent<Component::Health>()->faction = 1;
+    body->GetComponent<Component::Health>()->maxCooldown = 10.f;
+    body->GetComponent<Component::Health>()->health = body->GetComponent<Component::Health>()->maxHealth = 100.f;
+    body->GetComponent<Component::Health>()->regainAmount = body->GetComponent<Component::Health>()->health / 3.f;
     body->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     body->GetComponent<Component::Physics>()->angularVelocity.y = -0.1f;
-    body->AddComponent<Component::Spawner>()->delay = 0.2;
-    body->GetComponent<Component::Spawner>()->faction = 1.f;
-    body->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShoot);
 
     mCoverModel = Resources().CreateOBJModel("Resources/ring_segment.obj");
     for (int i = 0; i < 3; i++) {
@@ -63,16 +68,13 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
         CreateCover(&coverArr[i]);
         Component::Transform* transform = coverArr[i].node->GetComponent<Component::Transform>();
         transform->yaw = i * 120.f;
-        transform->Move(transform->GetWorldDirection() * 18.f);
+        transform->Move(transform->GetWorldDirection() * 21.f);
     }
 }
 
 ShieldBoss::~ShieldBoss() {
     Resources().FreeOBJModel(mBodyModel);
     Resources().FreeOBJModel(mCoverModel);
-    //for (int i = 0; i < 3; i++) {
-    //    coverArr[i].node->Kill();
-    //}
 }
 
 float ShieldBoss::GetHealth() {
@@ -107,6 +109,8 @@ void ShieldBoss::CreateCover(Cover* cover) {
     cover->rightShield->AddComponent<Component::Collider2DCircle>()->radius = 4.f;
     cover->rightShield->AddComponent<Component::Damage>()->faction = 1.f;
     cover->rightShield->GetComponent<Component::Damage>()->removeOnImpact = false;
+
+    Deactivate();
 }
 
 void ShieldBoss::Activate() {
@@ -119,13 +123,35 @@ void ShieldBoss::Deactivate() {
 
 void ShieldBoss::mUpdateFunction() {
     SuperBoss::mUpdateFunction();
-    for (int i = 0; i < 3; i++) {
-        Component::Transform* transform = coverArr[i].node->GetComponent<Component::Transform>();
-        transform->Move(transform->GetWorldDirection() * 0.2f * ((float)moveCoverIn * 2.f - 1.f));
+    Component::Spawner* spawnerComp = node->GetComponent<Component::Spawner>();
+    if (spawnerComp->timeSinceSpawn > spawnerComp->delay && Active()) {
+        FireBullets();
+        spawnerComp->timeSinceSpawn = 0.f;
     }
-    Component::Spawner* spawner = node->GetComponent<Component::Spawner>();
-    if (spawner->timeSinceSpawn >= spawner->delay) {
-        moveCoverIn = !moveCoverIn;
-        spawner->timeSinceSpawn = 0.f;
+}
+
+void ShieldBoss::FireBullets() {
+    int nr = 15;
+    mOffsetAngle += 360.f / nr / 2.f;
+    mOffsetAngle = mOffsetAngle % 360;
+    for (int i = 0; i < nr; i++) {
+        float angle = mOffsetAngle + i * 360.f / nr;
+        float size = 2.f;
+        float speed = 20.f;
+        GameObject::Bullet* bullet = GameEntityCreator().CreateEnemyBullet(GetPosition(), glm::vec3(0.f, 0.f, 0.f), 1);
+        bullet->node->GetComponent<Component::Transform>()->scale *= size;
+        bullet->node->GetComponent<Component::Transform>()->yaw = angle;
+        glm::vec3 velocity = bullet->node->GetComponent<Component::Transform>()->GetWorldDirection();
+        bullet->node->GetComponent<Component::Physics>()->velocity = speed * bullet->node->GetComponent<Component::Transform>()->GetWorldDirection();
+        bullet->node->GetComponent<Component::Physics>()->maxVelocity = 1.5f * glm::length(bullet->node->GetComponent<Component::Physics>()->velocity);
+        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
+        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
+        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
+        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
+        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= size;
+        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= size;
+        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= size;
+        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= size;
+        bullet->node->GetComponent<Component::Damage>()->damageAmount = 9000.0000001f;
     }
 }

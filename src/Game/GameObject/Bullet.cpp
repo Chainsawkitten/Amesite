@@ -23,14 +23,17 @@
 using namespace GameObject;
 
 Bullet::Bullet(Scene* scene, float lifeTime) : SuperGameObject(scene) {
+
+    lightIntensity = 1.f;
+
     node = CreateEntity();
     node->AddComponent<Component::Damage>()->damageAmount = 10.f;
     node->AddComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
     node->AddComponent<Component::Explode>()->lifeTime = 0.15f;
-    node->GetComponent<Component::Explode>()->size = 1.f;
+    node->GetComponent<Component::Explode>()->size = 2.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
     node->AddComponent<Component::Collider2DCircle>()->radius = 0.5f;
-    node->AddComponent<Component::GridCollide>();
+    node->AddComponent<Component::GridCollide>()->removeOnImpact = true;
     node->AddComponent<Component::Physics>();
     Component::LifeTime* lifeTimeComponent = node->AddComponent<Component::LifeTime>();
     lifeTimeComponent->lifeTime = lifeTimeComponent->initialLifeTime = lifeTime;
@@ -91,9 +94,9 @@ void Bullet::mUpdateFunction() {
     float maxIntensity = 15.f;
     float timeLimFactor = 0.1f / lifeTimeComponent->initialLifeTime;
     if (lifeTimeFactor < timeLimFactor) {
-        node->GetComponent<Component::PointLight>()->intensity = maxIntensity / timeLimFactor * lifeTimeFactor;
+        node->GetComponent<Component::PointLight>()->intensity = maxIntensity / timeLimFactor * lifeTimeFactor * lightIntensity;
     } else {
-        node->GetComponent<Component::PointLight>()->intensity = maxIntensity / (timeLimFactor - 1.f) * (lifeTimeFactor - 1.f);
+        node->GetComponent<Component::PointLight>()->intensity = maxIntensity / (timeLimFactor - 1.f) * (lifeTimeFactor - 1.f) * lightIntensity;
     }
        
 }

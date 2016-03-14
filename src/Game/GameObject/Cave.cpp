@@ -36,7 +36,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     mBossRadius = 9;
 
-    scaleFactor = 5.f;
+    scaleFactor = 10.f;
 
     caveMap = new CaveGenerator::CaveMap(height, width, seed);
 
@@ -104,8 +104,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     PerlinNoiseGenerator png(time(0));
 
     float factor = 100.f;
-    float floatMapFactor = (4.f / 10.f);
-    float perlinNoiseFactor = (6.f / 10.f);
+    float floatMapFactor = (5.f / 10.f);
+    float perlinNoiseFactor = (5.f / 10.f);
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
@@ -123,7 +123,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->AddComponent<Component::Transform>();
     heightMap->AddComponent<Component::Material>();
     heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width)/2.f)+1.f, -11.f, scaleFactor*(static_cast<float>(height) / 2.f) + 1.f));
-    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f)*10, 15.f, (static_cast<float>(height) / 2.f) * 10);
+    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f) * scaleFactor * 2, 14.f, (static_cast<float>(height) / 2.f) * scaleFactor * 2);
 
     mTerrain = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
 
@@ -131,13 +131,13 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/defaultYellow.png");
     heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/defaultYellow.png");
 
-    for (int i = 0; i < 50; i++)
+    for (int i = 0; i <  200; i++)
         PlaceScenery(GameEntityCreator().CreateStone(), true);
 
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 80; i++)
         PlaceScenery(GameEntityCreator().CreateCrystalLight(), false);
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 40; i++)
         PlaceScenery(GameEntityCreator().CreateFallenPillar(), true);
 
 
@@ -152,8 +152,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mTopBorder->AddComponent<Component::Mesh>();
     mTopBorder->AddComponent<Component::Material>();
     mTopBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
-    mTopBorder->GetComponent<Component::Transform>()->Move(glm::vec3(0, 0, scaleFactor*(static_cast<float>(width) / 2.f) + 45.f));
-    mTopBorder->GetComponent<Component::Transform>()->scale = glm::vec3(1000, 100, 1);
+    mTopBorder->GetComponent<Component::Transform>()->Move(glm::vec3(0, 0, glm::ceil(scaleFactor*(static_cast<float>(width) / 2.f)) + 40.f));
+    mTopBorder->GetComponent<Component::Transform>()->scale = glm::vec3(10000, 100, 1);
     mTopBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
     mTopBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
 
@@ -161,8 +161,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mBottomBorder->AddComponent<Component::Mesh>();
     mBottomBorder->AddComponent<Component::Material>();
     mBottomBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
-    mBottomBorder->GetComponent<Component::Transform>()->Move(glm::vec3(0, 0, -scaleFactor*(static_cast<float>(width) / 2.f) - 50.f));
-    mBottomBorder->GetComponent<Component::Transform>()->scale = glm::vec3(1000, 100, 1);
+    mBottomBorder->GetComponent<Component::Transform>()->Move(glm::vec3(0, 0, glm::floor(scaleFactor*(-static_cast<float>(width) / 2.f)) - 50.f));
+    mBottomBorder->GetComponent<Component::Transform>()->scale = glm::vec3(10000, 100, 1);
     mBottomBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
     mBottomBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
 
@@ -170,8 +170,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mRightBorder->AddComponent<Component::Mesh>();
     mRightBorder->AddComponent<Component::Material>();
     mRightBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
-    mRightBorder->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f) + 45.f, 0, 0));
-    mRightBorder->GetComponent<Component::Transform>()->scale = glm::vec3(100, 1000, 1);
+    mRightBorder->GetComponent<Component::Transform>()->Move(glm::vec3(glm::ceil(scaleFactor*(static_cast<float>(width) / 2.f)) + 40.f, 0, 0));
+    mRightBorder->GetComponent<Component::Transform>()->scale = glm::vec3(100, 10000, 1);
     mRightBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
     mRightBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
 
@@ -179,21 +179,21 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mLeftBorder->AddComponent<Component::Mesh>();
     mLeftBorder->AddComponent<Component::Material>();
     mLeftBorder->AddComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width) / 2.f), 3, scaleFactor*(static_cast<float>(height) / 2.f)));
-    mLeftBorder->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(-static_cast<float>(width) / 2.f) - 50.f, 0, 0));
-    mLeftBorder->GetComponent<Component::Transform>()->scale = glm::vec3(100, 1000, 1);
+    mLeftBorder->GetComponent<Component::Transform>()->Move(glm::vec3(glm::floor(scaleFactor*(-static_cast<float>(width) / 2.f)) - 50.f, 0, 0));
+    mLeftBorder->GetComponent<Component::Transform>()->scale = glm::vec3(100, 10000, 1);
     mLeftBorder->GetComponent<Component::Transform>()->Rotate(0, -90, 0);
     mLeftBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
 
     //Set the texture
-    std::string texture = "Resources/defaultGray.png";
-    mTopBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    mTopBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
-    mBottomBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    mBottomBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
-    mRightBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    mRightBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
-    mLeftBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    mLeftBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    //std::string texture = "Resources/defaultGray.png";
+    //mTopBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    //mTopBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    //mBottomBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    //mBottomBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    //mRightBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    //mRightBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    //mLeftBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    //mLeftBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
 
 }
 
