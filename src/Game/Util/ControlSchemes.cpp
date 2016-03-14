@@ -446,8 +446,16 @@ void ControlScheme::CameraAuto(Component::Controller* controller, float deltaTim
     } else {
         transform->position = cameraPos;
     }
-
+    // NEED TO DO THIS?
     transform->UpdateModelMatrix();
+}
+
+void ControlScheme::CameraChangeControl(Component::Controller* controller, float deltaTime) {
+    if (Input()->Pressed(controller->playerID, InputHandler::CHANGECAMERACONTROL))
+        if (HubInstance().GetMainCamera().state == GameObject::Camera::CameraState::AUTO)
+            HubInstance().GetMainCamera().state = GameObject::Camera::CameraState::FREE;
+        else
+            HubInstance().GetMainCamera().state = GameObject::Camera::CameraState::AUTO;
 }
 
 void ControlScheme::Boost(Component::Controller* controller, float deltaTime) {

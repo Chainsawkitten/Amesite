@@ -112,10 +112,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/defaultYellow.png");
     heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/defaultYellow.png");
 
-    //Place scenery
-    for (int i = 0; i < 1; i++)
-        PlaceScenery(GameEntityCreator().CreateCrashSite(), true);
-
     for (int i = 0; i < 50; i++)
         PlaceScenery(GameEntityCreator().CreateStone(), true);
 
@@ -198,11 +194,7 @@ void Cave::PlaceScenery(Entity* scenery, bool rotate) {
 
     float x = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
     float z = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
-
-    unsigned int xOnGrid = glm::floor(x / scaleFactor);
-    unsigned int zOnGrid = glm::floor(z / scaleFactor);
-
-    glm::vec3 point = glm::vec3(x, mTerrain->GetY(xOnGrid, zOnGrid) - 10.f, z);
+    glm::vec3 point = glm::vec3(x, GetTerrainHeight(x, z) - 10.f, z);
 
     if (!GridCollide(point)) {
         
@@ -215,6 +207,10 @@ void Cave::PlaceScenery(Entity* scenery, bool rotate) {
 
     }
 
+}
+
+float Cave::GetTerrainHeight(float x, float z) {
+    return mTerrain->GetY(glm::floor(x / scaleFactor), glm::floor(z / scaleFactor));
 }
 
 int Cave::GetWidth() const {

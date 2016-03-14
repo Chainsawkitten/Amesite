@@ -79,6 +79,7 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
 
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::CHANGECAMERACONTROL, InputHandler::KEYBOARD, GLFW_KEY_SPACE);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
@@ -234,6 +235,7 @@ void MainScene::Update(float deltaTime) {
                 player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
                 player->Deactivate();
                 GameEntityCreator().CreateExplosion(player->GetPosition(), 1.5f, 25.f, Component::ParticleEmitter::BLUE);
+                GameEntityCreator().CreateReviveCircle(player);
             }
             glm::vec2 playerPosition(player->GetPosition().x, player->GetPosition().z);
 

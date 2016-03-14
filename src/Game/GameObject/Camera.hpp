@@ -26,6 +26,11 @@ namespace GameObject {
             /// Body of camera
             Entity* body;
 
+            enum CameraState {
+                AUTO = 0,
+                FREE
+            } state;
+
             /// Whether the camera is auto controlled
             /**
              * Default: false
@@ -33,6 +38,8 @@ namespace GameObject {
             bool autoControll;
 
         private:
+            CameraState mLastState;
+
             void mUpdateFunction();
     };
 }
