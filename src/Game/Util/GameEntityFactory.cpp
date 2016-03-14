@@ -79,13 +79,16 @@ Rocket* GameEntityFactory::CreateRocket(const glm::vec3& origin) {
 
 Rocket* GameEntityFactory::CreateMiniRocket(const glm::vec3& origin) {
     Rocket* gameObject = new Rocket(mScene);
+    float scaleFactor = 0.25f;
     Component::Transform* transform = gameObject->node->GetComponent<Component::Transform>();
     transform->position = origin;
-    transform->scale *= 0.25f;
+    transform->scale *= scaleFactor;
     gameObject->node->AddComponent<Component::LifeTime>()->lifeTime = 5.f;
     gameObject->node->GetComponent<Component::Damage>()->removeOnImpact = true;
     gameObject->node->GetComponent<Component::GridCollide>()->removeOnImpact = true;
-    gameObject->node->GetComponent<Component::Explode>()->size = 8.f;
+    gameObject->node->GetComponent<Component::Explode>()->size *= scaleFactor;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= scaleFactor;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= scaleFactor;
     Component::Health *healthComp = gameObject->node->GetComponent<Component::Health>();
     healthComp->maxHealth = healthComp->health = 20.f;
     healthComp->removeOnLowHealth = true;

@@ -130,5 +130,8 @@ namespace GameObject {
             void AddEnginePartilces(Entity* entity);
 
             void mUpdateFunction();
+
+            private:
+                float mRegainAmount;
     };
 }

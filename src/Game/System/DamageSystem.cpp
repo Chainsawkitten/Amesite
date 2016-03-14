@@ -44,7 +44,7 @@ void DamageSystem::Update(Scene& scene) {
                     if (damageY->faction != HealthX->faction) {
                         // Reduce health by damage.
                         HealthX->health -= damageY->damageAmount;
-                        
+                        HealthX->cooldown = HealthX->maxCooldown;
                         if(HealthX->damaged == -1)
                             HealthX->damaged = 1;
                         
