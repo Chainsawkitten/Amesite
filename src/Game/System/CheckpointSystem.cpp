@@ -58,9 +58,7 @@ void System::CheckpointSystem::RespawnPlayers() {
         site->GetComponent<Component::Transform>()->position = player->GetPosition();
         site->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
         site->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
-    }
 
-    for (auto &player : mPlayers) {
         player->SetPosition(glm::vec3(mPosition.x, 0.f, mPosition.y));
         player->GetNodeEntity()->GetComponent<Component::Health>()->health = player->GetNodeEntity()->GetComponent<Component::Health>()->maxHealth;
         player->Activate();
