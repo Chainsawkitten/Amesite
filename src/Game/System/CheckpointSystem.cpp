@@ -14,6 +14,16 @@
 #include <Resources.hpp>
 #include "Game/GameObject/Player/SuperPlayer.hpp"
 
+System::CheckpointSystem::CheckpointSystem() {
+    mLowHPSoundBuffer = Resources().CreateSound("Resources/LowHPBeep.ogg");
+    alGenSources(1, &mBeepSource);
+    alSourcei(mBeepSource, AL_BUFFER, mLowHPSoundBuffer->Buffer());
+    alSourcei(mBeepSource, AL_LOOPING, AL_TRUE);
+    mPlayingBeepSound = false;
+    mRespawn = false;
+
+}
+
 void System::CheckpointSystem::Update(float deltaTime) {
     for (auto& thisPlayer : mPlayers) {
         for (auto& otherPlayer : mPlayers) {
@@ -32,12 +42,13 @@ void System::CheckpointSystem::Update(float deltaTime) {
         //If the players respawn timer is < 0, then the player should be activated.
         if (thisPlayer->respawnTimeLeft < 0.001f) {
             thisPlayer->Activate();
+            thisPlayer->respawnTimeLeft = thisPlayer->initalRespawnTime;
         }
     }
 
     bool anyPlayerHit = false;
     for (auto &player : mPlayers) {
-        if (player->mState == 2) {
+        if (player->mState >= 1) {
             anyPlayerHit = true;
             break;
         }
@@ -46,6 +57,9 @@ void System::CheckpointSystem::Update(float deltaTime) {
     if (anyPlayerHit && !mPlayingBeepSound) {
         alSourcePlay(mBeepSource);
         mPlayingBeepSound = true;
+    } else if (!anyPlayerHit && mPlayingBeepSound) {
+        alSourceStop(mBeepSource);
+        mPlayingBeepSound = false;
     }
 
 
@@ -55,14 +69,6 @@ void System::CheckpointSystem::Update(float deltaTime) {
     }
 
     RespawnPlayers();
-}
-
-System::CheckpointSystem::CheckpointSystem() {
-    mLowHPSoundBuffer = Resources().CreateSound("Resources/LowHPBeep.ogg");
-    alGenSources(1, &mBeepSource);
-    alSourcei(mBeepSource, AL_BUFFER, mLowHPSoundBuffer->Buffer());
-    alSourcei(mBeepSource, AL_LOOPING, AL_TRUE);
-    mPlayingBeepSound = false;
 }
 
 System::CheckpointSystem::~CheckpointSystem() {
@@ -80,19 +86,18 @@ void System::CheckpointSystem::AddPlayer(GameObject::SuperPlayer* player) {
 
 void System::CheckpointSystem::RespawnPlayers() {
 
-    Entity* site1 = GameEntityCreator().CreateCrashSite1();
-
-    site1->GetComponent<Component::Transform>()->position = mPlayers[0]->GetPosition();
-    site1->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
-    site1->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
-
-    Entity* site2 = GameEntityCreator().CreateCrashSite2();
-
-    site2->GetComponent<Component::Transform>()->position = mPlayers[1]->GetPosition();
-    site2->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
-    site2->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+    mRespawn = true;
 
     for (auto &player : mPlayers) {
+        Entity* site;
+        if (typeid(*player).name() == typeid(GameObject::Player1).name())
+            site = GameEntityCreator().CreateCrashSite1();
+        else if (typeid(*player).name() == typeid(GameObject::Player2).name())
+            site = GameEntityCreator().CreateCrashSite2();
+        site->GetComponent<Component::Transform>()->position = player->GetPosition();
+        site->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
+        site->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
+
         player->SetPosition(glm::vec3(mPosition.x, 0.f, mPosition.y));
         player->GetNodeEntity()->GetComponent<Component::Health>()->health = player->GetNodeEntity()->GetComponent<Component::Health>()->maxHealth;
         player->Activate();

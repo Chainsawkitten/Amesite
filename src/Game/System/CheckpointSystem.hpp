@@ -38,6 +38,9 @@ namespace System {
              * @param player Player to add.
              */
             void AddPlayer(GameObject::SuperPlayer* player);
+            
+            /// Did we respawn this frame
+            bool mRespawn;
 
         private:
             Audio::SoundBuffer* mLowHPSoundBuffer;

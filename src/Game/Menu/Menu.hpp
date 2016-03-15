@@ -8,7 +8,7 @@ class ShaderProgram;
 namespace Geometry {
     class Plane;
 }
-class MenuOption;
+class SubMenu;
 namespace GameObject {
     class SuperPlayer;
 }
@@ -47,6 +47,15 @@ class Menu {
         /// Render menu options.
         void RenderMenuOptions();
         
+        /// Pan out camera and resume game.
+        void ResumeGame();
+        
+        /// Transition from current submenu to another.
+        /**
+         * @param subMenuIndex Index of the sub menu to transition to.
+         */
+        void Transition(int subMenuIndex);
+        
     private:
         bool mActive;
         bool mFlyOut;
@@ -56,13 +65,15 @@ class Menu {
         glm::vec3 mRotation;
         glm::mat4 mModelMatrix;
         
+        // Transition between submenus.
+        bool mTransition;
+        int mNextSubMenu;
+        float mTransitionTimer;
+        
         // Text.
         Font* mFont;
         
-        // Menu options.
-        std::vector<MenuOption*> mMenuOptions;
+        // Sub menus.
+        std::vector<SubMenu*> mSubMenus;
         int mSelected;
-        
-        void StartGame();
-        void Quit();
 };

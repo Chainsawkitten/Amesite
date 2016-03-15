@@ -21,5 +21,11 @@ namespace GameObject {
 
             /// Node of the %Explosion.
             Entity* node;
+
+            /// Tail of the %Explosion
+            Entity* tail;
+
+            /// Body of the %Explosion
+            Entity* body;
     };
 }

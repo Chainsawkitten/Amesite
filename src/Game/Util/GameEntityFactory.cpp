@@ -291,6 +291,15 @@ Bullet* GameEntityFactory::CreatePlayerBullet(const glm::vec3& position, const g
     gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = gameObject->node->GetComponent<Component::LifeTime>()->initialLifeTime = 1.0f;
     gameObject->node->GetComponent<Component::Damage>()->faction = faction;
     gameObject->node->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
+    gameObject->lightIntensity = 0.3f;
+
+    Component::ParticleEmitter* emitter = gameObject->node->GetComponent<Component::ParticleEmitter>();
+    emitter->maxEmitTime = 0.002;
+    emitter->minEmitTime = 0.0016;
+    emitter->particleType.color = glm::vec3(.0f, 1.f, .0f);
+
+    gameObject->tail->GetComponent<Component::ParticleEmitter>()->enabled = false;
+
     return gameObject;
 }
 
@@ -325,11 +334,31 @@ Dust* GameEntityFactory::CreateDust(Entity * object, int particleTextureIndex) {
 
 Explosion* GameEntityFactory::CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex, Component::Explode* explodeComponent) {
     Explosion* gameObject = new Explosion(mScene);
+
+    if (explodeComponent != nullptr) {
+        if (explodeComponent->type == Component::Explode::NONE) {
+            gameObject->node->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            gameObject->tail->GetComponent<Component::ParticleEmitter>()->enabled = false;
+            gameObject->body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+        }
+    }
+
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
     gameObject->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = particleTextureIndex;
+
+    gameObject->tail->GetComponent<Component::Transform>()->position = position;
+    gameObject->tail->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
+    gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
+    gameObject->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
+
+    gameObject->body->GetComponent<Component::Transform>()->position = position;
+    gameObject->body->GetComponent<Component::LifeTime>()->lifeTime = lifeTime;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
+    gameObject->body->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
+
     CreateShrapnel(position, 2, explodeComponent);
     return gameObject;
 }
