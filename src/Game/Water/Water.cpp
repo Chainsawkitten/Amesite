@@ -6,7 +6,7 @@
 #include <Shader/ShaderProgram.hpp>
 #include <Geometry/Plane.hpp>
 
-#include "Default3D.vert.hpp"
+#include "Water.vert.hpp"
 #include "Water.frag.hpp"
 
 #include "../Util/Hub.hpp"
@@ -21,7 +21,7 @@
 
 Water::Water() {
     // Initialize shaders.
-    Shader* vertexShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
+    Shader* vertexShader = Resources().CreateShader(WATER_VERT, WATER_VERT_LENGTH, GL_VERTEX_SHADER);
     Shader* fragmentShader = Resources().CreateShader(WATER_FRAG, WATER_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
     Resources().FreeShader(vertexShader);

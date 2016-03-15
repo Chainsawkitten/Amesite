@@ -213,7 +213,7 @@ set(EMBEDDED_INPUT
         shaders/Particle.vert
         shaders/Particle.geom
         shaders/Particle.frag
-        shaders/Water.geom
+        shaders/Water.vert
         shaders/Water.frag
     )
 
