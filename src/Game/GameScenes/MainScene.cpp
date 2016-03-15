@@ -162,7 +162,7 @@ MainScene::MainScene() {
     int bossIndex = 0;
     for (int i = 0; i < (numberOfBossPositions / 2); i++) {
         for (int j = 0; j < (numberOfBossPositions / 2); j++) {
-            mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(pillarOrigin.x + i*30.f, pillarOrigin.y, pillarOrigin.z + j*30.f), mBossVector[bossIndex]->GetPosition()));
+            mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(pillarOrigin.x + i*40.f, pillarOrigin.y, pillarOrigin.z + j*40.f), mBossVector[bossIndex]->GetPosition()));
             mNoSpawnRooms.push_back(glm::vec3(bossPositions[bossIndex].x, 0.f, bossPositions[bossIndex].y));
             bossIndex++;
         }

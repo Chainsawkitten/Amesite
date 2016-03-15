@@ -25,12 +25,16 @@ using namespace GameObject;
 
 Altar::Altar(Scene* scene) : SuperGameObject(scene) {
     node = CreateEntity();
-    node->AddComponent<Component::Transform>();
+    node->AddComponent<Component::Transform>()->scale *= 1.3f;
     node->GetComponent<Component::Transform>()->yaw = 20.f;
     node->AddComponent<Component::Material>();
-    node->GetComponent<Component::Material>()->SetDiffuse("Resources/altar_diff.png");
-    node->GetComponent<Component::Material>()->SetGlow("Resources/altar_glow.png");
-    node->AddComponent<Component::Mesh>()->geometry = mAltarModel = Resources().CreateOBJModel("Resources/altar.obj");
+    node->GetComponent<Component::Material>()->SetDiffuse("Resources/Altar_Dif.png");
+    node->GetComponent<Component::Material>()->SetNormal("Resources/Altar_NM.png");
+    node->GetComponent<Component::Material>()->SetGlow("Resources/Altar_Glo.png");
+    node->AddComponent<Component::Mesh>()->geometry = mAltarModel = Resources().CreateOBJModel("Resources/Altar2.obj");
+    //node->GetComponent<Component::Material>()->SetDiffuse("Resources/altar_diff.png");
+    //node->GetComponent<Component::Material>()->SetGlow("Resources/altar_glow.png");
+    //node->AddComponent<Component::Mesh>()->geometry = mAltarModel = Resources().CreateOBJModel("Resources/altar.obj");
 }
 
 Altar::~Altar() {

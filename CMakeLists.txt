@@ -135,9 +135,16 @@ set(RESOURCES
         assets/spawn/altar/altar_diff.png
         assets/spawn/altar/altar_glow.png
         assets/spawn/altar/altar.obj
+        assets/spawn/altar/Altar_Dif.png
+        assets/spawn/altar/Altar_NM.png
+        assets/spawn/altar/Altar_Glo.png
+        assets/spawn/altar/Altar2.obj
         assets/spawn/pillar/pillar_diff.png
         assets/spawn/pillar/pillar_glow.png
         assets/spawn/pillar/pillar.obj
+        assets/spawn/pillar/Pillar_Albedo.png
+        assets/spawn/pillar/Pillar_NM.png
+        assets/spawn/pillar/Pillar2.obj
         assets/spawn/portal/portal.obj
         assets/stones/stone_01_glow.png
         assets/stones/stone_01_diff.png
