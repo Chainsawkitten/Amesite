@@ -254,6 +254,8 @@ Entity* GameEntityFactory::CreateShrapnel(glm::vec3 position, unsigned int amoun
                     shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
                     shrapnel->GetComponent<Component::Material>()->SetGlow("Resources/enemy_glow.png");
                     break;
+                default:
+                    break;
             }
         }
         shrapnel->AddComponent<Component::Transform>()->scale *= 0.03f;
