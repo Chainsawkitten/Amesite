@@ -1,9 +1,9 @@
 #include "Player1.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
-#include <Engine/Resources.hpp>
+#include <Resources.hpp>
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/OBJModel.hpp>
 
@@ -474,7 +474,7 @@ void Player1::mUpdateFunction() {
     mFrontEngineLeft->GetComponent<Component::Transform>()->roll = rollFactor * 15.f * velocityFactor;
     float particlesFactor = 20.f + velocityFactor * 2.f;
     Component::ParticleEmitter* emitter = mBackEngineRightParticles->GetComponent<Component::ParticleEmitter>();
-    emitter->particleType.minVelocity = emitter->particleType.maxVelocity = particlesFactor * glm::vec3(0.f, -1.f , 0.f);
+    emitter->particleType.minVelocity = emitter->particleType.maxVelocity = particlesFactor * glm::vec3(0.f, -1.f, 0.f);
     emitter = mBackEngineLeftParticles->GetComponent<Component::ParticleEmitter>();
     emitter->particleType.minVelocity = emitter->particleType.maxVelocity = particlesFactor * glm::vec3(0.f, -1.f, 0.f);
     emitter = mFrontEngineRightParticles->GetComponent<Component::ParticleEmitter>();

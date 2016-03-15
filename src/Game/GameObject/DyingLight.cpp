@@ -1,10 +1,10 @@
 #include "DyingLight.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/ParticleEmitter.hpp>
+#include <Component/Transform.hpp>
+#include <Component/ParticleEmitter.hpp>
 #include <Component/PointLight.hpp>
 #include "../Component/LifeTime.hpp"
 #include "../Component/Update.hpp"
@@ -15,7 +15,6 @@ DyingLight::DyingLight(Scene* scene) : SuperGameObject(scene) {
     node = CreateEntity();
     Component::PointLight* light = node->AddComponent<Component::PointLight>();
     light->color = glm::vec3(1, 0, 0);
-    light->ambientCoefficient;
     node->AddComponent<Component::Transform>();
     node->AddComponent<Component::LifeTime>()->lifeTime = 0.5f;
 

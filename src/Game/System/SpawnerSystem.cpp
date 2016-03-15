@@ -1,8 +1,8 @@
 #include "SpawnerSystem.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
+#include <GameObject/SuperGameObject.hpp>
 
 #include "../Component/Spawner.hpp"
 

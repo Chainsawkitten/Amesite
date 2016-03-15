@@ -1,12 +1,12 @@
 #include "Camera.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/Physics.hpp>
-#include <Engine/Component/Lens.hpp>
-#include <Engine/Component/Listener.hpp>
+#include <Component/Transform.hpp>
+#include <Component/Physics.hpp>
+#include <Component/Lens.hpp>
+#include <Component/Listener.hpp>
 
 #include "../GameObject/Player/SuperPlayer.hpp"
 #include "../GameObject/Boss/SuperBoss.hpp"
@@ -95,7 +95,7 @@ void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>&
     // Calculate how far away the camera should be.
     float distance = glm::distance(min, max) * 1.20f;
 
-    distance = glm::clamp(distance, 120.f, 140.f);
+    distance = glm::clamp(distance, 100.f, 120.f);
     
     Component::Transform* transform = body->GetComponent<Component::Transform>();
     

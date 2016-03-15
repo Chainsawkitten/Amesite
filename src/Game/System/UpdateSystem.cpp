@@ -1,7 +1,7 @@
 #include "UpdateSystem.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
 #include "../Component/Update.hpp"
 

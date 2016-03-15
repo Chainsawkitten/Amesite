@@ -52,10 +52,10 @@ int main() {
     
     // Profiling variables.
     bool profiling = false;
-    unsigned int profileFrames;
-    float minFrameTime;
-    float averageFrameTime;
-    float maxFrameTime;
+    unsigned int profileFrames = 0;
+    float minFrameTime = 0.f;
+    float averageFrameTime = 0.f;
+    float maxFrameTime = 0.f;
 
     // Main game loop.
     double lastTime = glfwGetTime();

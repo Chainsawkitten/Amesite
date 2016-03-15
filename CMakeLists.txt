@@ -7,7 +7,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(UNIX OR MINGW)
-    set(CMAKE_CXX_FLAGS "-g -gdwarf-2 -static-libstdc++")
+    set(CMAKE_CXX_FLAGS "-g -gdwarf-2 -static-libstdc++ -Wall")
 endif()
 
 # GLFW
@@ -135,9 +135,16 @@ set(RESOURCES
         assets/spawn/altar/altar_diff.png
         assets/spawn/altar/altar_glow.png
         assets/spawn/altar/altar.obj
+        assets/spawn/altar/Altar_Dif.png
+        assets/spawn/altar/Altar_NM.png
+        assets/spawn/altar/Altar_Glo.png
+        assets/spawn/altar/Altar2.obj
         assets/spawn/pillar/pillar_diff.png
         assets/spawn/pillar/pillar_glow.png
         assets/spawn/pillar/pillar.obj
+        assets/spawn/pillar/Pillar_Albedo.png
+        assets/spawn/pillar/Pillar_NM.png
+        assets/spawn/pillar/Pillar2.obj
         assets/spawn/portal/portal.obj
         assets/stones/stone_01_glow.png
         assets/stones/stone_01_diff.png
@@ -158,6 +165,7 @@ set(RESOURCES
         assets/sound/MusicAction.ogg
         assets/sound/MusicCalm.ogg
         assets/sound/Laser.ogg
+        assets/sound/LowHPBeep.ogg
         assets/Loading.png
     )
 
@@ -224,8 +232,6 @@ endmacro()
 foreach(item ${EMBEDDED_INPUT})
     ProcessWithHeaderize(EMBEDDED_HEADER EMBEDDED_SOURCE ${item} ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
-
-include_directories(src)
 
 # Doxygen documentation
 option(ModershipBuildDocs "Build the doxygen documentation" ON)
@@ -381,6 +387,7 @@ set(GAME_SRCS
         src/Game/main.cpp
         src/Game/Game.cpp
         src/Game/Util/GameSettings.cpp
+        src/Game/Util/PerlinNoise.cpp
         src/Game/Util/GameEntityFactory.cpp
         src/Game/Util/ControlSchemes.cpp
         src/Game/Util/Hub.cpp
@@ -454,6 +461,7 @@ set(GAME_SRCS
 set(GAME_HEADERS
         src/Game/Game.hpp
         src/Game/Util/GameSettings.hpp
+        src/Game/Util/PerlinNoise.hpp
         src/Game/Util/GameSettings.hpp
         src/Game/Util/GameEntityFactory.hpp
         src/Game/Util/ControlSchemes.hpp

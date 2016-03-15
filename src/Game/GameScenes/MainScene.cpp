@@ -1,11 +1,11 @@
 #include "MainScene.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
 #include <Util/Input.hpp>
-#include "Game/Util/GameEntityFactory.hpp"
-#include "Game/Util/ControlSchemes.hpp"
+#include "../Util/GameEntityFactory.hpp"
+#include "../Util/ControlSchemes.hpp"
 
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
@@ -20,10 +20,10 @@
 #include <Component/SoundSource.hpp>
 #include <Component/Listener.hpp>
 #include <Component/ParticleEmitter.hpp>
-#include "Game/Component/Health.hpp"
-#include "Game/Component/Damage.hpp"
-#include "Game/Component/LifeTime.hpp"
-#include "Game/Component/Spawner.hpp"
+#include "../Component/Health.hpp"
+#include "../Component/Damage.hpp"
+#include "../Component/LifeTime.hpp"
+#include "../Component/Spawner.hpp"
 
 #include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
@@ -144,10 +144,9 @@ MainScene::MainScene() {
 
     // Create players 
     Player1* player1 = GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f));
-    Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX - 4.f, 0.f, playerStartZ - 6.f));
+    Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f));
     mPlayers.push_back(player1);
     mPlayers.push_back(player2);
-    
     HubInstance().mPlayers.push_back(player1);
     HubInstance().mPlayers.push_back(player2);
     
@@ -162,7 +161,7 @@ MainScene::MainScene() {
     int bossIndex = 0;
     for (int i = 0; i < (numberOfBossPositions / 2); i++) {
         for (int j = 0; j < (numberOfBossPositions / 2); j++) {
-            mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(pillarOrigin.x + i*30.f, pillarOrigin.y, pillarOrigin.z + j*30.f), mBossVector[bossIndex]->GetPosition()));
+            mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(pillarOrigin.x + i*40.f, pillarOrigin.y, pillarOrigin.z + j*40.f), mBossVector[bossIndex]->GetPosition()));
             mNoSpawnRooms.push_back(glm::vec3(bossPositions[bossIndex].x, 0.f, bossPositions[bossIndex].y));
             bossIndex++;
         }
