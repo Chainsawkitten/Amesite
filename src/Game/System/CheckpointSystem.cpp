@@ -25,6 +25,7 @@ System::CheckpointSystem::CheckpointSystem() {
 }
 
 void System::CheckpointSystem::Update(float deltaTime) {
+    bool anyPlayerHit = false;
     for (auto& thisPlayer : mPlayers) {
         for (auto& otherPlayer : mPlayers) {
             //If the other player isn't this player and isn't active, and the players are close enough, start healing.
@@ -44,16 +45,14 @@ void System::CheckpointSystem::Update(float deltaTime) {
             thisPlayer->Activate();
             thisPlayer->respawnTimeLeft = thisPlayer->initalRespawnTime;
         }
-    }
 
-    bool anyPlayerHit = false;
-    for (auto &player : mPlayers) {
-        if (player->mState >= 1) {
+        if (thisPlayer->mState >= 1 && thisPlayer->mState < 3) {
             anyPlayerHit = true;
             break;
         }
     }
 
+    //Turn on/off the hurt sound.
     if (anyPlayerHit && !mPlayingBeepSound) {
         alSourcePlay(mBeepSource);
         mPlayingBeepSound = true;
