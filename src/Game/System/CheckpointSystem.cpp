@@ -75,7 +75,7 @@ void System::CheckpointSystem::RespawnPlayers() {
     site2->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
 
     for (auto &player : mPlayers) {
-        Entity* site;
+        Entity* site = nullptr;
         if (typeid(*player).name() == typeid(GameObject::Player1).name())
             site = GameEntityCreator().CreateCrashSite1();
         else if (typeid(*player).name() == typeid(GameObject::Player2).name())
