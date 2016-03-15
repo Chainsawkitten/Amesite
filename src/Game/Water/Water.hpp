@@ -40,6 +40,18 @@ class Water {
          */
         RenderTarget* GetReflectionTarget() const;
         
+        /// Get the clipping plane for refractions.
+        /**
+         * @return The clipping plane
+         */
+        glm::vec4 GetRefractionClippingPlane() const;
+        
+        /// Get the clipping plane for reflections.
+        /**
+         * @return The clipping plane
+         */
+        glm::vec4 GetReflectionClippingPlane() const;
+        
         /// Set how much the water textures should repat.
         /**
          * @param textureRepeat How many times the water textures should repeat.

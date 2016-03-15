@@ -150,6 +150,16 @@ RenderTarget* Water::GetReflectionTarget() const {
     return mReflectionTarget;
 }
 
+glm::vec4 Water::GetRefractionClippingPlane() const {
+    /// @todo Don't hardcore clipping planes
+    return glm::vec4(0.f, -1.f, 0.f, mPosition.y + 0.01f);
+}
+
+glm::vec4 Water::GetReflectionClippingPlane() const {
+    /// @todo Don't hardcore clipping planes
+    return glm::vec4(0.f, 1.f, 0.f, -mPosition.y + 0.1f);
+}
+
 void Water::SetTextureRepeat(const glm::vec2& textureRepeat) {
     mTextureRepeat = textureRepeat;
 }

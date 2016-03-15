@@ -11,6 +11,7 @@ uniform mat4 projection;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat3 normalMatrix;
+uniform vec4 clippingPlane;
 
 out VertexData {
     vec3 normal;

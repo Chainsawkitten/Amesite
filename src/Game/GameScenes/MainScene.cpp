@@ -318,8 +318,20 @@ void MainScene::Update(float deltaTime) {
     
     // Water.
     mWater.Update(deltaTime, glm::vec3(1.f, 0.f, 0.f));
-    mRenderSystem.Render(*this, mWater.GetReflectionTarget());
-    mRenderSystem.Render(*this, mWater.GetRefractionTarget());
+    
+    // Render refractions.
+    mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionClippingPlane());
+    
+    // Render reflections
+    /// @todo Don't hardcore camera inversion.
+    float distance = 2.f * (cameraTransform->position.y - 0.f);// - water->Position().y);
+    cameraTransform->position = cameraTransform->position - glm::vec3(0.f, distance, 0.f);
+    cameraTransform->pitch = -cameraTransform->pitch;
+    cameraTransform->UpdateModelMatrix();
+    mRenderSystem.Render(*this, mWater.GetReflectionTarget(), mWater.GetReflectionClippingPlane());
+    cameraTransform->pitch = -cameraTransform->pitch;
+    cameraTransform->position = cameraTransform->position + glm::vec3(0.f, distance, 0.f);
+    cameraTransform->UpdateModelMatrix();
     
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
