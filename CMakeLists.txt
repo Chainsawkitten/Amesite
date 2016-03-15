@@ -7,7 +7,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(UNIX OR MINGW)
-    set(CMAKE_CXX_FLAGS "-g -gdwarf-2 -static-libstdc++")
+    set(CMAKE_CXX_FLAGS "-g -gdwarf-2 -static-libstdc++ -Wall")
 endif()
 
 # GLFW
