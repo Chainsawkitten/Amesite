@@ -4,6 +4,9 @@
 
 class Texture2D;
 class ShaderProgram;
+namespace Geometry {
+    class Plane;
+}
 
 /// Reflective water surface.
 class Water {
@@ -28,4 +31,6 @@ class Water {
         Texture2D* mDudvMap;
         Texture2D* mNormalMap;
         glm::vec2 mTextureRepeat;
+        
+        Geometry::Plane* mPlane;
 };

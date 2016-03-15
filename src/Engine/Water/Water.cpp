@@ -4,6 +4,7 @@
 #include "../Texture/Texture2D.hpp"
 #include "../Shader/Shader.hpp"
 #include "../Shader/ShaderProgram.hpp"
+#include "../Geometry/Plane.hpp"
 
 #include "Default3D.vert.hpp"
 #include "Water.geom.hpp"
@@ -19,6 +20,8 @@ Water::Water() {
     Resources().FreeShader(geometryShader);
     Resources().FreeShader(fragmentShader);
     
+    mPlane = Resources().CreatePlane();
+    
     mWaterTexture = Resources().CreateTexture2DFromFile("Resources/Water.png");
     mDudvMap = Resources().CreateTexture2DFromFile("Resources/WaterDUDV.png");
     mNormalMap = Resources().CreateTexture2DFromFile("Resources/WaterNormal.png");
@@ -29,6 +32,8 @@ Water::~Water() {
     Resources().FreeTexture2D(mWaterTexture);
     Resources().FreeTexture2D(mDudvMap);
     Resources().FreeTexture2D(mNormalMap);
+    
+    Resources().FreePlane();
     
     Resources().FreeShaderProgram(mShaderProgram);
 }
