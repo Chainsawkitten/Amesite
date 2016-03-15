@@ -28,14 +28,16 @@ void HealthSystem::Update(Scene& scene, float deltaTime) {
         if (healthComponent->cooldown < 0.01f) {
             healthComponent->health = std::fminf(healthComponent->health + healthComponent->regainAmount * deltaTime, healthComponent->maxHealth);
         }
-        if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth)
-            if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth)
+        if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth) {
+            if (healthComponent->health < 0.01f && healthComponent->removeOnLowHealth) {
                 if (healthComponent->entity->gameObject != nullptr)
                     healthComponent->entity->gameObject->Kill();
                 else
                     healthComponent->entity->Kill();
+            }
+        }
 
-        //Update damaged
+        // Update damaged
         if (healthComponent->damaged != -1) {
 
             healthComponent->damaged--;
