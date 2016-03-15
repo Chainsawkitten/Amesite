@@ -13,14 +13,23 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <System/SoundSystem.hpp>
+#include <Audio/SoundBuffer.hpp>
+#include <Resources.hpp>
+#include "Game/GameObject/Player/SuperPlayer.hpp"
 
 System::CheckpointSystem::CheckpointSystem() {
-
+    mLowHPSoundBuffer = Resources().CreateSound("Resources/LowHPBeep.ogg");
+    alGenSources(1, &mBeepSource);
+    alSourcei(mBeepSource, AL_BUFFER, mLowHPSoundBuffer->Buffer());
+    alSourcei(mBeepSource, AL_LOOPING, AL_TRUE);
+    mPlayingBeepSound = false;
     mRespawn = false;
 
 }
 
 void System::CheckpointSystem::Update(float deltaTime) {
+    bool anyPlayerHit = false;
     for (auto& thisPlayer : mPlayers) {
         for (auto& otherPlayer : mPlayers) {
             //If the other player isn't this player and isn't active, and the players are close enough, start healing.
@@ -40,7 +49,22 @@ void System::CheckpointSystem::Update(float deltaTime) {
             thisPlayer->Activate();
             thisPlayer->respawnTimeLeft = thisPlayer->initalRespawnTime;
         }
+
+        if (thisPlayer->mState >= 1 && thisPlayer->mState < 3) {
+            anyPlayerHit = true;
+            break;
+        }
     }
+
+    //Turn on/off the hurt sound.
+    if (anyPlayerHit && !mPlayingBeepSound) {
+        alSourcePlay(mBeepSource);
+        mPlayingBeepSound = true;
+    } else if (!anyPlayerHit && mPlayingBeepSound) {
+        alSourceStop(mBeepSource);
+        mPlayingBeepSound = false;
+    }
+
 
     for (auto &player : mPlayers) {
         if (player->Active())
@@ -48,6 +72,11 @@ void System::CheckpointSystem::Update(float deltaTime) {
     }
 
     RespawnPlayers();
+}
+
+System::CheckpointSystem::~CheckpointSystem() {
+    alDeleteSources(1, &mBeepSource);
+    Resources().FreeSound(mLowHPSoundBuffer);
 }
 
 void System::CheckpointSystem::MoveCheckpoint(glm::vec2 position) {
