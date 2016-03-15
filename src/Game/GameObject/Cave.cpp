@@ -24,6 +24,9 @@
 
 #include "../Util/ControlSchemes.hpp"
 
+#include "../Util/PerlinNoise.hpp"
+#include <ctime>
+
 using namespace GameObject;
 
 Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int iterations, int threshold, CaveGenerator::Coordinate playerPosition, std::vector<CaveGenerator::Coordinate> bossPositions) : SuperGameObject(scene) {
@@ -98,13 +101,29 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
         }
     }
 
+    PerlinNoiseGenerator png(time(0));
+
+    float factor = 100.f;
+    float floatMapFactor = (5.f / 10.f);
+    float perlinNoiseFactor = (5.f / 10.f);
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            float x = static_cast<float>(j) / static_cast<float>(width);
+            float y = static_cast<float>(i) / static_cast<float>(height);
+
+            float n = png.Noise(factor*x, factor*y, 1.0f);
+            floatMap[i][j] = floatMapFactor*floatMap[i][j] + perlinNoiseFactor*glm::abs(n);
+        }
+    }
+
     heightMap = CreateEntity();
     
     heightMap->AddComponent<Component::Mesh>();
     heightMap->AddComponent<Component::Transform>();
     heightMap->AddComponent<Component::Material>();
     heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width)/2.f)+1.f, -11.f, scaleFactor*(static_cast<float>(height) / 2.f) + 1.f));
-    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f) * scaleFactor * 2, 7.f, (static_cast<float>(height) / 2.f) * scaleFactor * 2);
+    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f) * scaleFactor * 2, 14.f, (static_cast<float>(height) / 2.f) * scaleFactor * 2);
 
     mTerrain = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
 
@@ -194,7 +213,7 @@ void Cave::PlaceScenery(Entity* scenery, bool rotate) {
 
     float x = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
     float z = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
-    glm::vec3 point = glm::vec3(x, GetTerrainHeight(x, z) - 10.f, z);
+    glm::vec3 point = glm::vec3(x, GetTerrainHeight(x, z) - 5.f, z);
 
     if (!GridCollide(point)) {
         
