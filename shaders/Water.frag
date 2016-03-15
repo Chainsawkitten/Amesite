@@ -27,7 +27,8 @@ const float waveStrength = 0.02;
 uniform vec4 lightPosition;
 uniform vec3 lightIntensity;
 
-out vec4 fragmentColor;
+layout(location = 0) out vec4 fragmentColor;
+layout(location = 1) out vec4 extraOut;
 
 // Calculate texcoord
 vec2 CalculateTexCoord() {
@@ -89,4 +90,6 @@ void main() {
     vec3 specularLight = vec3(1.0, 1.0, 1.0) * pow(max(dot(r, v), 0.0), shinyPower) * clamp(depth, 0.0, 1.0);
     fragmentColor = vec4(lightIntensity * (fragmentColor.rgb + specularLight), 1.0);
     fragmentColor.a = clamp(depth, 0.0, 1.0);*/
+    
+    extraOut = vec4(0.0, 0.0, 0.0, 1.0);
 }

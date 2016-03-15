@@ -199,6 +199,8 @@ MainScene::MainScene() {
 
     // Push boss positions here to avoid spawning enemies.
     mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
+    
+    mWater.SetTextureRepeat(glm::vec2(100.f, 100.f));
 }
 
 MainScene::~MainScene() {

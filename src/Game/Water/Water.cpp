@@ -78,10 +78,10 @@ void Water::Render() const {
     glDisable(GL_CULL_FACE);
     
     // Blending
-    GLboolean blending;
-    glGetBooleanv(GL_BLEND, &blending);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnablei(GL_BLEND, 0);
+    glEnablei(GL_BLEND, 1);
+    glBlendFunci(0, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunci(1, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     // Set texture locations
     glUniform1i(mShaderProgram->GetUniformLocation("tRefraction"), 0);
@@ -138,8 +138,8 @@ void Water::Render() const {
     
     glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
     
-    if (!blending)
-        glDisable(GL_BLEND);
+    glDisablei(GL_BLEND, 0);
+    glDisablei(GL_BLEND, 1);
 }
 
 void Water::SetTextureRepeat(const glm::vec2& textureRepeat) {
