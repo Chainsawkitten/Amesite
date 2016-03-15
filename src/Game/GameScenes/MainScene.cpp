@@ -286,7 +286,7 @@ void MainScene::Update(float deltaTime) {
     cameraTransform->yaw = 0.f;
     cameraTransform->pitch = 60.f;
     cameraTransform->roll = 0.f;
-    mMainCamera->UpdateRelativePosition(mPlayers);
+    mMainCamera->UpdateRelativePosition(mPlayers, mBossVector, deltaTime);
 
     if (!mMenu.IsActive()) {
         //If all players are disabled, respawn them.

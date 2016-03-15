@@ -9,6 +9,7 @@
 #include <Engine/Component/Listener.hpp>
 
 #include "../GameObject/Player/SuperPlayer.hpp"
+#include "../GameObject/Boss/SuperBoss.hpp"
 #include "../GameObject/Camera.hpp"
 
 using namespace GameObject;
@@ -24,16 +25,17 @@ Camera::Camera(Scene* scene) : SuperGameObject(scene) {
 Camera::~Camera() {
 }
 
-void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>& players) {
-    int numberOfPlayers = players.size();
+void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>& players, const std::vector<GameObject::SuperBoss*>& bosses, float deltaTime) {
     glm::vec3 cameraPos = glm::vec3(0.f, 0.f, 0.f);
+    glm::vec3 playerCameraPos = glm::vec3(0.f, 0.f, 0.f);
     glm::vec3 min = glm::vec3(std::numeric_limits<float>::max(), 0.f, std::numeric_limits<float>::max());
     glm::vec3 max = glm::vec3(-std::numeric_limits<float>::max(), 0.f, -std::numeric_limits<float>::max());
 
     float heightFactor = 1.25f;
     float widthFactor = 0.75f;
     
-    for (int i = 0; i < numberOfPlayers; i++) {
+    int nrOfPlayers = players.size();
+    for (int i = 0; i < nrOfPlayers; i++) {
         glm::vec3 playerPos = players[i]->GetPosition();
         
         // Find min/max player positions
@@ -47,14 +49,49 @@ void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>&
         if ((playerPos.z*heightFactor) < min.z)
             min.z = playerPos.z*heightFactor;
         
-        cameraPos.x += playerPos.x;
-        cameraPos.z += playerPos.z;
+        playerCameraPos.x += playerPos.x;
+        playerCameraPos.z += playerPos.z;
     }
-    float playerFactor = 1.f / static_cast<float>(numberOfPlayers);
-    
-    cameraPos.x *= playerFactor;
-    cameraPos.z *= playerFactor;
-    
+
+    cameraPos = playerCameraPos;
+
+    float playerFactor = 1.f / static_cast<float>(nrOfPlayers);
+
+    playerCameraPos.x *= playerFactor;
+    playerCameraPos.z *= playerFactor;
+
+    glm::vec3 bossCameraPos = glm::vec3(0.f, 0.f, 0.f);
+    int bossFactor = 0;
+    int nrOfBosses = bosses.size();
+    for (int i = 0; i < nrOfBosses; i++) {
+        if (bosses[i] != nullptr) {
+            glm::vec3 bossPos = bosses[i]->GetPosition();
+
+            if (glm::distance(playerCameraPos, bossPos) < 100.f) {
+                // Find min/max player positions
+                if (bossPos.x*widthFactor > max.x)
+                    max.x = bossPos.x*widthFactor;
+                if (bossPos.x*widthFactor < min.x)
+                    min.x = bossPos.x*widthFactor;
+
+                if ((bossPos.z*heightFactor) > max.z)
+                    max.z = bossPos.z*heightFactor;
+                if ((bossPos.z*heightFactor) < min.z)
+                    min.z = bossPos.z*heightFactor;
+
+                bossCameraPos.x += bossPos.x;
+                bossCameraPos.z += bossPos.z;
+                bossFactor++;
+                cameraPos += bossCameraPos;
+            }
+        }
+    }
+
+    float cameraFactor = 1.f / static_cast<float>(nrOfPlayers + bossFactor);
+
+    cameraPos.x *= cameraFactor;
+    cameraPos.z *= cameraFactor;
+
     // Calculate how far away the camera should be.
     float distance = glm::distance(min, max) * 1.20f;
 
@@ -66,7 +103,7 @@ void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>&
     const glm::mat4& viewMatrix = transform->modelMatrix;
     glm::vec3 direction = glm::vec3(viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2]);
     cameraPos += direction * distance;
-
-    body->GetComponent<Component::Transform>()->position = cameraPos;
+    glm::vec3 velocity = (cameraPos - transform->position) * 2.f;
+    transform->position += velocity * deltaTime;
     transform->UpdateModelMatrix();
 }
