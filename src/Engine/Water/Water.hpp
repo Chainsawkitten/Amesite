@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 class Texture2D;
+class ShaderProgram;
 
 /// Reflective water surface.
 class Water {
@@ -20,6 +21,8 @@ class Water {
         void SetTextureRepeat(const glm::vec2& textureRepeat);
         
     private:
+        ShaderProgram* mShaderProgram;
+        
         // Textures.
         Texture2D* mWaterTexture;
         Texture2D* mDudvMap;
