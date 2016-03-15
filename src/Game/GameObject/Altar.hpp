@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include <GameObject/SuperGameObject.hpp>
 
 class Scene;
 class Entity;
@@ -22,6 +22,9 @@ namespace GameObject {
 
             /// Node of %Altar
             Entity* node;
+
+            /// light relative to node
+            Entity* light;
 
         private:
             Geometry::OBJModel* mAltarModel;

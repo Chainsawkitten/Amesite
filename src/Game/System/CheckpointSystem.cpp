@@ -3,7 +3,7 @@
 #include "../GameObject/Player/SuperPlayer.hpp"
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
-#include <Game/Util/GameEntityFactory.hpp>
+#include "../Util/GameEntityFactory.hpp"
 
 #include "../Component/Health.hpp"
 
@@ -13,14 +13,23 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <System/SoundSystem.hpp>
+#include <Audio/SoundBuffer.hpp>
+#include <Resources.hpp>
+#include "../GameObject/Player/SuperPlayer.hpp"
 
 System::CheckpointSystem::CheckpointSystem() {
-
+    mLowHPSoundBuffer = Resources().CreateSound("Resources/LowHPBeep.ogg");
+    alGenSources(1, &mBeepSource);
+    alSourcei(mBeepSource, AL_BUFFER, mLowHPSoundBuffer->Buffer());
+    alSourcei(mBeepSource, AL_LOOPING, AL_TRUE);
+    mPlayingBeepSound = false;
     mRespawn = false;
 
 }
 
 void System::CheckpointSystem::Update(float deltaTime) {
+    bool anyPlayerHit = false;
     for (auto& thisPlayer : mPlayers) {
         for (auto& otherPlayer : mPlayers) {
             //If the other player isn't this player and isn't active, and the players are close enough, start healing.
@@ -40,7 +49,22 @@ void System::CheckpointSystem::Update(float deltaTime) {
             thisPlayer->Activate();
             thisPlayer->respawnTimeLeft = thisPlayer->initalRespawnTime;
         }
+
+        if (thisPlayer->mState >= 1 && thisPlayer->mState < 3) {
+            anyPlayerHit = true;
+            break;
+        }
     }
+
+    //Turn on/off the hurt sound.
+    if (anyPlayerHit && !mPlayingBeepSound) {
+        alSourcePlay(mBeepSource);
+        mPlayingBeepSound = true;
+    } else if (!anyPlayerHit && mPlayingBeepSound) {
+        alSourceStop(mBeepSource);
+        mPlayingBeepSound = false;
+    }
+
 
     for (auto &player : mPlayers) {
         if (player->Active())
@@ -48,6 +72,11 @@ void System::CheckpointSystem::Update(float deltaTime) {
     }
 
     RespawnPlayers();
+}
+
+System::CheckpointSystem::~CheckpointSystem() {
+    alDeleteSources(1, &mBeepSource);
+    Resources().FreeSound(mLowHPSoundBuffer);
 }
 
 void System::CheckpointSystem::MoveCheckpoint(glm::vec2 position) {
@@ -62,26 +91,14 @@ void System::CheckpointSystem::RespawnPlayers() {
 
     mRespawn = true;
 
-    Entity* site1 = GameEntityCreator().CreateCrashSite1();
-
-    site1->GetComponent<Component::Transform>()->position = mPlayers[0]->GetPosition();
-    site1->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
-    site1->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
-
-    Entity* site2 = GameEntityCreator().CreateCrashSite2();
-
-    site2->GetComponent<Component::Transform>()->position = mPlayers[1]->GetPosition();
-    site2->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
-    site2->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
-
     for (auto &player : mPlayers) {
-        Entity* site;
+        Entity* site = nullptr;
         if (typeid(*player).name() == typeid(GameObject::Player1).name())
             site = GameEntityCreator().CreateCrashSite1();
         else if (typeid(*player).name() == typeid(GameObject::Player2).name())
             site = GameEntityCreator().CreateCrashSite2();
         site->GetComponent<Component::Transform>()->position = player->GetPosition();
-        site->GetComponent<Component::Transform>()->Move(0, -11.f, 0);
+        site->GetComponent<Component::Transform>()->Move(0, -5.f, 0);
         site->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
 
         player->SetPosition(glm::vec3(mPosition.x, 0.f, mPosition.y));

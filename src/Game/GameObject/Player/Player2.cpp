@@ -1,9 +1,9 @@
 #include "Player2.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
-#include <Engine/Resources.hpp>
+#include <Resources.hpp>
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/OBJModel.hpp>
 
@@ -495,7 +495,6 @@ void Player2::mUpdateFunction() {
     float rollFactor = 0.f;
     glm::vec3 frontDirection = mNode->GetComponent<Component::Transform>()->GetWorldDirection();
     glm::vec3 sideDirection = glm::cross(frontDirection, glm::vec3(0.f, 1.f, 0.f));
-    glm::vec3 upDirection = glm::cross(sideDirection, frontDirection);
     if (glm::length(velocity) > 0.01f) {
         pitchFactor = glm::dot(glm::normalize(velocity), frontDirection);
         rollFactor = glm::dot(glm::normalize(velocity), sideDirection);

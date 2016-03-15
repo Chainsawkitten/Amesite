@@ -1,11 +1,11 @@
 #include "SuperBoss.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/RelativeTransform.hpp>
-#include <Engine/Component/PointLight.hpp>
+#include <Component/Transform.hpp>
+#include <Component/RelativeTransform.hpp>
+#include <Component/PointLight.hpp>
 
 #include "../../Util/Hub.hpp"
 #include "../Player/Player1.hpp"
