@@ -315,11 +315,15 @@ void MainScene::Update(float deltaTime) {
 
     if (mMenu.IsActive())
         mMenu.Update(mPlayers[0], deltaTime);
-
+    
+    // Water.
+    mWater.Update(deltaTime, glm::vec3(1.f, 0.f, 0.f));
+    mRenderSystem.Render(*this, mWater.GetReflectionTarget());
+    mRenderSystem.Render(*this, mWater.GetRefractionTarget());
+    
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
-    mWater.Update(deltaTime, glm::vec3(1.f, 0.f, 0.f));
     mWater.Render();
     
     if (mMenu.IsActive())

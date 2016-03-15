@@ -142,6 +142,14 @@ void Water::Render() const {
     glDisablei(GL_BLEND, 1);
 }
 
+RenderTarget* Water::GetRefractionTarget() const {
+    return mRefractionTarget;
+}
+
+RenderTarget* Water::GetReflectionTarget() const {
+    return mReflectionTarget;
+}
+
 void Water::SetTextureRepeat(const glm::vec2& textureRepeat) {
     mTextureRepeat = textureRepeat;
 }

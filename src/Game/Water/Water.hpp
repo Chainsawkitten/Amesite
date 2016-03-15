@@ -28,6 +28,18 @@ class Water {
         /// Render the reflective surface.
         void Render() const;
         
+        /// Get refraction render target.
+        /**
+         * @return The refraction render target
+         */
+        RenderTarget* GetRefractionTarget() const;
+        
+        /// Get reflection render target.
+        /**
+         * @return The reflection render target
+         */
+        RenderTarget* GetReflectionTarget() const;
+        
         /// Set how much the water textures should repat.
         /**
          * @param textureRepeat How many times the water textures should repeat.
