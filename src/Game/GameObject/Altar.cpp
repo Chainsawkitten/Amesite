@@ -18,6 +18,7 @@
 #include <Component/Collider2DCircle.hpp>
 #include <Component/Animation.hpp>
 #include <Component/ParticleEmitter.hpp>
+#include <Component/SpotLight.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 
@@ -31,6 +32,14 @@ Altar::Altar(Scene* scene) : SuperGameObject(scene) {
     node->GetComponent<Component::Material>()->SetDiffuse("Resources/altar_diff.png");
     node->GetComponent<Component::Material>()->SetGlow("Resources/altar_glow.png");
     node->AddComponent<Component::Mesh>()->geometry = mAltarModel = Resources().CreateOBJModel("Resources/altar.obj");
+    light = CreateEntity();
+    light->AddComponent<Component::RelativeTransform>()->parentEntity = node;
+    light->GetComponent<Component::Transform>()->scale *= 0.1;
+    light->GetComponent<Component::Transform>()->Move(0.f, 22.f, 0.f);
+    light->AddComponent<Component::SpotLight>();
+    light->GetComponent<Component::SpotLight>()->attenuation = 1.5f;
+    light->GetComponent<Component::SpotLight>()->coneAngle = 180.f;
+    light->GetComponent<Component::SpotLight>()->color = glm::vec3(109.f, 242.f, 207.f) * 0.01f;
 }
 
 Altar::~Altar() {

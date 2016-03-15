@@ -23,6 +23,9 @@ namespace GameObject {
             /// Node of %Altar
             Entity* node;
 
+            /// light relative to node
+            Entity* light;
+
         private:
             Geometry::OBJModel* mAltarModel;
             Geometry::OBJModel* mPillarModel;
