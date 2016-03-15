@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include <GameObject/SuperGameObject.hpp>
 
 #include <glm/glm.hpp>
 

@@ -1,7 +1,7 @@
 #include "Scene.hpp"
 
 #include "../Entity/Entity.hpp"
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include "../GameObject/SuperGameObject.hpp"
 #include "../Component/Animation.hpp"
 
 #include <algorithm>

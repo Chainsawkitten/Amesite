@@ -3,7 +3,7 @@
 #include "../GameObject/Player/SuperPlayer.hpp"
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
-#include <Game/Util/GameEntityFactory.hpp>
+#include "../Util/GameEntityFactory.hpp"
 
 #include "../Component/Health.hpp"
 

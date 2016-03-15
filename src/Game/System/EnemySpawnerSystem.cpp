@@ -1,9 +1,9 @@
 #include "EnemySpawnerSystem.hpp"
 
-#include <Engine/Scene/Scene.hpp>
+#include <Scene/Scene.hpp>
 #include <Entity/Entity.hpp>
-#include <Engine/GameObject/SuperGameObject.hpp>
-#include <Engine/Component/Transform.hpp>
+#include <GameObject/SuperGameObject.hpp>
+#include <Component/Transform.hpp>
 
 #include "../Util/GameEntityFactory.hpp"
 

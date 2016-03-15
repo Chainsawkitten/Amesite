@@ -1,11 +1,11 @@
 #include "MainScene.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
 #include <Util/Input.hpp>
-#include "Game/Util/GameEntityFactory.hpp"
-#include "Game/Util/ControlSchemes.hpp"
+#include "../Util/GameEntityFactory.hpp"
+#include "../Util/ControlSchemes.hpp"
 
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
@@ -20,10 +20,10 @@
 #include <Component/SoundSource.hpp>
 #include <Component/Listener.hpp>
 #include <Component/ParticleEmitter.hpp>
-#include "Game/Component/Health.hpp"
-#include "Game/Component/Damage.hpp"
-#include "Game/Component/LifeTime.hpp"
-#include "Game/Component/Spawner.hpp"
+#include "../Component/Health.hpp"
+#include "../Component/Damage.hpp"
+#include "../Component/LifeTime.hpp"
+#include "../Component/Spawner.hpp"
 
 #include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>

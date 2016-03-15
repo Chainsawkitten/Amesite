@@ -225,8 +225,6 @@ foreach(item ${EMBEDDED_INPUT})
     ProcessWithHeaderize(EMBEDDED_HEADER EMBEDDED_SOURCE ${item} ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
 
-include_directories(src)
-
 # Doxygen documentation
 option(ModershipBuildDocs "Build the doxygen documentation" ON)
 find_package(Doxygen)
