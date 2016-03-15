@@ -140,6 +140,7 @@ set(RESOURCES
         assets/spawn/pillar/pillar.obj
         assets/spawn/portal/portal.obj
         assets/stones/stone_01_glow.png
+        assets/stones/stone_01_diff.png
         assets/stones/stone_01.obj
         assets/stones/stone_02.obj
         assets/stones/stone_03.obj
@@ -446,7 +447,9 @@ set(GAME_SRCS
         src/Game/Menu/SubMenu.cpp
         src/Game/Menu/MainMenu.cpp
         src/Game/Menu/OptionsMenu.cpp
+        src/Game/Menu/SuperMenuOption.cpp
         src/Game/Menu/MenuOption.cpp
+        src/Game/Menu/MenuSwitch.cpp
     )
 
 set(GAME_HEADERS
@@ -518,7 +521,9 @@ set(GAME_HEADERS
         src/Game/Menu/SubMenu.hpp
         src/Game/Menu/MainMenu.hpp
         src/Game/Menu/OptionsMenu.hpp
+        src/Game/Menu/SuperMenuOption.hpp
         src/Game/Menu/MenuOption.hpp
+        src/Game/Menu/MenuSwitch.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

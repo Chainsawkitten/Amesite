@@ -1,12 +1,16 @@
 #include "CheckpointSystem.hpp"
+
 #include "../GameObject/Player/SuperPlayer.hpp"
+#include "../GameObject/Player/Player1.hpp"
+#include "../GameObject/Player/Player2.hpp"
 #include <Game/Util/GameEntityFactory.hpp>
 
 #include "../Component/Health.hpp"
 
-#include <Component\ParticleEmitter.hpp>
+#include <Component/ParticleEmitter.hpp>
 #include <Component/Transform.hpp>
 #include <Entity/Entity.hpp>
+
 #include <glm/glm.hpp>
 #include <vector>
 #include <System/SoundSystem.hpp>
