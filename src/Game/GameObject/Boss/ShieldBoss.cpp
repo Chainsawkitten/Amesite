@@ -141,7 +141,6 @@ void ShieldBoss::FireBullets() {
         GameObject::Bullet* bullet = GameEntityCreator().CreateEnemyBullet(GetPosition(), glm::vec3(0.f, 0.f, 0.f), 1);
         bullet->node->GetComponent<Component::Transform>()->scale *= size;
         bullet->node->GetComponent<Component::Transform>()->yaw = angle;
-        glm::vec3 velocity = bullet->node->GetComponent<Component::Transform>()->GetWorldDirection();
         bullet->node->GetComponent<Component::Physics>()->velocity = speed * bullet->node->GetComponent<Component::Transform>()->GetWorldDirection();
         bullet->node->GetComponent<Component::Physics>()->maxVelocity = 1.5f * glm::length(bullet->node->GetComponent<Component::Physics>()->velocity);
         bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
