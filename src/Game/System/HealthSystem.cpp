@@ -40,6 +40,6 @@ void HealthSystem::Update(Scene& scene, float deltaTime) {
 
             healthComponent->damaged--;
 
-        } 
+        }
     }
 }

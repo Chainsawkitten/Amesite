@@ -170,7 +170,7 @@ void Pylon::Activate() {
 void Pylon::Deactivate() {
     SuperEnemy::Deactivate();
     node->GetComponent<Component::Controller>()->enabled = false;
-    node->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f,0.f,0.f);
+    node->GetComponent<Component::Physics>()->velocity = glm::vec3(0.f, 0.f, 0.f);
     turret->GetComponent<Component::Controller>()->enabled = false;
     pylon1->GetComponent<Component::Controller>()->enabled = false;
     pylon2->GetComponent<Component::Controller>()->enabled = false;

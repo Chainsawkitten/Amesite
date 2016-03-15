@@ -198,7 +198,7 @@ void Cave::PlaceScenery(Entity* scenery, bool rotate) {
 
     if (!GridCollide(point)) {
         
-        if(rotate)
+        if (rotate)
             scenery->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
     
         scenery->GetComponent<Component::Transform>()->scale *= 1 - ((rand() % 1000) / 1000.f) / 2.f;

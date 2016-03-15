@@ -154,7 +154,7 @@ void ControlScheme::AlwaysShootClosestPlayer(Component::Controller* controller, 
             }
 
             glm::vec3 targetDirection = targetPlayerPosition - transformWorldPosition;
-            if(glm::length(targetDirection) > 0.001f)
+            if (glm::length(targetDirection) > 0.001f)
                 GameEntityCreator().CreateEnemyBullet(transformComponent->GetWorldPosition(), 20.f * glm::normalize(glm::vec3(targetDirection.x, 0.f, targetDirection.z)), spawnerComponent->faction);
         }
     }
