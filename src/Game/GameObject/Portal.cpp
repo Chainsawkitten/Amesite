@@ -21,7 +21,7 @@ using namespace GameObject;
 
 Portal::Portal(Scene* scene) : SuperGameObject(scene) {
     node = CreateEntity();
-    node->AddComponent<Component::Transform>();
+    node->AddComponent<Component::Transform>()->scale *= 1.3f;
     node->AddComponent<Component::Physics>()->angularVelocity.y = 1.f;
     node->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
     node->AddComponent<Component::Material>();
@@ -35,8 +35,8 @@ Portal::Portal(Scene* scene) : SuperGameObject(scene) {
     idleNode->CreateKeyFrame(glm::vec3(0.1f, -0.1f, -0.1f), 0.f, 0.f, 0.f, 1.5f, false, true);
     idleNode->CreateKeyFrame(glm::vec3(-0.1f, 0.1f, 0.1f), 0.f, 0.f, 0.f, 1.5f, false, true);
     node->GetComponent<Component::Animation>()->Start("idle");
-    node->AddComponent<Component::PointLight>()->attenuation = 0.1f;
-
+    node->AddComponent<Component::PointLight>()->attenuation = 1.5f;
+    node->GetComponent<Component::PointLight>()->color = glm::vec3(109.f, 242.f, 207.f) * 0.1f;
 }
 
 Portal::~Portal() {
