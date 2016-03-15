@@ -14,6 +14,8 @@
 #include "../GameObject/Camera.hpp"
 #include <Entity/Entity.hpp>
 #include <Component/Transform.hpp>
+#include <Component/Lens.hpp>
+#include <MainWindow.hpp>
 
 Water::Water() {
     // Initialize shaders.
@@ -46,6 +48,8 @@ Water::~Water() {
 void Water::Render() const {
 //    refractionTarget->SetSource();
 //    reflectionTarget->SetSource();
+    
+    const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
     mShaderProgram->Use();
     
@@ -95,10 +99,11 @@ void Water::Render() const {
     
     glm::mat4 view = cameraTransform->modelMatrix;
     glm::mat4 normal = glm::transpose(glm::inverse(view * GetModelMatrix()));
+    glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("modelMatrix"), 1, GL_FALSE, &GetModelMatrix()[0][0]);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("viewMatrix"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normal)[0][0]);
-//    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projectionMatrix"), 1, GL_FALSE, &camera->Projection(screenSize)[0][0]);
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projectionMatrix"), 1, GL_FALSE, &projectionMat[0][0]);
     
 //    glUniform4fv(mShaderProgram->GetUniformLocation("lightPosition"), 1, &(view * light.position)[0]);
 //    glUniform3fv(mShaderProgram->GetUniformLocation("lightIntensity"), 1, &light.intensity[0]);
