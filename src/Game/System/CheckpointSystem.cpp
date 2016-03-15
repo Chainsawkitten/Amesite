@@ -25,7 +25,7 @@ System::CheckpointSystem::CheckpointSystem() {
     alSourcei(mBeepSource, AL_LOOPING, AL_TRUE);
     mPlayingBeepSound = false;
     mRespawn = false;
-
+    numberOfDeaths = 0;
 }
 
 void System::CheckpointSystem::Update(float deltaTime) {
@@ -88,7 +88,7 @@ void System::CheckpointSystem::AddPlayer(GameObject::SuperPlayer* player) {
 }
 
 void System::CheckpointSystem::RespawnPlayers() {
-
+    numberOfDeaths++;
     mRespawn = true;
 
     for (auto &player : mPlayers) {

@@ -9,7 +9,7 @@
 #include <random>
 #include <time.h>
 
-WinScene::WinScene(float totalTime, int enemiesKilled) {
+WinScene::WinScene(float totalTime, int enemiesKilled, int deaths) {
     mPortalTexture = Resources().CreateTexture2DFromFile("Resources/SwirlingPortal.png");
     mElapsedTime = 0.f;
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 25.f);
@@ -59,7 +59,7 @@ WinScene::WinScene(float totalTime, int enemiesKilled) {
         std::to_string(seconds) +
         " seconds.\nYou killed " +
         std::to_string(enemiesKilled) +
-        " enemies.\n\nAnd so you left, " +
+        " enemies.\nYou died " + std::to_string(deaths) + " times.\n\nAnd so you left, " +
         outroString;
 
 }
@@ -79,9 +79,8 @@ void WinScene::Update(float deltaTime) {
     // Clear screen.
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Render logo.
-    glm::vec2 size = glm::vec2(static_cast<float>(mPortalTexture->GetWidth()), static_cast<float>(mPortalTexture->GetHeight()));
     glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
+    glm::vec2 size = glm::vec2(screenSize.x, screenSize.y);
 
     // Scale logo down if larger than screen.
     if (size.x > screenSize.x || size.y > screenSize.y) {
@@ -91,13 +90,11 @@ void WinScene::Update(float deltaTime) {
     }
 
     // Fade in and out logo.
-    float alpha = 0.5f;
-    if (mElapsedTime > 3.5f) {
-        alpha = 4.f - mElapsedTime;
-    } else if (mElapsedTime > 0.5f) {
-        alpha = 1.f;
+    float alpha = 1.0f;
+    if (mElapsedTime < 1.0f) {
+        alpha = 1.f - mElapsedTime;
     } else {
-        alpha = mElapsedTime * 2.f;
+        alpha = 0.f;
     }
 
     mPortalTexture->Render((screenSize - size) * 0.5f, size, alpha);

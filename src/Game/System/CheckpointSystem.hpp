@@ -42,6 +42,9 @@ namespace System {
             /// Did we respawn this frame
             bool mRespawn;
 
+            /// How many times have we died?
+            int numberOfDeaths;
+
         private:
             Audio::SoundBuffer* mLowHPSoundBuffer;
             bool mPlayingBeepSound;
