@@ -114,7 +114,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
             float y = static_cast<float>(i) / static_cast<float>(height);
 
             float n = png.Noise(factor*x, factor*y, 1.0f);
-            Log() << floatMapFactor*floatMap[i][j] + perlinNoiseFactor*glm::abs(n) << "\n";
             floatMap[i][j] = floatMapFactor*floatMap[i][j] + perlinNoiseFactor*glm::abs(n);
         }
     }
