@@ -77,11 +77,8 @@ void main() {
     // Fresnel effect.
     float refractiveFactor = sqrt(dot(normalize(-vertexIn.viewPosition), normalize(vertexIn.normal)));
     refractiveFactor = clamp(refractiveFactor, 0.0, 1.0);
-    /*fragmentColor = mix(reflectionColor, refractionColor, refractiveFactor);
-    fragmentColor = fragmentColor * mix(texture(tWater, texCoords), vec4(1.0, 1.0, 1.0, 1.0), 0.5);*/
-    
-    //temp
-    fragmentColor = texture(tWater, texCoords);
+    fragmentColor = mix(reflectionColor, refractionColor, refractiveFactor);
+    fragmentColor = fragmentColor * mix(texture(tWater, texCoords), vec4(1.0, 1.0, 1.0, 1.0), 0.5);
     
     // Specular.
     /*float shinyPower = 20.0;
