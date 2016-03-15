@@ -56,7 +56,7 @@ ReviveCircle::~ReviveCircle() {
 }
 
 void ReviveCircle::mUpdateFunction() {
-    node->GetComponent<Component::Transform>()->position = mPlayer->GetPosition() - glm::vec3(0.f, 4.f, 0.f);
+    node->GetComponent<Component::Transform>()->position = mPlayer->GetPosition() - glm::vec3(0.f, 3.f, 0.f);
     float minFactor = 0.4f;
     float factor = 1.f - mPlayer->respawnTimeLeft / mPlayer->initalRespawnTime;
     factor = (1.f - minFactor) * factor * factor + minFactor;
