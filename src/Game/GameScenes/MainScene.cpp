@@ -317,6 +317,7 @@ void MainScene::Update(float deltaTime) {
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
+    mWater.Update(deltaTime, glm::vec3(1.f, 0.f, 0.f));
     mWater.Render();
     
     if (mMenu.IsActive())

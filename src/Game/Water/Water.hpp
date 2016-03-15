@@ -18,8 +18,15 @@ class Water {
         /// Destructor.
         ~Water();
         
+        /// Update the water.
+        /**
+         * @param time Time since last frame (in seconds).
+         * @param wind The wind velocity.
+         */
+        void Update(float time, const glm::vec3& wind);
+        
         /// Render the reflective surface.
-		void Render() const;
+        void Render() const;
         
         /// Set how much the water textures should repat.
         /**

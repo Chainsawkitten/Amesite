@@ -58,6 +58,15 @@ Water::~Water() {
     Resources().FreeShaderProgram(mShaderProgram);
 }
 
+void Water::Update(float time, const glm::vec3& wind) {
+    mTextureOffset += 0.02f * time * -glm::vec2(wind.x, wind.z);
+    mTextureOffset.x = fmod(mTextureOffset.x, 1.f);
+    mTextureOffset.y = fmod(mTextureOffset.y, 1.f);
+    
+    mMoveFactor += time * 0.02f;
+    mMoveFactor = fmod(mMoveFactor, 1.f);
+}
+
 void Water::Render() const {
     mRefractionTarget->SetSource();
     mReflectionTarget->SetSource();
