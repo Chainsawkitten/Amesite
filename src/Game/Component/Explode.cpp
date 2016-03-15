@@ -1,5 +1,6 @@
 #include "Explode.hpp"
-#include <Engine/Component/ParticleEmitter.hpp>
+
+#include <Component/ParticleEmitter.hpp>
 
 using namespace Component;
 

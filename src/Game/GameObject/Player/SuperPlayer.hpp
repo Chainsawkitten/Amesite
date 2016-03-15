@@ -1,13 +1,28 @@
 #pragma once
 
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include <GameObject/SuperGameObject.hpp>
 
 #include <glm/glm.hpp>
 
 namespace GameObject {
     /// A SuperPlayer
     class SuperPlayer : public SuperGameObject {
+        protected:
+            ///Stores whether the player is active or not.
+            bool mActive;
+
         public:
+            ///The players current state.
+            enum PlayerState {
+                LIGHTDAMAGE = 0,     ///Player lightly damaged.
+                MEDIUMDAMAGE,        ///Player mediumly damaged.
+                HEAVYDAMAGE,         ///Player heavily damaged.
+                DEAD                 ///Player dead.
+            };
+            
+            ///Contains the players current state.
+            PlayerState mState;
+
             /// Create %SuperPlayer
             /**
              * @param scene Pointer to which Scene %Player Enities' are contained.
@@ -63,16 +78,5 @@ namespace GameObject {
             /**
              * Default: initalRespawnTime (5.f)
              */
-
-        protected:
-            //The players current state.
-            enum PlayerState {
-                LIGHTDAMAGE = 0,
-                MEDIUMDAMAGE,
-                HEAVYDAMAGE,
-                DEAD
-            } mState;
-
-            bool mActive;
     };
 }

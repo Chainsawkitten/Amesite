@@ -1,6 +1,6 @@
 #include "SuperGameObject.hpp"
 
-#include <Engine/Entity/Entity.hpp>
+#include "../Entity/Entity.hpp"
 
 #include <algorithm>
 

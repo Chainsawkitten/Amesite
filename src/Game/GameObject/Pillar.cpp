@@ -1,20 +1,20 @@
 #include "Pillar.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
-#include <Engine/Resources.hpp>
+#include <Resources.hpp>
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/OBJModel.hpp>
 
 
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/RelativeTransform.hpp>
-#include <Engine/Component/Mesh.hpp>
-#include <Engine/Component/Material.hpp>
-#include <Engine/Component/PointLight.hpp>
-#include <Engine/Component/Physics.hpp>
-#include <Engine/Component/Animation.hpp>
+#include <Component/Transform.hpp>
+#include <Component/RelativeTransform.hpp>
+#include <Component/Mesh.hpp>
+#include <Component/Material.hpp>
+#include <Component/PointLight.hpp>
+#include <Component/Physics.hpp>
+#include <Component/Animation.hpp>
 #include "../Component/Update.hpp"
 #include "../Component/Spawner.hpp"
 #include "../Component/LifeTime.hpp"
@@ -32,9 +32,12 @@ Pillar::Pillar(Scene* scene, glm::vec3 bossPosition) : SuperGameObject(scene) {
     node = CreateEntity();
     node->AddComponent<Component::Transform>();
     node->AddComponent<Component::Material>();
-    node->GetComponent<Component::Material>()->SetDiffuse("Resources/pillar_diff.png");
-    node->GetComponent<Component::Material>()->SetGlow("Resources/pillar_glow.png");
-    node->AddComponent<Component::Mesh>()->geometry = mPillarModel = Resources().CreateOBJModel("Resources/pillar.obj");
+    node->GetComponent<Component::Material>()->SetDiffuse("Resources/Pillar_Albedo.png");
+    node->GetComponent<Component::Material>()->SetNormal("Resources/Pillar_NM.png");
+    node->AddComponent<Component::Mesh>()->geometry = mPillarModel = Resources().CreateOBJModel("Resources/Pillar2.obj");
+    //node->GetComponent<Component::Material>()->SetDiffuse("Resources/pillar_diff.png");
+    //node->GetComponent<Component::Material>()->SetGlow("Resources/pillar_glow.png");
+    //node->AddComponent<Component::Mesh>()->geometry = mPillarModel = Resources().CreateOBJModel("Resources/pillar.obj");
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&Pillar::mUpdateFunction, this);
     node->AddComponent<Component::Spawner>()->delay = 1.5f;
 

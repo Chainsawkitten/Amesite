@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include <GameObject/SuperGameObject.hpp>
 
 class Scene;
 class Entity;
@@ -9,28 +9,31 @@ namespace Component {
 }
 
 namespace GameObject {
-    /// A bullet
+    /// A bullet which does damage on impact.
     class Bullet : public SuperGameObject {
         public:
             /// Create %Bullet
             /**
              * @param scene Pointer to which Scene %Bullet Enities' are contained.
+             * @param lifeTime How long to live (in seconds).
              */
             Bullet(Scene* scene, float lifeTime = 4.f);
-           
+            
+            /// Destructor.
             ~Bullet();
-
+            
             /// Node of the %Bullet
             Entity* node;
-
+            
+            /// Tail node.
             Entity* tail;
 
             /// How bright it shines
             /**
-            * @default 1.f
-            */
+             * Default: 1.
+             */
             float lightIntensity;
-
+            
         private:
             void mUpdateFunction();
     };

@@ -21,10 +21,11 @@ void LifeTimeSystem::Update(Scene& scene, float deltaTime) {
     std::vector<Component::LifeTime*> lifeTimes = scene.GetAll<Component::LifeTime>();
     for (auto& lifeTimeComponent : lifeTimes) {
         lifeTimeComponent->lifeTime -= deltaTime;
-        if (lifeTimeComponent->lifeTime < 0.f)
+        if (lifeTimeComponent->lifeTime < 0.f) {
             if (lifeTimeComponent->entity->gameObject != nullptr)
                 lifeTimeComponent->entity->gameObject->Kill();
             else
                 lifeTimeComponent->entity->Kill();
+        }
     }
 }
