@@ -25,15 +25,19 @@
 #include <Component/ParticleEmitter.hpp>
 #include <Component/Physics.hpp>
 
+#include "../Bullet.hpp"
+
 #include "../../Util/ControlSchemes.hpp"
+#include "../../Util/GameEntityFactory.hpp"
 
 using namespace GameObject;
 
 SpinBoss::SpinBoss(Scene* scene) : SuperBoss(scene) {
+    mBulletSize = 5.f;
     node->AddComponent<Component::Transform>()->scale *= 1.f;
 
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&SpinBoss::mUpdateFunction, this);
-    node->AddComponent<Component::Physics>()->angularVelocity.y = 0.35f;
+    node->AddComponent<Component::Physics>()->angularVelocity.y = 0.1f;
     node->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
 
     mNoReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon_glow.png");
@@ -49,7 +53,7 @@ SpinBoss::SpinBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Material>()->glow = mReflectTexture;
     body->AddComponent<Component::Reflect>();
     body->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
-    body->AddComponent<Component::Explode>()->size = 30.f;
+    body->AddComponent<Component::Explode>()->size = 60.f;
     body->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     body->GetComponent<Component::Explode>()->lifeTime = 1.5f;
     body->GetComponent<Component::Explode>()->offset.y = 5.0f;
@@ -70,14 +74,12 @@ SpinBoss::SpinBoss(Scene* scene) : SuperBoss(scene) {
             transform->yaw = 120.f * i;
             transform->position = transform->GetWorldDirection() * 15.f;
             transform->scale *= 0.5f;
-            armArr[i]->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::AlwaysShootRandomPlayer);
             armArr[i]->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
             armArr[i]->GetComponent<Component::Physics>()->angularVelocity.y = 0.25f;
         } else {
             transform->yaw = 120.f * i - 300.f;
             transform->position = transform->GetWorldDirection() * 17.f;
             transform->scale *= 0.3f;
-            armArr[i]->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::AlwaysShoot);
             armArr[i]->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
             armArr[i]->GetComponent<Component::Physics>()->angularVelocity.y = -0.25f;
         }
@@ -94,6 +96,7 @@ SpinBoss::~SpinBoss() {
 }
 
 void SpinBoss::CreateArm(Entity* entity) {
+    mCurrentSpawnerDelay = 0.35f;
     entity->AddComponent<Component::Damage>()->faction = 1;
     entity->GetComponent<Component::Damage>()->removeOnImpact = false;
     entity->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
@@ -105,7 +108,7 @@ void SpinBoss::CreateArm(Entity* entity) {
     entity->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
     entity->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
     entity->AddComponent<Component::Spawner>()->faction = 1;
-    entity->GetComponent<Component::Spawner>()->delay = 0.2f;
+    entity->GetComponent<Component::Spawner>()->delay = mCurrentSpawnerDelay;
     entity->AddComponent<Component::Explode>()->size = 30.f;
     entity->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
     entity->GetComponent<Component::Explode>()->lifeTime = 0.5f;
@@ -118,8 +121,8 @@ void SpinBoss::CreateArm(Entity* entity) {
     emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
     emitter->lifetime = 0.0;
     emitter->particleType.textureIndex = Component::ParticleEmitter::PURPLE;
-    emitter->particleType.minLifetime = .01f * 45.f;
-    emitter->particleType.maxLifetime = .02f * 45.f;
+    emitter->particleType.minLifetime = .01f * 20.f;
+    emitter->particleType.maxLifetime = .02f * 20.f;
     emitter->particleType.minVelocity = glm::vec3(-.3f, 0.f, -.2f);
     emitter->particleType.maxVelocity = glm::vec3(.3f, 0.f, .2f);
     emitter->particleType.minSize = glm::vec2(.5f, .5f) * 8.f;
@@ -144,6 +147,33 @@ void SpinBoss::ChangePhase(BossPhase phase) {
     }
 }
 
+void SpinBoss::FireBullet(glm::vec3 bossPos, glm::vec3 armPos) {
+    GameObject::Bullet* bullet = GameEntityCreator().CreateEnemyBullet(armPos, armPos-bossPos, 1);
+    float speed = 1.f;
+    float lifeTimeFraction = 3.f;
+
+    bullet->node->KillComponent<Component::PointLight>();
+    bullet->node->GetComponent<Component::Transform>()->scale *= mBulletSize;
+    glm::vec3 velocity = bullet->node->GetComponent<Component::Transform>()->GetWorldDirection();
+    bullet->node->GetComponent<Component::Physics>()->velocity = speed * (armPos - bossPos);
+    bullet->node->GetComponent<Component::Physics>()->maxVelocity = 1.5f * glm::length(bullet->node->GetComponent<Component::Physics>()->velocity);
+    bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize = glm::vec2(1.f, 1.f) * mBulletSize;
+    bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize = glm::vec2(1.f, 1.f) * mBulletSize;
+    bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minSize = glm::vec2(1.f, 1.f) * mBulletSize*0.8f;
+    bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxSize = glm::vec2(1.f, 1.f) * mBulletSize*0.8f;
+
+    bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = Component::ParticleEmitter::PURPLE;
+    bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = Component::ParticleEmitter::SMOKE;
+    bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.2f, 0.2f, 0.2f);
+
+    bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= lifeTimeFraction;
+    bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= lifeTimeFraction;
+    bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= lifeTimeFraction;
+    bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= lifeTimeFraction;
+
+    bullet->node->GetComponent<Component::Damage>()->damageAmount = 100.f;
+}
+
 float SpinBoss::GetHealth() {
     return body->GetComponent<Component::Health>()->health;
 }
@@ -162,13 +192,26 @@ void SpinBoss::Deactivate() {
 
 void SpinBoss::mUpdateFunction() {
     SuperBoss::mUpdateFunction();
+    glm::vec3 bossPosition = node->GetComponent<Component::Transform>()->position;
+
     if (mPhase == BossPhase::ONE)
         for (int i = 0; i < 6; i++)
-            if (armArr[i] != nullptr)
+            if (armArr[i] != nullptr) {
                 if (armArr[i]->GetComponent<Component::Health>()->health < 0.01f) {
+                    node->GetComponent<Component::Physics>()->angularVelocity.y += 0.15f;
                     armArr[i]->Kill();
                     armArr[i] = nullptr;
+                    mCurrentSpawnerDelay -= 0.05;
+                    mBulletSize += 1.f;
                     if (--mNrOfArms <= 0)
                         ChangePhase(BossPhase::TWO);
+                } else {
+                    Component::Spawner* spawnerComp = armArr[i]->GetComponent<Component::Spawner>();
+                    spawnerComp->delay = mCurrentSpawnerDelay;
+                    if (spawnerComp->timeSinceSpawn > spawnerComp->delay && Active()) {
+                        FireBullet(bossPosition, armArr[i]->GetComponent<Component::RelativeTransform>()->GetWorldPosition());
+                        spawnerComp->timeSinceSpawn = 0.f;
+                    }
                 }
+            }
 }
