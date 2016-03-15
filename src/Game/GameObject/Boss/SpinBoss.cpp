@@ -207,8 +207,7 @@ void SpinBoss::mUpdateFunction() {
                     mBulletSize += 1.f;
                     if (--mNrOfArms <= 0)
                         ChangePhase(BossPhase::TWO);
-                }
-                else {
+                } else {
                     Component::Spawner* spawnerComp = armArr[i]->GetComponent<Component::Spawner>();
                     spawnerComp->delay = mCurrentSpawnerDelay;
                     if (spawnerComp->timeSinceSpawn > spawnerComp->delay && Active()) {

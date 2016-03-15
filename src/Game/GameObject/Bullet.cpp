@@ -97,8 +97,7 @@ void Bullet::mUpdateFunction() {
     if (light != nullptr) {
         if (lifeTimeFactor < timeLimFactor) {
             light->intensity = maxIntensity / timeLimFactor * lifeTimeFactor * lightIntensity;
-        }
-        else {
+        } else {
             light->intensity = maxIntensity / (timeLimFactor - 1.f) * (lifeTimeFactor - 1.f) * lightIntensity;
         }
     }
