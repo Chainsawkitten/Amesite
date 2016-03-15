@@ -195,13 +195,25 @@ Entity* GameEntityFactory::CreateCrashSite2() {
 
 }
 
+Entity* GameEntityFactory::CreateGlowingStone() {
+
+    Entity* stone = mScene->CreateEntity();
+    stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+    stone->AddComponent<Component::Material>()->SetDiffuse("Resources/stone_01_diff.png");
+    stone->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    stone->GetComponent<Component::Material>()->SetGlow("Resources/stone_01_glow.png");
+    stone->AddComponent<Component::Transform>()->scale *= 0.3f;
+
+    return stone;
+
+}
+
 Entity* GameEntityFactory::CreateStone() {
 
     Entity* stone = mScene->CreateEntity();
     stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
     stone->AddComponent<Component::Material>()->SetDiffuse("Resources/DefaultGray.png");
     stone->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
-    stone->GetComponent<Component::Material>()->SetGlow("Resources/stone_01_glow.png");
     stone->AddComponent<Component::Transform>()->scale *= 0.3f;
 
     return stone;
