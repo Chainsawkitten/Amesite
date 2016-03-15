@@ -53,16 +53,16 @@ void main() {
     reflectionTexCoord.y = 1.0 - reflectionTexCoord.y;
     
     // Calculate depth of water.
-    /*float depth = texture(tDepthMap, refractionTexCoord).r;
+    float depth = texture(tDepthMap, refractionTexCoord).r;
     float floorDistance = 2.0 * zNear * zFar / (zFar + zNear - (2.0 * depth - 1.0) * (zFar - zNear));
     depth = gl_FragCoord.z;
     float waterDistance = 2.0 * zNear * zFar / (zFar + zNear - (2.0 * depth - 1.0) * (zFar - zNear));
-    depth = floorDistance - waterDistance;*/
+    depth = floorDistance - waterDistance;
     
     // Distortion.
     vec2 texCoords = texture(tDuDvMap, vertexIn.texCoords * textureRepeat + vec2(moveFactor, 0.f)).rg * 0.1;
     texCoords += vertexIn.texCoords * textureRepeat + texOffset + vec2(0.f, moveFactor);
-    /*vec2 distortion1 = (texture(tDuDvMap, texCoords).rg * 2.0 - 1.0) * waveStrength * clamp(depth * 0.5, 0.0, 1.0);;
+    vec2 distortion1 = (texture(tDuDvMap, texCoords).rg * 2.0 - 1.0) * waveStrength * clamp(depth * 0.5, 0.0, 1.0);
     
     refractionTexCoord += distortion1;
     reflectionTexCoord += distortion1;
@@ -70,21 +70,23 @@ void main() {
     vec4 refractionColor = texture(tRefraction, refractionTexCoord);
     vec4 reflectionColor = texture(tReflection, reflectionTexCoord);
     
-    vec3 normal = calculateNormal(vertexIn.normal, vertexIn.tangent, texture(tNormalMap, texCoords).xyz);
+    vec3 normal = CalculateNormal(vertexIn.normal, vertexIn.tangent, texture(tNormalMap, texCoords).xyz);
     
     // Fresnel effect.
-    float refractiveFactor = sqrt(dot(normalize(-vertexIn.viewPosition), normalize(vertexIn.normal)));
+    /*float refractiveFactor = sqrt(dot(normalize(-vertexIn.viewPosition), normalize(vertexIn.normal)));
     refractiveFactor = clamp(refractiveFactor, 0.0, 1.0);
     fragmentColor = mix(reflectionColor, refractionColor, refractiveFactor);
-    fragmentColor = fragmentColor * mix(texture(tWater, texCoords), vec4(1.0, 1.0, 1.0, 1.0), 0.5);
+    fragmentColor = fragmentColor * mix(texture(tWater, texCoords), vec4(1.0, 1.0, 1.0, 1.0), 0.5);*/
+    
+    //temp
+    fragmentColor = texture(tWater, texCoords);
     
     // Specular.
-    float shinyPower = 20.0;
+    /*float shinyPower = 20.0;
     vec3 v = normalize(-vertexIn.viewPosition);
     vec3 lightDirection = normalize(vec3(lightPosition) - vertexIn.viewPosition);
     vec3 r = normalize(reflect(-lightDirection, normal));
     vec3 specularLight = vec3(1.0, 1.0, 1.0) * pow(max(dot(r, v), 0.0), shinyPower) * clamp(depth, 0.0, 1.0);
     fragmentColor = vec4(lightIntensity * (fragmentColor.rgb + specularLight), 1.0);
     fragmentColor.a = clamp(depth, 0.0, 1.0);*/
-    fragmentColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
