@@ -104,7 +104,7 @@ namespace CaveGenerator {
             /**
              * @param percent The initial percentage of walls we want in the map.
              */
-            void GenerateCaveMap(int& percent);
+            void GenerateCaveMap(unsigned int percent);
 
             /// Detects rooms.
             void DetectRooms();
