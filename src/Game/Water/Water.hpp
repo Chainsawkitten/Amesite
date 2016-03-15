@@ -34,6 +34,8 @@ class Water {
         Texture2D* mDudvMap;
         Texture2D* mNormalMap;
         glm::vec2 mTextureRepeat;
+        glm::vec2 mTextureOffset;
+        float mMoveFactor;
         
         Geometry::Plane* mPlane;
         

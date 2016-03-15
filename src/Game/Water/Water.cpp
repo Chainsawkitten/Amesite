@@ -33,6 +33,9 @@ Water::Water() {
     mNormalMap = Resources().CreateTexture2DFromFile("Resources/WaterNormal.png");
     mTextureRepeat = glm::vec2(1.f, 1.f);
     
+    mTextureOffset = glm::vec2(0.f, 0.f);
+    mMoveFactor = 0.f;
+    
     mPosition = glm::vec3(450.f, 0.f, 450.f);
     mScale = glm::vec3(1000.f, 1000.f, 1000.f);
 }
@@ -77,23 +80,23 @@ void Water::Render() const {
 //    glActiveTexture(GL_TEXTURE1);
 //    glBindTexture(GL_TEXTURE_2D, reflectionTarget->ColorTexture());
     
-//    glActiveTexture(GL_TEXTURE2);
-//    glBindTexture(GL_TEXTURE_2D, dudvMap->TextureID());
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, mDudvMap->GetTextureID());
     
-//    glActiveTexture(GL_TEXTURE3);
-//    glBindTexture(GL_TEXTURE_2D, waterTexture->TextureID());
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, mWaterTexture->GetTextureID());
     
-//    glActiveTexture(GL_TEXTURE4);
-//    glBindTexture(GL_TEXTURE_2D, normalMap->TextureID());
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, mNormalMap->GetTextureID());
     
 //    glActiveTexture(GL_TEXTURE5);
 //    glBindTexture(GL_TEXTURE_2D, refractionTarget->DepthTexture());
     
 //    glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &screenSize[0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("textureRepeat"), 1, &mTextureRepeat[0]);
-//    glUniform2fv(mShaderProgram->GetUniformLocation("texOffset"), 1, &texOffset[0]);
+    glUniform2fv(mShaderProgram->GetUniformLocation("texOffset"), 1, &mTextureOffset[0]);
     glUniform4fv(mShaderProgram->GetUniformLocation("clippingPlane"), 1, &glm::vec4(0.f, 0.f, 0.f, 0.f)[0]);
-//    glUniform1f(mShaderProgram->GetUniformLocation("moveFactor"), moveFactor);
+    glUniform1f(mShaderProgram->GetUniformLocation("moveFactor"), mMoveFactor);
 //    glUniform1f(mShaderProgram->GetUniformLocation("zNear"), camera->NearPlane());
 //    glUniform1f(mShaderProgram->GetUniformLocation("zFar"), camera->FarPlane());
     

@@ -30,7 +30,7 @@ uniform vec3 lightIntensity;
 out vec4 fragmentColor;
 
 // Calculate texcoord
-vec2 calculateTexCoord() {
+vec2 CalculateTexCoord() {
     return gl_FragCoord.xy / screenSize;
 }
 
@@ -48,21 +48,21 @@ vec3 calculateNormal(in vec3 normal, in vec3 tangent, in vec3 mapNormal) {
 }
 
 void main() {
-    /*vec2 refractionTexCoord = calculateTexCoord();
+    vec2 refractionTexCoord = CalculateTexCoord();
     vec2 reflectionTexCoord = refractionTexCoord;
     reflectionTexCoord.y = 1.0 - reflectionTexCoord.y;
     
     // Calculate depth of water.
-    float depth = texture(tDepthMap, refractionTexCoord).r;
+    /*float depth = texture(tDepthMap, refractionTexCoord).r;
     float floorDistance = 2.0 * zNear * zFar / (zFar + zNear - (2.0 * depth - 1.0) * (zFar - zNear));
     depth = gl_FragCoord.z;
     float waterDistance = 2.0 * zNear * zFar / (zFar + zNear - (2.0 * depth - 1.0) * (zFar - zNear));
-    depth = floorDistance - waterDistance;
+    depth = floorDistance - waterDistance;*/
     
     // Distortion.
     vec2 texCoords = texture(tDuDvMap, vertexIn.texCoords * textureRepeat + vec2(moveFactor, 0.f)).rg * 0.1;
     texCoords += vertexIn.texCoords * textureRepeat + texOffset + vec2(0.f, moveFactor);
-    vec2 distortion1 = (texture(tDuDvMap, texCoords).rg * 2.0 - 1.0) * waveStrength * clamp(depth * 0.5, 0.0, 1.0);;
+    /*vec2 distortion1 = (texture(tDuDvMap, texCoords).rg * 2.0 - 1.0) * waveStrength * clamp(depth * 0.5, 0.0, 1.0);;
     
     refractionTexCoord += distortion1;
     reflectionTexCoord += distortion1;
