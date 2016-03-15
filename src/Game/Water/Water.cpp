@@ -97,20 +97,22 @@ void Water::Render() const {
     glUniform2fv(mShaderProgram->GetUniformLocation("texOffset"), 1, &mTextureOffset[0]);
     glUniform4fv(mShaderProgram->GetUniformLocation("clippingPlane"), 1, &glm::vec4(0.f, 0.f, 0.f, 0.f)[0]);
     glUniform1f(mShaderProgram->GetUniformLocation("moveFactor"), mMoveFactor);
-//    glUniform1f(mShaderProgram->GetUniformLocation("zNear"), camera->NearPlane());
-//    glUniform1f(mShaderProgram->GetUniformLocation("zFar"), camera->FarPlane());
     
     // Send matrices to shader.
     Entity* camera = HubInstance().GetMainCamera().body;
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
+    Component::Lens* cameraLens = camera->GetComponent<Component::Lens>();
     
     glm::mat4 viewMat = cameraTransform->worldOrientationMatrix * glm::translate(glm::mat4(), -cameraTransform->GetWorldPosition());
     glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * GetModelMatrix()));
-    glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
+    glm::mat4 projectionMat = cameraLens->GetProjection(screenSize);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &GetModelMatrix()[0][0]);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
     glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
+    
+    glUniform1f(mShaderProgram->GetUniformLocation("zNear"), cameraLens->zNear);
+    glUniform1f(mShaderProgram->GetUniformLocation("zFar"), cameraLens->zFar);
     
 //    glUniform4fv(mShaderProgram->GetUniformLocation("lightPosition"), 1, &(view * light.position)[0]);
 //    glUniform3fv(mShaderProgram->GetUniformLocation("lightIntensity"), 1, &light.intensity[0]);
