@@ -16,7 +16,7 @@
 #include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
 #include <Resources.hpp>
-#include "Game/GameObject/Player/SuperPlayer.hpp"
+#include "../GameObject/Player/SuperPlayer.hpp"
 
 System::CheckpointSystem::CheckpointSystem() {
     mLowHPSoundBuffer = Resources().CreateSound("Resources/LowHPBeep.ogg");
