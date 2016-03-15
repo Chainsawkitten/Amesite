@@ -92,7 +92,7 @@ void Water::Render() const {
 //    glActiveTexture(GL_TEXTURE5);
 //    glBindTexture(GL_TEXTURE_2D, refractionTarget->DepthTexture());
     
-//    glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &screenSize[0]);
+    glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &screenSize[0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("textureRepeat"), 1, &mTextureRepeat[0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("texOffset"), 1, &mTextureOffset[0]);
     glUniform4fv(mShaderProgram->GetUniformLocation("clippingPlane"), 1, &glm::vec4(0.f, 0.f, 0.f, 0.f)[0]);
