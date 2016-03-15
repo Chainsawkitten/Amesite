@@ -180,6 +180,7 @@ void Pylon::Deactivate() {
     pylon1->GetComponent<Component::ParticleEmitter>()->enabled = false;
     pylon2->GetComponent<Component::ParticleEmitter>()->enabled = false;
     node->GetComponent<Component::PointLight>()->intensity = 0.f;
+    node->GetComponent<Component::Physics>()->velocity = node->GetComponent<Component::Physics>()->acceleration = glm::vec3(0.f, 0.f, 0.f);
 }
 
 void Pylon::mUpdateFunction() {

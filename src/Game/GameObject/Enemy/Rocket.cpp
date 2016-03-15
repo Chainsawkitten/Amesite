@@ -115,6 +115,7 @@ void Rocket::Deactivate() {
     node->GetComponent<Component::Physics>()->acceleration = glm::vec3(0.f, 0.f, 0.f);
     node->GetComponent<Component::PointLight>()->intensity = 0.f;
     body->GetComponent<Component::ParticleEmitter>()->enabled = false;
+    node->GetComponent<Component::Physics>()->velocity = node->GetComponent<Component::Physics>()->acceleration = glm::vec3(0.f, 0.f, 0.f);
 }
 
 void Rocket::mUpdateFunction() {
