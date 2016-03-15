@@ -16,6 +16,7 @@ out VertexData {
     vec3 normal;
     vec3 tangent;
     vec2 texCoords;
+    vec3 viewPosition;
 } vertexOut;
 
 void main () {
@@ -23,4 +24,5 @@ void main () {
     vertexOut.normal = normalize(normalMatrix * vertexNormal);
     vertexOut.tangent = vertexTangent;
     vertexOut.texCoords = vertexTexture;
+    vertexOut.viewPosition = vec3(view * (model * vec4(vertexPosition, 1.0)));
 }

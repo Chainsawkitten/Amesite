@@ -7,6 +7,7 @@ in VertexData {
     vec3 normal;
     vec3 tangent;
     vec2 texCoords;
+    vec3 viewPosition;
 } vertexIn;
 
 uniform sampler2D tRefraction;
@@ -74,9 +75,9 @@ void main() {
     vec3 normal = CalculateNormal(vertexIn.normal, vertexIn.tangent, texture(tNormalMap, texCoords).xyz);
     
     // Fresnel effect.
-    /*float refractiveFactor = sqrt(dot(normalize(-vertexIn.viewPosition), normalize(vertexIn.normal)));
+    float refractiveFactor = sqrt(dot(normalize(-vertexIn.viewPosition), normalize(vertexIn.normal)));
     refractiveFactor = clamp(refractiveFactor, 0.0, 1.0);
-    fragmentColor = mix(reflectionColor, refractionColor, refractiveFactor);
+    /*fragmentColor = mix(reflectionColor, refractionColor, refractiveFactor);
     fragmentColor = fragmentColor * mix(texture(tWater, texCoords), vec4(1.0, 1.0, 1.0, 1.0), 0.5);*/
     
     //temp
