@@ -7,7 +7,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(UNIX OR MINGW)
-    set(CMAKE_CXX_FLAGS "-g -gdwarf-2 -static-libstdc++")
+    set(CMAKE_CXX_FLAGS "-g -gdwarf-2 -static-libstdc++ -Wall")
 endif()
 
 # GLFW
@@ -224,8 +224,6 @@ endmacro()
 foreach(item ${EMBEDDED_INPUT})
     ProcessWithHeaderize(EMBEDDED_HEADER EMBEDDED_SOURCE ${item} ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
-
-include_directories(src)
 
 # Doxygen documentation
 option(ModershipBuildDocs "Build the doxygen documentation" ON)

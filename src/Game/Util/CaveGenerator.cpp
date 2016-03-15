@@ -199,8 +199,8 @@ namespace CaveGenerator {
             mRoomList.push_back(Room(mMap, room));
         }
 
-        int largestRoomSize = 0;
-        Room *largestRoom;
+        std::size_t largestRoomSize = 0;
+        Room* largestRoom = nullptr;
         for (auto& room : mRoomList) {
             if (room.coordinates.size() > largestRoomSize) {
                 largestRoomSize = int(room.coordinates.size());
@@ -296,8 +296,7 @@ namespace CaveGenerator {
         return mMap;
     }
 
-    void CaveMap::GenerateCaveMap(int& percent)
-    {
+    void CaveMap::GenerateCaveMap(unsigned int percent) {
         std::uniform_int_distribution<uint32_t> hundredDistribution(1, 100);
 
         //Create array.
@@ -359,10 +358,10 @@ namespace CaveGenerator {
         int bestDistance = 0;
         bool possibleConnection = false;
 
-        Coordinate* firstBestCoordinate;
-        Coordinate* secondBestCoordinate;
-        Room* firstBestRoom;
-        Room* secondBestRoom;
+        Coordinate* firstBestCoordinate = nullptr;
+        Coordinate* secondBestCoordinate = nullptr;
+        Room* firstBestRoom = nullptr;
+        Room* secondBestRoom = nullptr;
         
         for (auto& firstRoom : roomListA) {
             if (!forceAccessibilityFromMainRoom) {

@@ -1,9 +1,9 @@
 #include "Cave.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
-#include <Engine/Resources.hpp>
+#include <Resources.hpp>
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
 #include <Geometry/Map.hpp>
@@ -12,14 +12,14 @@
 
 #include "../Component/Controller.hpp"
 #include "../Component/Health.hpp"
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/Mesh.hpp>
-#include <Engine/Component/Material.hpp>
-#include <Engine/Component/Physics.hpp>
-#include <Engine/Component/Collider2DCircle.hpp>
-#include <Engine/Component/SpotLight.hpp>
-#include <Engine/Geometry/Terrain.hpp>
-#include <Game/Util/GameEntityFactory.hpp>
+#include <Component/Transform.hpp>
+#include <Component/Mesh.hpp>
+#include <Component/Material.hpp>
+#include <Component/Physics.hpp>
+#include <Component/Collider2DCircle.hpp>
+#include <Component/SpotLight.hpp>
+#include <Geometry/Terrain.hpp>
+#include "../Util/GameEntityFactory.hpp"
 #include "../Util/CaveGenerator.hpp"
 
 #include "../Util/ControlSchemes.hpp"
@@ -198,7 +198,7 @@ void Cave::PlaceScenery(Entity* scenery, bool rotate) {
 
     if (!GridCollide(point)) {
         
-        if(rotate)
+        if (rotate)
             scenery->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
     
         scenery->GetComponent<Component::Transform>()->scale *= 1 - ((rand() % 1000) / 1000.f) / 2.f;

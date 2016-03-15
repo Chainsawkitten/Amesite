@@ -3,7 +3,7 @@
 #include "../GameObject/Player/SuperPlayer.hpp"
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
-#include <Game/Util/GameEntityFactory.hpp>
+#include "../Util/GameEntityFactory.hpp"
 
 #include "../Component/Health.hpp"
 
@@ -63,7 +63,7 @@ void System::CheckpointSystem::RespawnPlayers() {
     mRespawn = true;
 
     for (auto &player : mPlayers) {
-        Entity* site;
+        Entity* site = nullptr;
         if (typeid(*player).name() == typeid(GameObject::Player1).name())
             site = GameEntityCreator().CreateCrashSite1();
         else if (typeid(*player).name() == typeid(GameObject::Player2).name())

@@ -17,7 +17,7 @@ Map::~Map() {
     delete[] mVertexData;
     delete[] mIndexData;
 
-    for (int i = 0; i < mDataDimensions.y - 1; i++)
+    for (unsigned int i = 0; i < mDataDimensions.y - 1; i++)
         delete[] mTypeMap[i];
     delete[] mTypeMap;
 
@@ -171,7 +171,7 @@ Map::MeshNode Map::CreateMeshNode(const glm::vec3 position, glm::uvec2 index, bo
         node.mTexCoords = texCoords + glm::vec2(0.f, (0.5f / ((float)mDataDimensions.y / mTextureRepeat.y)));
     } else {
         node.mPosition = position + glm::vec3(1.f, 0.f, 0.f)* squareSize / 2.f;
-        node.mTexCoords = texCoords + glm::vec2((0.5f / ((float)mDataDimensions.x / mTextureRepeat.x), 0.f));
+        node.mTexCoords = texCoords + glm::vec2(0.5f / ((float)mDataDimensions.x / mTextureRepeat.x), 0.f);
     }
 
     return node;

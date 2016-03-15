@@ -2,8 +2,8 @@
 
 #include <glm/glm.hpp>
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
 #include "../../Util/Hub.hpp"
 #include "../Player/Player1.hpp"
@@ -41,7 +41,7 @@ void SuperEnemy::mUpdateFunction() {
     bool isWithinRange = false;
     bool isWithinTwiceRange = false;
     for (auto& player : HubInstance().mPlayers) {
-        if(player->Active()) {
+        if (player->Active()) {
             float distance = glm::distance(player->GetPosition(), transformWorldPosition);
             if (distance < range)
                 isWithinRange = true;

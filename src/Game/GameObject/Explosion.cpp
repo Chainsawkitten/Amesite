@@ -1,10 +1,10 @@
 #include "Explosion.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/ParticleEmitter.hpp>
+#include <Component/Transform.hpp>
+#include <Component/ParticleEmitter.hpp>
 #include "../Component/LifeTime.hpp"
 
 using namespace GameObject;
