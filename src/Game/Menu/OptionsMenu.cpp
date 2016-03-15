@@ -1,19 +1,29 @@
 #include "OptionsMenu.hpp"
 
 #include "MenuOption.hpp"
+#include "MenuSwitch.hpp"
 #include <MainWindow.hpp>
 #include "Menu.hpp"
+
+#include "../Util/GameSettings.hpp"
 
 #include <Resources.hpp>
 #include <Font/Font.hpp>
 
 OptionsMenu::OptionsMenu(Menu* parentMenu) : SubMenu() {
     // Define menu options.
-    MenuOption* menuOption = new MenuOption(GetFont(), "SOME OPTION", glm::vec3(0.f, 1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
-    AddMenuOption(menuOption);
-    menuOption = new MenuOption(GetFont(), "SOME BULLSHIT", glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
-    AddMenuOption(menuOption);
-    menuOption = new MenuOption(GetFont(), "BACK", glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    std::vector<std::string> options;
+    options.push_back("On");
+    options.push_back("Off");
+    MenuSwitch* menuSwitch = new MenuSwitch(GetFont(), "Fullscreen", options, glm::vec3(0.f, 1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    menuSwitch->callback = std::bind(&OptionsMenu::Fullscreen, this, std::placeholders::_1);
+    AddMenuOption(menuSwitch);
+    
+    menuSwitch = new MenuSwitch(GetFont(), "FXAA", options, glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    menuSwitch->callback = std::bind(&OptionsMenu::FXAA, this, std::placeholders::_1);
+    AddMenuOption(menuSwitch);
+    
+    MenuOption* menuOption = new MenuOption(GetFont(), "BACK", glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuOption->callback = std::bind(&Menu::Transition, parentMenu, 0);
     AddMenuOption(menuOption);
     
@@ -34,4 +44,12 @@ glm::vec3 OptionsMenu::GetCameraPosition() const {
 
 glm::vec3 OptionsMenu::GetCameraDirection() const {
     return glm::vec3(90.f, 0.f, 0.f);
+}
+
+void OptionsMenu::Fullscreen(std::string option) {
+    GameSettings::GetInstance().SetBool("Fullscreen", option == "On");
+}
+
+void OptionsMenu::FXAA(std::string option) {
+    GameSettings::GetInstance().SetBool("FXAA", option == "On");
 }
