@@ -363,8 +363,7 @@ void ControlScheme::AimedFire(Component::Controller* controller, float deltaTime
 
             float bulletSpeed = 60.f;
 
-            GameObject::Bullet* bullet = GameEntityCreator().CreatePlayerBullet(transform->GetWorldPosition(), bulletSpeed *  direction, spawnerComponent->faction);
-            //bullet->node->AddComponent<Component::PointLight>()->attenuation = 2.f;
+            GameEntityCreator().CreatePlayerBullet(transform->GetWorldPosition(), bulletSpeed *  direction, spawnerComponent->faction);
             spawnerComponent->timeSinceSpawn = 0.f;
             
             // Shoot sound.
@@ -390,7 +389,7 @@ void ControlScheme::AutoAimedFire(Component::Controller* controller, float delta
             glm::vec3 direction = glm::normalize(glm::vec3(glm::sin(angle), 0, glm::cos(angle)));
 
             float bulletSpeed = 10.f;
-            GameObject::Bullet* bullet = GameEntityCreator().CreateEnemyBullet(transform->position, bulletSpeed *  direction, 1);
+            GameEntityCreator().CreateEnemyBullet(transform->position, bulletSpeed *  direction, 1);
             spawnerComponent->timeSinceSpawn = 0.0f;
         }
     }
