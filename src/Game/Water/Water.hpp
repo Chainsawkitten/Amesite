@@ -7,6 +7,7 @@ class ShaderProgram;
 namespace Geometry {
     class Plane;
 }
+class RenderTarget;
 
 /// Reflective water surface.
 class Water {
@@ -28,6 +29,10 @@ class Water {
         
     private:
         ShaderProgram* mShaderProgram;
+        
+        // Render targets.
+        RenderTarget* mRefractionTarget;
+        RenderTarget* mReflectionTarget;
         
         // Textures.
         Texture2D* mWaterTexture;

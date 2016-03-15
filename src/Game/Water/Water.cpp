@@ -17,6 +17,7 @@
 #include <MainWindow.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <RenderTarget.hpp>
 
 Water::Water() {
     // Initialize shaders.
@@ -38,6 +39,10 @@ Water::Water() {
     
     mPosition = glm::vec3(450.f, 0.f, 450.f);
     mScale = glm::vec3(1000.f, 1000.f, 1000.f);
+    
+    const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
+    mRefractionTarget = new RenderTarget(screenSize);
+    mReflectionTarget = new RenderTarget(screenSize);
 }
 
 Water::~Water() {
@@ -45,14 +50,17 @@ Water::~Water() {
     Resources().FreeTexture2D(mDudvMap);
     Resources().FreeTexture2D(mNormalMap);
     
+    delete mRefractionTarget;
+    delete mReflectionTarget;
+    
     Resources().FreePlane();
     
     Resources().FreeShaderProgram(mShaderProgram);
 }
 
 void Water::Render() const {
-//    refractionTarget->SetSource();
-//    reflectionTarget->SetSource();
+    mRefractionTarget->SetSource();
+    mReflectionTarget->SetSource();
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
@@ -74,11 +82,11 @@ void Water::Render() const {
     glUniform1i(mShaderProgram->GetUniformLocation("tNormalMap"), 4);
     glUniform1i(mShaderProgram->GetUniformLocation("tDepthMap"), 5);
     
-//    glActiveTexture(GL_TEXTURE0);
-//    glBindTexture(GL_TEXTURE_2D, refractionTarget->ColorTexture());
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mRefractionTarget->GetColorTexture());
     
-//    glActiveTexture(GL_TEXTURE1);
-//    glBindTexture(GL_TEXTURE_2D, reflectionTarget->ColorTexture());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mReflectionTarget->GetColorTexture());
     
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, mDudvMap->GetTextureID());
@@ -89,8 +97,8 @@ void Water::Render() const {
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, mNormalMap->GetTextureID());
     
-//    glActiveTexture(GL_TEXTURE5);
-//    glBindTexture(GL_TEXTURE_2D, refractionTarget->DepthTexture());
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, mRefractionTarget->GetDepthTexture());
     
     glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &screenSize[0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("textureRepeat"), 1, &mTextureRepeat[0]);

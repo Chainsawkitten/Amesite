@@ -34,7 +34,7 @@ vec2 CalculateTexCoord() {
     return gl_FragCoord.xy / screenSize;
 }
 
-vec3 calculateNormal(in vec3 normal, in vec3 tangent, in vec3 mapNormal) {
+vec3 CalculateNormal(in vec3 normal, in vec3 tangent, in vec3 mapNormal) {
     vec3 n = normalize(normal);
     vec3 t = normalize(tangent);
     t = normalize(t - dot(t, n) * n);
