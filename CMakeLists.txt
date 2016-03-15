@@ -159,6 +159,9 @@ set(RESOURCES
         assets/sound/MusicCalm.ogg
         assets/sound/Laser.ogg
         assets/Loading.png
+        assets/water/Water.png
+        assets/water/WaterDUDV.png
+        assets/water/WaterNormal.png
     )
 
 add_custom_target(ResourceTarget ALL)
