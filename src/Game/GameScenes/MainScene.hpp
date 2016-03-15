@@ -17,6 +17,7 @@
 #include "../System/UpdateSystem.hpp"
 #include "../System/SpawnerSystem.hpp"
 #include "../Menu/Menu.hpp"
+#include <Water/Water.hpp>
 
 #include <AL/al.h>
 
@@ -116,6 +117,9 @@ class MainScene : public Scene {
 
         // The cave
         GameObject::Cave* mCave;
+        
+        // Water.
+        Water mWater;
 
         // Post processing.
         PostProcessing* mPostProcessing;
