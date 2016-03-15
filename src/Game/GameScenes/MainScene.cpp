@@ -200,7 +200,8 @@ MainScene::MainScene() {
     // Push boss positions here to avoid spawning enemies.
     mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
     
-    mWater.SetTextureRepeat(glm::vec2(100.f, 100.f));
+    mWater.SetTextureRepeat(glm::vec2(50.f, 50.f));
+    mWater.SetPosition(glm::vec3(450.f, -3.f, 450.f));
 }
 
 MainScene::~MainScene() {
@@ -324,7 +325,7 @@ void MainScene::Update(float deltaTime) {
     
     // Render reflections
     /// @todo Don't hardcore camera inversion.
-    float distance = 2.f * (cameraTransform->position.y - 0.f);// - water->Position().y);
+    float distance = 2.f * (cameraTransform->position.y - mWater.GetPosition().y);
     cameraTransform->position = cameraTransform->position - glm::vec3(0.f, distance, 0.f);
     cameraTransform->pitch = -cameraTransform->pitch;
     cameraTransform->UpdateModelMatrix();

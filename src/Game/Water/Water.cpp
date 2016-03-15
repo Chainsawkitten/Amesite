@@ -37,7 +37,7 @@ Water::Water() {
     mTextureOffset = glm::vec2(0.f, 0.f);
     mMoveFactor = 0.f;
     
-    mPosition = glm::vec3(450.f, 0.f, 450.f);
+    mPosition = glm::vec3(0.f, 0.f, 0.f);
     mScale = glm::vec3(1000.f, 1000.f, 1000.f);
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
@@ -56,6 +56,14 @@ Water::~Water() {
     Resources().FreePlane();
     
     Resources().FreeShaderProgram(mShaderProgram);
+}
+
+const glm::vec3& Water::GetPosition() const {
+    return mPosition;
+}
+
+void Water::SetPosition(const glm::vec3& position) {
+    mPosition = position;
 }
 
 void Water::Update(float time, const glm::vec3& wind) {

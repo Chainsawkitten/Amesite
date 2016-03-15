@@ -18,6 +18,18 @@ class Water {
         /// Destructor.
         ~Water();
         
+        /// Get position of the water surface.
+        /**
+         * @return Position of the water surface.
+         */
+        const glm::vec3& GetPosition() const;
+        
+        /// Set the position.
+        /**
+         * @param position The new position.
+         */
+        void SetPosition(const glm::vec3& position);
+        
         /// Update the water.
         /**
          * @param time Time since last frame (in seconds).

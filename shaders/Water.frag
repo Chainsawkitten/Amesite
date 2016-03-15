@@ -23,7 +23,7 @@ uniform vec2 texOffset;
 uniform float moveFactor;
 uniform float zNear;
 uniform float zFar;
-const float waveStrength = 0.02;
+const float waveStrength = 0.005;
 
 uniform vec4 lightPosition;
 uniform vec3 lightIntensity;
