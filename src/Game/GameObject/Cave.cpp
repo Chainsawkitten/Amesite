@@ -25,6 +25,7 @@
 #include "../Util/ControlSchemes.hpp"
 
 #include "../Util/PerlinNoise.hpp"
+#include <Util/Log.hpp>
 #include <ctime>
 
 using namespace GameObject;
@@ -103,7 +104,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     PerlinNoiseGenerator png(time(0));
 
-    float factor = 100.f;
+    float factor = 1000.f;
     float floatMapFactor = (5.f / 10.f);
     float perlinNoiseFactor = (5.f / 10.f);
 
@@ -113,6 +114,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
             float y = static_cast<float>(i) / static_cast<float>(height);
 
             float n = png.Noise(factor*x, factor*y, 1.0f);
+            Log() << floatMapFactor*floatMap[i][j] + perlinNoiseFactor*glm::abs(n) << "\n";
             floatMap[i][j] = floatMapFactor*floatMap[i][j] + perlinNoiseFactor*glm::abs(n);
         }
     }
@@ -123,7 +125,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->AddComponent<Component::Transform>();
     heightMap->AddComponent<Component::Material>();
     heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width)/2.f)+1.f, -11.f, scaleFactor*(static_cast<float>(height) / 2.f) + 1.f));
-    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f) * scaleFactor * 2, 14.f, (static_cast<float>(height) / 2.f) * scaleFactor * 2);
+    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f) * scaleFactor * 2, 17.f, (static_cast<float>(height) / 2.f) * scaleFactor * 2);
 
     mTerrain = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
 
