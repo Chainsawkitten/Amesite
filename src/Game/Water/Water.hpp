@@ -36,4 +36,6 @@ class Water {
         glm::vec2 mTextureRepeat;
         
         Geometry::Plane* mPlane;
+        
+        glm::mat4 GetModelMatrix() const;
 };

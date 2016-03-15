@@ -94,10 +94,10 @@ void Water::Render() const {
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     
     glm::mat4 view = cameraTransform->modelMatrix;
-//    glm::mat4 normal = glm::transpose(glm::inverse(view * ModelMatrix()));
-//    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("modelMatrix"), 1, GL_FALSE, &ModelMatrix()[0][0]);
+    glm::mat4 normal = glm::transpose(glm::inverse(view * GetModelMatrix()));
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("modelMatrix"), 1, GL_FALSE, &GetModelMatrix()[0][0]);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("viewMatrix"), 1, GL_FALSE, &view[0][0]);
-//    glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normal)[0][0]);
+    glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normal)[0][0]);
 //    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projectionMatrix"), 1, GL_FALSE, &camera->Projection(screenSize)[0][0]);
     
 //    glUniform4fv(mShaderProgram->GetUniformLocation("lightPosition"), 1, &(view * light.position)[0]);
@@ -113,4 +113,8 @@ void Water::Render() const {
 
 void Water::SetTextureRepeat(const glm::vec2& textureRepeat) {
     mTextureRepeat = textureRepeat;
+}
+
+glm::mat4 Water::GetModelMatrix() const {
+    return glm::mat4();
 }
