@@ -37,5 +37,8 @@ class Water {
         
         Geometry::Plane* mPlane;
         
+        glm::vec3 mPosition;
+        glm::vec3 mScale;
+        
         glm::mat4 GetModelMatrix() const;
 };

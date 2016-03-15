@@ -7,7 +7,6 @@
 #include <Geometry/Plane.hpp>
 
 #include "Default3D.vert.hpp"
-#include "Water.geom.hpp"
 #include "Water.frag.hpp"
 
 #include "../Util/Hub.hpp"
@@ -17,14 +16,14 @@
 #include <Component/Lens.hpp>
 #include <MainWindow.hpp>
 
+#include <glm/gtc/matrix_transform.hpp>
+
 Water::Water() {
     // Initialize shaders.
     Shader* vertexShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* geometryShader = Resources().CreateShader(WATER_GEOM, WATER_GEOM_LENGTH, GL_GEOMETRY_SHADER);
     Shader* fragmentShader = Resources().CreateShader(WATER_FRAG, WATER_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, geometryShader, fragmentShader });
+    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
     Resources().FreeShader(vertexShader);
-    Resources().FreeShader(geometryShader);
     Resources().FreeShader(fragmentShader);
     
     mPlane = Resources().CreatePlane();
@@ -33,6 +32,9 @@ Water::Water() {
     mDudvMap = Resources().CreateTexture2DFromFile("Resources/WaterDUDV.png");
     mNormalMap = Resources().CreateTexture2DFromFile("Resources/WaterNormal.png");
     mTextureRepeat = glm::vec2(1.f, 1.f);
+    
+    mPosition = glm::vec3(450.f, 0.f, 450.f);
+    mScale = glm::vec3(1000.f, 1000.f, 1000.f);
 }
 
 Water::~Water() {
@@ -52,6 +54,8 @@ void Water::Render() const {
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
     mShaderProgram->Use();
+    
+    glDisable(GL_CULL_FACE);
     
     // Blending
     GLboolean blending;
@@ -97,13 +101,13 @@ void Water::Render() const {
     Entity* camera = HubInstance().GetMainCamera().body;
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     
-    glm::mat4 view = cameraTransform->modelMatrix;
-    glm::mat4 normal = glm::transpose(glm::inverse(view * GetModelMatrix()));
+    glm::mat4 viewMat = cameraTransform->worldOrientationMatrix * glm::translate(glm::mat4(), -cameraTransform->GetWorldPosition());
+    glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * GetModelMatrix()));
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
-    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("modelMatrix"), 1, GL_FALSE, &GetModelMatrix()[0][0]);
-    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("viewMatrix"), 1, GL_FALSE, &view[0][0]);
-    glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normal)[0][0]);
-    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projectionMatrix"), 1, GL_FALSE, &projectionMat[0][0]);
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &GetModelMatrix()[0][0]);
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
+    glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
     
 //    glUniform4fv(mShaderProgram->GetUniformLocation("lightPosition"), 1, &(view * light.position)[0]);
 //    glUniform3fv(mShaderProgram->GetUniformLocation("lightIntensity"), 1, &light.intensity[0]);
@@ -121,5 +125,5 @@ void Water::SetTextureRepeat(const glm::vec2& textureRepeat) {
 }
 
 glm::mat4 Water::GetModelMatrix() const {
-    return glm::mat4();
+    return glm::translate(glm::mat4(), mPosition) * glm::rotate(glm::mat4(), glm::radians(270.f), glm::vec3(1.f, 0.f, 0.f)) * glm::scale(glm::mat4(), mScale);
 }

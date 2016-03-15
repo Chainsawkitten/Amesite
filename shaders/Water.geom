@@ -29,24 +29,16 @@ out VertexData {
 } vertexOut;
 
 void main() {
-    // Calculate normal.
-    vec3 n = cross(gl_in[1].gl_Position.xyz - gl_in[0].gl_Position.xyz, gl_in[2].gl_Position.xyz - gl_in[0].gl_Position.xyz);
-    vec3 normal = normalMatrix * n;
+    for(int i = 0; i < gl_in.length(); i++) {
+        // Copy attributes
+        vertexOut.normal =  normalize(normalMatrix * vertexIn[i].normal);
+        vertexOut.tangent = normalize(normalMatrix * vertexIn[i].tangent);
+        vertexOut.texCoords = vertexIn[i].texCoords;
+        vertexOut.viewPosition = vec3(viewMatrix * (modelMatrix * gl_in[i].gl_Position));
+        gl_Position = projectionMatrix * vec4(vertexOut.viewPosition, 1.0);
     
-    // Only display triangle if it's facing the viewer.
-    float d = dot(normal, -vec3(viewMatrix * (modelMatrix * gl_in[0].gl_Position)));
-    if (d > 0.0) {
-        for(int i = 0; i < gl_in.length(); i++) {
-            // Copy attributes
-            vertexOut.normal =  normalize(normalMatrix * vertexIn[i].normal);
-            vertexOut.tangent = normalize(normalMatrix * vertexIn[i].tangent);
-            vertexOut.texCoords = vertexIn[i].texCoords;
-            vertexOut.viewPosition = vec3(viewMatrix * (modelMatrix * gl_in[i].gl_Position));
-            gl_Position = projectionMatrix * vec4(vertexOut.viewPosition, 1.0);
-        
-            // Done with the vertex
-            EmitVertex();
-        }
-        EndPrimitive();
+        // Done with the vertex
+        EmitVertex();
     }
+    EndPrimitive();
 }

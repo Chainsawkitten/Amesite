@@ -316,7 +316,9 @@ void MainScene::Update(float deltaTime) {
 
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
-
+    
+    mWater.Render();
+    
     if (mMenu.IsActive())
         mMenu.RenderSelected();
 

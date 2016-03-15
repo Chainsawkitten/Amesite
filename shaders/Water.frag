@@ -7,7 +7,6 @@ in VertexData {
     vec3 normal;
     vec3 tangent;
     vec2 texCoords;
-    vec3 viewPosition;
 } vertexIn;
 
 uniform sampler2D tRefraction;
@@ -49,7 +48,7 @@ vec3 calculateNormal(in vec3 normal, in vec3 tangent, in vec3 mapNormal) {
 }
 
 void main() {
-    vec2 refractionTexCoord = calculateTexCoord();
+    /*vec2 refractionTexCoord = calculateTexCoord();
     vec2 reflectionTexCoord = refractionTexCoord;
     reflectionTexCoord.y = 1.0 - reflectionTexCoord.y;
     
@@ -86,5 +85,6 @@ void main() {
     vec3 r = normalize(reflect(-lightDirection, normal));
     vec3 specularLight = vec3(1.0, 1.0, 1.0) * pow(max(dot(r, v), 0.0), shinyPower) * clamp(depth, 0.0, 1.0);
     fragmentColor = vec4(lightIntensity * (fragmentColor.rgb + specularLight), 1.0);
-    fragmentColor.a = clamp(depth, 0.0, 1.0);
+    fragmentColor.a = clamp(depth, 0.0, 1.0);*/
+    fragmentColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
