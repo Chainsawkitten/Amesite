@@ -74,14 +74,12 @@ SpinBoss::SpinBoss(Scene* scene) : SuperBoss(scene) {
             transform->yaw = 120.f * i;
             transform->position = transform->GetWorldDirection() * 15.f;
             transform->scale *= 0.5f;
-            //armArr[i]->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::AlwaysShootRandomPlayer);
             armArr[i]->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
             armArr[i]->GetComponent<Component::Physics>()->angularVelocity.y = 0.25f;
         } else {
             transform->yaw = 120.f * i - 300.f;
             transform->position = transform->GetWorldDirection() * 17.f;
             transform->scale *= 0.3f;
-            //armArr[i]->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::AlwaysShoot);
             armArr[i]->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
             armArr[i]->GetComponent<Component::Physics>()->angularVelocity.y = -0.25f;
         }
