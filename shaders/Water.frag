@@ -89,8 +89,8 @@ void main() {
     vec3 lightDirection = normalize(vec3(lightPosition) - vertexIn.viewPosition);
     vec3 r = normalize(reflect(-lightDirection, normal));
     vec3 specularLight = vec3(1.0, 1.0, 1.0) * pow(max(dot(r, v), 0.0), shinyPower) * clamp(depth, 0.0, 1.0);
-    fragmentColor = vec4(lightIntensity * (fragmentColor.rgb + specularLight), 1.0);
-    fragmentColor.a = clamp(depth, 0.0, 1.0);*/
+    fragmentColor = vec4(lightIntensity * (fragmentColor.rgb + specularLight), 1.0);*/
+    fragmentColor.a = clamp(depth, 0.0, 1.0);
     
     extraOut = vec4(0.0, 0.0, 0.0, 1.0);
 }
