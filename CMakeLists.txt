@@ -140,6 +140,7 @@ set(RESOURCES
         assets/spawn/pillar/pillar.obj
         assets/spawn/portal/portal.obj
         assets/stones/stone_01_glow.png
+        assets/stones/stone_01_diff.png
         assets/stones/stone_01.obj
         assets/stones/stone_02.obj
         assets/stones/stone_03.obj

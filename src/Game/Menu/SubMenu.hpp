@@ -4,6 +4,7 @@
 #include <vector>
 
 class SuperMenuOption;
+class MenuOption;
 class Font;
 
 /// A sub menu inside a menu.
@@ -70,6 +71,14 @@ class SubMenu {
          */
         void AddMenuOption(SuperMenuOption* menuOption);
         
+        /// Set title option.
+        /**
+         * Sets a menu option to display as the title of the menu.
+         * This menu option can't be interacted with.
+         * @param titleOption %Menu option to display as title.
+         */
+        void SetTitleOption(MenuOption* titleOption);
+        
         /// Get the menu's font.
         /**
          * @return The menu's font.
@@ -87,4 +96,6 @@ class SubMenu {
         // Menu options.
         std::vector<SuperMenuOption*> mMenuOptions;
         int mSelected;
+        
+        MenuOption* mTitleOption;
 };

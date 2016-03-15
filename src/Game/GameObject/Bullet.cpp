@@ -33,7 +33,7 @@ Bullet::Bullet(Scene* scene, float lifeTime) : SuperGameObject(scene) {
     node->GetComponent<Component::Explode>()->size = 2.f;
     node->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
     node->AddComponent<Component::Collider2DCircle>()->radius = 0.5f;
-    node->AddComponent<Component::GridCollide>();
+    node->AddComponent<Component::GridCollide>()->removeOnImpact = true;
     node->AddComponent<Component::Physics>();
     Component::LifeTime* lifeTimeComponent = node->AddComponent<Component::LifeTime>();
     lifeTimeComponent->lifeTime = lifeTimeComponent->initialLifeTime = lifeTime;

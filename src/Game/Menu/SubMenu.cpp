@@ -1,6 +1,7 @@
 #include "SubMenu.hpp"
 
 #include "SuperMenuOption.hpp"
+#include "MenuOption.hpp"
 #include <Resources.hpp>
 #include <Font/Font.hpp>
 
@@ -26,6 +27,8 @@ SubMenu::SubMenu() {
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
     
     mSelected = 0;
+    
+    mTitleOption = nullptr;
 }
 
 SubMenu::~SubMenu() {
@@ -33,6 +36,9 @@ SubMenu::~SubMenu() {
     
     for (SuperMenuOption* menuOption : mMenuOptions)
         delete menuOption;
+    
+    if (mTitleOption != nullptr)
+        delete mTitleOption;
 }
 
 void SubMenu::SetPosition(const glm::vec3& position) {
@@ -96,10 +102,17 @@ void SubMenu::RenderMenuOptions() {
     
     for (SuperMenuOption* menuOption : mMenuOptions)
         menuOption->Render(screenSize, mModelMatrix);
+    
+    if (mTitleOption != nullptr)
+        mTitleOption->Render(screenSize, mModelMatrix);
 }
 
 void SubMenu::AddMenuOption(SuperMenuOption* menuOption) {
     mMenuOptions.push_back(menuOption);
+}
+
+void SubMenu::SetTitleOption(MenuOption* titleOption) {
+    mTitleOption = titleOption;
 }
 
 Font* SubMenu::GetFont() const {
