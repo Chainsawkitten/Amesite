@@ -15,7 +15,6 @@ DyingLight::DyingLight(Scene* scene) : SuperGameObject(scene) {
     node = CreateEntity();
     Component::PointLight* light = node->AddComponent<Component::PointLight>();
     light->color = glm::vec3(1, 0, 0);
-    light->ambientCoefficient;
     node->AddComponent<Component::Transform>();
     node->AddComponent<Component::LifeTime>()->lifeTime = 0.5f;
 
