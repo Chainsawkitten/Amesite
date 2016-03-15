@@ -17,6 +17,9 @@ class Water {
         /// Destructor.
         ~Water();
         
+        /// Render the reflective surface.
+		void Render() const;
+        
         /// Set how much the water textures should repat.
         /**
          * @param textureRepeat How many times the water textures should repeat.

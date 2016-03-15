@@ -310,7 +310,6 @@ set(ENGINE_SRCS
         src/Engine/PostProcessing/GlowFilter.cpp
         src/Engine/PostProcessing/GlowBlurFilter.cpp
         src/Engine/GameObject/SuperGameObject.cpp
-        src/Engine/Water/Water.cpp
     )
 
 set(ENGINE_HEADERS
@@ -374,7 +373,6 @@ set(ENGINE_HEADERS
         src/Engine/PostProcessing/GlowFilter.hpp
         src/Engine/PostProcessing/GlowBlurFilter.hpp
         src/Engine/GameObject/SuperGameObject.hpp
-        src/Engine/Water/Water.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
@@ -456,6 +454,7 @@ set(GAME_SRCS
         src/Game/Menu/SuperMenuOption.cpp
         src/Game/Menu/MenuOption.cpp
         src/Game/Menu/MenuSwitch.cpp
+        src/Game/Water/Water.cpp
     )
 
 set(GAME_HEADERS
@@ -530,6 +529,7 @@ set(GAME_HEADERS
         src/Game/Menu/SuperMenuOption.hpp
         src/Game/Menu/MenuOption.hpp
         src/Game/Menu/MenuSwitch.hpp
+        src/Game/Water/Water.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
