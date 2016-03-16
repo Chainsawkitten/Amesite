@@ -52,6 +52,9 @@ namespace GameObject {
         /// Deactivates the player.
         void Deactivate();
 
+        /// Rotates player.
+        void SetYaw(float yaw);
+
     private:
         Geometry::OBJModel* mBodyModel;
         Geometry::OBJModel* mEngineModel;
@@ -141,7 +144,8 @@ namespace GameObject {
 
         void mUpdateFunction();
 
-        private:
-            float mRegainAmount;
+        float mRegainAmount;
+
+        float mCollisionRadius;
     };
 }

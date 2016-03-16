@@ -56,6 +56,7 @@ namespace GameObject {
             
             void FireBullets();
 
+            float mMaxSpawnerDelay;
             int mOffsetAngle;
     };
 }

@@ -18,6 +18,7 @@
 #include "../System/SpawnerSystem.hpp"
 #include <System/ParticleSystem.hpp>
 #include "../Menu/Menu.hpp"
+#include "../Water/Water.hpp"
 
 #include <AL/al.h>
 
@@ -106,9 +107,6 @@ class MainScene : public Scene {
         // Particle Render system.
         System::ParticleRenderSystem mParticleRenderSystem;
 
-        // Vector containing players
-        std::vector<GameObject::SuperPlayer*> mPlayers;
-
         // Bosses
         std::vector<GameObject::SuperBoss*> mBossVector;
 
@@ -120,6 +118,9 @@ class MainScene : public Scene {
 
         // The cave
         GameObject::Cave* mCave;
+        
+        // Water.
+        Water mWater;
 
         // Post processing.
         PostProcessing* mPostProcessing;
