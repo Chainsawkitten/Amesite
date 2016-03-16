@@ -24,6 +24,7 @@
 #include "../Component/Damage.hpp"
 #include "../Component/LifeTime.hpp"
 #include "../Component/Spawner.hpp"
+#include <Component/PointLight.hpp>
 
 #include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
@@ -171,6 +172,16 @@ MainScene::MainScene() {
     
     // Create altar
     GameEntityCreator().CreateAltar(glm::vec3(mPortalPosition.x, -16.f, mPortalPosition.y));
+    
+    // Spawn bunch of lights.
+    for (int i=0; i<50; ++i) {
+        Entity* lightEntity = CreateEntity();
+        Component::Transform* lightTransform = lightEntity->AddComponent<Component::Transform>();
+        lightTransform->position = glm::vec3(playerStartX, 0.f, playerStartZ);
+        Component::PointLight* lightLight = lightEntity->AddComponent<Component::PointLight>();
+        lightLight->attenuation = 1.0f;
+        lightLight->color = glm::vec3(0.67f, 0.f, 0.72f);
+    }
     
     //Stores how many bosses exist
     mBossCounter = mBossVector.size();
