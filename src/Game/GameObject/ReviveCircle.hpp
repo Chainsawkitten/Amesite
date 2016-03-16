@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Engine/GameObject/SuperGameObject.hpp>
+#include <GameObject/SuperGameObject.hpp>
 
 class Scene;
 class Entity;
@@ -10,21 +10,26 @@ namespace Geometry {
 
 namespace GameObject {
     class SuperPlayer;
-    /// A ReviveCircle
+    
+    /// A circle that indicates player revival.
     class ReviveCircle : public SuperGameObject {
         public:
-            /// Create %ReviveCircle
+            /// Create revive circle.
             /**
              * @param scene Pointer to which Scene %ReviveCircle Enities' are contained.
+             * @param player Player to which teh circle corresponds.
              */
             ReviveCircle(Scene* scene, SuperPlayer* player);
            
+            /// Destructor.
             ~ReviveCircle();
 
             /// Node of %ReviveCircle
             Entity* node;
+            
             /// Outer ring relative to node
             Entity* outerRing;
+            
             /// Inner circle relative to node
             Entity* innerCircle;
 

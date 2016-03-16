@@ -275,7 +275,7 @@ Entity* GameEntityFactory::CreateShrapnel(glm::vec3 position, unsigned int amoun
         Entity* shrapnel = mScene->CreateEntity();
         if (explodeComponent != nullptr) {
             switch (explodeComponent->type) {
-                case Component::Explode::CAVE: 
+                case Component::Explode::CAVE:
                     shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
                     shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/wall_gray.png");
                     shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
@@ -285,6 +285,8 @@ Entity* GameEntityFactory::CreateShrapnel(glm::vec3 position, unsigned int amoun
                     shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
                     shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
                     shrapnel->GetComponent<Component::Material>()->SetGlow("Resources/enemy_glow.png");
+                    break;
+                default:
                     break;
             }
         }

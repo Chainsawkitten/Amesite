@@ -1,9 +1,9 @@
 #include "EnemySpawnerSystem.hpp"
 
-#include <Engine/Scene/Scene.hpp>
+#include <Scene/Scene.hpp>
 #include <Entity/Entity.hpp>
-#include <Engine/GameObject/SuperGameObject.hpp>
-#include <Engine/Component/Transform.hpp>
+#include <GameObject/SuperGameObject.hpp>
+#include <Component/Transform.hpp>
 
 #include "../Util/GameEntityFactory.hpp"
 
@@ -26,8 +26,8 @@
 using namespace System;
 
 EnemySpawnerSystem::EnemySpawnerSystem() {
-    mMinEnemyCount = 30;
-    mMaxEnemyCount = 60;
+    mMinEnemyCount = 80;
+    mMaxEnemyCount = 120;
     mEnemyCount = 0;
     mEnemiesKilled = 0;
     mSpawnerRadius = 60.f;

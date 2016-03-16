@@ -1,9 +1,9 @@
 #include "DivideBoss.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
-#include <Engine/Resources.hpp>
+#include <Resources.hpp>
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/OBJModel.hpp>
 
@@ -15,14 +15,14 @@
 #include "../../Component/Controller.hpp"
 #include "../../Component/Damage.hpp"
 #include "../../Component/LifeTime.hpp"
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/RelativeTransform.hpp>
-#include <Engine/Component/Mesh.hpp>
-#include <Engine/Component/Material.hpp>
-#include <Engine/Component/Collider2DCircle.hpp>
-#include <Engine/Component/Animation.hpp>
-#include <Engine/Component/ParticleEmitter.hpp>
-#include <Engine/Component/Physics.hpp>
+#include <Component/Transform.hpp>
+#include <Component/RelativeTransform.hpp>
+#include <Component/Mesh.hpp>
+#include <Component/Material.hpp>
+#include <Component/Collider2DCircle.hpp>
+#include <Component/Animation.hpp>
+#include <Component/ParticleEmitter.hpp>
+#include <Component/Physics.hpp>
 
 #include "../../Util/ControlSchemes.hpp"
 #include "../../Util/GameEntityFactory.hpp"
@@ -50,7 +50,7 @@ DivideBoss::DivideBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Health>()->removeOnLowHealth = false;
     body->GetComponent<Component::Health>()->maxCooldown = 0.f;
     body->GetComponent<Component::Health>()->health = body->GetComponent<Component::Health>()->maxHealth = 300.f;
-    body->GetComponent<Component::Health>()->regainAmount = body->GetComponent<Component::Health>()->maxHealth / 10.f;
+    body->GetComponent<Component::Health>()->regainAmount = body->GetComponent<Component::Health>()->maxHealth / 7.f;
     body->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     body->GetComponent<Component::Physics>()->angularVelocity.y = -0.1f;
     body->AddComponent<Component::Damage>()->faction = 1.f;
@@ -88,11 +88,12 @@ void DivideBoss::mUpdateFunction() {
     float nextHpStep = mLastHpStep - 0.1f;
     if (healthFactor < nextHpStep) {
         mLastHpStep = nextHpStep;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 3; i++) {
             std::uniform_int_distribution<uint32_t> randomValue(0, 1);
             GameObject::Rocket* miniRocket = GameEntityCreator().CreateMiniRocket(body->GetComponent<Component::Transform>()->GetWorldPosition() + glm::vec3(randomValue(mRNG) * 2.f - 1.f, 0.f, randomValue(mRNG) * 2.f - 1.f) * 10.f);
             miniRocket->range = this->range;
             miniRocket->node->GetComponent<Component::LifeTime>()->lifeTime = 20.f;
+            miniRocket->node->GetComponent<Component::Physics>()->maxVelocity *= 1.15f;
         }
     }
     body->GetComponent<Component::Transform>()->scale = glm::vec3(1.f, 1.f, 1.f) * healthFactor + 0.5f;

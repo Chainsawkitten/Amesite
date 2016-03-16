@@ -118,6 +118,8 @@ void InputHandler::Update() {
                 }
             }
             break;
+        default:
+            break;
         }
         
         if (values[binding.player][binding.button] == 0.0)

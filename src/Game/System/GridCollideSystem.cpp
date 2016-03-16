@@ -2,8 +2,8 @@
 
 #include "../GameObject/Cave.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
 #include <vector>
 

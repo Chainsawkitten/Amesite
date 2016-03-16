@@ -59,35 +59,35 @@ class GameEntityFactory {
         /**
          * @param type of enemy the spawner handles.
          * @param delay for spawning a new enemy.
-         * @return The enemy spawner GameObject.
+         * @return The created enemy spawner GameObject.
          */
         GameObject::EnemySpawner* CreateEnemySpawner(unsigned int type, float delay);
         
         /// Create a rocket enemy.
         /**
          * @param origin The enemy's starting position
-         * @return The enemy GameObject.
+         * @return The created enemy GameObject.
          */
         GameObject::Rocket* CreateRocket(const glm::vec3& origin);
 
         /// Create a mini rocket enemy.
         /**
          * @param origin The enemy's starting position
-         * @return The enemy GameObject.
+         * @return The created enemy GameObject.
          */
         GameObject::Rocket* CreateMiniRocket(const glm::vec3& origin);
 
         /// Create a nest enemy.
         /**
           * @param origin The enemy's starting position
-          * @return The enemy GameObject.
+          * @return The created enemy GameObject.
           */
         GameObject::Nest* CreateNest(const glm::vec3& origin);
 
         /// Create pylon enemy.
         /**
          * @param origin The enemy's starting position
-         * @return The pylon GameObject.
+         * @return The created pylon GameObject.
          */
         GameObject::Pylon* CreateEnemyPylon(const glm::vec3& origin);
        
@@ -104,49 +104,49 @@ class GameEntityFactory {
         /// Create player1.
         /**
          * @param origin The player's starting position.
-         * @return The player1 GameObject.
+         * @return The created player 1 GameObject.
          */
         GameObject::Player1* CreatePlayer1(const glm::vec3& origin);
 
         /// Create player2.
         /**
         * @param origin The player's starting position.
-        * @return The player2 GameObject.
+        * @return The created player 2 GameObject.
         */
         GameObject::Player2* CreatePlayer2(const glm::vec3& origin);
 
         /// Create SpinBoss.
         /**
          * @param origin The SpinBoss's starting position.
-         * @return The SpinBoss GameObject.
+         * @return The created SpinBoss GameObject.
          */
         GameObject::SpinBoss* CreateSpinBoss(const glm::vec3& origin);
 
         /// Create ShieldBoss.
         /**
          * @param origin The ShieldBoss's starting position.
-         * @return The ShieldBoss GameObject.
+         * @return The created ShieldBoss GameObject.
          */
         GameObject::ShieldBoss* CreateShieldBoss(const glm::vec3& origin);
 
         /// Create DivideBoss.
         /**
          * @param origin The DivideBoss's starting position.
-         * @return The DivideBoss GameObject.
+         * @return The created DivideBoss GameObject.
          */
         GameObject::DivideBoss* CreateDivideBoss(const glm::vec3& origin);
 
         /// Create RingBoss.
         /**
          * @param origin The RingBoss's starting position.
-         * @return The RingBoss GameObject.
+         * @return The created RingBoss GameObject.
          */
         GameObject::RingBoss* CreateRingBoss(const glm::vec3& origin);
         
         /// Create Altar.
         /**
          * @param origin The Altar's starting position.
-         * @return The Spawn GameObject.
+         * @return The created Spawn GameObject.
          */
         GameObject::Altar* CreateAltar(const glm::vec3& origin);
 
@@ -154,22 +154,22 @@ class GameEntityFactory {
         /**
          * @param origin The Pillar's starting position.
          * @param bossPosition The Boss position.
-         * @return The Pillar GameObject.
+         * @return The created Pillar GameObject.
          */
         GameObject::Pillar* CreatePillar(const glm::vec3& origin, glm::vec3 bossPosition);
 
         /// Create PillarBall.
         /**
          * @param origin The PillarBall's starting position.
-         * @param velocity The PillarBall's velocity.
-         * @return The PillarBall GameObject.
+         * @param destination The destination to point to.
+         * @return The created PillarBall GameObject.
          */
         GameObject::PillarBall* CreatePillarBall(const glm::vec3& origin, const glm::vec3& destination);
 
         /// Create Portal.
         /**
          * @param origin The Portal's starting position.
-         * @return The Portal GameObject.
+         * @return The created Portal GameObject.
          */
         GameObject::Portal* CreatePortal(const glm::vec3& origin);
 
@@ -181,14 +181,14 @@ class GameEntityFactory {
 
         /// Create crash site.
         /**
-         * @return The crash entity.
+         * @return The created crash entity.
          */
         Entity* CreateCrashSite2();
 
         /// Create stone.
         /**
-        * @return The stone entity.
-        */
+         * @return The created stone entity.
+         */
         Entity* CreateStone();
 
         /// Create glowing stone.
@@ -199,13 +199,13 @@ class GameEntityFactory {
 
         /// Create crystal light.
         /**
-         * @return The crystal entity.
+         * @return The created crystal entity.
          */
         Entity* CreateCrystalLight();
 
         /// Create fallen pillar.
         /**
-         * @return The pillar entity.
+         * @return The created pillar entity.
          */
         Entity* CreateFallenPillar();
 
@@ -213,7 +213,8 @@ class GameEntityFactory {
         /**
          * @param position The Shrapnel's starting position.
          * @param amount The amount of shrapnel.
-         * @return The shrapnel entity.
+         * @param explodeComponent Explode component to give sharpnel.
+         * @return The created shrapnel entity.
          */
         Entity* CreateShrapnel(glm::vec3 position, unsigned int amount, Component::Explode* explodeComponent = nullptr);
 
@@ -222,7 +223,7 @@ class GameEntityFactory {
          * @param position The bullet's starting position.
          * @param direction The direction the bullet is traveling in.
          * @param faction The faction, bullets only harm entities of other factions.
-         * @return The bullet GameObject.
+         * @return The created bullet GameObject.
          */
         GameObject::Bullet* CreatePlayerBullet(const glm::vec3& position, const glm::vec3& direction, int faction);
 
@@ -231,7 +232,7 @@ class GameEntityFactory {
          * @param position The bullet's starting position.
          * @param direction The direction the bullet is traveling in.
          * @param faction The faction, bullets only harm entities of other factions.
-         * @return The bullet GameObject.
+         * @return The created bullet GameObject.
          */
         GameObject::Bullet* CreateEnemyBullet(const glm::vec3& position, const glm::vec3& direction, int faction);
 
@@ -239,7 +240,7 @@ class GameEntityFactory {
         /**
          * @param origin The camera's starting position.
          * @param rotation The camera's starting orientation.
-         * @return The camera GameObject.
+         * @return The created camera GameObject.
          */
         GameObject::Camera* CreateCamera(const glm::vec3& origin, const glm::vec3& rotation);
 
@@ -247,6 +248,7 @@ class GameEntityFactory {
         /**
          * @param object Entity to which the system is relative.
          * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
+         * @return The created dust particle emitter.
          */
         GameObject::Dust* CreateDust(Entity* object, int particleTextureIndex);
 
@@ -256,13 +258,15 @@ class GameEntityFactory {
          * @param lifeTime Life time of the explosion.
          * @param size Size of the explosion.
          * @param particleTextureIndex %Texture the particles should sample from, these are documented in Component::ParticleEmitter::ParticleTextureIndex.
+         * @param explodeComponent Explode component to give shrapnel.
+         * @return The created explosion.
          */
         GameObject::Explosion* CreateExplosion(glm::vec3 position, float lifeTime, float size, int particleTextureIndex, Component::Explode* explodeComponent = nullptr);
 
         /// Creates a ReviveCircle.
         /**
-         * @param position Position of the revive circle.
          * @param player Player which this reive circle corresponds to.
+         * @return The created revive circle game object.
          */
         GameObject::ReviveCircle* CreateReviveCircle(GameObject::SuperPlayer* player);
 

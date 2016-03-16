@@ -1,9 +1,9 @@
 #include "ReviveCircle.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
-#include <Engine/Resources.hpp>
+#include <Resources.hpp>
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/OBJModel.hpp>
 
@@ -12,14 +12,14 @@
 #include "../Component/Explode.hpp"
 #include "../Component/Controller.hpp"
 #include "../Component/Update.hpp"
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/RelativeTransform.hpp>
-#include <Engine/Component/Mesh.hpp>
-#include <Engine/Component/Material.hpp>
-#include <Engine/Component/Collider2DCircle.hpp>
-#include <Engine/Component/Animation.hpp>
-#include <Engine/Component/ParticleEmitter.hpp>
-#include <Engine/Component/Physics.hpp>
+#include <Component/Transform.hpp>
+#include <Component/RelativeTransform.hpp>
+#include <Component/Mesh.hpp>
+#include <Component/Material.hpp>
+#include <Component/Collider2DCircle.hpp>
+#include <Component/Animation.hpp>
+#include <Component/ParticleEmitter.hpp>
+#include <Component/Physics.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 #include "Player/SuperPlayer.hpp"
@@ -56,7 +56,7 @@ ReviveCircle::~ReviveCircle() {
 }
 
 void ReviveCircle::mUpdateFunction() {
-    node->GetComponent<Component::Transform>()->position = mPlayer->GetPosition() - glm::vec3(0.f, 4.f, 0.f);
+    node->GetComponent<Component::Transform>()->position = mPlayer->GetPosition() - glm::vec3(0.f, 3.f, 0.f);
     float minFactor = 0.4f;
     float factor = 1.f - mPlayer->respawnTimeLeft / mPlayer->initalRespawnTime;
     factor = (1.f - minFactor) * factor * factor + minFactor;

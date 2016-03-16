@@ -1,23 +1,23 @@
 #include "Bullet.hpp"
 
-#include <Engine/Scene/Scene.hpp>
-#include <Engine/Entity/Entity.hpp>
+#include <Scene/Scene.hpp>
+#include <Entity/Entity.hpp>
 
-#include <Engine/Resources.hpp>
+#include <Resources.hpp>
 #include <Geometry/Geometry3D.hpp>
 #include <Geometry/Cube.hpp>
 #include "../Component/Damage.hpp"
 #include "../Component/LifeTime.hpp"
 #include "../Component/Explode.hpp"
 #include "../Component/GridCollide.hpp"
-#include <Engine/Component/ParticleEmitter.hpp>
-#include <Engine/Component/Transform.hpp>
-#include <Engine/Component/Physics.hpp>
-#include <Engine/Component/Collider2DCircle.hpp>
-#include <Engine/Component/Mesh.hpp>
-#include <Engine/Component/Material.hpp>
-#include <Engine/Component/PointLight.hpp>
-#include "Game/Component/Update.hpp"
+#include <Component/ParticleEmitter.hpp>
+#include <Component/Transform.hpp>
+#include <Component/Physics.hpp>
+#include <Component/Collider2DCircle.hpp>
+#include <Component/Mesh.hpp>
+#include <Component/Material.hpp>
+#include <Component/PointLight.hpp>
+#include "../Component/Update.hpp"
 
 
 using namespace GameObject;
@@ -93,10 +93,13 @@ void Bullet::mUpdateFunction() {
     float lifeTimeFactor = 1.f - lifeTimeComponent->lifeTime / lifeTimeComponent->initialLifeTime;
     float maxIntensity = 15.f;
     float timeLimFactor = 0.1f / lifeTimeComponent->initialLifeTime;
-    if (lifeTimeFactor < timeLimFactor) {
-        node->GetComponent<Component::PointLight>()->intensity = maxIntensity / timeLimFactor * lifeTimeFactor * lightIntensity;
-    } else {
-        node->GetComponent<Component::PointLight>()->intensity = maxIntensity / (timeLimFactor - 1.f) * (lifeTimeFactor - 1.f) * lightIntensity;
+    Component::PointLight* light = node->GetComponent<Component::PointLight>();
+    if (light != nullptr) {
+        if (lifeTimeFactor < timeLimFactor) {
+            light->intensity = maxIntensity / timeLimFactor * lifeTimeFactor * lightIntensity;
+        } else {
+            light->intensity = maxIntensity / (timeLimFactor - 1.f) * (lifeTimeFactor - 1.f) * lightIntensity;
+        }
     }
        
 }
