@@ -255,13 +255,8 @@ void MainScene::Update(float deltaTime) {
         mCollisionSystem.Update(*this);
         
         // Update enemy spawning
-<<<<<<< HEAD
         mEnemySpawnerSystem.Update(*this, deltaTime, mCave, mNoSpawnRooms);
-
-=======
-        mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);
         
->>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
         // Check grid collisions.
         mGridCollideSystem.Update(*this, deltaTime, *mCave);
         
@@ -289,13 +284,9 @@ void MainScene::Update(float deltaTime) {
     cameraTransform->yaw = 0.f;
     cameraTransform->pitch = 60.f;
     cameraTransform->roll = 0.f;
-<<<<<<< HEAD
-    mMainCamera->UpdateRelativePosition(mBossVector, deltaTime);
-
-=======
-    mMainCamera->UpdateRelativePosition(mPlayers, mBossVector, deltaTime);
     
->>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
+    mMainCamera->UpdateRelativePosition(mBossVector, deltaTime);
+    
     if (!mMenu.IsActive()) {
         //If all players are disabled, respawn them.
         mCheckpointSystem.Update(deltaTime);
@@ -321,11 +312,7 @@ void MainScene::Update(float deltaTime) {
     }
     
     if (mMenu.IsActive())
-<<<<<<< HEAD
         mMenu.Update(HubInstance().mPlayers[0], deltaTime);
-
-=======
-        mMenu.Update(mPlayers[0], deltaTime);
     
     // Water.
     mWater.Update(deltaTime, glm::vec3(1.f, 0.f, 0.f));
@@ -350,7 +337,6 @@ void MainScene::Update(float deltaTime) {
         cameraTransform->UpdateModelMatrix();
     }
     
->>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
@@ -394,21 +380,10 @@ void MainScene::Update(float deltaTime) {
     // Set music volumes.
     mTargetMix = 0.f;
     for (GameObject::SuperEnemy* enemy : mEnemySpawnerSystem.GetEnemies()) {
-        
         if (mCheckpointSystem.mRespawn) {
-<<<<<<< HEAD
-
             if (glm::distance(enemy->node->GetComponent<Component::Transform>()->GetWorldPosition(), HubInstance().mPlayers[0]->GetPosition()) < 10) {
-
-=======
-            
-            if (glm::distance(enemy->node->GetComponent<Component::Transform>()->GetWorldPosition(), mPlayers[0]->GetPosition()) < 10) {
-                
->>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
                 enemy->node->GetComponent<Component::Health>()->health = 0;
-                
             }
-            
         }
         
         if (enemy->Active()) {
