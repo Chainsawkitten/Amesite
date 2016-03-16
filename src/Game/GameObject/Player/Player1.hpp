@@ -2,6 +2,8 @@
 
 #include "SuperPlayer.hpp"
 
+#include <util/Input.hpp>
+
 class Texture2D;
 
 namespace Geometry {
@@ -60,6 +62,12 @@ namespace GameObject {
              * @param mouseAim aim with mouse if set true.
              */
             void SetJoystickAim(bool joystickAim);
+
+            /// Sets player id.
+            /**
+             * @param id Player id
+             */
+            void SetPlayerID(InputHandler::Player id);
 
         private:
             // Default true

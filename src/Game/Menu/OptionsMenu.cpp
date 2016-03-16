@@ -71,5 +71,5 @@ void OptionsMenu::TwoPlayers(std::string option) {
 
 void OptionsMenu::MouseAim (std::string option) {
     GameSettings::GetInstance().SetBool("Player One Joystick Aim", option == "On");
-    static_cast<GameObject::Player1*>(HubInstance().mPlayers[0])->SetJoystickAim(option == "On");
+    HubInstance().SetPlayer2State(GameSettings::GetInstance().GetBool("Two Players"));
 }
