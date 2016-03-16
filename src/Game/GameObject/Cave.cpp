@@ -34,9 +34,9 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mHeight = height;
     mMap = nullptr;
 
-    mBossRadius = 9;
+    mBossRadius = 90;
 
-    scaleFactor = 10.f;
+    scaleFactor = 3.f;
 
     caveMap = new CaveGenerator::CaveMap(height, width, seed);
 
