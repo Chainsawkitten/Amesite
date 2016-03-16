@@ -322,6 +322,7 @@ set(ENGINE_SRCS
         src/Engine/PostProcessing/GlowBlurFilter.cpp
         src/Engine/GameObject/SuperGameObject.cpp
         src/Engine/Physics/AxisAlignedBoundingBox.cpp
+        src/Engine/Physics/Frustum.cpp
     )
 
 set(ENGINE_HEADERS
@@ -386,6 +387,7 @@ set(ENGINE_HEADERS
         src/Engine/PostProcessing/GlowBlurFilter.hpp
         src/Engine/GameObject/SuperGameObject.hpp
         src/Engine/Physics/AxisAlignedBoundingBox.hpp
+        src/Engine/Physics/Frustum.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
