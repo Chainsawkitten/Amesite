@@ -56,7 +56,7 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
     body->AddComponent<Component::Health>()->removeOnLowHealth = false;
     body->GetComponent<Component::Health>()->faction = 1;
     body->GetComponent<Component::Health>()->maxCooldown = 10.f;
-    body->GetComponent<Component::Health>()->health = body->GetComponent<Component::Health>()->maxHealth = 200.f;
+    body->GetComponent<Component::Health>()->health = body->GetComponent<Component::Health>()->maxHealth = 300.f;
     body->GetComponent<Component::Health>()->regainAmount = body->GetComponent<Component::Health>()->health / 3.f;
     body->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     body->GetComponent<Component::Physics>()->angularVelocity.y = -0.1f;
@@ -138,13 +138,13 @@ void ShieldBoss::FireBullets() {
     float lifeTimeFraction = 3.f;
 
     node->GetComponent<Component::Spawner>()->delay = mMaxSpawnerDelay - healthFraction*1.f;
-    int nr = 15 + healthFraction*5.f;
+    int nr = 15 + healthFraction * 10.f;
     mOffsetAngle += 360.f / nr / 2.f;
     mOffsetAngle = mOffsetAngle % 360;
 
     for (int i = 0; i < nr; i++) {
         float angle = mOffsetAngle + i * 360.f / nr;
-        float size = 2.f + healthFraction * 3.f;
+        float size = 3.f + healthFraction * 4.f;
         float speed = 20.f + healthFraction * 10.f;
         GameObject::Bullet* bullet = GameEntityCreator().CreateEnemyBullet(GetPosition(), glm::vec3(0.f, 0.f, 0.f), 1);
         bullet->node->KillComponent<Component::PointLight>();
