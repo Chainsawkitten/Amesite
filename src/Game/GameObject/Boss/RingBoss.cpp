@@ -58,7 +58,6 @@ RingBoss::RingBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Health>()->maxCooldown = 5.f;
     body->AddComponent<Component::Spawner>()->delay = mMaxSpawnerDelay;
     body->GetComponent<Component::Spawner>()->faction = 1.f;
-    //body->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShootClosestPlayer);
 
     CreateRing();
 }
