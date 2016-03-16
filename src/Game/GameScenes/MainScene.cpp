@@ -56,6 +56,7 @@
 #include "../GameObject/Pillar.hpp"
 #include "../GameObject/Enemy/SuperEnemy.hpp"
 
+#include <RenderTarget.hpp>
 #include "../Game.hpp"
 #include "WinScene.hpp"
 
@@ -321,6 +322,10 @@ void MainScene::Update(float deltaTime) {
     if (GameSettings::GetInstance().GetBool("Refractions")) {
         mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionClippingPlane());
         mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetRefractionClippingPlane());
+    } else {
+        mWater.GetRefractionTarget()->SetTarget();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     }
     
     // Render reflections
@@ -335,6 +340,10 @@ void MainScene::Update(float deltaTime) {
         cameraTransform->pitch = -cameraTransform->pitch;
         cameraTransform->position = cameraTransform->position + glm::vec3(0.f, distance, 0.f);
         cameraTransform->UpdateModelMatrix();
+    } else {
+        mWater.GetReflectionTarget()->SetTarget();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     }
     
     // Render.
