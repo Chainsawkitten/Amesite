@@ -39,7 +39,6 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
-    mJoystickAim = true;
     mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
     mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     mNode->AddComponent<Component::Health>()->removeOnLowHealth = false;
@@ -510,21 +509,14 @@ void Player1::SetYaw(float yaw) {
 }
 
 void Player1::SetJoystickAim(bool joystickAim) {
-    if (joystickAim != mJoystickAim) {
-        std::vector<void(*)(Component::Controller* controller, float deltaTime)>& vec = mNode->GetComponent<Component::Controller>()->controlSchemes;
-        if (joystickAim) {
-            // remove mouse
-            vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::MouseRotate), vec.end());
-            // add aim
-            vec.push_back(&ControlScheme::Aim);
-        } else {
-            // remove aim
-            vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::Aim), vec.end());
-            // add mouse
-            vec.push_back(&ControlScheme::MouseRotate);
-        }
-        mJoystickAim = joystickAim;
-    }
+    std::vector<void(*)(Component::Controller* controller, float deltaTime)>& vec = mNode->GetComponent<Component::Controller>()->controlSchemes;
+    vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::MouseRotate), vec.end());
+    vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::Aim), vec.end());
+    if (joystickAim)
+        vec.push_back(&ControlScheme::Aim);
+    else 
+        vec.push_back(&ControlScheme::MouseRotate);
+
 }
 
 void Player1::SetPlayerID(InputHandler::Player id) {

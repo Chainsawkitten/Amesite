@@ -70,9 +70,6 @@ namespace GameObject {
             void SetPlayerID(InputHandler::Player id);
 
         private:
-            // Default true
-            bool mJoystickAim;
-
             Geometry::OBJModel* mBodyModel;
             Geometry::OBJModel* mFrontEngineModel;
             Geometry::OBJModel* mBackEngineModel;
