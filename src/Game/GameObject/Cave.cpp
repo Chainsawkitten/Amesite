@@ -143,9 +143,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     for (int i = 0; i < 40; i++)
         PlaceScenery(GameEntityCreator().CreateFallenPillar(), true);
 
-    for (int i = 0; i < 40; i++)
-        PlaceScenery(GameEntityCreator().CreateBrokenFallenPillar(), true);
-
 
     for (int i = 0; i < mHeight; i++)
         delete[] floatMap[i];
@@ -363,7 +360,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
         n = PointCollide(transform->CalculateWorldPosition() + height + width, velocity, deltaTime);
 
-        if (n != glm::vec3(0, -1, 0)) {
+        if (n.y != -1) {
 
             n = glm::normalize(n);
             glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
@@ -394,7 +391,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
         n = PointCollide(transform->CalculateWorldPosition() + height - width, velocity, deltaTime);
 
-        if (n != glm::vec3(0, -1, 0)) {
+        if (n.y != -1) {
 
             n = glm::normalize(n);
             glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
@@ -425,7 +422,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
         n = PointCollide(transform->CalculateWorldPosition() - height - width, velocity, deltaTime);
 
-        if (n != glm::vec3(0, -1, 0)) {
+        if (n.y != -1) {
 
             n = glm::normalize(n);
             glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
@@ -456,7 +453,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
         n = PointCollide(transform->CalculateWorldPosition() - height + width, velocity, deltaTime);
 
-        if (n != glm::vec3(0, -1, 0)) {
+        if (n.y != -1) {
 
             n = glm::normalize(n);
             glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
