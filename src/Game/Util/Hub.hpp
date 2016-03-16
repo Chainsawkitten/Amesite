@@ -42,6 +42,9 @@ class Hub {
 
         ///Vector containing all the players.
         std::vector<GameObject::SuperPlayer*> mPlayers;
+
+        ///Clears the hub.
+        void Clear();
     private:
         Hub();
         ~Hub();

@@ -120,7 +120,7 @@ MainScene::MainScene() {
     int seed = time(0);
     int percent = 50;
     int iterations = 10;
-    int threshold = 100;
+    int threshold = 200;
     
     CaveGenerator::Coordinate playerPosition(width / 2, height / 2);
     CaveGenerator::Coordinate NorthWest(10, 10);
