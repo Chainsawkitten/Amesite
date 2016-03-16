@@ -22,6 +22,7 @@
 #include <Component/Animation.hpp>
 #include <Component/ParticleEmitter.hpp>
 #include <Component/Physics.hpp>
+#include <Component/PointLight.hpp>
 
 #include "../Player/Player1.hpp"
 #include "../Player/Player2.hpp"
@@ -38,6 +39,7 @@ RingBoss::RingBoss(Scene* scene) : SuperBoss(scene) {
 
     node->AddComponent<Component::Transform>()->scale *= 0.6f;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&RingBoss::mUpdateFunction, this);
+    node->GetComponent<Component::PointLight>()->ambientCoefficient = .004f;
 
     body->GetComponent<Component::Transform>()->scale *= 0.8f;
     body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond_body.obj");
@@ -176,7 +178,7 @@ void RingBoss::CreateRingPart(Entity* entity, glm::vec3 position) {
     Component::RelativeTransform* transform = entity->AddComponent<Component::RelativeTransform>();
     transform->parentEntity = ring.node;
     transform->position = position;
-    entity->AddComponent<Component::Collider2DCircle>()->radius = 3.f;
+    entity->AddComponent<Component::Collider2DCircle>()->radius = 5.f;
     entity->AddComponent<Component::Reflect>()->faction = 1.f;
     entity->AddComponent<Component::Damage>()->faction = 1.f;
     entity->GetComponent<Component::Damage>()->removeOnImpact = false;
