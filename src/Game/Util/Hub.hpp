@@ -34,6 +34,12 @@ class Hub {
          */
         void SetPlayer2State(bool enable);
 
+        /// Set control state of player 1
+        /**
+         * @param joystick Player one joystick controlled or not
+         */
+        void SetPlayer1Joystick(bool joystick);
+
         ///Vector containing all the players.
         std::vector<GameObject::SuperPlayer*> mPlayers;
     private:

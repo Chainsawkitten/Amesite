@@ -39,7 +39,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
-    mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
+    mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     mNode->AddComponent<Component::Health>()->removeOnLowHealth = false;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth = 30.f;
@@ -131,7 +131,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mLeftSpawnNode->AddComponent<Component::Animation>();
     mLeftSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
     mLeftSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
-    mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
+    mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     Component::SoundSource* sound = mLeftSpawnNode->AddComponent<Component::SoundSource>();
     mShootSound = Resources().CreateSound("Resources/Laser.ogg");
     sound->soundBuffer = mShootSound;
@@ -159,7 +159,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mRightSpawnNode->AddComponent<Component::Animation>();
     mRightSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
     mRightSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
-    mRightSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
+    mRightSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
 
     mEngineModel = Resources().CreateOBJModel("Resources/player2_engine.obj");
     mPropellerModel = Resources().CreateOBJModel("Resources/player2_propeller.obj");
