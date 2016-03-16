@@ -321,20 +321,24 @@ void MainScene::Update(float deltaTime) {
     mWater.Update(deltaTime, glm::vec3(1.f, 0.f, 0.f));
     
     // Render refractions.
-    mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionClippingPlane());
-    mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetRefractionClippingPlane());
+    if (GameSettings::GetInstance().GetBool("Refractions")) {
+        mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionClippingPlane());
+        mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetRefractionClippingPlane());
+    }
     
     // Render reflections
-    /// @todo Don't hardcore camera inversion.
-    float distance = 2.f * (cameraTransform->position.y - mWater.GetPosition().y);
-    cameraTransform->position = cameraTransform->position - glm::vec3(0.f, distance, 0.f);
-    cameraTransform->pitch = -cameraTransform->pitch;
-    cameraTransform->UpdateModelMatrix();
-    mRenderSystem.Render(*this, mWater.GetReflectionTarget(), mWater.GetReflectionClippingPlane());
-    mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetReflectionClippingPlane());
-    cameraTransform->pitch = -cameraTransform->pitch;
-    cameraTransform->position = cameraTransform->position + glm::vec3(0.f, distance, 0.f);
-    cameraTransform->UpdateModelMatrix();
+    if (GameSettings::GetInstance().GetBool("Reflections")) {
+        /// @todo Don't hardcore camera inversion.
+        float distance = 2.f * (cameraTransform->position.y - mWater.GetPosition().y);
+        cameraTransform->position = cameraTransform->position - glm::vec3(0.f, distance, 0.f);
+        cameraTransform->pitch = -cameraTransform->pitch;
+        cameraTransform->UpdateModelMatrix();
+        mRenderSystem.Render(*this, mWater.GetReflectionTarget(), mWater.GetReflectionClippingPlane());
+        mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetReflectionClippingPlane());
+        cameraTransform->pitch = -cameraTransform->pitch;
+        cameraTransform->position = cameraTransform->position + glm::vec3(0.f, distance, 0.f);
+        cameraTransform->UpdateModelMatrix();
+    }
     
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
