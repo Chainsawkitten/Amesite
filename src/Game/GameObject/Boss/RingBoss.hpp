@@ -55,7 +55,11 @@ namespace GameObject {
             Geometry::OBJModel* mBodyModel;
             Geometry::OBJModel* mRingModel;
 
+            float mMaxSpawnerDelay;
+
             void CreateRing();
+
+            void FireBullets();
 
             void CreateRingPart(Entity* entity, glm::vec3 position);
     };

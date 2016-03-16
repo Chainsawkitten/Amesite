@@ -167,6 +167,6 @@ void ShieldBoss::FireBullets() {
         bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= lifeTimeFraction;
         bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= lifeTimeFraction;
         bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= lifeTimeFraction;
-        bullet->node->GetComponent<Component::Damage>()->damageAmount = 9000.0000001f;
+        bullet->node->GetComponent<Component::Damage>()->damageAmount = 20.f;
     }
 }
