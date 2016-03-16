@@ -172,6 +172,9 @@ set(RESOURCES
         assets/sound/Laser.ogg
         assets/sound/LowHPBeep.ogg
         assets/Loading.png
+        assets/water/Water.png
+        assets/water/WaterDUDV.png
+        assets/water/WaterNormal.png
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -215,6 +218,8 @@ set(EMBEDDED_INPUT
         shaders/Particle.vert
         shaders/Particle.geom
         shaders/Particle.frag
+        shaders/Water.vert
+        shaders/Water.frag
     )
 
 # Headerize
@@ -461,6 +466,7 @@ set(GAME_SRCS
         src/Game/Menu/SuperMenuOption.cpp
         src/Game/Menu/MenuOption.cpp
         src/Game/Menu/MenuSwitch.cpp
+        src/Game/Water/Water.cpp
     )
 
 set(GAME_HEADERS
@@ -536,6 +542,7 @@ set(GAME_HEADERS
         src/Game/Menu/SuperMenuOption.hpp
         src/Game/Menu/MenuOption.hpp
         src/Game/Menu/MenuSwitch.hpp
+        src/Game/Water/Water.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

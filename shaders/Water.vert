@@ -17,13 +17,13 @@ out VertexData {
     vec3 normal;
     vec3 tangent;
     vec2 texCoords;
+    vec3 viewPosition;
 } vertexOut;
 
 void main () {
-    vec4 worldPosition = model * vec4(vertexPosition, 1.0);
-    gl_Position = projection * (view * (worldPosition));
+    gl_Position = projection * (view * (model * vec4(vertexPosition, 1.0)));
     vertexOut.normal = normalize(normalMatrix * vertexNormal);
     vertexOut.tangent = vertexTangent;
     vertexOut.texCoords = vertexTexture;
-    gl_ClipDistance[0] = dot(worldPosition, clippingPlane);
+    vertexOut.viewPosition = vec3(view * (model * vec4(vertexPosition, 1.0)));
 }

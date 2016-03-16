@@ -2,6 +2,7 @@
 
 #include <glm\glm.hpp>
 #include <vector>
+#include <random>
 
 class Scene;
 
@@ -46,6 +47,9 @@ namespace System {
             const std::vector<GameObject::SuperEnemy*>& GetEnemies() const;
 
         private:
+            // Random Engine
+            std::mt19937 mRNG;
+
             // Enemy count.
             unsigned int mMaxEnemyCount;
             unsigned int mMinEnemyCount;
@@ -55,7 +59,7 @@ namespace System {
             glm::vec3 mMapScale;
 
             // Retrieves a valid random spawn position from the map.
-            glm::vec3 FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) const;
+            glm::vec3 FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms);
 
             // Check if far away enough from all bosses.
             bool ProximityToBosses(const glm::vec3 position, const std::vector<glm::vec3> noSpawnRooms, int bossRadius) const;
