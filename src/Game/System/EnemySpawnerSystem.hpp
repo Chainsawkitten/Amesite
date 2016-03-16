@@ -59,7 +59,7 @@ namespace System {
             glm::vec3 mMapScale;
 
             // Retrieves a valid random spawn position from the map.
-            glm::vec3 FindValidPosition(const GameObject::Cave* cave, const std::vector<glm::vec3> noSpawnRooms) const;
+            glm::vec3 FindValidPosition(const GameObject::Cave* cave, const std::vector<glm::vec3> noSpawnRooms);
 
             // Check if far away enough from all bosses.
             bool ProximityToBosses(const glm::vec3 position, const std::vector<glm::vec3> noSpawnRooms, int bossRadius) const;

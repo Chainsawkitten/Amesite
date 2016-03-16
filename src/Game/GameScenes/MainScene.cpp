@@ -175,16 +175,7 @@ MainScene::MainScene() {
     mBossCounter = mBossVector.size();
     
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
-<<<<<<< HEAD
 
-=======
-    
-    // Add players to checkpoint system.
-    for (auto& player : mPlayers) {
-        mCheckpointSystem.AddPlayer(player);
-    }
-    
->>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
     // Directional light.
     //    Entity* dirLight = CreateEntity();
     //    dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
@@ -231,13 +222,8 @@ void MainScene::Update(float deltaTime) {
         
         // ControllerSystem
         mControllerSystem.Update(*this, deltaTime);
-<<<<<<< HEAD
 
         for (auto player : HubInstance().mPlayers) {
-=======
-        
-        for (auto player : mPlayers) {
->>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
             mCave->GridCollide(player->GetNodeEntity(), deltaTime);
             if (player->GetHealth() < 0.01f && player->Active()) {
                 player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
@@ -269,13 +255,8 @@ void MainScene::Update(float deltaTime) {
         mCollisionSystem.Update(*this);
         
         // Update enemy spawning
-<<<<<<< HEAD
         mEnemySpawnerSystem.Update(*this, deltaTime, mCave, mNoSpawnRooms);
 
-=======
-        mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);
-        
->>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
         // Check grid collisions.
         mGridCollideSystem.Update(*this, deltaTime, *mCave);
         
@@ -303,13 +284,9 @@ void MainScene::Update(float deltaTime) {
     cameraTransform->yaw = 0.f;
     cameraTransform->pitch = 60.f;
     cameraTransform->roll = 0.f;
-<<<<<<< HEAD
+
     mMainCamera->UpdateRelativePosition(mBossVector, deltaTime);
 
-=======
-    mMainCamera->UpdateRelativePosition(mPlayers, mBossVector, deltaTime);
-    
->>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
     if (!mMenu.IsActive()) {
         //If all players are disabled, respawn them.
         mCheckpointSystem.Update(deltaTime);
@@ -335,11 +312,7 @@ void MainScene::Update(float deltaTime) {
     }
     
     if (mMenu.IsActive())
-<<<<<<< HEAD
         mMenu.Update(HubInstance().mPlayers[0], deltaTime);
-
-=======
-        mMenu.Update(mPlayers[0], deltaTime);
     
     // Water.
     mWater.Update(deltaTime, glm::vec3(1.f, 0.f, 0.f));
@@ -360,7 +333,6 @@ void MainScene::Update(float deltaTime) {
     cameraTransform->position = cameraTransform->position + glm::vec3(0.f, distance, 0.f);
     cameraTransform->UpdateModelMatrix();
     
->>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
@@ -368,6 +340,13 @@ void MainScene::Update(float deltaTime) {
     
     if (mMenu.IsActive())
         mMenu.RenderSelected();
+    
+    // Anti-aliasing.
+    if (GameSettings::GetInstance().GetBool("FXAA")) {
+        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+        mFxaaFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
+        mPostProcessing->ApplyFilter(mFxaaFilter);
+    }
     
     mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize());
     
@@ -381,12 +360,6 @@ void MainScene::Update(float deltaTime) {
         mPostProcessing->ApplyFilter(mGlowBlurFilter);
     }
     mPostProcessing->ApplyFilter(mGlowFilter);
-    
-    // Anti-aliasing.
-    if (GameSettings::GetInstance().GetBool("FXAA")) {
-        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
-        mPostProcessing->ApplyFilter(mFxaaFilter);
-    }
     
     // Gamma correction.
     mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
@@ -405,15 +378,7 @@ void MainScene::Update(float deltaTime) {
     for (GameObject::SuperEnemy* enemy : mEnemySpawnerSystem.GetEnemies()) {
         
         if (mCheckpointSystem.mRespawn) {
-<<<<<<< HEAD
-
             if (glm::distance(enemy->node->GetComponent<Component::Transform>()->GetWorldPosition(), HubInstance().mPlayers[0]->GetPosition()) < 10) {
-
-=======
-            
-            if (glm::distance(enemy->node->GetComponent<Component::Transform>()->GetWorldPosition(), mPlayers[0]->GetPosition()) < 10) {
-                
->>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
                 enemy->node->GetComponent<Component::Health>()->health = 0;
                 
             }
