@@ -82,7 +82,7 @@ void RingBoss::CreateRing() {
     transform->scale *= 1.8f;
     ring.node->AddComponent<Component::Mesh>()->geometry = mRingModel = Resources().CreateOBJModel("Resources/ring_body.obj");
     ring.node->AddComponent<Component::Material>();
-    ring.node->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::LookAtClosestPlayer);
+    //ring.node->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::LookAtClosestPlayer);
     ring.node->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
 
     ring.midFront = CreateEntity();
@@ -203,7 +203,7 @@ void RingBoss::mUpdateFunction() {
         }
 
         // Rotate
-        Component::Transform* transformComponent = node->GetComponent<Component::Transform>();
+        Component::Transform* transformComponent = ring.node->GetComponent<Component::Transform>();
         float minimumDistance = std::numeric_limits<float>().max();
         glm::vec3 targetPlayerPosition;
 
