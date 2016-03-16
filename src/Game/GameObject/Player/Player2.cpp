@@ -37,7 +37,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mNode->AddComponent<Component::Controller>()->speed = 5000.f;
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
-    mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::MouseRotate);
+    mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
     mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
     mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     mNode->AddComponent<Component::Health>()->removeOnLowHealth = false;
@@ -535,4 +535,8 @@ void Player2::mUpdateFunction() {
     mRightTurretBarrel.barrel[1]->GetComponent<Component::Transform>()->position.z = (0.5f * recoilFactor + 0.5f) * factor - factor; //[0.5,1]
     mRightTurretBarrel.barrel[0]->GetComponent<Component::Transform>()->position.z = (recoilFactor / 2.f) * factor - factor; //[0,0.5]
     mRightTurretBarrel.node->GetComponent<Component::Transform>()->roll = 180 * recoilFactor;
+}
+
+void Player2::SetYaw(float yaw) {
+    mNode->GetComponent<Component::Transform>()->yaw = yaw;
 }

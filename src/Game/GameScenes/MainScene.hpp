@@ -103,7 +103,7 @@ class MainScene : public Scene {
         System::UpdateSystem mUpdateSystem;
 
         // Vector containing players
-        std::vector<GameObject::SuperPlayer*> mPlayers;
+        std::vector<GameObject::SuperPlayer*>* mPlayers;
 
         // Bosses
         std::vector<GameObject::SuperBoss*> mBossVector;

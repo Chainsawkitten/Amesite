@@ -52,7 +52,19 @@ namespace GameObject {
             /// Deactivates the player.
             void Deactivate();
 
+            /// Rotates player.
+            void SetYaw(float yaw);
+
+            /// Sets player1 aimed by mouse of not.
+            /**
+             * @param mouseAim aim with mouse if set true.
+             */
+            void SetMouseAim(bool mouseAim);
+
         private:
+            // Default true
+            bool mMouseAim;
+
             Geometry::OBJModel* mBodyModel;
             Geometry::OBJModel* mFrontEngineModel;
             Geometry::OBJModel* mBackEngineModel;
@@ -131,7 +143,6 @@ namespace GameObject {
 
             void mUpdateFunction();
 
-            private:
-                float mRegainAmount;
+            float mRegainAmount;
     };
 }
