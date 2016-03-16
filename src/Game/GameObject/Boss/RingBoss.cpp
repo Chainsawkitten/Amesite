@@ -73,6 +73,7 @@ void RingBoss::CreateRing() {
     ring.node->AddComponent<Component::Mesh>()->geometry = mRingModel = Resources().CreateOBJModel("Resources/ring_body.obj");
     ring.node->AddComponent<Component::Material>();
     ring.node->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::LookAtClosestPlayer);
+    ring.node->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
 
     ring.midFront = CreateEntity();
     CreateRingPart(ring.midFront, glm::vec3(0.f, 0.f, 10.f));

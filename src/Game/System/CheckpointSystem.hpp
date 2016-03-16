@@ -32,12 +32,6 @@ namespace System {
              * @param position New position for the checkpoint.
              */
             void MoveCheckpoint(glm::vec2 position);
-
-            ///Adds player to mPlayers. 
-            /**
-             * @param player Player to add.
-             */
-            void AddPlayer(GameObject::SuperPlayer* player);
             
             /// Did we respawn this frame
             bool mRespawn;
@@ -46,7 +40,6 @@ namespace System {
             Audio::SoundBuffer* mLowHPSoundBuffer;
             bool mPlayingBeepSound;
             void RespawnPlayers();
-            std::vector<GameObject::SuperPlayer*> mPlayers;
             glm::vec2 mPosition;
             ALuint mBeepSource;
     };
