@@ -209,6 +209,12 @@ class GameEntityFactory {
          */
         Entity* CreateFallenPillar();
 
+        /// Create broken fallen pillar.
+        /**
+         * @return The created broken pillar entity.
+         */
+        Entity* CreateBrokenFallenPillar();
+
         /// Create shrapnel.
         /**
          * @param position The Shrapnel's starting position.

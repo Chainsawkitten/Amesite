@@ -199,9 +199,9 @@ Entity* GameEntityFactory::CreateGlowingStone() {
 
     Entity* stone = mScene->CreateEntity();
     stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
-    stone->AddComponent<Component::Material>()->SetDiffuse("Resources/stone_01_diff.png");
+    stone->AddComponent<Component::Material>()->SetDiffuse("Resources/stone_02_diff.png");
     stone->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
-    stone->GetComponent<Component::Material>()->SetGlow("Resources/stone_01_glow.png");
+    stone->GetComponent<Component::Material>()->SetGlow("Resources/stone_02_glow.png");
     stone->AddComponent<Component::Transform>()->scale *= 0.3f;
 
     Component::ParticleEmitter* emitter = stone->AddComponent<Component::ParticleEmitter>();
@@ -243,10 +243,23 @@ Entity* GameEntityFactory::CreateStone() {
 Entity* GameEntityFactory::CreateFallenPillar() {
 
     Entity* pillar = mScene->CreateEntity();
-    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/pillar.obj");
-    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/pillar_diff.png");
-    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
-    pillar->GetComponent<Component::Material>()->SetGlow("Resources/pillar_glow.png");
+    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/Pillar2.obj");
+    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/Pillar_Albedo.png");
+    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/Pillar_NM.png");
+    pillar->GetComponent<Component::Material>()->SetGlow("Resources/Pillar_Glow2.png");
+    pillar->AddComponent<Component::Transform>();
+
+    return pillar;
+
+}
+
+Entity* GameEntityFactory::CreateBrokenFallenPillar() {
+
+    Entity* pillar = mScene->CreateEntity();
+    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/pillar_bot.obj");
+    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/Pillar_Albedo.png");
+    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/Pillar_NM.png");
+    pillar->GetComponent<Component::Material>()->SetGlow("Resources/Pillar_Glow2.png");
     pillar->AddComponent<Component::Transform>();
 
     return pillar;
