@@ -7,6 +7,8 @@
 
 #include <vector>
 
+#include "Component/Physics.hpp"
+
 #include "../Component/GridCollide.hpp"
 #include "../Component/Explode.hpp"
 
@@ -20,8 +22,18 @@ GridCollideSystem::~GridCollideSystem() {
 
 void GridCollideSystem::Update(Scene& scene, float deltaTime, GameObject::Cave& cave) {
     std::vector<Component::GridCollide*> gridCollideVector = scene.GetAll<Component::GridCollide>();
-    for (auto& gridCollideComponent : gridCollideVector)
-        if (cave.GridCollide(gridCollideComponent->entity, deltaTime)) {
+    for (auto& gridCollideComponent : gridCollideVector) 
+    {
+
+        if (glm::length(gridCollideComponent->entity->GetComponent<Component::Physics>()->velocity) < 0.001f)
+            continue;
+
+        bool collide = false;
+        if (gridCollideComponent->removeOnImpact)
+            collide = cave.WallIntersect(gridCollideComponent->entity, deltaTime);
+        else collide = cave.GridCollide(gridCollideComponent->entity, deltaTime);
+
+        if (collide) {
             gridCollideComponent->hasCollided = true;
             Component::Explode* explode = gridCollideComponent->entity->GetComponent<Component::Explode>();
             if (explode != nullptr)
@@ -33,4 +45,7 @@ void GridCollideSystem::Update(Scene& scene, float deltaTime, GameObject::Cave& 
                     gridCollideComponent->entity->Kill();
             }
         }
+
+    }
+
 }

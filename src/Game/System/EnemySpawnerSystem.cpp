@@ -28,8 +28,8 @@
 using namespace System;
 
 EnemySpawnerSystem::EnemySpawnerSystem() {
-    mMinEnemyCount = 80;
-    mMaxEnemyCount = 120;
+    mMinEnemyCount = 120;
+    mMaxEnemyCount = 160;
     mEnemyCount = 0;
     mEnemiesKilled = 0;
     mSpawnerRadius = 60.f;
