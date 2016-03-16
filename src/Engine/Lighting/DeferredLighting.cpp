@@ -18,6 +18,9 @@
 #include "../Component/Animation.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "../Physics/AxisAlignedBoundingBox.hpp"
+#include "../Physics/Frustum.hpp"
+
 DeferredLighting::DeferredLighting(const glm::vec2& size) {
     mSize = size;
     
@@ -168,6 +171,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     // Get the camera matrices.
     viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
     projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
+    glm::mat4 viewProjectionMat(projectionMat * viewMat);
     
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(projectionMat)[0][0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &screenSize[0]);
@@ -218,6 +222,8 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     // At which point lights should be cut off (no longer contribute).
     double cutOff = 0.0001;
     
+    Physics::AxisAlignedBoundingBox aabb(glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.5f, 0.5f, 0.5f));
+    
     // Render all point lights.
     std::vector<Component::PointLight*> pointLights = scene.GetAll<Component::PointLight>();
     for (Component::PointLight* light : pointLights) {
@@ -227,15 +233,18 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation);
             modelMat = glm::translate(glm::mat4(), transform->GetWorldPosition()) * glm::scale(glm::mat4(), glm::vec3(1.f, 1.f, 1.f) * scale);
             
-            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &(light->color * light->intensity)[0]);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), light->attenuation);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), light->ambientCoefficient);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 180.f);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
-            glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
-            
-            glDrawElements(GL_TRIANGLES, mCube->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+            Physics::Frustum frustum(viewProjectionMat * modelMat);
+            if (frustum.Collide(aabb)) {
+                glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
+                glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &(light->color * light->intensity)[0]);
+                glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), light->attenuation);
+                glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), light->ambientCoefficient);
+                glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 180.f);
+                glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
+                glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
+                
+                glDrawElements(GL_TRIANGLES, mCube->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+            }
         }
     }
     
