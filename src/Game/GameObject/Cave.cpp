@@ -188,15 +188,15 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mLeftBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
 
     //Set the texture
-    //std::string texture = "Resources/defaultGray.png";
-    //mTopBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    //mTopBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
-    //mBottomBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    //mBottomBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
-    //mRightBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    //mRightBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
-    //mLeftBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    //mLeftBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    std::string texture = "Resources/defaultGray.png";
+    mTopBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mTopBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mBottomBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mBottomBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mRightBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mRightBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mLeftBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mLeftBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
 
 }
 
