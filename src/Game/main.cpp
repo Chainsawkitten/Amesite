@@ -67,6 +67,9 @@ int main() {
         window->Update();
         Game::GetInstance().Update(static_cast<float>(deltaTime));
         
+        // Swap buffers and wait until next frame.
+        window->SwapBuffers();
+        
         // Set window title to reflect screen update and render times.
         float frameTime = (glfwGetTime() - lastTime) * 1000.0f;
         std::string title = "Modership";
@@ -99,9 +102,6 @@ int main() {
             
             Log() << "Profiling started - " << time(nullptr) << "\n";
         }
-        
-        // Swap buffers and wait until next frame.
-        window->SwapBuffers();
         
         long wait = static_cast<long>((1.0 / GameSettings::GetInstance().GetLong("Target FPS") + lastTimeRender - glfwGetTime()) * 1000000.0);
         if (wait > 0)
