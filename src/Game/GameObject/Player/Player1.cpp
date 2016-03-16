@@ -35,7 +35,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
 
     mNode = CreateEntity();
     mNode->AddComponent<Component::Transform>()->scale *= 0.2f; //0.15f
-    mNode->AddComponent<Component::Controller>()->speed = 5000.f;
+    mNode->AddComponent<Component::Controller>()->speed = 50.f;
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);

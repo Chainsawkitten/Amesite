@@ -42,7 +42,7 @@ void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
         direction = glm::vec2(x, z);
     }
     
-    glm::vec3 speedVec = glm::vec3(x * controller->speed * deltaTime, 0, z * controller->speed * deltaTime);
+    glm::vec3 speedVec = glm::vec3(x * controller->speed, 0, z * controller->speed);
     
     Component::Physics* physicsComponent = controller->entity->GetComponent<Component::Physics>();
     
@@ -53,7 +53,7 @@ void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
         else
             physicsComponent->acceleration = glm::vec3(0, 0, 0);
     } else if (glm::length(direction)>Input()->MoveDeadzone()) {
-        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->speed, 0, z * deltaTime));
+        controller->entity->GetComponent<Component::Transform>()->Move(glm::vec3(x * deltaTime * controller->speed, 0, z * deltaTime * controller->speed));
     }
 }
 
