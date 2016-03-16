@@ -89,6 +89,7 @@ namespace Geometry {
 
         GenerateBuffers();
         GenerateVertexArray();
+        CreateAxisAlignedBoundingBox();
     }
     
     Terrain::~Terrain() {
