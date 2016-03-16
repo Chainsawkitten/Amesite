@@ -318,6 +318,8 @@ void MainScene::Update(float deltaTime) {
     // Water.
     mWater.Update(deltaTime, glm::vec3(1.f, 0.f, 0.f));
     
+    mParticleRenderSystem.UpdateBuffer(*this);
+    
     // Render refractions.
     if (GameSettings::GetInstance().GetBool("Refractions")) {
         mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionClippingPlane());
