@@ -344,6 +344,13 @@ void MainScene::Update(float deltaTime) {
     if (mMenu.IsActive())
         mMenu.RenderSelected();
     
+    // Anti-aliasing.
+    if (GameSettings::GetInstance().GetBool("FXAA")) {
+        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+        mFxaaFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
+        mPostProcessing->ApplyFilter(mFxaaFilter);
+    }
+    
     mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize());
     
     // Glow.
@@ -356,12 +363,6 @@ void MainScene::Update(float deltaTime) {
         mPostProcessing->ApplyFilter(mGlowBlurFilter);
     }
     mPostProcessing->ApplyFilter(mGlowFilter);
-    
-    // Anti-aliasing.
-    if (GameSettings::GetInstance().GetBool("FXAA")) {
-        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
-        mPostProcessing->ApplyFilter(mFxaaFilter);
-    }
     
     // Gamma correction.
     mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
