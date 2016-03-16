@@ -59,11 +59,11 @@ namespace GameObject {
             /**
              * @param mouseAim aim with mouse if set true.
              */
-            void SetMouseAim(bool mouseAim);
+            void SetJoystickAim(bool joystickAim);
 
         private:
             // Default true
-            bool mMouseAim;
+            bool mJoystickAim;
 
             Geometry::OBJModel* mBodyModel;
             Geometry::OBJModel* mFrontEngineModel;

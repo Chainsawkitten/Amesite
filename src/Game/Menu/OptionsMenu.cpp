@@ -6,6 +6,8 @@
 #include "Menu.hpp"
 
 #include "../Util/GameSettings.hpp"
+#include "../Util/Hub.hpp"
+#include "../GameObject/Player/Player1.hpp"
 
 #include <Resources.hpp>
 #include <Font/Font.hpp>
@@ -18,11 +20,19 @@ OptionsMenu::OptionsMenu(Menu* parentMenu) : SubMenu() {
     MenuSwitch* menuSwitch = new MenuSwitch(GetFont(), "Fullscreen", options, glm::vec3(0.f, 1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::Fullscreen, this, std::placeholders::_1);
     AddMenuOption(menuSwitch);
-    
-    menuSwitch = new MenuSwitch(GetFont(), "FXAA", options, glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+
+    menuSwitch = new MenuSwitch(GetFont(), "FXAA", options, glm::vec3(0.f, 0.75f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::FXAA, this, std::placeholders::_1);
     AddMenuOption(menuSwitch);
     
+    menuSwitch = new MenuSwitch(GetFont(), "Two Players", options, glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    menuSwitch->callback = std::bind(&OptionsMenu::TwoPlayers, this, std::placeholders::_1);
+    AddMenuOption(menuSwitch);
+    
+    menuSwitch = new MenuSwitch(GetFont(), "Player One Joystick Aim", options, glm::vec3(0.f, -0.75f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    menuSwitch->callback = std::bind(&OptionsMenu::MouseAim, this, std::placeholders::_1);
+    AddMenuOption(menuSwitch);
+
     MenuOption* menuOption = new MenuOption(GetFont(), "BACK", glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuOption->callback = std::bind(&Menu::Transition, parentMenu, 0);
     AddMenuOption(menuOption);
@@ -52,4 +62,14 @@ void OptionsMenu::Fullscreen(std::string option) {
 
 void OptionsMenu::FXAA(std::string option) {
     GameSettings::GetInstance().SetBool("FXAA", option == "On");
+}
+
+void OptionsMenu::TwoPlayers(std::string option) {
+    GameSettings::GetInstance().SetBool("Two Players", option == "On");
+    HubInstance().SetPlayer2State(option == "On");
+}
+
+void OptionsMenu::MouseAim (std::string option) {
+    GameSettings::GetInstance().SetBool("Player One Joystick Aim", option == "On");
+    static_cast<GameObject::Player1*>(HubInstance().mPlayers[0])->SetJoystickAim(option == "On");
 }

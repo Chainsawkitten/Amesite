@@ -144,13 +144,13 @@ MainScene::MainScene() {
 
     // Create players 
     Player1* player1 = GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f));
-    player1->SetMouseAim(true);
+    player1->SetJoystickAim(GameSettings::GetInstance().GetBool("Player One Joystick Aim"));
     HubInstance().mPlayers.push_back(player1);
     Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX + 7.f, 0.f, playerStartZ + 6.f));
     player2->SetYaw(-90);
     HubInstance().mPlayers.push_back(player2);
     mPlayers = &HubInstance().mPlayers;
-    HubInstance().SetPlayer2State(false);
+    HubInstance().SetPlayer2State(GameSettings::GetInstance().GetBool("Two Players"));
     
     // Create bosses and pillars
     mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
