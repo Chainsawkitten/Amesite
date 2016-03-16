@@ -191,6 +191,12 @@ class GameEntityFactory {
          */
         Entity* CreateStone();
 
+        /// Create glowing stone.
+        /**
+         * @return The stone entity.
+         */
+        Entity* CreateGlowingStone();
+
         /// Create crystal light.
         /**
          * @return The created crystal entity.

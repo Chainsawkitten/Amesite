@@ -107,8 +107,5 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
         renderTarget->SetTarget();
         //mDeferredLighting->ShowTextures(screenSize);
         mDeferredLighting->Render(scene, camera, screenSize);
-        
-        // Render the particle system
-        particleRenderSystem.Render(scene, camera, screenSize, clippingPlane);
     }
 }

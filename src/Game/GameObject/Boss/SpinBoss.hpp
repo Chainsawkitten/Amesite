@@ -62,10 +62,14 @@ namespace GameObject {
             Texture2D* mReflectTexture;
 
             int mNrOfArms;
+            float mCurrentSpawnerDelay;
+            float mBulletSize;
 
             void CreateArm(Entity* entity);
 
             void ChangePhase(BossPhase phase);
+
+            void FireBullet(glm::vec3 bossPos, glm::vec3 armPos);
 
             Geometry::OBJModel* mBody;
     };

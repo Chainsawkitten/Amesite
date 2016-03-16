@@ -26,11 +26,12 @@
 using namespace System;
 
 EnemySpawnerSystem::EnemySpawnerSystem() {
-    mMinEnemyCount = 30;
-    mMaxEnemyCount = 60;
+    mMinEnemyCount = 80;
+    mMaxEnemyCount = 120;
     mEnemyCount = 0;
     mEnemiesKilled = 0;
     mSpawnerRadius = 60.f;
+    mRNG.seed(static_cast<uint32_t>(time(0)));
 }
 
 EnemySpawnerSystem::~EnemySpawnerSystem() {
@@ -79,7 +80,7 @@ const std::vector<GameObject::SuperEnemy*>& EnemySpawnerSystem::GetEnemies() con
     return mEnemies;
 }
 
-glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) const {
+glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) {
 
     glm::vec3 mMapScale = cave->map->GetComponent<Component::Transform>()->GetWorldScale();
     glm::uvec3 size = glm::vec3(cave->GetWidth(), 0.f, cave->GetHeight());
@@ -101,10 +102,13 @@ glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, co
     averagePlayerPosition.z *= factor;
   
     bool** map = cave->GetCaveData();
-
+    int max = size.x - 1;
+    std::uniform_int_distribution<uint32_t> mMapDistribution(0, max);
     // If we can find a valid position within a certrain amount of iterations we return it.
     for (int i = 0; i < 20; i++) {
-        position = glm::uvec3(rand() % size.x, 0.f, rand() % size.z);
+        unsigned int xValue = mMapDistribution(mRNG);
+        unsigned int yValue = mMapDistribution(mRNG);
+        position = glm::uvec3(xValue, 0.f, yValue);
         if (((glm::length((glm::vec3(position)*mMapScale) - averagePlayerPosition)) > mSpawnerRadius )
             && !(map[position.z][position.x]
                 || map[position.z - 1][position.x]

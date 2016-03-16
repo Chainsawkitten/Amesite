@@ -131,8 +131,11 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/defaultYellow.png");
     heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/defaultYellow.png");
 
-    for (int i = 0; i <  200; i++)
+    for (int i = 0; i < 150; i++)
         PlaceScenery(GameEntityCreator().CreateStone(), true);
+
+    for (int i = 0; i < 50; i++)
+        PlaceScenery(GameEntityCreator().CreateGlowingStone(), true);
 
     for (int i = 0; i < 80; i++)
         PlaceScenery(GameEntityCreator().CreateCrystalLight(), false);
@@ -369,6 +372,8 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
         physics->velocity = glm::vec3(0, 0, 0);
         physics->acceleration = glm::vec3(0, 0, 0);
 
+        return true;
+
     }
 
     n = PointCollide(transform->CalculateWorldPosition() + height - width, velocity, deltaTime);
@@ -397,6 +402,8 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
         physics->velocity = glm::vec3(0, 0, 0);
         physics->acceleration = glm::vec3(0, 0, 0);
+
+        return true;
 
     }
 
@@ -427,6 +434,8 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
         physics->velocity = glm::vec3(0, 0, 0);
         physics->acceleration = glm::vec3(0, 0, 0);
 
+        return true;
+
     }
 
     n = PointCollide(transform->CalculateWorldPosition() - height + width, velocity, deltaTime);
@@ -455,6 +464,8 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
         physics->velocity = glm::vec3(0, 0, 0);
         physics->acceleration = glm::vec3(0, 0, 0);
+
+        return true;
 
     }
 

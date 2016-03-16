@@ -195,13 +195,45 @@ Entity* GameEntityFactory::CreateCrashSite2() {
 
 }
 
+Entity* GameEntityFactory::CreateGlowingStone() {
+
+    Entity* stone = mScene->CreateEntity();
+    stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+    stone->AddComponent<Component::Material>()->SetDiffuse("Resources/stone_01_diff.png");
+    stone->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    stone->GetComponent<Component::Material>()->SetGlow("Resources/stone_01_glow.png");
+    stone->AddComponent<Component::Transform>()->scale *= 0.3f;
+
+    Component::ParticleEmitter* emitter = stone->AddComponent<Component::ParticleEmitter>();
+    emitter->emitterType = Component::ParticleEmitter::CUBOID;
+    emitter->size = glm::vec3(3.f, 3.f, 3.f);
+    emitter->maxEmitTime = 1.2f;
+    emitter->minEmitTime = 0.8f;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 5.0;
+    emitter->particleType.textureIndex = Component::ParticleEmitter::DUST;
+    emitter->particleType.minLifetime = 2.f;
+    emitter->particleType.maxLifetime = 3.f;
+    emitter->particleType.minVelocity = glm::vec3(-.6f, 1.f, -.6f);
+    emitter->particleType.maxVelocity = glm::vec3(.6f, 2.f, .6f);
+    emitter->particleType.minSize = glm::vec2(.2f, .2f) * 2.f;
+    emitter->particleType.maxSize = glm::vec2(.4f, .4f) * 2.f;
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::normalize(glm::vec3(109.f, 242.f, 207.f));
+    emitter->particleType.startAlpha = 1.f;
+    emitter->particleType.midAlpha = 1.f;
+    emitter->particleType.endAlpha = 0.f;
+
+    return stone;
+
+}
+
 Entity* GameEntityFactory::CreateStone() {
 
     Entity* stone = mScene->CreateEntity();
     stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
     stone->AddComponent<Component::Material>()->SetDiffuse("Resources/DefaultGray.png");
     stone->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
-    stone->GetComponent<Component::Material>()->SetGlow("Resources/stone_01_glow.png");
     stone->AddComponent<Component::Transform>()->scale *= 0.3f;
 
     return stone;

@@ -31,7 +31,7 @@ void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>&
     glm::vec3 min = glm::vec3(std::numeric_limits<float>::max(), 0.f, std::numeric_limits<float>::max());
     glm::vec3 max = glm::vec3(-std::numeric_limits<float>::max(), 0.f, -std::numeric_limits<float>::max());
 
-    float heightFactor = 1.25f;
+    float heightFactor = 1.55f;
     float widthFactor = 0.75f;
     
     int nrOfPlayers = players.size();

@@ -33,9 +33,5 @@ namespace System {
             ShaderProgram* mShaderProgram;
 
             DeferredLighting* mDeferredLighting;
-
-
-            // Particle Render system.
-            ParticleRenderSystem particleRenderSystem;
     };
 }

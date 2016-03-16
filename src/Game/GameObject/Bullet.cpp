@@ -93,10 +93,13 @@ void Bullet::mUpdateFunction() {
     float lifeTimeFactor = 1.f - lifeTimeComponent->lifeTime / lifeTimeComponent->initialLifeTime;
     float maxIntensity = 15.f;
     float timeLimFactor = 0.1f / lifeTimeComponent->initialLifeTime;
-    if (lifeTimeFactor < timeLimFactor) {
-        node->GetComponent<Component::PointLight>()->intensity = maxIntensity / timeLimFactor * lifeTimeFactor * lightIntensity;
-    } else {
-        node->GetComponent<Component::PointLight>()->intensity = maxIntensity / (timeLimFactor - 1.f) * (lifeTimeFactor - 1.f) * lightIntensity;
+    Component::PointLight* light = node->GetComponent<Component::PointLight>();
+    if (light != nullptr) {
+        if (lifeTimeFactor < timeLimFactor) {
+            light->intensity = maxIntensity / timeLimFactor * lifeTimeFactor * lightIntensity;
+        } else {
+            light->intensity = maxIntensity / (timeLimFactor - 1.f) * (lifeTimeFactor - 1.f) * lightIntensity;
+        }
     }
        
 }
