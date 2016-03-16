@@ -103,9 +103,9 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     PerlinNoiseGenerator png(time(0));
 
-    float factor = 100.f;
-    float floatMapFactor = (5.f / 10.f);
-    float perlinNoiseFactor = (5.f / 10.f);
+    float factor = 200.f;
+    float floatMapFactor = (1.f / 10.f);
+    float perlinNoiseFactor = (9.f / 10.f);
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
@@ -122,8 +122,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->AddComponent<Component::Mesh>();
     heightMap->AddComponent<Component::Transform>();
     heightMap->AddComponent<Component::Material>();
-    heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width)/2.f)+1.f, -11.f, scaleFactor*(static_cast<float>(height) / 2.f) + 1.f));
-    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f) * scaleFactor * 2, 14.f, (static_cast<float>(height) / 2.f) * scaleFactor * 2);
+    heightMap->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*(static_cast<float>(width)/2.f)+1.f, -13.f, scaleFactor*(static_cast<float>(height) / 2.f) + 1.f));
+    heightMap->GetComponent<Component::Transform>()->scale = glm::vec3((static_cast<float>(width)/2.f) * scaleFactor * 2, 16.f, (static_cast<float>(height) / 2.f) * scaleFactor * 2);
 
     mTerrain = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
 
@@ -142,9 +142,6 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
 
     for (int i = 0; i < 40; i++)
         PlaceScenery(GameEntityCreator().CreateFallenPillar(), true);
-
-    for (int i = 0; i < 40; i++)
-        PlaceScenery(GameEntityCreator().CreateBrokenFallenPillar(), true);
 
 
     for (int i = 0; i < mHeight; i++)
@@ -191,15 +188,15 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mLeftBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
 
     //Set the texture
-    //std::string texture = "Resources/defaultGray.png";
-    //mTopBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    //mTopBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
-    //mBottomBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    //mBottomBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
-    //mRightBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    //mRightBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
-    //mLeftBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
-    //mLeftBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    std::string texture = "Resources/defaultGray.png";
+    mTopBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mTopBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mBottomBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mBottomBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mRightBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mRightBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
+    mLeftBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
+    mLeftBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
 
 }
 
@@ -217,9 +214,19 @@ Cave::~Cave() {
 
 void Cave::PlaceScenery(Entity* scenery, bool rotate) {
 
-    float x = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
-    float z = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
+    float x = ((rand() % 1000) / 1000.f) * scaleFactor * mHeight;
+    float z = ((rand() % 1000) / 1000.f) * scaleFactor * mHeight;
     glm::vec3 point = glm::vec3(x, GetTerrainHeight(x, z) - 5.f, z);
+    glm::vec3 center = glm::vec3(scaleFactor*(static_cast<float>(mWidth) / 2.f) + 1.f, 0.f, scaleFactor*(static_cast<float>(mHeight) / 2.f) + 1.f);
+    float distance = glm::distance(center, point);
+
+    if (distance < 50.f) 
+    {
+
+        point += glm::normalize(point - center) * (50.f - distance);
+        point = glm::vec3(point.x, mTerrain->GetY(point.x, point.z) - 5.f, point.z);
+
+    }
 
     if (!GridCollide(point)) {
         
@@ -262,7 +269,7 @@ glm::vec3 Cave::PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTim
 
 glm::vec3 Cave::CellCollide(float xPos, float yPos, int x, int y) {
 
-    if (x >= 0 && y >= 0 && x < 89 && y < 89)
+    if (x >= 0 && y >= 0 && x < mHeight && y < mWidth)
         switch (this->mTypeMap[x][y]) {
 
         case 1:
@@ -353,7 +360,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
         n = PointCollide(transform->CalculateWorldPosition() + height + width, velocity, deltaTime);
 
-        if (n != glm::vec3(0, -1, 0)) {
+        if (n.y != -1) {
 
             n = glm::normalize(n);
             glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
@@ -384,7 +391,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
         n = PointCollide(transform->CalculateWorldPosition() + height - width, velocity, deltaTime);
 
-        if (n != glm::vec3(0, -1, 0)) {
+        if (n.y != -1) {
 
             n = glm::normalize(n);
             glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
@@ -415,7 +422,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
         n = PointCollide(transform->CalculateWorldPosition() - height - width, velocity, deltaTime);
 
-        if (n != glm::vec3(0, -1, 0)) {
+        if (n.y != -1) {
 
             n = glm::normalize(n);
             glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
@@ -446,7 +453,7 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
         n = PointCollide(transform->CalculateWorldPosition() - height + width, velocity, deltaTime);
 
-        if (n != glm::vec3(0, -1, 0)) {
+        if (n.y != -1) {
 
             n = glm::normalize(n);
             glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
@@ -479,6 +486,27 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
 }
 
+bool Cave::WallIntersect(Entity* entity, float deltaTime) {
+
+    Component::Transform* transform = entity->GetComponent<Component::Transform>();
+    Component::Physics* physics = entity->GetComponent<Component::Physics>();
+
+    glm::vec3 velocity = physics->velocity;
+    velocity += physics->acceleration * deltaTime;
+    velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
+
+    if (glm::length(velocity) > physics->maxVelocity)
+        velocity = glm::normalize(velocity) * physics->maxVelocity;
+
+    glm::vec3 n;
+
+    n = PointCollide(transform->CalculateWorldPosition(), velocity, deltaTime);
+
+    if (n != glm::vec3(0, -1, 0))
+        return true;
+
+}
+
 bool Cave::GridCollide(glm::vec3 point) {
 
     unsigned int x = glm::floor(point.x / scaleFactor);
@@ -487,7 +515,7 @@ bool Cave::GridCollide(glm::vec3 point) {
     float xPos = point.x / scaleFactor - x;
     float zPos = point.z / scaleFactor - z;
     
-    if (x >= 0 && z >= 0 && x < 89 && z < 89) {
+    if (x >= 0 && z >= 0 && x < mHeight - 1 && z < mWidth - 1) {
 
         switch (this->mTypeMap[x][z]) {
 

@@ -76,6 +76,7 @@ EnemySpawner* GameEntityFactory::CreateEnemySpawner(unsigned int type, float del
 Rocket* GameEntityFactory::CreateRocket(const glm::vec3& origin) {
     Rocket* gameObject = new Rocket(mScene);
     gameObject->node->GetComponent<Component::Transform>()->position = origin;
+    gameObject->node->GetComponent<Component::Damage>()->damageAmount = 8999;
     return gameObject;
 }
 

@@ -61,11 +61,19 @@ namespace GameObject {
 
             /// Grid collision
             /**
-             * @param entity The minimum room size in tiles.
+             * @param The entity
              * @param deltaTime Where the players start.
              * @return Returns true if collision with map, else false.
              */
             bool GridCollide(Entity* entity, float deltaTime);
+
+            /// Does it intersect with a wall
+            /**
+             * @param The entity
+             * @param deltaTime Where the players start.
+             * @return Returns true if collision with map, else false.
+             */
+            bool WallIntersect(Entity* entity, float deltaTime);
 
             /// Grid collision
             /**
