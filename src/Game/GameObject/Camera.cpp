@@ -12,6 +12,8 @@
 #include "../GameObject/Boss/SuperBoss.hpp"
 #include "../GameObject/Camera.hpp"
 
+#include "../Util/Hub.hpp"
+
 using namespace GameObject;
 
 Camera::Camera(Scene* scene) : SuperGameObject(scene) {
@@ -25,7 +27,7 @@ Camera::Camera(Scene* scene) : SuperGameObject(scene) {
 Camera::~Camera() {
 }
 
-void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>& players, const std::vector<GameObject::SuperBoss*>& bosses, float deltaTime) {
+void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperBoss*>& bosses, float deltaTime) {
     glm::vec3 cameraPos = glm::vec3(0.f, 0.f, 0.f);
     glm::vec3 playerCameraPos = glm::vec3(0.f, 0.f, 0.f);
     glm::vec3 min = glm::vec3(std::numeric_limits<float>::max(), 0.f, std::numeric_limits<float>::max());
@@ -34,9 +36,9 @@ void Camera::UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>&
     float heightFactor = 1.55f;
     float widthFactor = 0.75f;
     
-    int nrOfPlayers = players.size();
+    int nrOfPlayers = HubInstance().mPlayers.size();
     for (int i = 0; i < nrOfPlayers; i++) {
-        glm::vec3 playerPos = players[i]->GetPosition();
+        glm::vec3 playerPos = HubInstance().mPlayers[i]->GetPosition();
         
         // Find min/max player positions
         if (playerPos.x*widthFactor > max.x)

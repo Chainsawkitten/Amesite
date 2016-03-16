@@ -27,10 +27,20 @@ class Hub {
          */
         GameObject::Camera& GetMainCamera();
 
+
+        /// Set state of player 2
+        /**
+         * @param enable Set true if two players.
+         */
+        void SetPlayer2State(bool enable);
+
         ///Vector containing all the players.
         std::vector<GameObject::SuperPlayer*> mPlayers;
     private:
+        Hub();
+        ~Hub();
         GameObject::Camera* mCamera;
+        GameObject::SuperPlayer* mDisabledPlayer;
 };
 
 /// Gets the hub.

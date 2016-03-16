@@ -18,6 +18,8 @@
 #include <Resources.hpp>
 #include "../GameObject/Player/SuperPlayer.hpp"
 
+#include "../Util/Hub.hpp"
+
 System::CheckpointSystem::CheckpointSystem() {
     mLowHPSoundBuffer = Resources().CreateSound("Resources/LowHPBeep.ogg");
     alGenSources(1, &mBeepSource);
@@ -30,8 +32,8 @@ System::CheckpointSystem::CheckpointSystem() {
 
 void System::CheckpointSystem::Update(float deltaTime) {
     bool anyPlayerHit = false;
-    for (auto& thisPlayer : mPlayers) {
-        for (auto& otherPlayer : mPlayers) {
+    for (auto& thisPlayer : HubInstance().mPlayers) {
+        for (auto& otherPlayer : HubInstance().mPlayers) {
             //If the other player isn't this player and isn't active, and the players are close enough, start healing.
             if (thisPlayer != otherPlayer) {
                 if (thisPlayer->Active() && !otherPlayer->Active() && glm::distance(thisPlayer->GetPosition(), otherPlayer->GetPosition()) < 15.f) {
@@ -66,7 +68,7 @@ void System::CheckpointSystem::Update(float deltaTime) {
     }
 
 
-    for (auto &player : mPlayers) {
+    for (auto &player : HubInstance().mPlayers) {
         if (player->Active())
             return;
     }
@@ -83,15 +85,11 @@ void System::CheckpointSystem::MoveCheckpoint(glm::vec2 position) {
     mPosition = position;
 }
 
-void System::CheckpointSystem::AddPlayer(GameObject::SuperPlayer* player) {
-    mPlayers.push_back(player);
-}
-
 void System::CheckpointSystem::RespawnPlayers() {
 
     mRespawn = true;
 
-    for (auto &player : mPlayers) {
+    for (auto &player : HubInstance().mPlayers) {
         Entity* site = nullptr;
         if (typeid(*player).name() == typeid(GameObject::Player1).name())
             site = GameEntityCreator().CreateCrashSite1();

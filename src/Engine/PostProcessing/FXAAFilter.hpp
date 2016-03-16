@@ -27,8 +27,15 @@ class FXAAFilter : public Filter {
          */
         void SetScreenSize(const glm::vec2& screenSize);
         
+        /// Set brightness.
+        /**
+         * @param brightness Brightness.
+         */
+        void SetBrightness(float brightness);
+        
     private:
         ShaderProgram* mShaderProgram;
         
         glm::vec2 mScreenSize;
+        float mBrightness;
 };
