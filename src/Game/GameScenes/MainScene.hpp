@@ -146,4 +146,8 @@ class MainScene : public Scene {
         
         ALfloat mMix;
         ALfloat mTargetMix;
+        
+        std::vector<Texture2D*> mPreallocatedTextures;
+        
+        void PreallocateTextures();
 };

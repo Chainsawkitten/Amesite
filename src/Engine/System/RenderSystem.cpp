@@ -65,8 +65,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
         glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
         glm::mat4 viewProjectionMat = projectionMat * viewMat;
         
-        glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
-        glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
+        glUniformMatrix4fv(mShaderProgram->GetUniformLocation("viewProjection"), 1, GL_FALSE, &viewProjectionMat[0][0]);
         glUniform4fv(mShaderProgram->GetUniformLocation("clippingPlane"), 1, &clippingPlane[0]);
         
         // Finds models in scene.
