@@ -103,7 +103,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mBottomLight->AddComponent<Component::PointLight>();
     mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 1.f);
     mBottomLight->GetComponent<Component::PointLight>()->attenuation = 0.8f;
-    mBottomLight->GetComponent<Component::PointLight>()->intensity = 3.f;
+    mBottomLight->GetComponent<Component::PointLight>()->intensity = 0.f;
 
     mTurretBodyModel = Resources().CreateOBJModel("Resources/turret_body.obj");
     mTurretBarrelModel = Resources().CreateOBJModel("Resources/turret_barrel.obj");
@@ -431,6 +431,7 @@ void Player2::CreateBarrel(Barrel* barrel) {
 }
 
 void Player2::mUpdateFunction() {
+
     //Update health texture
     if (GetHealth() >= 2.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
         mState = LIGHTDAMAGE;
@@ -447,6 +448,7 @@ void Player2::mUpdateFunction() {
         mMidPropellerParticles[3]->GetComponent<Component::ParticleEmitter>()->enabled = true;
 
     } else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
+        mBottomLight->GetComponent<Component::PointLight>()->intensity = 3.f;
         mState = MEDIUMDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 0.f);

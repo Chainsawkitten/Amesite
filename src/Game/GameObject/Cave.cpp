@@ -217,6 +217,16 @@ void Cave::PlaceScenery(Entity* scenery, bool rotate) {
     float x = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
     float z = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
     glm::vec3 point = glm::vec3(x, GetTerrainHeight(x, z) - 5.f, z);
+    glm::vec3 center = glm::vec3(scaleFactor*(static_cast<float>(mWidth) / 2.f) + 1.f, 0.f, scaleFactor*(static_cast<float>(mHeight) / 2.f) + 1.f);
+    float distance = glm::distance(center, point);
+
+    if (distance < 50.f) 
+    {
+
+        point += glm::normalize(point - center) * (50.f - distance);
+        point = glm::vec3(point.x, mTerrain->GetY(point.x, point.z) - 5.f, point.z);
+
+    }
 
     if (!GridCollide(point)) {
         
