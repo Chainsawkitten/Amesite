@@ -2,6 +2,7 @@
 
 #include <glm\glm.hpp>
 #include <vector>
+#include <random>
 
 class Scene;
 
@@ -46,6 +47,9 @@ namespace System {
             const std::vector<GameObject::SuperEnemy*>& GetEnemies() const;
 
         private:
+            // Random Engine
+            std::mt19937 mRNG;
+
             // Enemy count.
             unsigned int mMaxEnemyCount;
             unsigned int mMinEnemyCount;

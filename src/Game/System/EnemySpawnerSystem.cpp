@@ -33,6 +33,7 @@ EnemySpawnerSystem::EnemySpawnerSystem() {
     mEnemyCount = 0;
     mEnemiesKilled = 0;
     mSpawnerRadius = 60.f;
+    mRNG.seed(static_cast<uint32_t>(time(0)));
 }
 
 EnemySpawnerSystem::~EnemySpawnerSystem() {
@@ -103,10 +104,13 @@ glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, co
     averagePlayerPosition.z *= factor;
   
     bool** map = cave->GetCaveData();
-
+    int max = size.x - 1;
+    std::uniform_int_distribution<uint32_t> mMapDistribution(0, max);
     // If we can find a valid position within a certrain amount of iterations we return it.
     for (int i = 0; i < 20; i++) {
-        position = glm::uvec3(rand() % size.x, 0.f, rand() % size.z);
+        unsigned int xValue = mMapDistribution(mRNG);
+        unsigned int yValue = mMapDistribution(mRNG);
+        position = glm::uvec3(xValue, 0.f, yValue);
         if (((glm::length((glm::vec3(position)*mMapScale) - averagePlayerPosition)) > mSpawnerRadius )
             && !(map[position.z][position.x]
                 || map[position.z - 1][position.x]
