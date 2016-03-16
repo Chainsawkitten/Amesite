@@ -49,7 +49,7 @@ OptionsMenu::OptionsMenu(Menu* parentMenu) : SubMenu() {
     float fontHeight = glm::ceil(MainWindow::GetInstance()->GetSize().y * 0.18f);
     Font* font = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", fontHeight);
     font->SetColor(glm::vec3(1.f, 1.f, 1.f));
-    SetTitleOption(new MenuOption(font, "OPTIONS", glm::vec3(-3.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 90.f), 2.f));
+    AddTitleOption(new MenuOption(font, "OPTIONS", glm::vec3(-3.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 90.f), 2.f));
     Resources().FreeFont(font);
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
