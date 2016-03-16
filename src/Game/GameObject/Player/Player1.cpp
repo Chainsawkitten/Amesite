@@ -335,7 +335,7 @@ Player1::~Player1() {
 }
 
 glm::vec3 Player1::GetPosition() {
-    return mNode->GetComponent<Component::Transform>()->GetWorldPosition();
+    return mNode->GetComponent<Component::Transform>()->position;
 }
 
 void Player1::SetPosition(glm::vec3 position) {

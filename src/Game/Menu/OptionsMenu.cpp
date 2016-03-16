@@ -66,7 +66,7 @@ void OptionsMenu::FXAA(std::string option) {
 
 void OptionsMenu::TwoPlayers(std::string option) {
     GameSettings::GetInstance().SetBool("Two Players", option == "On");
-    HubInstance().SetPlayer2State(option == "On");
+    HubInstance().SetPlayer2State(GameSettings::GetInstance().GetBool("Two Players"));
 }
 
 void OptionsMenu::MouseAim (std::string option) {

@@ -20,6 +20,8 @@
 #include "../GameObject/Enemy/Nest.hpp"
 #include "../GameObject/Boss/SpinBoss.hpp"
 
+#include "../Util/Hub.hpp"
+
 #include <vector>
 #include <Util/Log.hpp>
 
@@ -36,7 +38,7 @@ EnemySpawnerSystem::EnemySpawnerSystem() {
 EnemySpawnerSystem::~EnemySpawnerSystem() {
 }
 
-void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) {
+void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<glm::vec3> noSpawnRooms) {
     for (unsigned int i = 0; i < mEnemies.size(); i++) {
         if (mEnemies[i]->GetHealth() < 0.01f) {
             mEnemies[i]->Kill();
@@ -55,7 +57,7 @@ void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject:
                     spawner->timeSinceSpawn += (deltaTime * 20);
                 }
                 if (spawner->delay <= spawner->timeSinceSpawn) {
-                    glm::vec3 position = FindValidPosition(cave, players, noSpawnRooms);
+                    glm::vec3 position = FindValidPosition(cave, noSpawnRooms);
                     if (position.x > 0.f) {
                         spawner->timeSinceSpawn = 0.0;
                         if (spawner->enemyType == Component::Spawner::PYLON) {
@@ -79,7 +81,7 @@ const std::vector<GameObject::SuperEnemy*>& EnemySpawnerSystem::GetEnemies() con
     return mEnemies;
 }
 
-glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) const {
+glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<glm::vec3> noSpawnRooms) const {
 
     glm::vec3 mMapScale = cave->map->GetComponent<Component::Transform>()->GetWorldScale();
     glm::uvec3 size = glm::vec3(cave->GetWidth(), 0.f, cave->GetHeight());
@@ -89,13 +91,13 @@ glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, co
 
     glm::vec3 averagePlayerPosition = glm::vec3(0.f, 0.f, 0.f);
 
-    for (auto player : *players) {
+    for (auto player : HubInstance().mPlayers) {
         glm::vec3 playerPos = player->GetPosition();
 
         averagePlayerPosition.x += playerPos.x;
         averagePlayerPosition.z += playerPos.z;
     }
-    float factor = 1.f / static_cast<float>(players->size());
+    float factor = 1.f / static_cast<float>(HubInstance().mPlayers.size());
 
     averagePlayerPosition.x *= factor;
     averagePlayerPosition.z *= factor;

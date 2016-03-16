@@ -311,7 +311,7 @@ Player2::~Player2() {
 }
 
 glm::vec3 Player2::GetPosition() {
-    return mNode->GetComponent<Component::Transform>()->GetWorldPosition();
+    return mNode->GetComponent<Component::Transform>()->position;
 }
 
 void Player2::SetPosition(glm::vec3 position) {
