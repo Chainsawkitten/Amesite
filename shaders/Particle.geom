@@ -24,6 +24,8 @@ uniform vec3 cameraUp;
 // Uniform integer for number of atlas rows.
 uniform float textureAtlasRows;
 
+uniform vec4 clippingPlane;
+
 // Output
 out VertexData {
     vec2 texCoords;
@@ -47,29 +49,37 @@ void main() {
     // Particle up vector = particle right x look
     vec4 up = normalize(vec4(cross(look.xyz, right.xyz), 0.0)) * vertexIn[0].size.y * 0.5;
     
-    gl_Position = viewProjectionMatrix * (gl_in[0].gl_Position - right + up);
+    vec4 worldPosition = gl_in[0].gl_Position - right + up;
+    gl_Position = viewProjectionMatrix * worldPosition;
+    gl_ClipDistance[0] = dot(worldPosition, clippingPlane);
     vertexOut.color = vertexIn[0].color;
     vertexOut.texCoords = atlasCoordOffset;
     vertexOut.alpha = vertexIn[0].alpha;
     EmitVertex();
-
-    gl_Position = viewProjectionMatrix *  (gl_in[0].gl_Position - right - up);
+    
+    worldPosition = gl_in[0].gl_Position - right - up;
+    gl_Position = viewProjectionMatrix * worldPosition;
+    gl_ClipDistance[0] = dot(worldPosition, clippingPlane);
     vertexOut.color = vertexIn[0].color;
     vertexOut.texCoords = vec2(atlasCoordOffset.x+atlasIndexOffset, atlasCoordOffset.y);
     vertexOut.alpha = vertexIn[0].alpha;
     EmitVertex();
-
-    gl_Position = viewProjectionMatrix *  (gl_in[0].gl_Position + right + up);
+    
+    worldPosition = gl_in[0].gl_Position + right + up;
+    gl_Position = viewProjectionMatrix * worldPosition;
+    gl_ClipDistance[0] = dot(worldPosition, clippingPlane);
     vertexOut.color = vertexIn[0].color;
     vertexOut.texCoords = vec2(atlasCoordOffset.x, atlasCoordOffset.y+atlasIndexOffset);
     vertexOut.alpha = vertexIn[0].alpha;
     EmitVertex();
-
-    gl_Position = viewProjectionMatrix *  (gl_in[0].gl_Position + right - up);
+    
+    worldPosition = gl_in[0].gl_Position + right - up;
+    gl_Position = viewProjectionMatrix * worldPosition;
+    gl_ClipDistance[0] = dot(worldPosition, clippingPlane);
     vertexOut.color = vertexIn[0].color;
     vertexOut.texCoords = vec2(atlasCoordOffset.x+atlasIndexOffset, atlasCoordOffset.y+atlasIndexOffset);
     vertexOut.alpha = vertexIn[0].alpha;
     EmitVertex();
-
+    
     EndPrimitive();
 }

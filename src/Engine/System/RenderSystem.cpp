@@ -41,7 +41,7 @@ RenderSystem::~RenderSystem() {
     Resources().FreeShaderProgram(mShaderProgram);
 }
 
-void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
+void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::vec4& clippingPlane) {
     glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
     
     mDeferredLighting->SetTarget();
@@ -65,6 +65,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
         
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
+        glUniform4fv(mShaderProgram->GetUniformLocation("clippingPlane"), 1, &clippingPlane[0]);
         
         // Finds models in scene.
         std::vector<Component::Mesh*> meshes = scene.GetAll<Component::Mesh>();
