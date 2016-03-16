@@ -34,7 +34,7 @@
 using namespace GameObject;
 
 RingBoss::RingBoss(Scene* scene) : SuperBoss(scene) {
-    mMaxSpawnerDelay = 0.9f;
+    mMaxSpawnerDelay = 1.3f;
 
     node->AddComponent<Component::Transform>()->scale *= 0.6f;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&RingBoss::mUpdateFunction, this);
@@ -53,7 +53,9 @@ RingBoss::RingBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Explode>()->sound = true;
     body->AddComponent<Component::Health>()->faction = 1;
     body->GetComponent<Component::Health>()->removeOnLowHealth = false;
-    body->GetComponent<Component::Health>()->health = 300.f;
+    body->GetComponent<Component::Health>()->health = body->GetComponent<Component::Health>()->maxHealth = 300.f;
+    body->GetComponent<Component::Health>()->regainAmount = body->GetComponent<Component::Health>()->maxHealth / 10.f;
+    body->GetComponent<Component::Health>()->maxCooldown = 5.f;
     body->AddComponent<Component::Spawner>()->delay = mMaxSpawnerDelay;
     body->GetComponent<Component::Spawner>()->faction = 1.f;
     //body->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AlwaysShootClosestPlayer);
@@ -142,10 +144,10 @@ void GameObject::RingBoss::FireBullets() {
     float health = body->GetComponent<Component::Health>()->health;
     float healthFraction = ((maxHealth - health) / maxHealth);
     float lifeTimeFraction = 3.f;
-    float size = 5.f + healthFraction * 4.f;
+    float size = 3.f + healthFraction * 5.f;
     float speed = 10.f + healthFraction * 30.f;
 
-    body->GetComponent<Component::Spawner>()->delay = mMaxSpawnerDelay - healthFraction * .6f;
+    body->GetComponent<Component::Spawner>()->delay = mMaxSpawnerDelay - healthFraction * 1.f;
 
     for (auto bullet : bullets) {
         bullet->node->KillComponent<Component::PointLight>();
@@ -167,7 +169,7 @@ void GameObject::RingBoss::FireBullets() {
         bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= lifeTimeFraction;
         bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= lifeTimeFraction;
         bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= lifeTimeFraction;
-        bullet->node->GetComponent<Component::Damage>()->damageAmount = 9000.0000001f;
+        bullet->node->GetComponent<Component::Damage>()->damageAmount = 20.f;
     }
 }
 
@@ -175,8 +177,8 @@ void RingBoss::CreateRingPart(Entity* entity, glm::vec3 position) {
     Component::RelativeTransform* transform = entity->AddComponent<Component::RelativeTransform>();
     transform->parentEntity = ring.node;
     transform->position = position;
-    //entity->AddComponent<Component::Collider2DCircle>()->radius = 5.f;
-    //entity->AddComponent<Component::Reflect>()->faction = 1.f;
+    entity->AddComponent<Component::Collider2DCircle>()->radius = 3.f;
+    entity->AddComponent<Component::Reflect>()->faction = 1.f;
     entity->AddComponent<Component::Damage>()->faction = 1.f;
     entity->GetComponent<Component::Damage>()->removeOnImpact = false;
 }
