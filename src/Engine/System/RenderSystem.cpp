@@ -106,8 +106,5 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
         renderTarget->SetTarget();
         //mDeferredLighting->ShowTextures(screenSize);
         mDeferredLighting->Render(scene, camera, screenSize);
-        
-        // Render the particle system
-        particleRenderSystem.Render(scene, camera, screenSize);
     }
 }
