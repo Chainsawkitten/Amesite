@@ -143,6 +143,9 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     for (int i = 0; i < 40; i++)
         PlaceScenery(GameEntityCreator().CreateFallenPillar(), true);
 
+    for (int i = 0; i < 40; i++)
+        PlaceScenery(GameEntityCreator().CreateBrokenFallenPillar(), true);
+
 
     for (int i = 0; i < mHeight; i++)
         delete[] floatMap[i];
