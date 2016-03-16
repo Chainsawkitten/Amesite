@@ -97,5 +97,5 @@ class SubMenu {
         std::vector<SuperMenuOption*> mMenuOptions;
         int mSelected;
         
-        MenuOption* mTitleOption;
+        std::vector<MenuOption*> mTitleOption;
 };
