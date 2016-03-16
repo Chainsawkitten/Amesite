@@ -144,10 +144,15 @@ set(RESOURCES
         assets/spawn/pillar/pillar.obj
         assets/spawn/pillar/Pillar_Albedo.png
         assets/spawn/pillar/Pillar_NM.png
+        assets/spawn/pillar/Pillar_Glow2.png
+        assets/spawn/pillar/pillar_top.obj
+        assets/spawn/pillar/pillar_bot.obj
         assets/spawn/pillar/Pillar2.obj
         assets/spawn/portal/portal.obj
         assets/stones/stone_01_glow.png
         assets/stones/stone_01_diff.png
+        assets/stones/stone_02_glow.png
+        assets/stones/stone_02_diff.png
         assets/stones/stone_01.obj
         assets/stones/stone_02.obj
         assets/stones/stone_03.obj
@@ -167,6 +172,9 @@ set(RESOURCES
         assets/sound/Laser.ogg
         assets/sound/LowHPBeep.ogg
         assets/Loading.png
+        assets/water/Water.png
+        assets/water/WaterDUDV.png
+        assets/water/WaterNormal.png
     )
 
 add_custom_target(ResourceTarget ALL)
@@ -210,6 +218,8 @@ set(EMBEDDED_INPUT
         shaders/Particle.vert
         shaders/Particle.geom
         shaders/Particle.frag
+        shaders/Water.vert
+        shaders/Water.frag
     )
 
 # Headerize
@@ -311,6 +321,8 @@ set(ENGINE_SRCS
         src/Engine/PostProcessing/GlowFilter.cpp
         src/Engine/PostProcessing/GlowBlurFilter.cpp
         src/Engine/GameObject/SuperGameObject.cpp
+        src/Engine/Physics/AxisAlignedBoundingBox.cpp
+        src/Engine/Physics/Frustum.cpp
     )
 
 set(ENGINE_HEADERS
@@ -374,6 +386,8 @@ set(ENGINE_HEADERS
         src/Engine/PostProcessing/GlowFilter.hpp
         src/Engine/PostProcessing/GlowBlurFilter.hpp
         src/Engine/GameObject/SuperGameObject.hpp
+        src/Engine/Physics/AxisAlignedBoundingBox.hpp
+        src/Engine/Physics/Frustum.hpp
     )
 
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
@@ -456,6 +470,7 @@ set(GAME_SRCS
         src/Game/Menu/SuperMenuOption.cpp
         src/Game/Menu/MenuOption.cpp
         src/Game/Menu/MenuSwitch.cpp
+        src/Game/Water/Water.cpp
     )
 
 set(GAME_HEADERS
@@ -531,6 +546,7 @@ set(GAME_HEADERS
         src/Game/Menu/SuperMenuOption.hpp
         src/Game/Menu/MenuOption.hpp
         src/Game/Menu/MenuSwitch.hpp
+        src/Game/Water/Water.hpp
     )
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})

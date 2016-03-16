@@ -191,6 +191,12 @@ class GameEntityFactory {
          */
         Entity* CreateStone();
 
+        /// Create glowing stone.
+        /**
+         * @return The stone entity.
+         */
+        Entity* CreateGlowingStone();
+
         /// Create crystal light.
         /**
          * @return The created crystal entity.
@@ -202,6 +208,12 @@ class GameEntityFactory {
          * @return The created pillar entity.
          */
         Entity* CreateFallenPillar();
+
+        /// Create broken fallen pillar.
+        /**
+         * @return The created broken pillar entity.
+         */
+        Entity* CreateBrokenFallenPillar();
 
         /// Create shrapnel.
         /**

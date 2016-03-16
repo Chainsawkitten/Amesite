@@ -85,6 +85,8 @@ OBJModel::OBJModel(const char* filename) {
     
     delete[] vertexData;
     delete[] indexData;
+    
+    CreateAxisAlignedBoundingBox();
 }
 
 glm::vec3 OBJModel::ReadVec3(std::ifstream& modelFile) {

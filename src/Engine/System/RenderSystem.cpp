@@ -22,6 +22,7 @@
 
 #include "../Lighting/DeferredLighting.hpp"
 #include "../RenderTarget.hpp"
+#include "../Physics/Frustum.hpp"
 
 using namespace System;
 
@@ -41,7 +42,7 @@ RenderSystem::~RenderSystem() {
     Resources().FreeShaderProgram(mShaderProgram);
 }
 
-void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
+void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::vec4& clippingPlane) {
     glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
     
     mDeferredLighting->SetTarget();
@@ -62,9 +63,11 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
     if (camera != nullptr) {
         glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
         glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
+        glm::mat4 viewProjectionMat = projectionMat * viewMat;
         
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
+        glUniform4fv(mShaderProgram->GetUniformLocation("clippingPlane"), 1, &clippingPlane[0]);
         
         // Finds models in scene.
         std::vector<Component::Mesh*> meshes = scene.GetAll<Component::Mesh>();
@@ -73,31 +76,35 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
             Component::Transform* transform = model->GetComponent<Component::Transform>();
             Component::Material* material = model->GetComponent<Component::Material>();
             if (transform != nullptr && material != nullptr) {
-                glBindVertexArray(mesh->geometry->GetVertexArray());
-                
-                // Set texture locations
-                glUniform1i(mShaderProgram->GetUniformLocation("baseImage"), 0);
-                glUniform1i(mShaderProgram->GetUniformLocation("normalMap"), 1);
-                glUniform1i(mShaderProgram->GetUniformLocation("specularMap"), 2);
-                glUniform1i(mShaderProgram->GetUniformLocation("glowMap"), 3);
-                
-                // Textures
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, material->diffuse->GetTextureID());
-                glActiveTexture(GL_TEXTURE1);
-                glBindTexture(GL_TEXTURE_2D, material->normal->GetTextureID());
-                glActiveTexture(GL_TEXTURE2);
-                glBindTexture(GL_TEXTURE_2D, material->specular->GetTextureID());
-                glActiveTexture(GL_TEXTURE3);
-                glBindTexture(GL_TEXTURE_2D, material->glow->GetTextureID());
-                
-                // Render model.
                 glm::mat4 modelMat = transform->modelMatrix;
-                glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
-                glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
-                glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
                 
-                glDrawElements(GL_TRIANGLES, mesh->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+                Physics::Frustum frustum(viewProjectionMat * modelMat);
+                if (frustum.Collide(mesh->geometry->GetAxisAlignedBoundingBox())) {
+                    glBindVertexArray(mesh->geometry->GetVertexArray());
+                    
+                    // Set texture locations
+                    glUniform1i(mShaderProgram->GetUniformLocation("baseImage"), 0);
+                    glUniform1i(mShaderProgram->GetUniformLocation("normalMap"), 1);
+                    glUniform1i(mShaderProgram->GetUniformLocation("specularMap"), 2);
+                    glUniform1i(mShaderProgram->GetUniformLocation("glowMap"), 3);
+                    
+                    // Textures
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, material->diffuse->GetTextureID());
+                    glActiveTexture(GL_TEXTURE1);
+                    glBindTexture(GL_TEXTURE_2D, material->normal->GetTextureID());
+                    glActiveTexture(GL_TEXTURE2);
+                    glBindTexture(GL_TEXTURE_2D, material->specular->GetTextureID());
+                    glActiveTexture(GL_TEXTURE3);
+                    glBindTexture(GL_TEXTURE_2D, material->glow->GetTextureID());
+                    
+                    // Render model.
+                    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
+                    glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
+                    glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
+                    
+                    glDrawElements(GL_TRIANGLES, mesh->geometry->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+                }
             }
         }
         
@@ -106,8 +113,5 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget) {
         renderTarget->SetTarget();
         //mDeferredLighting->ShowTextures(screenSize);
         mDeferredLighting->Render(scene, camera, screenSize);
-        
-        // Render the particle system
-        particleRenderSystem.Render(scene, camera, screenSize);
     }
 }

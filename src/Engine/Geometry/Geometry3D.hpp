@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Physics/AxisAlignedBoundingBox.hpp"
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
@@ -54,6 +55,15 @@ namespace Geometry {
              * @return The vertex array
              */
             GLuint GetVertexArray() const;
+            
+            /// Create local space axis-aligned bounding box around the geometry.
+            void CreateAxisAlignedBoundingBox();
+            
+            /// Get the axis-aligned bounding box around the geometry.
+            /**
+             * @return Local space axis-aligned bounding box around the geometry.
+             */
+            const Physics::AxisAlignedBoundingBox& GetAxisAlignedBoundingBox() const;
     
         protected:
             /// Generate vertex and index buffers.
@@ -66,6 +76,8 @@ namespace Geometry {
             GLuint mVertexBuffer;
             GLuint mIndexBuffer;
             GLuint mVertexArray;
+            
+            Physics::AxisAlignedBoundingBox mAxisAlignedBoundingBox;
     };
 }
 

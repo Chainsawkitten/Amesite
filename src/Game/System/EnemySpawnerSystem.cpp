@@ -20,6 +20,8 @@
 #include "../GameObject/Enemy/Nest.hpp"
 #include "../GameObject/Boss/SpinBoss.hpp"
 
+#include "../Util/Hub.hpp"
+
 #include <vector>
 #include <Util/Log.hpp>
 
@@ -31,12 +33,13 @@ EnemySpawnerSystem::EnemySpawnerSystem() {
     mEnemyCount = 0;
     mEnemiesKilled = 0;
     mSpawnerRadius = 60.f;
+    mRNG.seed(static_cast<uint32_t>(time(0)));
 }
 
 EnemySpawnerSystem::~EnemySpawnerSystem() {
 }
 
-void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) {
+void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject::Cave* cave, const std::vector<glm::vec3> noSpawnRooms) {
     for (unsigned int i = 0; i < mEnemies.size(); i++) {
         if (mEnemies[i]->GetHealth() < 0.01f) {
             mEnemies[i]->Kill();
@@ -55,7 +58,7 @@ void EnemySpawnerSystem::Update(Scene& scene, float deltaTime, const GameObject:
                     spawner->timeSinceSpawn += (deltaTime * 20);
                 }
                 if (spawner->delay <= spawner->timeSinceSpawn) {
-                    glm::vec3 position = FindValidPosition(cave, players, noSpawnRooms);
+                    glm::vec3 position = FindValidPosition(cave, noSpawnRooms);
                     if (position.x > 0.f) {
                         spawner->timeSinceSpawn = 0.0;
                         if (spawner->enemyType == Component::Spawner::PYLON) {
@@ -79,7 +82,7 @@ const std::vector<GameObject::SuperEnemy*>& EnemySpawnerSystem::GetEnemies() con
     return mEnemies;
 }
 
-glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<GameObject::SuperPlayer*> *players, const std::vector<glm::vec3> noSpawnRooms) const {
+glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, const std::vector<glm::vec3> noSpawnRooms) {
 
     glm::vec3 mMapScale = cave->map->GetComponent<Component::Transform>()->GetWorldScale();
     glm::uvec3 size = glm::vec3(cave->GetWidth(), 0.f, cave->GetHeight());
@@ -89,22 +92,25 @@ glm::vec3 EnemySpawnerSystem::FindValidPosition(const GameObject::Cave* cave, co
 
     glm::vec3 averagePlayerPosition = glm::vec3(0.f, 0.f, 0.f);
 
-    for (auto player : *players) {
+    for (auto player : HubInstance().mPlayers) {
         glm::vec3 playerPos = player->GetPosition();
 
         averagePlayerPosition.x += playerPos.x;
         averagePlayerPosition.z += playerPos.z;
     }
-    float factor = 1.f / static_cast<float>(players->size());
+    float factor = 1.f / static_cast<float>(HubInstance().mPlayers.size());
 
     averagePlayerPosition.x *= factor;
     averagePlayerPosition.z *= factor;
   
     bool** map = cave->GetCaveData();
-
+    int max = size.x - 1;
+    std::uniform_int_distribution<uint32_t> mMapDistribution(0, max);
     // If we can find a valid position within a certrain amount of iterations we return it.
     for (int i = 0; i < 20; i++) {
-        position = glm::uvec3(rand() % size.x, 0.f, rand() % size.z);
+        unsigned int xValue = mMapDistribution(mRNG);
+        unsigned int yValue = mMapDistribution(mRNG);
+        position = glm::uvec3(xValue, 0.f, yValue);
         if (((glm::length((glm::vec3(position)*mMapScale) - averagePlayerPosition)) > mSpawnerRadius )
             && !(map[position.z][position.x]
                 || map[position.z - 1][position.x]

@@ -132,14 +132,20 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/defaultYellow.png");
     heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/defaultYellow.png");
 
-    for (int i = 0; i <  200; i++)
+    for (int i = 0; i < 150; i++)
         PlaceScenery(GameEntityCreator().CreateStone(), true);
+
+    for (int i = 0; i < 50; i++)
+        PlaceScenery(GameEntityCreator().CreateGlowingStone(), true);
 
     for (int i = 0; i < 80; i++)
         PlaceScenery(GameEntityCreator().CreateCrystalLight(), false);
 
     for (int i = 0; i < 40; i++)
         PlaceScenery(GameEntityCreator().CreateFallenPillar(), true);
+
+    for (int i = 0; i < 40; i++)
+        PlaceScenery(GameEntityCreator().CreateBrokenFallenPillar(), true);
 
 
     for (int i = 0; i < mHeight; i++)
@@ -337,128 +343,139 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
     if (glm::length(velocity) > physics->maxVelocity)
         velocity = glm::normalize(velocity) * physics->maxVelocity;
 
-    glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
-    glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
+    Component::Collider2DCircle* collider = transform->entity->GetComponent<Component::Collider2DCircle>();
 
-    glm::vec3 n;
-    float bounce = 2.f;
+    if (collider != nullptr) {
+        glm::vec3 width = glm::vec3(transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f, 0, 0);
+        glm::vec3 height = glm::vec3(0, 0, transform->entity->GetComponent<Component::Collider2DCircle>()->radius * transform->GetWorldScale().x * 1.f);
 
-    n = PointCollide(transform->CalculateWorldPosition() + height + width, velocity, deltaTime);
+        glm::vec3 n;
+        float bounce = 2.f;
 
-    if (n != glm::vec3(0, -1, 0)) {
+        n = PointCollide(transform->CalculateWorldPosition() + height + width, velocity, deltaTime);
 
-        n = glm::normalize(n);
-        glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+        if (n != glm::vec3(0, -1, 0)) {
 
-        bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime).y == -1;
-        bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime).y == -1;
-        bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime).y == -1;
-        bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime).y == -1;
+            n = glm::normalize(n);
+            glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
 
-        if (c0 && c1 && c2 && c3) {
+            bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime).y == -1;
+            bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime).y == -1;
+            bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime).y == -1;
+            bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime).y == -1;
 
-            physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
-            physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
+            if (c0 && c1 && c2 && c3) {
 
-            physics->velocity /= bounce;
-            physics->acceleration /= bounce;
+                physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+                physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
 
-            return true;
+                physics->velocity /= bounce;
+                physics->acceleration /= bounce;
 
-        }
+                return true;
 
-        physics->velocity = glm::vec3(0, 0, 0);
-        physics->acceleration = glm::vec3(0, 0, 0);
+            }
 
-    }
-
-    n = PointCollide(transform->CalculateWorldPosition() + height - width, velocity, deltaTime);
-
-    if (n != glm::vec3(0, -1, 0)) {
-
-        n = glm::normalize(n);
-        glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
-
-        bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-
-        if (c0 && c1 && c2 && c3) {
-
-            physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
-            physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
-
-            physics->velocity /= bounce;
-            physics->acceleration /= bounce;
+            physics->velocity = glm::vec3(0, 0, 0);
+            physics->acceleration = glm::vec3(0, 0, 0);
 
             return true;
 
         }
 
-        physics->velocity = glm::vec3(0, 0, 0);
-        physics->acceleration = glm::vec3(0, 0, 0);
+        n = PointCollide(transform->CalculateWorldPosition() + height - width, velocity, deltaTime);
 
-    }
+        if (n != glm::vec3(0, -1, 0)) {
 
-    n = PointCollide(transform->CalculateWorldPosition() - height - width, velocity, deltaTime);
+            n = glm::normalize(n);
+            glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
 
-    if (n != glm::vec3(0, -1, 0)) {
+            bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+            bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+            bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+            bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
 
-        n = glm::normalize(n);
-        glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+            if (c0 && c1 && c2 && c3) {
 
-        bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+                physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+                physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
 
-        if (c0 && c1 && c2 && c3) {
+                physics->velocity /= bounce;
+                physics->acceleration /= bounce;
 
-            physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
-            physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
+                return true;
 
-            physics->velocity /= bounce;
-            physics->acceleration /= bounce;
+            }
 
-            return true;
-
-        }
-
-        physics->velocity = glm::vec3(0, 0, 0);
-        physics->acceleration = glm::vec3(0, 0, 0);
-
-    }
-
-    n = PointCollide(transform->CalculateWorldPosition() - height + width, velocity, deltaTime);
-
-    if (n != glm::vec3(0, -1, 0)) {
-
-        n = glm::normalize(n);
-        glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
-
-        bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-        bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
-
-        if (c0 && c1 && c2 && c3) {
-
-            physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
-            physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
-
-            physics->velocity /= bounce;
-            physics->acceleration /= bounce;
+            physics->velocity = glm::vec3(0, 0, 0);
+            physics->acceleration = glm::vec3(0, 0, 0);
 
             return true;
 
         }
 
-        physics->velocity = glm::vec3(0, 0, 0);
-        physics->acceleration = glm::vec3(0, 0, 0);
+        n = PointCollide(transform->CalculateWorldPosition() - height - width, velocity, deltaTime);
 
+        if (n != glm::vec3(0, -1, 0)) {
+
+            n = glm::normalize(n);
+            glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+
+            bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+            bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+            bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+            bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+
+            if (c0 && c1 && c2 && c3) {
+
+                physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+                physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
+
+                physics->velocity /= bounce;
+                physics->acceleration /= bounce;
+
+                return true;
+
+            }
+
+            physics->velocity = glm::vec3(0, 0, 0);
+            physics->acceleration = glm::vec3(0, 0, 0);
+
+            return true;
+
+        }
+
+        n = PointCollide(transform->CalculateWorldPosition() - height + width, velocity, deltaTime);
+
+        if (n != glm::vec3(0, -1, 0)) {
+
+            n = glm::normalize(n);
+            glm::vec3 newVelocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+
+            bool c0 = PointCollide(transform->CalculateWorldPosition() + height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+            bool c1 = PointCollide(transform->CalculateWorldPosition() - height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+            bool c2 = PointCollide(transform->CalculateWorldPosition() - height + width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+            bool c3 = PointCollide(transform->CalculateWorldPosition() + height - width, newVelocity, deltaTime) == glm::vec3(0, 0, 0);
+
+            if (c0 && c1 && c2 && c3) {
+
+                physics->velocity = velocity - 2.f * (glm::dot(velocity, n) * n);
+                physics->acceleration = physics->acceleration - 2.f * (glm::dot(physics->acceleration, n) * n);
+
+                physics->velocity /= bounce;
+                physics->acceleration /= bounce;
+
+                return true;
+
+            }
+
+            physics->velocity = glm::vec3(0, 0, 0);
+            physics->acceleration = glm::vec3(0, 0, 0);
+
+            return true;
+
+        }
     }
-
     return false;
 
 }

@@ -31,6 +31,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_medium_damage.png");
     mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_heavy_damage.png");
     mDeadTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_dead.png");
+    mCollisionRadius = 10.f;
 
     mNode = CreateEntity();
     mNode->AddComponent<Component::Transform>()->scale *= 0.2f; //0.15f
@@ -38,7 +39,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
-    mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
+    mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
     mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     mNode->AddComponent<Component::Health>()->removeOnLowHealth = false;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth = 30.f;
@@ -46,7 +47,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     //Regain full health after 5 seconds.
     mNode->GetComponent<Component::Health>()->regainAmount = mRegainAmount = mNode->GetComponent<Component::Health>()->maxHealth / 5.f;
     mNode->GetComponent<Component::Health>()->faction = 0;
-    mNode->AddComponent<Component::Collider2DCircle>()->radius = 10.f;
+    mNode->AddComponent<Component::Collider2DCircle>()->radius = mCollisionRadius;
     mNode->AddComponent<Component::Animation>();
     Component::Animation::AnimationClip* idleNode = mNode->GetComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleNode->CreateKeyFrame(glm::vec3(0.1f, 0.f, 0.f), 0.f, 0.f, 0, 1.5f, false, true);
@@ -130,7 +131,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLeftSpawnNode->AddComponent<Component::Animation>();
     mLeftSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
     mLeftSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
-    mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
+    mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
     Component::SoundSource* sound = mLeftSpawnNode->AddComponent<Component::SoundSource>();
     mShootSound = Resources().CreateSound("Resources/Laser.ogg");
     sound->soundBuffer = mShootSound;
@@ -158,7 +159,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mRightSpawnNode->AddComponent<Component::Animation>();
     mRightSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
     mRightSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
-    mRightSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
+    mRightSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
 
     Entity* pointLight;
     // Engine
@@ -334,7 +335,7 @@ Player1::~Player1() {
 }
 
 glm::vec3 Player1::GetPosition() {
-    return mNode->GetComponent<Component::Transform>()->GetWorldPosition();
+    return mNode->GetComponent<Component::Transform>()->position;
 }
 
 void Player1::SetPosition(glm::vec3 position) {
@@ -353,6 +354,7 @@ float Player1::GetHealth() {
 void Player1::Activate() {
 
     mActive = true;
+    mNode->AddComponent<Component::Collider2DCircle>()->radius = mCollisionRadius;
     mNode->GetComponent<Component::Controller>()->enabled = true;
     mLeftSpawnNode->GetComponent<Component::Controller>()->enabled = true;
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = true;
@@ -364,6 +366,7 @@ void Player1::Activate() {
 void Player1::Deactivate() {
 
     mActive = false;
+    mNode->KillComponent<Component::Collider2DCircle>();
     mNode->GetComponent<Component::Controller>()->enabled = false;
     mLeftSpawnNode->GetComponent<Component::Controller>()->enabled = false;
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = false;
@@ -442,6 +445,7 @@ void Player1::mUpdateFunction() {
         mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
     } else {
         mState = DEAD;
+        
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mDeadTexture;
@@ -498,4 +502,25 @@ void Player1::mUpdateFunction() {
     mRightTurretBarrel.barrel[1]->GetComponent<Component::Transform>()->position.z = (0.5f * recoilFactor + 0.5f) * factor - factor; //[0.5,1]
     mRightTurretBarrel.barrel[0]->GetComponent<Component::Transform>()->position.z = (recoilFactor / 2.f) * factor - factor; //[0,0.5]
     mRightTurretBarrel.node->GetComponent<Component::Transform>()->roll = 180 * recoilFactor;
+}
+
+void Player1::SetYaw(float yaw) {
+    mNode->GetComponent<Component::Transform>()->yaw = yaw;
+}
+
+void Player1::SetJoystickAim(bool joystickAim) {
+    std::vector<void(*)(Component::Controller* controller, float deltaTime)>& vec = mNode->GetComponent<Component::Controller>()->controlSchemes;
+    vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::MouseRotate), vec.end());
+    vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::Aim), vec.end());
+    if (joystickAim)
+        vec.push_back(&ControlScheme::Aim);
+    else 
+        vec.push_back(&ControlScheme::MouseRotate);
+
+}
+
+void Player1::SetPlayerID(InputHandler::Player id) {
+    mNode->GetComponent<Component::Controller>()->playerID = id;
+    mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = id;
+    mRightSpawnNode->GetComponent<Component::Controller>()->playerID = id;
 }

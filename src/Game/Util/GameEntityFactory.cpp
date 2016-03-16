@@ -195,13 +195,45 @@ Entity* GameEntityFactory::CreateCrashSite2() {
 
 }
 
+Entity* GameEntityFactory::CreateGlowingStone() {
+
+    Entity* stone = mScene->CreateEntity();
+    stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
+    stone->AddComponent<Component::Material>()->SetDiffuse("Resources/stone_02_diff.png");
+    stone->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    stone->GetComponent<Component::Material>()->SetGlow("Resources/stone_02_glow.png");
+    stone->AddComponent<Component::Transform>()->scale *= 0.3f;
+
+    Component::ParticleEmitter* emitter = stone->AddComponent<Component::ParticleEmitter>();
+    emitter->emitterType = Component::ParticleEmitter::CUBOID;
+    emitter->size = glm::vec3(3.f, 3.f, 3.f);
+    emitter->maxEmitTime = 1.2f;
+    emitter->minEmitTime = 0.8f;
+    emitter->timeToNext = emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+    emitter->lifetime = 5.0;
+    emitter->particleType.textureIndex = Component::ParticleEmitter::DUST;
+    emitter->particleType.minLifetime = 2.f;
+    emitter->particleType.maxLifetime = 3.f;
+    emitter->particleType.minVelocity = glm::vec3(-.6f, 1.f, -.6f);
+    emitter->particleType.maxVelocity = glm::vec3(.6f, 2.f, .6f);
+    emitter->particleType.minSize = glm::vec2(.2f, .2f) * 2.f;
+    emitter->particleType.maxSize = glm::vec2(.4f, .4f) * 2.f;
+    emitter->particleType.uniformScaling = true;
+    emitter->particleType.color = glm::normalize(glm::vec3(109.f, 242.f, 207.f));
+    emitter->particleType.startAlpha = 1.f;
+    emitter->particleType.midAlpha = 1.f;
+    emitter->particleType.endAlpha = 0.f;
+
+    return stone;
+
+}
+
 Entity* GameEntityFactory::CreateStone() {
 
     Entity* stone = mScene->CreateEntity();
     stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
     stone->AddComponent<Component::Material>()->SetDiffuse("Resources/DefaultGray.png");
     stone->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
-    stone->GetComponent<Component::Material>()->SetGlow("Resources/stone_01_glow.png");
     stone->AddComponent<Component::Transform>()->scale *= 0.3f;
 
     return stone;
@@ -211,10 +243,23 @@ Entity* GameEntityFactory::CreateStone() {
 Entity* GameEntityFactory::CreateFallenPillar() {
 
     Entity* pillar = mScene->CreateEntity();
-    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/pillar.obj");
-    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/pillar_diff.png");
-    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
-    pillar->GetComponent<Component::Material>()->SetGlow("Resources/pillar_glow.png");
+    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/Pillar2.obj");
+    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/Pillar_Albedo.png");
+    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/Pillar_NM.png");
+    pillar->GetComponent<Component::Material>()->SetGlow("Resources/Pillar_Glow2.png");
+    pillar->AddComponent<Component::Transform>();
+
+    return pillar;
+
+}
+
+Entity* GameEntityFactory::CreateBrokenFallenPillar() {
+
+    Entity* pillar = mScene->CreateEntity();
+    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/pillar_bot.obj");
+    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/Pillar_Albedo.png");
+    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/Pillar_NM.png");
+    pillar->GetComponent<Component::Material>()->SetGlow("Resources/Pillar_Glow2.png");
     pillar->AddComponent<Component::Transform>();
 
     return pillar;
@@ -290,7 +335,7 @@ Bullet* GameEntityFactory::CreatePlayerBullet(const glm::vec3& position, const g
     gameObject->node->GetComponent<Component::Transform>()->position = position;
     gameObject->node->GetComponent<Component::Physics>()->velocity = direction;
     gameObject->node->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
-    gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = gameObject->node->GetComponent<Component::LifeTime>()->initialLifeTime = 1.0f;
+    gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = gameObject->node->GetComponent<Component::LifeTime>()->initialLifeTime = 1.3f;
     gameObject->node->GetComponent<Component::Damage>()->faction = faction;
     gameObject->node->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
     gameObject->lightIntensity = 0.3f;

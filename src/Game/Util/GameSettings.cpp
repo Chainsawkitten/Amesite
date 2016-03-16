@@ -18,6 +18,8 @@ GameSettings::GameSettings() {
     AddLongSetting("Target FPS", "Graphics", "Target FPS", 60);
     AddBoolSetting("VSync", "Graphics", "VSync", false);
     AddBoolSetting("FXAA", "Graphics", "FXAA", false);
+    AddBoolSetting("Reflections", "Graphics", "Water Reflections", true);
+    AddBoolSetting("Refractions", "Graphics", "Water Refractions", true);
     AddDoubleSetting("Gamma", "Graphics", "Brightness", 2.2);
     
     AddDoubleSetting("Audio Volume", "Sound", "Volume", 1.0);
@@ -26,6 +28,8 @@ GameSettings::GameSettings() {
     AddDoubleSetting("Move Deadzone", "Controller", "Move Deadzone", 0.3);
     
     AddBoolSetting("Show Splash Screen", "Game", "Show Splash Screen", true);
+    AddBoolSetting("Player One Joystick Aim", "Game", "Player One Joystick Aim", false);
+    AddBoolSetting("Two Players", "Game", "Two Players", true);
 }
 
 GameSettings& GameSettings::GetInstance() {

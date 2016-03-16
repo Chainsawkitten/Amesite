@@ -67,6 +67,12 @@ namespace GameObject {
             /// Deactivates the player.
             virtual void Deactivate() = 0;
 
+            /// Rotates player.
+            /**
+             * @param yaw Angle to rotate player.
+             */
+            virtual void SetYaw(float yaw) = 0;
+
             /// The initial time the player has to been respawned (in seconds).
             /**
              * Default: 5.f

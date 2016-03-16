@@ -2,6 +2,8 @@
 
 #include "SuperPlayer.hpp"
 
+#include <util/Input.hpp>
+
 class Texture2D;
 
 namespace Geometry {
@@ -51,6 +53,21 @@ namespace GameObject {
             void Activate();
             /// Deactivates the player.
             void Deactivate();
+
+            /// Rotates player.
+            void SetYaw(float yaw);
+
+            /// Sets player1 aimed by mouse of not.
+            /**
+             * @param mouseAim aim with mouse if set true.
+             */
+            void SetJoystickAim(bool joystickAim);
+
+            /// Sets player id.
+            /**
+             * @param id Player id
+             */
+            void SetPlayerID(InputHandler::Player id);
 
         private:
             Geometry::OBJModel* mBodyModel;
@@ -131,7 +148,8 @@ namespace GameObject {
 
             void mUpdateFunction();
 
-            private:
-                float mRegainAmount;
+            float mRegainAmount;
+
+            float mCollisionRadius;
     };
 }

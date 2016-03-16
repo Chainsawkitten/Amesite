@@ -11,6 +11,7 @@ uniform mat4 projection;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat3 normalMatrix;
+uniform vec4 clippingPlane;
 
 out VertexData {
     vec3 normal;
@@ -19,8 +20,10 @@ out VertexData {
 } vertexOut;
 
 void main () {
-    gl_Position = projection * (view * (model * vec4(vertexPosition, 1.0)));
+    vec4 worldPosition = model * vec4(vertexPosition, 1.0);
+    gl_Position = projection * (view * (worldPosition));
     vertexOut.normal = normalize(normalMatrix * vertexNormal);
     vertexOut.tangent = vertexTangent;
     vertexOut.texCoords = vertexTexture;
+    gl_ClipDistance[0] = dot(worldPosition, clippingPlane);
 }

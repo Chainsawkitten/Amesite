@@ -29,4 +29,9 @@ class OptionsMenu : public SubMenu {
     private:
         void Fullscreen(std::string option);
         void FXAA(std::string option);
+        void TwoPlayers(std::string option);
+        void MouseAim(std::string option);
+        void WaterReflections(std::string option);
+        void WaterRefractions(std::string option);
+        void AudioVolume(std::string option);
 };
