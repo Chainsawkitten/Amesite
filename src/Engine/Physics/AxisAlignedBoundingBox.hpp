@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 
 namespace Physics {
+    class Frustum;
+    
     /// An axis-aligned bounding box.
     /**
      * Used for intersection testing.
@@ -29,5 +31,12 @@ namespace Physics {
              * @param maxVertex Max vertex.
              */
             AxisAlignedBoundingBox(const glm::vec3& dimensions = { 0.f, 0.f, 0.f }, const glm::vec3& origin = { 0.f, 0.f, 0.f }, const glm::vec3& minVertex = { 0.f, 0.f, 0.f }, const glm::vec3& maxVertex = { 0.f, 0.f, 0.f });
+            
+            /// Check collision between the axis-aligned bounding box and a frustum.
+            /**
+             * @param frustum The frustum to check collision against.
+             * @return Whether there was a collision.
+             */
+            bool Collide(const Frustum& frustum) const;
     };
 }
