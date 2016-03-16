@@ -19,6 +19,13 @@ namespace System {
 
             /// Destructor.
             ~ParticleRenderSystem();
+            
+            /// Update particle buffer.
+            /**
+             * Needs to be called before rendering (but only once a frame).
+             * @param scene The scene to render.
+             */
+            void UpdateBuffer(Scene& scene);
 
             /// Render
             /**
