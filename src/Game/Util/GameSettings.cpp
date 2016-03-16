@@ -18,6 +18,8 @@ GameSettings::GameSettings() {
     AddLongSetting("Target FPS", "Graphics", "Target FPS", 60);
     AddBoolSetting("VSync", "Graphics", "VSync", false);
     AddBoolSetting("FXAA", "Graphics", "FXAA", false);
+    AddBoolSetting("Reflections", "Graphics", "Water Reflections", true);
+    AddBoolSetting("Refractions", "Graphics", "Water Refractions", true);
     AddDoubleSetting("Gamma", "Graphics", "Brightness", 2.2);
     
     AddDoubleSetting("Audio Volume", "Sound", "Volume", 1.0);
