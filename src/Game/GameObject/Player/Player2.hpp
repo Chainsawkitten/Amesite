@@ -141,7 +141,8 @@ namespace GameObject {
 
         void mUpdateFunction();
 
-        private:
-            float mRegainAmount;
+        float mRegainAmount;
+
+        float mCollisionRadius;
     };
 }

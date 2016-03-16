@@ -31,6 +31,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_medium_damage.png");
     mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_heavy_damage.png");
     mDeadTexture = Resources().CreateTexture2DFromFile("Resources/player1_body_diff_dead.png");
+    mCollisionRadius = 10.f;
 
     mNode = CreateEntity();
     mNode->AddComponent<Component::Transform>()->scale *= 0.2f; //0.15f
@@ -46,7 +47,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     //Regain full health after 5 seconds.
     mNode->GetComponent<Component::Health>()->regainAmount = mRegainAmount = mNode->GetComponent<Component::Health>()->maxHealth / 5.f;
     mNode->GetComponent<Component::Health>()->faction = 0;
-    mNode->AddComponent<Component::Collider2DCircle>()->radius = 10.f;
+    mNode->AddComponent<Component::Collider2DCircle>()->radius = mCollisionRadius;
     mNode->AddComponent<Component::Animation>();
     Component::Animation::AnimationClip* idleNode = mNode->GetComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleNode->CreateKeyFrame(glm::vec3(0.1f, 0.f, 0.f), 0.f, 0.f, 0, 1.5f, false, true);
@@ -353,6 +354,7 @@ float Player1::GetHealth() {
 void Player1::Activate() {
 
     mActive = true;
+    mNode->AddComponent<Component::Collider2DCircle>()->radius = mCollisionRadius;
     mNode->GetComponent<Component::Controller>()->enabled = true;
     mLeftSpawnNode->GetComponent<Component::Controller>()->enabled = true;
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = true;
@@ -364,6 +366,7 @@ void Player1::Activate() {
 void Player1::Deactivate() {
 
     mActive = false;
+    mNode->KillComponent<Component::Collider2DCircle>();
     mNode->GetComponent<Component::Controller>()->enabled = false;
     mLeftSpawnNode->GetComponent<Component::Controller>()->enabled = false;
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = false;
@@ -442,6 +445,7 @@ void Player1::mUpdateFunction() {
         mBackEngineRight->GetComponent<Component::ParticleEmitter>()->enabled = true;
     } else {
         mState = DEAD;
+        
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 0.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 0.f, 0.f);
         mBody->GetComponent<Component::Material>()->diffuse = mDeadTexture;

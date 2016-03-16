@@ -31,6 +31,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_medium_damage.png");
     mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_heavy_damage.png");
     mDeadTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_dead.png");
+    mCollisionRadius = 10.f;
 
     mNode = CreateEntity();
     mNode->AddComponent<Component::Transform>()->scale *= 0.33f; //0.25f
@@ -46,7 +47,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     //Regain full health after 5 seconds.
     mNode->GetComponent<Component::Health>()->regainAmount = mRegainAmount = mNode->GetComponent<Component::Health>()->maxHealth / 5.f;
     mNode->GetComponent<Component::Health>()->faction = 0;
-    mNode->AddComponent<Component::Collider2DCircle>()->radius = 10.f;
+    mNode->AddComponent<Component::Collider2DCircle>()->radius = mCollisionRadius;
     mNode->AddComponent<Component::Animation>();
     Component::Animation::AnimationClip* idleNode = mNode->GetComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleNode->CreateKeyFrame(glm::vec3(0.1f, 0.f, 0.f), 0.f, 0.f, 0, 1.5f, false, true);
@@ -330,6 +331,7 @@ float Player2::GetHealth() {
 void Player2::Activate() {
 
     mActive = true;
+    mNode->AddComponent<Component::Collider2DCircle>()->radius = mCollisionRadius;
     mNode->GetComponent<Component::Controller>()->enabled = true;
     mLeftSpawnNode->GetComponent<Component::Controller>()->enabled = true;
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = true;
@@ -341,6 +343,7 @@ void Player2::Activate() {
 void Player2::Deactivate() {
 
     mActive = false;
+    mNode->KillComponent<Component::Collider2DCircle>();
     mNode->GetComponent<Component::Controller>()->enabled = false;
     mLeftSpawnNode->GetComponent<Component::Controller>()->enabled = false;
     mRightSpawnNode->GetComponent<Component::Controller>()->enabled = false;
