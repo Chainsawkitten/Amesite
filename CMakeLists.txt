@@ -144,6 +144,7 @@ set(RESOURCES
         assets/spawn/pillar/pillar.obj
         assets/spawn/pillar/Pillar_Albedo.png
         assets/spawn/pillar/Pillar_NM.png
+        assets/spawn/pillar/Pillar_Glow2.png
         assets/spawn/pillar/Pillar2.obj
         assets/spawn/portal/portal.obj
         assets/stones/stone_01_glow.png
