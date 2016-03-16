@@ -72,15 +72,16 @@ ParticleRenderSystem::~ParticleRenderSystem() {
     Resources().FreeTexture2D(mTextureAtlas);
     
     glDeleteBuffers(1, &mVertexBuffer);
-    
-    
 }
 
-void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2& screenSize, const glm::vec4& clippingPlane) {
+void ParticleRenderSystem::UpdateBuffer(Scene& scene) {
+    glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, scene.GetParticleCount() * sizeof(ParticleSystem::Particle), scene.GetParticles());
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void ParticleRenderSystem::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, const glm::vec4& clippingPlane) {
     if (scene.GetParticleCount() > 0) {
-        glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, scene.GetParticleCount()*sizeof(ParticleSystem::Particle), scene.GetParticles());
-        
         // Don't write to depth buffer.
         GLboolean depthWriting;
         glGetBooleanv(GL_DEPTH_WRITEMASK, &depthWriting);

@@ -33,4 +33,5 @@ class OptionsMenu : public SubMenu {
         void MouseAim(std::string option);
         void WaterReflections(std::string option);
         void WaterRefractions(std::string option);
+        void AudioVolume(std::string option);
 };
