@@ -77,7 +77,7 @@ class SubMenu {
          * This menu option can't be interacted with.
          * @param titleOption %Menu option to display as title.
          */
-        void SetTitleOption(MenuOption* titleOption);
+        void AddTitleOption(MenuOption* titleOption);
         
         /// Get the menu's font.
         /**

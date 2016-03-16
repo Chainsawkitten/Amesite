@@ -109,7 +109,7 @@ void SubMenu::AddMenuOption(SuperMenuOption* menuOption) {
     mMenuOptions.push_back(menuOption);
 }
 
-void SubMenu::SetTitleOption(MenuOption* titleOption) {
+void SubMenu::AddTitleOption(MenuOption* titleOption) {
     mTitleOption.push_back(titleOption);
 }
 
