@@ -316,6 +316,7 @@ void MainScene::Update(float deltaTime) {
 
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
+    mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize());
 
     if (mMenu.IsActive())
         mMenu.RenderSelected();
