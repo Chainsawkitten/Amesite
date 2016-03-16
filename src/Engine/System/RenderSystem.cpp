@@ -109,6 +109,6 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
         mDeferredLighting->Render(scene, camera, screenSize);
         
         // Render the particle system
-        particleRenderSystem.Render(scene, camera, screenSize);
+        particleRenderSystem.Render(scene, camera, screenSize, clippingPlane);
     }
 }

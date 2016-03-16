@@ -76,7 +76,7 @@ ParticleRenderSystem::~ParticleRenderSystem() {
     
 }
 
-void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2& screenSize) {
+void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2& screenSize, const glm::vec4& clippingPlane) {
     if (scene.GetParticleCount() > 0) {
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         glBufferSubData(GL_ARRAY_BUFFER, 0, scene.GetParticleCount()*sizeof(ParticleSystem::Particle), scene.GetParticles());
@@ -106,11 +106,13 @@ void ParticleRenderSystem::Render(Scene & scene, Entity* camera, const glm::vec2
         glm::mat4 view = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
         glm::vec3 up(glm::inverse(camera->GetComponent<Component::Transform>()->worldOrientationMatrix)* glm::vec4(0, 1, 0, 1));
         
-        // Ugly hardcoded resolution.
         glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraPosition"), 1, &camera->GetComponent<Component::Transform>()->GetWorldPosition()[0]);
         glUniform3fv(mParticleShaderProgram->GetUniformLocation("cameraUp"), 1, &up[0]);
         glUniformMatrix4fv(mParticleShaderProgram->GetUniformLocation("viewProjectionMatrix"), 1, GL_FALSE, &(camera->GetComponent<Component::Lens>()->GetProjection(screenSize) * view)[0][0]);
         glUniform1fv(mParticleShaderProgram->GetUniformLocation("textureAtlasRows"), 1, &mTextureAtlasNumRows);
+        
+        // Clipping plane.
+        glUniform4fv(mParticleShaderProgram->GetUniformLocation("clippingPlane"), 1, &clippingPlane[0]);
         
         // Draw the triangles
         glDrawArrays(GL_POINTS, 0, scene.GetParticleCount());
