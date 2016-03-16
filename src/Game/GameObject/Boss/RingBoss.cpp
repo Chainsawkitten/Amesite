@@ -143,7 +143,7 @@ void GameObject::RingBoss::FireBullets() {
     float healthFraction = ((maxHealth - health) / maxHealth);
     float lifeTimeFraction = 3.f;
     float size = 5.f + healthFraction * 4.f;
-    float speed = 10.f + healthFraction * 5.f;
+    float speed = 10.f + healthFraction * 30.f;
 
     body->GetComponent<Component::Spawner>()->delay = mMaxSpawnerDelay - healthFraction * .6f;
 
@@ -175,8 +175,8 @@ void RingBoss::CreateRingPart(Entity* entity, glm::vec3 position) {
     Component::RelativeTransform* transform = entity->AddComponent<Component::RelativeTransform>();
     transform->parentEntity = ring.node;
     transform->position = position;
-    entity->AddComponent<Component::Collider2DCircle>()->radius = 5.f;
-    entity->AddComponent<Component::Reflect>()->faction = 1.f;
+    //entity->AddComponent<Component::Collider2DCircle>()->radius = 5.f;
+    //entity->AddComponent<Component::Reflect>()->faction = 1.f;
     entity->AddComponent<Component::Damage>()->faction = 1.f;
     entity->GetComponent<Component::Damage>()->removeOnImpact = false;
 }
