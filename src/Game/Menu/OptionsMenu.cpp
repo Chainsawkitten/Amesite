@@ -21,16 +21,24 @@ OptionsMenu::OptionsMenu(Menu* parentMenu) : SubMenu() {
     menuSwitch->callback = std::bind(&OptionsMenu::Fullscreen, this, std::placeholders::_1);
     AddMenuOption(menuSwitch);
 
-    menuSwitch = new MenuSwitch(GetFont(), "FXAA", options, glm::vec3(0.f, 0.75f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    menuSwitch = new MenuSwitch(GetFont(), "FXAA", options, glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::FXAA, this, std::placeholders::_1);
     AddMenuOption(menuSwitch);
     
-    menuSwitch = new MenuSwitch(GetFont(), "Two Players", options, glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    menuSwitch = new MenuSwitch(GetFont(), "Two Players", options, glm::vec3(0.f, 0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::TwoPlayers, this, std::placeholders::_1);
     AddMenuOption(menuSwitch);
     
-    menuSwitch = new MenuSwitch(GetFont(), "Player One Joystick Aim", options, glm::vec3(0.f, -0.75f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    menuSwitch = new MenuSwitch(GetFont(), "Player One Joystick Aim", options, glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::MouseAim, this, std::placeholders::_1);
+    AddMenuOption(menuSwitch);
+    
+    menuSwitch = new MenuSwitch(GetFont(), "Water Reflections", options, glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    menuSwitch->callback = std::bind(&OptionsMenu::WaterReflections, this, std::placeholders::_1);
+    AddMenuOption(menuSwitch);
+    
+    menuSwitch = new MenuSwitch(GetFont(), "Water Refractions", options, glm::vec3(0.f, -1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    menuSwitch->callback = std::bind(&OptionsMenu::WaterRefractions, this, std::placeholders::_1);
     AddMenuOption(menuSwitch);
 
     MenuOption* menuOption = new MenuOption(GetFont(), "BACK", glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
@@ -72,4 +80,12 @@ void OptionsMenu::TwoPlayers(std::string option) {
 void OptionsMenu::MouseAim (std::string option) {
     GameSettings::GetInstance().SetBool("Player One Joystick Aim", option == "On");
     static_cast<GameObject::Player1*>(HubInstance().mPlayers[0])->SetJoystickAim(option == "On");
+}
+
+void OptionsMenu::WaterReflections(std::string option) {
+    GameSettings::GetInstance().SetBool("Reflections", option == "On");
+}
+
+void OptionsMenu::WaterRefractions(std::string option) {
+    GameSettings::GetInstance().SetBool("Refractions", option == "On");
 }
