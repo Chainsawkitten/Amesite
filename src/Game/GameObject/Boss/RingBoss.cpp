@@ -124,4 +124,32 @@ void RingBoss::Deactivate() {
 
 void RingBoss::mUpdateFunction() {
     SuperBoss::mUpdateFunction();
+    if (Active()) {
+        Component::Transform* transformComponent = node->GetComponent<Component::Transform>();
+        float minimumDistance = std::numeric_limits<float>().max();
+        glm::vec3 targetPlayerPosition;
+
+        glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
+        for (auto& player : HubInstance().mPlayers) {
+            if (player->Active()) {
+                float distanceToPlayer = glm::distance(player->GetPosition(), transformWorldPosition);
+                if (distanceToPlayer < minimumDistance) {
+                    minimumDistance = distanceToPlayer;
+                    targetPlayerPosition = player->GetPosition();
+                }
+            }
+        }
+
+        glm::vec3 targetDirection = targetPlayerPosition - transformWorldPosition;
+        if (glm::length(targetDirection) > 0.001f) {
+            Component::Physics* physics = ring.node->GetComponent<Component::Physics>();
+            glm::vec3 worldDirection = transformComponent->GetWorldDirection();
+            float angle = glm::degrees(glm::acos(glm::dot(glm::normalize(targetDirection), worldDirection)));
+            if (glm::cross(glm::normalize(targetDirection), worldDirection).y > 0.f)
+                angle = -glm::min(angle / 360.f * 10.f, 0.2f);
+            else
+                angle = glm::min(angle / 360.f * 10.f, 0.2f);
+            physics->angularVelocity.y = angle;
+        }
+    }
 }
