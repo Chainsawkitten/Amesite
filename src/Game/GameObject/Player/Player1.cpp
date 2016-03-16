@@ -39,8 +39,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
-    mJoystickAim = true;
-    mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
+    mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
     mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     mNode->AddComponent<Component::Health>()->removeOnLowHealth = false;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth = 30.f;
@@ -132,7 +131,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mLeftSpawnNode->AddComponent<Component::Animation>();
     mLeftSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
     mLeftSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
-    mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
+    mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
     Component::SoundSource* sound = mLeftSpawnNode->AddComponent<Component::SoundSource>();
     mShootSound = Resources().CreateSound("Resources/Laser.ogg");
     sound->soundBuffer = mShootSound;
@@ -160,7 +159,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mRightSpawnNode->AddComponent<Component::Animation>();
     mRightSpawnNode->AddComponent<Component::Spawner>()->delay = 0.3f;
     mRightSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
-    mRightSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
+    mRightSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
 
     Entity* pointLight;
     // Engine
@@ -510,19 +509,18 @@ void Player1::SetYaw(float yaw) {
 }
 
 void Player1::SetJoystickAim(bool joystickAim) {
-    if (joystickAim != mJoystickAim) {
-        std::vector<void(*)(Component::Controller* controller, float deltaTime)>& vec = mNode->GetComponent<Component::Controller>()->controlSchemes;
-        if (joystickAim) {
-            // remove mouse
-            vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::MouseRotate), vec.end());
-            // add aim
-            vec.push_back(&ControlScheme::Aim);
-        } else {
-            // remove aim
-            vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::Aim), vec.end());
-            // add mouse
-            vec.push_back(&ControlScheme::MouseRotate);
-        }
-        mJoystickAim = joystickAim;
-    }
+    std::vector<void(*)(Component::Controller* controller, float deltaTime)>& vec = mNode->GetComponent<Component::Controller>()->controlSchemes;
+    vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::MouseRotate), vec.end());
+    vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::Aim), vec.end());
+    if (joystickAim)
+        vec.push_back(&ControlScheme::Aim);
+    else 
+        vec.push_back(&ControlScheme::MouseRotate);
+
+}
+
+void Player1::SetPlayerID(InputHandler::Player id) {
+    mNode->GetComponent<Component::Controller>()->playerID = id;
+    mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = id;
+    mRightSpawnNode->GetComponent<Component::Controller>()->playerID = id;
 }
