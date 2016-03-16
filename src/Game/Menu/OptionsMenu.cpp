@@ -40,8 +40,24 @@ OptionsMenu::OptionsMenu(Menu* parentMenu) : SubMenu() {
     menuSwitch = new MenuSwitch(GetFont(), "Water Refractions", options, glm::vec3(0.f, -1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::WaterRefractions, this, std::placeholders::_1);
     AddMenuOption(menuSwitch);
+    
+    std::vector<std::string> volumeOptions;
+    volumeOptions.push_back("0");
+    volumeOptions.push_back("0.1");
+    volumeOptions.push_back("0.2");
+    volumeOptions.push_back("0.3");
+    volumeOptions.push_back("0.4");
+    volumeOptions.push_back("0.5");
+    volumeOptions.push_back("0.6");
+    volumeOptions.push_back("0.7");
+    volumeOptions.push_back("0.8");
+    volumeOptions.push_back("0.9");
+    volumeOptions.push_back("1");
+    menuSwitch = new MenuSwitch(GetFont(), "Volume", volumeOptions, glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    menuSwitch->callback = std::bind(&OptionsMenu::AudioVolume, this, std::placeholders::_1);
+    AddMenuOption(menuSwitch);
 
-    MenuOption* menuOption = new MenuOption(GetFont(), "BACK", glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
+    MenuOption* menuOption = new MenuOption(GetFont(), "BACK", glm::vec3(0.f, -2.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuOption->callback = std::bind(&Menu::Transition, parentMenu, 0);
     AddMenuOption(menuOption);
     
@@ -88,4 +104,8 @@ void OptionsMenu::WaterReflections(std::string option) {
 
 void OptionsMenu::WaterRefractions(std::string option) {
     GameSettings::GetInstance().SetBool("Refractions", option == "On");
+}
+
+void OptionsMenu::AudioVolume(std::string option) {
+    GameSettings::GetInstance().SetDouble("Audio Volume", std::stod(option));
 }
