@@ -84,7 +84,7 @@ void RingBoss::CreateRing() {
     transform->scale *= 1.8f;
     ring.node->AddComponent<Component::Mesh>()->geometry = mRingModel = Resources().CreateOBJModel("Resources/ring_body.obj");
     ring.node->AddComponent<Component::Material>();
-    ring.node->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::LookAtClosestPlayer);
+    //ring.node->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::LookAtClosestPlayer);
     ring.node->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
 
     ring.midFront = CreateEntity();
@@ -194,12 +194,42 @@ void RingBoss::Deactivate() {
 
 void RingBoss::mUpdateFunction() {
     SuperBoss::mUpdateFunction();
-    Component::Spawner* spawner = body->GetComponent<Component::Spawner>();
+    if (Active()) {
+        // Shoot
+        Component::Spawner* spawner = body->GetComponent<Component::Spawner>();
+        if (spawner != nullptr) {
+            if (spawner->timeSinceSpawn >= spawner->delay) {
+                spawner->timeSinceSpawn = 0.0f;
+                FireBullets();
+            }
+        }
 
-    if (spawner != nullptr) {
-        if (spawner->timeSinceSpawn >= spawner->delay) {
-            spawner->timeSinceSpawn = 0.0f;
-            FireBullets();
+        // Rotate
+        Component::Transform* transformComponent = ring.node->GetComponent<Component::Transform>();
+        float minimumDistance = std::numeric_limits<float>().max();
+        glm::vec3 targetPlayerPosition;
+
+        glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
+        for (auto& player : HubInstance().mPlayers) {
+            if (player->Active()) {
+                float distanceToPlayer = glm::distance(player->GetPosition(), transformWorldPosition);
+                if (distanceToPlayer < minimumDistance) {
+                    minimumDistance = distanceToPlayer;
+                    targetPlayerPosition = player->GetPosition();
+                }
+            }
+        }
+
+        glm::vec3 targetDirection = targetPlayerPosition - transformWorldPosition;
+        if (glm::length(targetDirection) > 0.001f) {
+            Component::Physics* physics = ring.node->GetComponent<Component::Physics>();
+            glm::vec3 worldDirection = transformComponent->GetWorldDirection();
+            float angle = glm::degrees(glm::acos(glm::dot(glm::normalize(targetDirection), worldDirection)));
+            if (glm::cross(glm::normalize(targetDirection), worldDirection).y > 0.f)
+                angle = -glm::min(angle / 360.f * 5.f, 0.2f);
+            else
+                angle = glm::min(angle / 360.f * 5.f, 0.2f);
+            physics->angularVelocity.y = angle;
         }
     }
 }

@@ -196,22 +196,11 @@ void ControlScheme::LookAtClosestPlayer(Component::Controller* controller, float
 
     glm::vec3 targetDirection = targetPlayerPosition - transformWorldPosition;
     if (glm::length(targetDirection) > 0.001f) {
-        Component::Physics* physics = controller->entity->GetComponent<Component::Physics>();
-        if (physics != nullptr) {
-            glm::vec3 worldDirection = transformComponent->GetWorldDirection();
-            float angle = glm::degrees(glm::acos(glm::dot(glm::normalize(targetDirection), worldDirection)));
-            if (glm::cross(glm::normalize(targetDirection), worldDirection).y > 0.f)
-                angle = -glm::min((angle / 360.f) * 5.f, 0.2f);
-            else
-                angle = glm::min((angle / 360.f )* 5.f, 0.2f);
-            physics->angularVelocity.y = angle;
-        } else {
-            float angle = glm::degrees(glm::acos(glm::dot(glm::normalize(targetDirection), glm::vec3(0.f, 0.f, 1.f))));
-            if (targetDirection.x > 0.f)
-                transformComponent->yaw = angle;
-            else
-                transformComponent->yaw = 360.f - angle;
-        }
+        float angle = glm::degrees(glm::acos(glm::dot(glm::normalize(targetDirection), glm::vec3(0.f, 0.f, 1.f))));
+        if (targetDirection.x > 0.f)
+            transformComponent->yaw = angle;
+        else
+            transformComponent->yaw = 360.f - angle;
     }
 }
 

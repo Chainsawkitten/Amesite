@@ -351,7 +351,8 @@ void MainScene::Update(float deltaTime) {
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
-    mWater.Render();
+    if (GameSettings::GetInstance().GetBool("Refractions") || GameSettings::GetInstance().GetBool("Reflections"))
+        mWater.Render();
     
     if (mMenu.IsActive())
         mMenu.RenderSelected();
