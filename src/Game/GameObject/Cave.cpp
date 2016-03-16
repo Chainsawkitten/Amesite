@@ -214,8 +214,8 @@ Cave::~Cave() {
 
 void Cave::PlaceScenery(Entity* scenery, bool rotate) {
 
-    float x = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
-    float z = ((rand() % 1000) / 1000.f) * scaleFactor * 90;
+    float x = ((rand() % 1000) / 1000.f) * scaleFactor * mHeight;
+    float z = ((rand() % 1000) / 1000.f) * scaleFactor * mHeight;
     glm::vec3 point = glm::vec3(x, GetTerrainHeight(x, z) - 5.f, z);
     glm::vec3 center = glm::vec3(scaleFactor*(static_cast<float>(mWidth) / 2.f) + 1.f, 0.f, scaleFactor*(static_cast<float>(mHeight) / 2.f) + 1.f);
     float distance = glm::distance(center, point);
@@ -269,7 +269,7 @@ glm::vec3 Cave::PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTim
 
 glm::vec3 Cave::CellCollide(float xPos, float yPos, int x, int y) {
 
-    if (x >= 0 && y >= 0 && x < 89 && y < 89)
+    if (x >= 0 && y >= 0 && x < mHeight && y < mWidth)
         switch (this->mTypeMap[x][y]) {
 
         case 1:
@@ -486,6 +486,27 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 
 }
 
+bool Cave::WallIntersect(Entity* entity, float deltaTime) {
+
+    Component::Transform* transform = entity->GetComponent<Component::Transform>();
+    Component::Physics* physics = entity->GetComponent<Component::Physics>();
+
+    glm::vec3 velocity = physics->velocity;
+    velocity += physics->acceleration * deltaTime;
+    velocity -= physics->velocity * physics->velocityDragFactor * deltaTime;
+
+    if (glm::length(velocity) > physics->maxVelocity)
+        velocity = glm::normalize(velocity) * physics->maxVelocity;
+
+    glm::vec3 n;
+
+    n = PointCollide(transform->CalculateWorldPosition(), velocity, deltaTime);
+
+    if (n != glm::vec3(0, -1, 0))
+        return true;
+
+}
+
 bool Cave::GridCollide(glm::vec3 point) {
 
     unsigned int x = glm::floor(point.x / scaleFactor);
@@ -494,7 +515,7 @@ bool Cave::GridCollide(glm::vec3 point) {
     float xPos = point.x / scaleFactor - x;
     float zPos = point.z / scaleFactor - z;
     
-    if (x >= 0 && z >= 0 && x < 89 && z < 89) {
+    if (x >= 0 && z >= 0 && x < mHeight - 1 && z < mWidth - 1) {
 
         switch (this->mTypeMap[x][z]) {
 

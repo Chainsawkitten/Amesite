@@ -196,7 +196,7 @@ MainScene::MainScene() {
     // Push boss positions here to avoid spawning enemies.
     mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
     
-    mWater.SetTextureRepeat(glm::vec2(50.f, 50.f));
+    mWater.SetTextureRepeat(glm::vec2(100.f, 100.f));
     mWater.SetPosition(glm::vec3(450.f, -5.f, 450.f));
 }
 
@@ -401,7 +401,7 @@ void MainScene::Update(float deltaTime) {
             }
         }
     }
-    
+
     if (mTargetMix > mMix)
         mMix += deltaTime;
     else if (mTargetMix < mMix)

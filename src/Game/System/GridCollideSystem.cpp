@@ -20,7 +20,13 @@ GridCollideSystem::~GridCollideSystem() {
 
 void GridCollideSystem::Update(Scene& scene, float deltaTime, GameObject::Cave& cave) {
     std::vector<Component::GridCollide*> gridCollideVector = scene.GetAll<Component::GridCollide>();
-    for (auto& gridCollideComponent : gridCollideVector)
+    for (auto& gridCollideComponent : gridCollideVector) 
+    {
+        //bool collide = false;
+        //if (gridCollideComponent->removeOnImpact)
+        //    collide = cave.WallIntersect(gridCollideComponent->entity, deltaTime);
+        //else collide = cave.GridCollide(gridCollideComponent->entity, deltaTime);
+
         if (cave.GridCollide(gridCollideComponent->entity, deltaTime)) {
             gridCollideComponent->hasCollided = true;
             Component::Explode* explode = gridCollideComponent->entity->GetComponent<Component::Explode>();
@@ -33,4 +39,7 @@ void GridCollideSystem::Update(Scene& scene, float deltaTime, GameObject::Cave& 
                     gridCollideComponent->entity->Kill();
             }
         }
+
+    }
+
 }
