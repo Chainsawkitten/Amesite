@@ -31,4 +31,6 @@ class OptionsMenu : public SubMenu {
         void FXAA(std::string option);
         void TwoPlayers(std::string option);
         void MouseAim(std::string option);
+        void WaterReflections(std::string option);
+        void WaterRefractions(std::string option);
 };
