@@ -53,7 +53,7 @@ SpinBoss::SpinBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Material>()->glow = mReflectTexture;
     body->AddComponent<Component::Reflect>();
     body->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
-    body->AddComponent<Component::Explode>()->size = 60.f;
+    body->AddComponent<Component::Explode>()->size = 120.f;
     body->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     body->GetComponent<Component::Explode>()->lifeTime = 1.5f;
     body->GetComponent<Component::Explode>()->offset.y = 5.0f;
@@ -109,7 +109,7 @@ void SpinBoss::CreateArm(Entity* entity) {
     entity->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
     entity->AddComponent<Component::Spawner>()->faction = 1;
     entity->GetComponent<Component::Spawner>()->delay = mCurrentSpawnerDelay;
-    entity->AddComponent<Component::Explode>()->size = 30.f;
+    entity->AddComponent<Component::Explode>()->size = 120.f;
     entity->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::FIRE;
     entity->GetComponent<Component::Explode>()->lifeTime = 0.5f;
     entity->GetComponent<Component::Explode>()->offset.y = 5.0f;
@@ -154,7 +154,6 @@ void SpinBoss::FireBullet(glm::vec3 bossPos, glm::vec3 armPos) {
 
     bullet->node->KillComponent<Component::PointLight>();
     bullet->node->GetComponent<Component::Transform>()->scale *= mBulletSize;
-    glm::vec3 velocity = bullet->node->GetComponent<Component::Transform>()->GetWorldDirection();
     bullet->node->GetComponent<Component::Physics>()->velocity = speed * (armPos - bossPos);
     bullet->node->GetComponent<Component::Physics>()->maxVelocity = 1.5f * glm::length(bullet->node->GetComponent<Component::Physics>()->velocity);
     bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize = glm::vec2(1.f, 1.f) * mBulletSize;

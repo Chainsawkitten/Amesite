@@ -107,9 +107,6 @@ class MainScene : public Scene {
         // Particle Render system.
         System::ParticleRenderSystem mParticleRenderSystem;
 
-        // Vector containing players
-        std::vector<GameObject::SuperPlayer*> mPlayers;
-
         // Bosses
         std::vector<GameObject::SuperBoss*> mBossVector;
 
