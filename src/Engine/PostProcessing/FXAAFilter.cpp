@@ -12,6 +12,8 @@ FXAAFilter::FXAAFilter() {
     mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
     Resources().FreeShader(vertexShader);
     Resources().FreeShader(fragmentShader);
+    
+    mBrightness = 2.2f;
 }
 
 FXAAFilter::~FXAAFilter() {
@@ -24,8 +26,13 @@ ShaderProgram* FXAAFilter::GetShaderProgram() const {
 
 void FXAAFilter::SetUniforms() {
     glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &mScreenSize[0]);
+    glUniform1f(mShaderProgram->GetUniformLocation("brightness"), mBrightness);
 }
 
 void FXAAFilter::SetScreenSize(const glm::vec2& screenSize) {
     mScreenSize = screenSize;
+}
+
+void FXAAFilter::SetBrightness(float brightness) {
+    mBrightness = brightness;
 }

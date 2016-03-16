@@ -154,7 +154,6 @@ void SpinBoss::FireBullet(glm::vec3 bossPos, glm::vec3 armPos) {
 
     bullet->node->KillComponent<Component::PointLight>();
     bullet->node->GetComponent<Component::Transform>()->scale *= mBulletSize;
-    glm::vec3 velocity = bullet->node->GetComponent<Component::Transform>()->GetWorldDirection();
     bullet->node->GetComponent<Component::Physics>()->velocity = speed * (armPos - bossPos);
     bullet->node->GetComponent<Component::Physics>()->maxVelocity = 1.5f * glm::length(bullet->node->GetComponent<Component::Physics>()->velocity);
     bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize = glm::vec2(1.f, 1.f) * mBulletSize;
