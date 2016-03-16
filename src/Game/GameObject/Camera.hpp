@@ -30,7 +30,7 @@ namespace GameObject {
              * @param bosses Vector of SuperBosses which the camera will be relative to.
              * @param deltaTime Time since last frame (in seconds).
              */
-            void UpdateRelativePosition(const std::vector<GameObject::SuperPlayer*>& players, const std::vector<GameObject::SuperBoss*>& bosses, float deltaTime);
+            void UpdateRelativePosition(const std::vector<GameObject::SuperBoss*>& bosses, float deltaTime);
 
             /// Body of camera
             Entity* body;

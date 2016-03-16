@@ -78,13 +78,13 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
-    
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
-    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
-    
+
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
+
     // Music
     mCalmSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
     alGenSources(1, &mCalmSource);
@@ -144,11 +144,12 @@ MainScene::MainScene() {
     
     // Create players 
     Player1* player1 = GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f));
-    Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX - 1.f, 0.f, playerStartZ - 1.f));
-    mPlayers.push_back(player1);
-    mPlayers.push_back(player2);
+    player1->SetJoystickAim(GameSettings::GetInstance().GetBool("Player One Joystick Aim"));
     HubInstance().mPlayers.push_back(player1);
+    Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX + 7.f, 0.f, playerStartZ + 6.f));
+    player2->SetYaw(-90);
     HubInstance().mPlayers.push_back(player2);
+    HubInstance().SetPlayer2State(GameSettings::GetInstance().GetBool("Two Players"));
     
     // Create bosses and pillars
     mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
@@ -174,11 +175,6 @@ MainScene::MainScene() {
     mBossCounter = mBossVector.size();
     
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
-    
-    // Add players to checkpoint system.
-    for (auto& player : mPlayers) {
-        mCheckpointSystem.AddPlayer(player);
-    }
     
     // Directional light.
     //    Entity* dirLight = CreateEntity();
@@ -226,8 +222,8 @@ void MainScene::Update(float deltaTime) {
         
         // ControllerSystem
         mControllerSystem.Update(*this, deltaTime);
-        
-        for (auto player : mPlayers) {
+
+        for (auto player : HubInstance().mPlayers) {
             mCave->GridCollide(player->GetNodeEntity(), deltaTime);
             if (player->GetHealth() < 0.01f && player->Active()) {
                 player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
@@ -259,8 +255,13 @@ void MainScene::Update(float deltaTime) {
         mCollisionSystem.Update(*this);
         
         // Update enemy spawning
+<<<<<<< HEAD
+        mEnemySpawnerSystem.Update(*this, deltaTime, mCave, mNoSpawnRooms);
+
+=======
         mEnemySpawnerSystem.Update(*this, deltaTime, mCave, &mPlayers, mNoSpawnRooms);
         
+>>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
         // Check grid collisions.
         mGridCollideSystem.Update(*this, deltaTime, *mCave);
         
@@ -288,8 +289,13 @@ void MainScene::Update(float deltaTime) {
     cameraTransform->yaw = 0.f;
     cameraTransform->pitch = 60.f;
     cameraTransform->roll = 0.f;
+<<<<<<< HEAD
+    mMainCamera->UpdateRelativePosition(mBossVector, deltaTime);
+
+=======
     mMainCamera->UpdateRelativePosition(mPlayers, mBossVector, deltaTime);
     
+>>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
     if (!mMenu.IsActive()) {
         //If all players are disabled, respawn them.
         mCheckpointSystem.Update(deltaTime);
@@ -315,6 +321,10 @@ void MainScene::Update(float deltaTime) {
     }
     
     if (mMenu.IsActive())
+<<<<<<< HEAD
+        mMenu.Update(HubInstance().mPlayers[0], deltaTime);
+
+=======
         mMenu.Update(mPlayers[0], deltaTime);
     
     // Water.
@@ -340,6 +350,7 @@ void MainScene::Update(float deltaTime) {
         cameraTransform->UpdateModelMatrix();
     }
     
+>>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
     
@@ -347,6 +358,13 @@ void MainScene::Update(float deltaTime) {
     
     if (mMenu.IsActive())
         mMenu.RenderSelected();
+    
+    // Anti-aliasing.
+    if (GameSettings::GetInstance().GetBool("FXAA")) {
+        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+        mFxaaFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
+        mPostProcessing->ApplyFilter(mFxaaFilter);
+    }
     
     mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize());
     
@@ -360,12 +378,6 @@ void MainScene::Update(float deltaTime) {
         mPostProcessing->ApplyFilter(mGlowBlurFilter);
     }
     mPostProcessing->ApplyFilter(mGlowFilter);
-    
-    // Anti-aliasing.
-    if (GameSettings::GetInstance().GetBool("FXAA")) {
-        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
-        mPostProcessing->ApplyFilter(mFxaaFilter);
-    }
     
     // Gamma correction.
     mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
@@ -384,9 +396,15 @@ void MainScene::Update(float deltaTime) {
     for (GameObject::SuperEnemy* enemy : mEnemySpawnerSystem.GetEnemies()) {
         
         if (mCheckpointSystem.mRespawn) {
+<<<<<<< HEAD
+
+            if (glm::distance(enemy->node->GetComponent<Component::Transform>()->GetWorldPosition(), HubInstance().mPlayers[0]->GetPosition()) < 10) {
+
+=======
             
             if (glm::distance(enemy->node->GetComponent<Component::Transform>()->GetWorldPosition(), mPlayers[0]->GetPosition()) < 10) {
                 
+>>>>>>> 138939c44fa64ab75ab38d4ae3f5132c2ba194ff
                 enemy->node->GetComponent<Component::Health>()->health = 0;
                 
             }
