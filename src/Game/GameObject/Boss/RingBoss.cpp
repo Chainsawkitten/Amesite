@@ -146,9 +146,9 @@ void RingBoss::mUpdateFunction() {
             glm::vec3 worldDirection = transformComponent->GetWorldDirection();
             float angle = glm::degrees(glm::acos(glm::dot(glm::normalize(targetDirection), worldDirection)));
             if (glm::cross(glm::normalize(targetDirection), worldDirection).y > 0.f)
-                angle = -glm::min(angle / 360.f * 10.f, 0.2f);
+                angle = -glm::min(angle / 360.f * 3.f, 0.2f);
             else
-                angle = glm::min(angle / 360.f * 10.f, 0.2f);
+                angle = glm::min(angle / 360.f * 3.f, 0.2f);
             physics->angularVelocity.y = angle;
         }
     }
