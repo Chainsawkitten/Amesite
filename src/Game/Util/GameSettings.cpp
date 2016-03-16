@@ -26,6 +26,8 @@ GameSettings::GameSettings() {
     AddDoubleSetting("Move Deadzone", "Controller", "Move Deadzone", 0.3);
     
     AddBoolSetting("Show Splash Screen", "Game", "Show Splash Screen", true);
+    AddBoolSetting("Player One Joystick Aim", "Game", "Player One Joystick Aim", false);
+    AddBoolSetting("Two Players", "Game", "Two Players", true);
 }
 
 GameSettings& GameSettings::GetInstance() {

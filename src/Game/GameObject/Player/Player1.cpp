@@ -39,6 +39,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
+    mJoystickAim = true;
     mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     mNode->AddComponent<Component::Health>()->removeOnLowHealth = false;
@@ -335,7 +336,7 @@ Player1::~Player1() {
 }
 
 glm::vec3 Player1::GetPosition() {
-    return mNode->GetComponent<Component::Transform>()->GetWorldPosition();
+    return mNode->GetComponent<Component::Transform>()->position;
 }
 
 void Player1::SetPosition(glm::vec3 position) {
@@ -502,4 +503,26 @@ void Player1::mUpdateFunction() {
     mRightTurretBarrel.barrel[1]->GetComponent<Component::Transform>()->position.z = (0.5f * recoilFactor + 0.5f) * factor - factor; //[0.5,1]
     mRightTurretBarrel.barrel[0]->GetComponent<Component::Transform>()->position.z = (recoilFactor / 2.f) * factor - factor; //[0,0.5]
     mRightTurretBarrel.node->GetComponent<Component::Transform>()->roll = 180 * recoilFactor;
+}
+
+void Player1::SetYaw(float yaw) {
+    mNode->GetComponent<Component::Transform>()->yaw = yaw;
+}
+
+void Player1::SetJoystickAim(bool joystickAim) {
+    if (joystickAim != mJoystickAim) {
+        std::vector<void(*)(Component::Controller* controller, float deltaTime)>& vec = mNode->GetComponent<Component::Controller>()->controlSchemes;
+        if (joystickAim) {
+            // remove mouse
+            vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::MouseRotate), vec.end());
+            // add aim
+            vec.push_back(&ControlScheme::Aim);
+        } else {
+            // remove aim
+            vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::Aim), vec.end());
+            // add mouse
+            vec.push_back(&ControlScheme::MouseRotate);
+        }
+        mJoystickAim = joystickAim;
+    }
 }

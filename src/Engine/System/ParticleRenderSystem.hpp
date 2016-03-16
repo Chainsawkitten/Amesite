@@ -21,7 +21,13 @@ namespace System {
             ~ParticleRenderSystem();
 
             /// Render
-            void Render(Scene& scene, Entity* camera, const glm::vec2& screenSize);
+            /**
+             * @param scene %Scene containing particles to render.
+             * @param camera Camera through which to render.
+             * @param screenSize Size of the screen in pixels.
+             * @param clippingPlane Clipping plane.
+             */
+            void Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, const glm::vec4& clippingPlane = glm::vec4(0.f, 0.f, 0.f, 0.f));
 
         private:
             Shader* mParticleVertShader;
