@@ -33,10 +33,11 @@ using namespace GameObject;
 ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
 
     mOffsetAngle = 0;
+    mMaxSpawnerDelay = 2.f;
 
     node->AddComponent<Component::Transform>()->scale *= 0.7f;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&ShieldBoss::mUpdateFunction, this);
-    node->AddComponent<Component::Spawner>()->delay = 2.f;
+    node->AddComponent<Component::Spawner>()->delay = mMaxSpawnerDelay;
     node->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     node->GetComponent<Component::Physics>()->angularVelocity.y = 0.15f;
 
@@ -47,7 +48,7 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
     body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
     body->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
     body->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
-    body->AddComponent<Component::Explode>()->size = 30.f;
+    body->AddComponent<Component::Explode>()->size = 120.f;
     body->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
     body->GetComponent<Component::Explode>()->lifeTime = 1.5f;
     body->GetComponent<Component::Explode>()->offset.y = 5.0f;
@@ -55,7 +56,7 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
     body->AddComponent<Component::Health>()->removeOnLowHealth = false;
     body->GetComponent<Component::Health>()->faction = 1;
     body->GetComponent<Component::Health>()->maxCooldown = 10.f;
-    body->GetComponent<Component::Health>()->health = body->GetComponent<Component::Health>()->maxHealth = 100.f;
+    body->GetComponent<Component::Health>()->health = body->GetComponent<Component::Health>()->maxHealth = 300.f;
     body->GetComponent<Component::Health>()->regainAmount = body->GetComponent<Component::Health>()->health / 3.f;
     body->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     body->GetComponent<Component::Physics>()->angularVelocity.y = -0.1f;
@@ -131,26 +132,41 @@ void ShieldBoss::mUpdateFunction() {
 }
 
 void ShieldBoss::FireBullets() {
-    int nr = 15;
+    float maxHealth = body->GetComponent<Component::Health>()->maxHealth;
+    float health = body->GetComponent<Component::Health>()->health;
+    float healthFraction = ((maxHealth - health) / maxHealth);
+    float lifeTimeFraction = 3.f;
+
+    node->GetComponent<Component::Spawner>()->delay = mMaxSpawnerDelay - healthFraction*1.f;
+    int nr = 15 + healthFraction * 10.f;
     mOffsetAngle += 360.f / nr / 2.f;
     mOffsetAngle = mOffsetAngle % 360;
+
     for (int i = 0; i < nr; i++) {
         float angle = mOffsetAngle + i * 360.f / nr;
-        float size = 2.f;
-        float speed = 20.f;
+        float size = 3.f + healthFraction * 4.f;
+        float speed = 20.f + healthFraction * 10.f;
         GameObject::Bullet* bullet = GameEntityCreator().CreateEnemyBullet(GetPosition(), glm::vec3(0.f, 0.f, 0.f), 1);
+        bullet->node->KillComponent<Component::PointLight>();
         bullet->node->GetComponent<Component::Transform>()->scale *= size;
         bullet->node->GetComponent<Component::Transform>()->yaw = angle;
         bullet->node->GetComponent<Component::Physics>()->velocity = speed * bullet->node->GetComponent<Component::Transform>()->GetWorldDirection();
         bullet->node->GetComponent<Component::Physics>()->maxVelocity = 1.5f * glm::length(bullet->node->GetComponent<Component::Physics>()->velocity);
-        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
-        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
-        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minSize *= size;
-        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxSize *= size;
-        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= size;
-        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= size;
-        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= size;
-        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= size;
+
+        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.minSize = glm::vec2(1.f, 1.f) * size;
+        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.maxSize = glm::vec2(1.f, 1.f) * size;
+        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minSize = glm::vec2(1.f, 1.f) * size*0.8f;
+        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxSize = glm::vec2(1.f, 1.f) * size*0.8f;
+
+        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = Component::ParticleEmitter::DUST;
+        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.9f, 0.2f, 0.2f);
+        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.textureIndex = Component::ParticleEmitter::SMOKE;
+        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.color = glm::vec3(0.6f, 0.2f, 0.2f);
+
+        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= lifeTimeFraction;
+        bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= lifeTimeFraction;
+        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= lifeTimeFraction;
+        bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= lifeTimeFraction;
         bullet->node->GetComponent<Component::Damage>()->damageAmount = 9000.0000001f;
     }
 }
