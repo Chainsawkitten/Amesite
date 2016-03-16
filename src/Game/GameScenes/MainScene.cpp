@@ -323,7 +323,8 @@ void MainScene::Update(float deltaTime) {
     // Render refractions.
     if (GameSettings::GetInstance().GetBool("Refractions")) {
         mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionClippingPlane());
-        mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetRefractionClippingPlane());
+        // Don't render particle refractions as they're never below the water level.
+        //mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetRefractionClippingPlane());
     } else {
         mWater.GetRefractionTarget()->SetTarget();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
