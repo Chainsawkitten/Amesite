@@ -37,7 +37,7 @@ void Hub::SetPlayer2State(bool enable) {
     } else if (!enable && mDisabledPlayer == nullptr) {
         mDisabledPlayer = mPlayers[1];
         glm::vec3 position = mDisabledPlayer->GetPosition();
-        mDisabledPlayer->SetPosition(glm::vec3(position.x,-30.f, position.z));
+        mDisabledPlayer->SetPosition(glm::vec3(position.x, -30.f, position.z));
         mPlayers.erase(mPlayers.begin() + 1);
     }
 }

@@ -56,6 +56,7 @@
 #include "../GameObject/Pillar.hpp"
 #include "../GameObject/Enemy/SuperEnemy.hpp"
 
+#include <RenderTarget.hpp>
 #include "../Game.hpp"
 #include "WinScene.hpp"
 
@@ -175,7 +176,7 @@ MainScene::MainScene() {
     mBossCounter = mBossVector.size();
     
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
-
+    
     // Directional light.
     //    Entity* dirLight = CreateEntity();
     //    dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
@@ -256,7 +257,7 @@ void MainScene::Update(float deltaTime) {
         
         // Update enemy spawning
         mEnemySpawnerSystem.Update(*this, deltaTime, mCave, mNoSpawnRooms);
-
+        
         // Check grid collisions.
         mGridCollideSystem.Update(*this, deltaTime, *mCave);
         
@@ -284,9 +285,9 @@ void MainScene::Update(float deltaTime) {
     cameraTransform->yaw = 0.f;
     cameraTransform->pitch = 60.f;
     cameraTransform->roll = 0.f;
-
+    
     mMainCamera->UpdateRelativePosition(mBossVector, deltaTime);
-
+    
     if (!mMenu.IsActive()) {
         //If all players are disabled, respawn them.
         mCheckpointSystem.Update(deltaTime);
@@ -318,20 +319,32 @@ void MainScene::Update(float deltaTime) {
     mWater.Update(deltaTime, glm::vec3(1.f, 0.f, 0.f));
     
     // Render refractions.
-    mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionClippingPlane());
-    mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetRefractionClippingPlane());
+    if (GameSettings::GetInstance().GetBool("Refractions")) {
+        mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionClippingPlane());
+        mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetRefractionClippingPlane());
+    } else {
+        mWater.GetRefractionTarget()->SetTarget();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    }
     
     // Render reflections
-    /// @todo Don't hardcore camera inversion.
-    float distance = 2.f * (cameraTransform->position.y - mWater.GetPosition().y);
-    cameraTransform->position = cameraTransform->position - glm::vec3(0.f, distance, 0.f);
-    cameraTransform->pitch = -cameraTransform->pitch;
-    cameraTransform->UpdateModelMatrix();
-    mRenderSystem.Render(*this, mWater.GetReflectionTarget(), mWater.GetReflectionClippingPlane());
-    mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetReflectionClippingPlane());
-    cameraTransform->pitch = -cameraTransform->pitch;
-    cameraTransform->position = cameraTransform->position + glm::vec3(0.f, distance, 0.f);
-    cameraTransform->UpdateModelMatrix();
+    if (GameSettings::GetInstance().GetBool("Reflections")) {
+        /// @todo Don't hardcore camera inversion.
+        float distance = 2.f * (cameraTransform->position.y - mWater.GetPosition().y);
+        cameraTransform->position = cameraTransform->position - glm::vec3(0.f, distance, 0.f);
+        cameraTransform->pitch = -cameraTransform->pitch;
+        cameraTransform->UpdateModelMatrix();
+        mRenderSystem.Render(*this, mWater.GetReflectionTarget(), mWater.GetReflectionClippingPlane());
+        mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetReflectionClippingPlane());
+        cameraTransform->pitch = -cameraTransform->pitch;
+        cameraTransform->position = cameraTransform->position + glm::vec3(0.f, distance, 0.f);
+        cameraTransform->UpdateModelMatrix();
+    } else {
+        mWater.GetReflectionTarget()->SetTarget();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    }
     
     // Render.
     mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
@@ -376,13 +389,10 @@ void MainScene::Update(float deltaTime) {
     // Set music volumes.
     mTargetMix = 0.f;
     for (GameObject::SuperEnemy* enemy : mEnemySpawnerSystem.GetEnemies()) {
-        
         if (mCheckpointSystem.mRespawn) {
             if (glm::distance(enemy->node->GetComponent<Component::Transform>()->GetWorldPosition(), HubInstance().mPlayers[0]->GetPosition()) < 10) {
                 enemy->node->GetComponent<Component::Health>()->health = 0;
-                
             }
-            
         }
         
         if (enemy->Active()) {
