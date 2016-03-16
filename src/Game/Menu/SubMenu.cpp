@@ -35,11 +35,8 @@ SubMenu::~SubMenu() {
     for (SuperMenuOption* menuOption : mMenuOptions)
         delete menuOption;
     
-    if (mTitleOption.size() != 0){
-        for(auto titleOption : mTitleOption){
-            delete titleOption;
-        }
-    }
+    for(auto titleOption : mTitleOption)
+        delete titleOption;
 }
 
 void SubMenu::SetPosition(const glm::vec3& position) {
@@ -104,11 +101,8 @@ void SubMenu::RenderMenuOptions() {
     for (SuperMenuOption* menuOption : mMenuOptions)
         menuOption->Render(screenSize, mModelMatrix);
     
-    if (mTitleOption.size() != 0) {
-        for(auto titleOption : mTitleOption){
-            titleOption->Render(screenSize, mModelMatrix);
-        }
-    }
+    for(auto titleOption : mTitleOption)
+        titleOption->Render(screenSize, mModelMatrix);
 }
 
 void SubMenu::AddMenuOption(SuperMenuOption* menuOption) {
