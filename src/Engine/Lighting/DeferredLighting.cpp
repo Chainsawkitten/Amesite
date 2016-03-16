@@ -204,7 +204,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), light->coneAngle);
             glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(direction)[0]);
             
-            glDrawElements(GL_TRIANGLES, mCube->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+            glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
         }
     }
     
