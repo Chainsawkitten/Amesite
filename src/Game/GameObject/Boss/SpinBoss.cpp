@@ -170,7 +170,7 @@ void SpinBoss::FireBullet(glm::vec3 bossPos, glm::vec3 armPos) {
     bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= lifeTimeFraction;
     bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= lifeTimeFraction;
 
-    bullet->node->GetComponent<Component::Damage>()->damageAmount = 100.f;
+    bullet->node->GetComponent<Component::Damage>()->damageAmount = 20.f;
 }
 
 float SpinBoss::GetHealth() {
