@@ -16,6 +16,8 @@ uniform sampler2D tDuDvMap;
 uniform sampler2D tWater;
 uniform sampler2D tNormalMap;
 uniform sampler2D tDepthMap;
+uniform sampler2D tRefractionExtra;
+uniform sampler2D tReflectionExtra;
 
 uniform vec2 screenSize;
 uniform vec2 textureRepeat;
@@ -70,7 +72,9 @@ void main() {
     reflectionTexCoord += distortion1;
     
     vec4 refractionColor = texture(tRefraction, refractionTexCoord);
+    vec4 refractionExtra = texture(tRefractionExtra, refractionTexCoord);
     vec4 reflectionColor = texture(tReflection, reflectionTexCoord);
+    vec4 reflectionExtra = texture(tReflectionExtra, reflectionTexCoord);
     
     vec3 normal = CalculateNormal(vertexIn.normal, vertexIn.tangent, texture(tNormalMap, texCoords).xyz);
     
@@ -87,7 +91,9 @@ void main() {
     vec3 r = normalize(reflect(-lightDirection, normal));
     vec3 specularLight = vec3(1.0, 1.0, 1.0) * pow(max(dot(r, v), 0.0), shinyPower) * clamp(depth, 0.0, 1.0);
     fragmentColor = vec4(lightIntensity * (fragmentColor.rgb + specularLight), 1.0);*/
-    fragmentColor.a = clamp(depth, 0.0, 1.0);
+    float alpha = clamp(depth, 0.0, 1.0);
+    fragmentColor.a = alpha;
     
-    extraOut = vec4(0.0, 0.0, 0.0, 1.0);
+    extraOut = mix(reflectionExtra, refractionExtra, refractiveFactor);
+    extraOut.a = alpha;
 }

@@ -98,6 +98,8 @@ void Water::Render() const {
     glUniform1i(mShaderProgram->GetUniformLocation("tWater"), 3);
     glUniform1i(mShaderProgram->GetUniformLocation("tNormalMap"), 4);
     glUniform1i(mShaderProgram->GetUniformLocation("tDepthMap"), 5);
+    glUniform1i(mShaderProgram->GetUniformLocation("tRefractionExtra"), 6);
+    glUniform1i(mShaderProgram->GetUniformLocation("tReflectionExtra"), 7);
     
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mRefractionTarget->GetColorTexture());
@@ -116,6 +118,12 @@ void Water::Render() const {
     
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, mRefractionTarget->GetDepthTexture());
+    
+    glActiveTexture(GL_TEXTURE6);
+    glBindTexture(GL_TEXTURE_2D, mRefractionTarget->GetExtraTexture());
+    
+    glActiveTexture(GL_TEXTURE7);
+    glBindTexture(GL_TEXTURE_2D, mReflectionTarget->GetExtraTexture());
     
     glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &screenSize[0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("textureRepeat"), 1, &mTextureRepeat[0]);
