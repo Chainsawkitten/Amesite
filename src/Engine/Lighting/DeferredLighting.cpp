@@ -162,16 +162,16 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glm::mat4 modelMat = glm::scale(glm::mat4(), glm::vec3(2.f, 2.f, 1.f));
     glm::mat4 viewMat;
     glm::mat3 normalMat;
+    glm::mat4 viewProjectionMat(projectionMat * viewMat);
     
-    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
-    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("viewProjection"), 1, GL_FALSE, &viewProjectionMat[0][0]);
     glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &normalMat[0][0]);
     
     // Get the camera matrices.
     viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
     projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
-    glm::mat4 viewProjectionMat(projectionMat * viewMat);
+    viewProjectionMat = projectionMat * viewMat;
     
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(projectionMat)[0][0]);
     glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &screenSize[0]);
@@ -215,8 +215,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     // Use cube light volume to render point lights.
     glBindVertexArray(mCube->GetVertexArray());
     
-    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
-    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("viewProjection"), 1, GL_FALSE, &viewProjectionMat[0][0]);
     glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &normalMat[0][0]);
     
     // At which point lights should be cut off (no longer contribute).
