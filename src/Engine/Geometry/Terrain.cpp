@@ -49,6 +49,7 @@ namespace Geometry {
     
         GenerateBuffers();
         GenerateVertexArray();
+        CreateAxisAlignedBoundingBox();
     }
 
     Terrain::Terrain(float** floatArray, int width, int height, const glm::vec2& textureRepeat ) {

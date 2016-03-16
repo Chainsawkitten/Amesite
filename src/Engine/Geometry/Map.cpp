@@ -11,6 +11,7 @@ Map::Map(bool **data, glm::uvec2 dataDimensions, float wallHeight) {
 
     GenerateBuffers();
     GenerateVertexArray();
+    CreateAxisAlignedBoundingBox();
 }
 
 Map::~Map() {
