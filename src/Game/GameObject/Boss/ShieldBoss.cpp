@@ -22,6 +22,7 @@
 #include <Component/Animation.hpp>
 #include <Component/ParticleEmitter.hpp>
 #include <Component/Physics.hpp>
+#include <Component/PointLight.hpp>
 
 #include "../Bullet.hpp"
 
@@ -40,6 +41,7 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
     node->AddComponent<Component::Spawner>()->delay = mMaxSpawnerDelay;
     node->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     node->GetComponent<Component::Physics>()->angularVelocity.y = 0.15f;
+    node->GetComponent<Component::PointLight>()->ambientCoefficient = .005f;
 
     body->GetComponent<Component::Transform>()->scale *= 1.2f;
     body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond_body.obj");
@@ -167,6 +169,6 @@ void ShieldBoss::FireBullets() {
         bullet->node->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= lifeTimeFraction;
         bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.minLifetime /= lifeTimeFraction;
         bullet->tail->GetComponent<Component::ParticleEmitter>()->particleType.maxLifetime /= lifeTimeFraction;
-        bullet->node->GetComponent<Component::Damage>()->damageAmount = 9000.0000001f;
+        bullet->node->GetComponent<Component::Damage>()->damageAmount = 20.f;
     }
 }

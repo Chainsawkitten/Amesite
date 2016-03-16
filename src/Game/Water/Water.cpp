@@ -38,7 +38,7 @@ Water::Water() {
     mMoveFactor = 0.f;
     
     mPosition = glm::vec3(0.f, 0.f, 0.f);
-    mScale = glm::vec3(1000.f, 1000.f, 1000.f);
+    mScale = glm::vec3(2000.f, 2000.f, 2000.f);
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     mRefractionTarget = new RenderTarget(screenSize);
