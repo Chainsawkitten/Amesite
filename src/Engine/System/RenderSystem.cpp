@@ -45,6 +45,7 @@ RenderSystem::~RenderSystem() {
 void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::vec2& screenSize, const glm::vec4& clippingPlane) {
     mDeferredLighting->SetTarget();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, static_cast<GLsizei>(screenSize.x), static_cast<GLsizei>(screenSize.y));
     
     mShaderProgram->Use();
     
