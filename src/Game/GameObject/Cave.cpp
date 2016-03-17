@@ -25,6 +25,7 @@
 #include "../Util/ControlSchemes.hpp"
 
 #include "../Util/PerlinNoise.hpp"
+#include <Util/Log.hpp>
 #include <ctime>
 
 using namespace GameObject;
@@ -220,23 +221,21 @@ void Cave::PlaceScenery(Entity* scenery, bool rotate) {
     glm::vec3 center = glm::vec3(scaleFactor*(static_cast<float>(mWidth) / 2.f) + 1.f, 0.f, scaleFactor*(static_cast<float>(mHeight) / 2.f) + 1.f);
     float distance = glm::distance(center, point);
 
-    if (distance < 50.f) 
-    {
-
+    if (distance < 50.f) {
         point += glm::normalize(point - center) * (50.f - distance);
         point = glm::vec3(point.x, mTerrain->GetY(point.x, point.z) - 5.f, point.z);
 
     }
 
     if (!GridCollide(point)) {
-        
         if (rotate)
             scenery->GetComponent<Component::Transform>()->Rotate(rand() % 360, rand() % 360, rand() % 360);
     
         scenery->GetComponent<Component::Transform>()->scale *= 1 - ((rand() % 1000) / 1000.f) / 2.f;
         scenery->GetComponent<Component::Transform>()->position = point;
         mSceneryVector.push_back(scenery);
-
+    } else {
+        scenery->Kill();
     }
 
 }
