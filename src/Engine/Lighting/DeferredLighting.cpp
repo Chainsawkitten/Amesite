@@ -197,16 +197,6 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         }
     }
     
-    if (lightIndex != 0) {
-        for (; lightIndex <= lightCount; ++lightIndex) {
-            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str()), 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
-        }
-        
-        glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
-    }
-    
-    lightIndex = 0;
-    
     // Render all spot lights.
     std::vector<Component::SpotLight*> spotLights = scene.GetAll<Component::SpotLight>();
     for (Component::SpotLight* light : spotLights) {
@@ -226,14 +216,6 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
                 glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
             }
         }
-    }
-    
-    if (lightIndex != 0) {
-        for (; lightIndex <= lightCount; ++lightIndex) {
-            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str()), 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
-        }
-        
-        glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     }
     
     // At which point lights should be cut off (no longer contribute).
