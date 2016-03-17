@@ -45,7 +45,8 @@ RenderSystem::~RenderSystem() {
 void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::vec2& screenSize, const glm::vec4& clippingPlane) {
     mDeferredLighting->SetTarget();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, static_cast<GLsizei>(screenSize.x), static_cast<GLsizei>(screenSize.y));
+    const glm::vec2& windowSize = MainWindow::GetInstance()->GetSize();
+    glViewport(0, 0, static_cast<GLsizei>(windowSize.x), static_cast<GLsizei>(windowSize.y));
     
     mShaderProgram->Use();
     
@@ -61,7 +62,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
     // Render from camera.
     if (camera != nullptr) {
         glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
-        glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
+        glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(windowSize);
         glm::mat4 viewProjectionMat = projectionMat * viewMat;
         
         glUniformMatrix4fv(mShaderProgram->GetUniformLocation("viewProjection"), 1, GL_FALSE, &viewProjectionMat[0][0]);
@@ -110,6 +111,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
 
         renderTarget->SetTarget();
         //mDeferredLighting->ShowTextures(screenSize);
+        glViewport(0, 0, static_cast<GLsizei>(screenSize.x), static_cast<GLsizei>(screenSize.y));
         mDeferredLighting->Render(scene, camera, screenSize);
     }
 }

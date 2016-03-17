@@ -41,8 +41,8 @@ Water::Water() {
     mScale = glm::vec3(2000.f, 2000.f, 2000.f);
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
-    mRefractionTarget = new RenderTarget(screenSize);
-    mReflectionTarget = new RenderTarget(screenSize);
+    mRefractionTarget = new RenderTarget(screenSize * 0.5f);
+    mReflectionTarget = new RenderTarget(screenSize * 0.5f);
 }
 
 Water::~Water() {
