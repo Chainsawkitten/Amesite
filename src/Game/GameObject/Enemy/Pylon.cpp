@@ -44,7 +44,7 @@ Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
     node->GetComponent<Component::Explode>()->sound = true;
     node->GetComponent<Component::Explode>()->type = Component::Explode::ENEMY;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&Pylon::mUpdateFunction, this);
-    node->AddComponent<Component::Physics>()->maxVelocity *= 0.95f;
+    node->AddComponent<Component::Physics>()->maxVelocity *= 0.75f;
     node->AddComponent<Component::GridCollide>();
     node->GetComponent<Component::GridCollide>()->removeOnImpact = false;
     node->AddComponent<Component::Controller>();
