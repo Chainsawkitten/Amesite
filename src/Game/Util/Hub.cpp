@@ -70,6 +70,10 @@ void Hub::SetPlayer1Joystick(bool joystick) {
     }
 }
 
+void Hub::Clear() {
+    mPlayers.clear();
+}
+
 Hub::Hub() {
     mDisabledPlayer = nullptr;
 }

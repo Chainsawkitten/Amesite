@@ -8,6 +8,7 @@
 #include <Font/Font.hpp>
 #include <random>
 #include <time.h>
+#include "../Util/Hub.hpp"
 
 WinScene::WinScene(float totalTime, int enemiesKilled) {
     mPortalTexture = Resources().CreateTexture2DFromFile("Resources/SwirlingPortal.png");
@@ -73,8 +74,10 @@ void WinScene::Update(float deltaTime) {
     mElapsedTime += deltaTime;
 
     // Go to main scene when win screen is over.
-    if (mElapsedTime > 10.f)
+    if (mElapsedTime > 10.f) {
+        HubInstance().Clear();
         Game::GetInstance().SetScene(new LoadingScene());
+    }
 
     // Clear screen.
     glClear(GL_COLOR_BUFFER_BIT);

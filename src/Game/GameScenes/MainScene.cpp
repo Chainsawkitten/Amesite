@@ -121,7 +121,7 @@ MainScene::MainScene() {
     int seed = time(0);
     int percent = 50;
     int iterations = 10;
-    int threshold = 100;
+    int threshold = 200;
     
     CaveGenerator::Coordinate playerPosition(width / 2, height / 2);
     CaveGenerator::Coordinate NorthWest(10, 10);
@@ -210,6 +210,8 @@ MainScene::MainScene() {
     
     mWater.SetTextureRepeat(glm::vec2(100.f, 100.f));
     mWater.SetPosition(glm::vec3(450.f, -3.f, 450.f));
+    
+    PreallocateTextures();
 }
 
 MainScene::~MainScene() {
@@ -224,6 +226,10 @@ MainScene::~MainScene() {
     
     alDeleteSources(1, &mActionSource);
     Resources().FreeSound(mActionSoundBuffer);
+    
+    for (Texture2D* texture : mPreallocatedTextures) {
+        Resources().FreeTexture2D(texture);
+    }
 }
 
 void MainScene::Update(float deltaTime) {
@@ -436,4 +442,21 @@ void MainScene::Update(float deltaTime) {
     
     alSourcef(mCalmSource, AL_GAIN, 1.f - mMix);
     alSourcef(mActionSource, AL_GAIN, mMix);
+}
+
+void MainScene::PreallocateTextures() {
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/wall_gray.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_spec.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_diff.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_spec.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_glow.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/DefaultBlue.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_spec.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/DefaultSpecular.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/Pillar_Albedo.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/Pillar_NM.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/Pillar_Glow2.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/DefaultGray.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/stone_02_glow.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/stone_02_diff.png"));
 }

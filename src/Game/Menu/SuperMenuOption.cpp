@@ -98,9 +98,9 @@ void SuperMenuOption::RenderSelected(const glm::vec2& screenSize, const glm::mat
     Entity* camera = HubInstance().GetMainCamera().body;
     glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
+    glm::mat4 viewProjectionMat = projectionMat * viewMat;
     
-    glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
-    glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
+    glUniformMatrix4fv(mSelectedShaderProgram->GetUniformLocation("viewProjection"), 1, GL_FALSE, &viewProjectionMat[0][0]);
     
     glBindVertexArray(mPlane->GetVertexArray());
     
@@ -137,9 +137,9 @@ void SuperMenuOption::Render(const glm::vec2& screenSize, const glm::mat4& menuM
     Entity* camera = HubInstance().GetMainCamera().body;
     glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
+    glm::mat4 viewProjectionMat = projectionMat * viewMat;
     
-    glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
-    glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
+    glUniformMatrix4fv(mTextShaderProgram->GetUniformLocation("viewProjection"), 1, GL_FALSE, &viewProjectionMat[0][0]);
     
     glBindVertexArray(mPlane->GetVertexArray());
     
