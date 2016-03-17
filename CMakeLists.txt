@@ -77,6 +77,11 @@ endif()
 # Copy resources
 set(RESOURCES
         assets/ABeeZee.ttf
+		assets/quantrnd.ttf
+		assets/quantrh.ttf
+		assets/quantflt.ttf
+		assets/quanttap.ttf
+		assets/quantfh.ttf
         assets/Mugglorna.png
         assets/default/DefaultDiffuse.png
         assets/default/DefaultNormal.png
