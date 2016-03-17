@@ -61,7 +61,7 @@ void Scene::UpdateModelMatrices() {
     std::vector<Component::Animation*> animations = GetAll<Component::Animation>();
     for (auto animationComponent : animations) {
         Component::RelativeTransform* relativeTranform = animationComponent->entity->GetComponent<Component::RelativeTransform>();
-        if(relativeTranform != nullptr){
+        if (relativeTranform != nullptr){
             Component::Animation* parentAnimation = relativeTranform->parentEntity->GetComponent<Component::Animation>();
             if (parentAnimation != nullptr) {
                 Component::Transform* transformComponent = animationComponent->entity->GetComponent<Component::Transform>();

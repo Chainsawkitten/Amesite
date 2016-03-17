@@ -514,7 +514,7 @@ void Player1::SetJoystickAim(bool joystickAim) {
     vec.erase(std::remove(vec.begin(), vec.end(), ControlScheme::Aim), vec.end());
     if (joystickAim)
         vec.push_back(&ControlScheme::Aim);
-    else 
+    else
         vec.push_back(&ControlScheme::MouseRotate);
 
 }

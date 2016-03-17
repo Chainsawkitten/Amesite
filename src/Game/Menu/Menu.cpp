@@ -108,7 +108,7 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
         }
         
         weight = 1.f - mTimer;
-    } 
+    }
 
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     cameraTransform->position = (1.f - weight) * cameraTransform->GetWorldPosition() + weight * subMenuPosition;
