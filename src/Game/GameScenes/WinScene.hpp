@@ -16,6 +16,7 @@ class WinScene : public Scene {
         /**
         * @param totalTime The total time played.
         * @param enemiesKilled The amount of enemies killed.
+        * @param timesDied The amount of times the players died.
         */
         WinScene(float totalTime, int enemiesKilled, int timesDied);
 
