@@ -20,6 +20,7 @@ ParticleSystem* ParticleSystem::mActiveInstance = nullptr;
 
 ParticleSystem::ParticleSystem() {
     mMaxParticleCount = 10000;
+    mRNG.seed(mRD());
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -31,6 +32,7 @@ unsigned int ParticleSystem::MaxParticleCount() const {
 }
 
 void ParticleSystem::Update(Scene& scene, double time) {
+    std::uniform_real_distribution<> zeroToOne(0, 1);
     for (unsigned int i = 0; i < scene.GetParticleCount(); ++i) {
         scene.GetParticles()[i].life += static_cast<float>(time);
         if (scene.GetParticles()[i].life >= scene.GetParticles()[i].lifetime) {
@@ -47,7 +49,7 @@ void ParticleSystem::Update(Scene& scene, double time) {
         if (emitter->enabled) {
             emitter->timeToNext -= time;
             while (emitter->timeToNext < 0.0) {
-                emitter->timeToNext += emitter->minEmitTime + ((double)rand() / RAND_MAX) * (emitter->maxEmitTime - emitter->minEmitTime);
+                emitter->timeToNext += emitter->minEmitTime + zeroToOne(mRNG) * (emitter->maxEmitTime - emitter->minEmitTime);
                 EmitParticle(scene, emitter);
             }
         }
@@ -72,9 +74,10 @@ void ParticleSystem::EmitParticle(Scene& scene, Component::ParticleEmitter* emit
     if (transform != nullptr) {
         glm::vec3 position;
         if (emitter->emitterType == Component::ParticleEmitter::CUBOID) {
-            position.x = transform->GetWorldPosition().x - emitter->size.x / 2.f + rand() / (RAND_MAX / emitter->size.x);
-            position.y = transform->GetWorldPosition().y - emitter->size.y / 2.f + rand() / (RAND_MAX / emitter->size.y);
-            position.z = transform->GetWorldPosition().z - emitter->size.z / 2.f + rand() / (RAND_MAX / emitter->size.z);
+            std::uniform_real_distribution<> zeroToOne(0, 1);
+            position.x = transform->GetWorldPosition().x - emitter->size.x / 2.f + zeroToOne(mRNG) * emitter->size.x;
+            position.y = transform->GetWorldPosition().y - emitter->size.y / 2.f + zeroToOne(mRNG) * emitter->size.y;
+            position.z = transform->GetWorldPosition().z - emitter->size.z / 2.f + zeroToOne(mRNG) * emitter->size.z;
         }
         else
             position = transform->GetWorldPosition();
@@ -85,10 +88,10 @@ void ParticleSystem::EmitParticle(Scene& scene, Component::ParticleEmitter* emit
 void ParticleSystem::EmitParticle(Scene& scene, glm::vec3 position, Component::ParticleEmitter* emitter) {
     if (scene.GetParticleCount() < mMaxParticleCount) {
         Particle particle;
-        
+        std::uniform_real_distribution<> zeroToOne(0, 1);
         particle.worldPos = position;
         particle.life = 0.f;
-        particle.lifetime = emitter->particleType.minLifetime + rand() / (RAND_MAX / (emitter->particleType.maxLifetime - emitter->particleType.minLifetime));
+        particle.lifetime = emitter->particleType.minLifetime + zeroToOne(mRNG) * (emitter->particleType.maxLifetime - emitter->particleType.minLifetime);
         particle.textureIndex = (float)emitter->particleType.textureIndex;
         particle.alpha[0] = emitter->particleType.startAlpha;
         particle.alpha[1] = emitter->particleType.midAlpha;
@@ -96,15 +99,15 @@ void ParticleSystem::EmitParticle(Scene& scene, glm::vec3 position, Component::P
         particle.color = emitter->particleType.color;
         
         if (emitter->particleType.uniformScaling) {
-            particle.size = emitter->particleType.minSize + (rand() / static_cast<float>(RAND_MAX)) * (emitter->particleType.maxSize - emitter->particleType.minSize);
+            particle.size = emitter->particleType.minSize + (static_cast<float>(zeroToOne(mRNG))) * (emitter->particleType.maxSize - emitter->particleType.minSize);
         } else {
-            particle.size.x = emitter->particleType.minSize.x + rand() / (RAND_MAX / (emitter->particleType.maxSize.x - emitter->particleType.minSize.x));
-            particle.size.y = emitter->particleType.minSize.y + rand() / (RAND_MAX / (emitter->particleType.maxSize.y - emitter->particleType.minSize.y));
+            particle.size.x = emitter->particleType.minSize.x + zeroToOne(mRNG) * (emitter->particleType.maxSize.x - emitter->particleType.minSize.x);
+            particle.size.y = emitter->particleType.minSize.y + zeroToOne(mRNG) * (emitter->particleType.maxSize.y - emitter->particleType.minSize.y);
         }
         
-        particle.velocity.x = emitter->particleType.minVelocity.x + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.x - emitter->particleType.minVelocity.x));
-        particle.velocity.y = emitter->particleType.minVelocity.y + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.y - emitter->particleType.minVelocity.y));
-        particle.velocity.z = emitter->particleType.minVelocity.z + rand() / (RAND_MAX / (emitter->particleType.maxVelocity.z - emitter->particleType.minVelocity.z));
+        particle.velocity.x = emitter->particleType.minVelocity.x + zeroToOne(mRNG) * (emitter->particleType.maxVelocity.x - emitter->particleType.minVelocity.x);
+        particle.velocity.y = emitter->particleType.minVelocity.y + zeroToOne(mRNG) * (emitter->particleType.maxVelocity.y - emitter->particleType.minVelocity.y);
+        particle.velocity.z = emitter->particleType.minVelocity.z + zeroToOne(mRNG) * (emitter->particleType.maxVelocity.z - emitter->particleType.minVelocity.z);
         
         scene.GetParticles()[scene.GetParticleCount()] = particle;
         scene.SetParticleCount(scene.GetParticleCount() + 1);
