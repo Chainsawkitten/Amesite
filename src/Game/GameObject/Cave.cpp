@@ -25,7 +25,6 @@
 #include "../Util/ControlSchemes.hpp"
 
 #include "../Util/PerlinNoise.hpp"
-#include <Util/Log.hpp>
 #include <ctime>
 
 using namespace GameObject;
