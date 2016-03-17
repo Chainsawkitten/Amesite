@@ -13,7 +13,7 @@
 WinScene::WinScene(float totalTime, int enemiesKilled, int timesDied) {
     mPortalTexture = Resources().CreateTexture2DFromFile("Resources/SwirlingPortal.png");
     mElapsedTime = 0.f;
-    mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 25.f);
+    mFont = Resources().CreateFontFromFile("Resources/quantrnd.ttf", 25.f);
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
 
     std::default_random_engine RNG;
@@ -54,7 +54,7 @@ WinScene::WinScene(float totalTime, int enemiesKilled, int timesDied) {
     int seconds = intTime % 60;
     mWinMessage =
         introString +
-        "\nYou have won!\nYou completed the game in:\n" +
+        "\nYou have won!\nYou completed the game in...\n" +
         std::to_string(minutes) +
         " minutes and " +
         std::to_string(seconds) +
