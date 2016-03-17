@@ -334,9 +334,9 @@ void MainScene::Update(float deltaTime) {
     
     // Render refractions.
     if (GameSettings::GetInstance().GetBool("Refractions")) {
-        mRenderSystem.Render(*this, mWater.GetRefractionTarget(), screenSize, mWater.GetRefractionClippingPlane());
+        mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionTarget()->GetSize(), mWater.GetRefractionClippingPlane());
         // Don't render particle refractions as they're never below the water level.
-        //mParticleRenderSystem.Render(*this, mMainCamera->body, screenSize, mWater.GetRefractionClippingPlane());
+        //mParticleRenderSystem.Render(*this, mMainCamera->body, mWater.GetRefractionTarget()->GetSize(), mWater.GetRefractionClippingPlane());
     } else {
         mWater.GetRefractionTarget()->SetTarget();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -350,8 +350,8 @@ void MainScene::Update(float deltaTime) {
         cameraTransform->position = cameraTransform->position - glm::vec3(0.f, distance, 0.f);
         cameraTransform->pitch = -cameraTransform->pitch;
         cameraTransform->UpdateModelMatrix();
-        mRenderSystem.Render(*this, mWater.GetReflectionTarget(), screenSize, mWater.GetReflectionClippingPlane());
-        mParticleRenderSystem.Render(*this, mMainCamera->body, screenSize, mWater.GetReflectionClippingPlane());
+        mRenderSystem.Render(*this, mWater.GetReflectionTarget(), mWater.GetReflectionTarget()->GetSize(), mWater.GetReflectionClippingPlane());
+        mParticleRenderSystem.Render(*this, mMainCamera->body, mWater.GetReflectionTarget()->GetSize(), mWater.GetReflectionClippingPlane());
         cameraTransform->pitch = -cameraTransform->pitch;
         cameraTransform->position = cameraTransform->position + glm::vec3(0.f, distance, 0.f);
         cameraTransform->UpdateModelMatrix();
