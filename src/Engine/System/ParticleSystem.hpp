@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <GL/glew.h>
+#include <random>
 
 namespace Component {
     class ParticleEmitter;
@@ -76,6 +77,9 @@ namespace System {
             
             // Emit a particle at the given position.
             void EmitParticle(Scene& scene, glm::vec3 position, Component::ParticleEmitter* emitter);
+
+        std::random_device mRD;
+        std::mt19937 mRNG;
     };
     
     /// Get currently active ParticleSystem.

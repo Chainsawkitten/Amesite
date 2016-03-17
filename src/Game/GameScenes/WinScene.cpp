@@ -10,10 +10,10 @@
 #include <time.h>
 #include "../Util/Hub.hpp"
 
-WinScene::WinScene(float totalTime, int enemiesKilled) {
+WinScene::WinScene(float totalTime, int enemiesKilled, int timesDied) {
     mPortalTexture = Resources().CreateTexture2DFromFile("Resources/SwirlingPortal.png");
     mElapsedTime = 0.f;
-    mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", 25.f);
+    mFont = Resources().CreateFontFromFile("Resources/quantrnd.ttf", 25.f);
     mFont->SetColor(glm::vec3(1.f, 1.f, 1.f));
 
     std::default_random_engine RNG;
@@ -54,13 +54,13 @@ WinScene::WinScene(float totalTime, int enemiesKilled) {
     int seconds = intTime % 60;
     mWinMessage =
         introString +
-        "\nYou have won!\nYou completed the game in:\n" +
+        "\nYou have won!\nYou completed the game in...\n" +
         std::to_string(minutes) +
         " minutes and " +
         std::to_string(seconds) +
         " seconds.\nYou killed " +
         std::to_string(enemiesKilled) +
-        " enemies.\n\nAnd so you left, " +
+        " enemies.\nYou died " + std::to_string(timesDied) + " Times...\n\nAnd so you left, " +
         outroString;
 
 }
@@ -82,25 +82,21 @@ void WinScene::Update(float deltaTime) {
     // Clear screen.
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Render logo.
-    glm::vec2 size = glm::vec2(static_cast<float>(mPortalTexture->GetWidth()), static_cast<float>(mPortalTexture->GetHeight()));
     glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
+    glm::vec2 size = glm::vec2(screenSize.x, screenSize.y);
 
-    // Scale logo down if larger than screen.
     if (size.x > screenSize.x || size.y > screenSize.y) {
         float xScale = screenSize.x / size.x;
         float yScale = screenSize.y / size.y;
         size *= xScale < yScale ? xScale : yScale;
     }
 
-    // Fade in and out logo.
-    float alpha = 0.5f;
-    if (mElapsedTime > 3.5f) {
-        alpha = 4.f - mElapsedTime;
-    } else if (mElapsedTime > 0.5f) {
-        alpha = 1.f;
-    } else {
-        alpha = mElapsedTime * 2.f;
+    float alpha = 1.0f;
+    if (mElapsedTime < 1.0f) {
+        alpha = 1.f - mElapsedTime;
+    }
+    else {
+        alpha = 0.f;
     }
 
     mPortalTexture->Render((screenSize - size) * 0.5f, size, alpha);
