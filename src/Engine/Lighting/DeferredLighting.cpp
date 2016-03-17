@@ -3,7 +3,6 @@
 
 #include "../Resources.hpp"
 #include "../Geometry/Plane.hpp"
-#include "../Geometry/Cube.hpp"
 #include "../Shader/Shader.hpp"
 #include "../Shader/ShaderProgram.hpp"
 #include "Default3D.vert.hpp"
@@ -29,7 +28,6 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
     mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
     
     mPlane = Resources().CreatePlane();
-    mCube = Resources().CreateCube();
     
     // Create the FBO
     glGenFramebuffers(1, &mFrameBufferObject);
@@ -85,7 +83,6 @@ DeferredLighting::~DeferredLighting() {
     Resources().FreeShader(mFragmentShader);
     
     Resources().FreePlane();
-    Resources().FreeCube();
 }
 
 void DeferredLighting::SetTarget() {
@@ -212,13 +209,6 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         }
     }*/
     
-    // Use cube light volume to render point lights.
-    //glBindVertexArray(mCube->GetVertexArray());
-    
-    //glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projectionMat[0][0]);
-    //glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &viewMat[0][0]);
-    //glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &normalMat[0][0]);
-    
     // At which point lights should be cut off (no longer contribute).
     double cutOff = 0.0001;
     
@@ -244,11 +234,8 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
                 glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].ambientCoefficient").c_str()), light->ambientCoefficient);
                 glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].coneAngle").c_str()), 180.f);
                 glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].direction").c_str()), 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
-                //glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
                 
-                //glDrawElements(GL_TRIANGLES, mCube->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
-                ++lightIndex;
-                if (lightIndex >= lightCount) {
+                if (++lightIndex >= lightCount) {
                     lightIndex = 0;
                     glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
                 }
