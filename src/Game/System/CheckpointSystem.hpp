@@ -36,6 +36,8 @@ namespace System {
             /// Did we respawn this frame
             bool mRespawn;
 
+            // Times the players fucked up and wiped.
+            int timesDied;
         private:
             Audio::SoundBuffer* mLowHPSoundBuffer;
             bool mPlayingBeepSound;

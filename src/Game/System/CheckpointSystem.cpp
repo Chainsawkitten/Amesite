@@ -27,7 +27,7 @@ System::CheckpointSystem::CheckpointSystem() {
     alSourcei(mBeepSource, AL_LOOPING, AL_TRUE);
     mPlayingBeepSound = false;
     mRespawn = false;
-
+    timesDied = 0;
 }
 
 void System::CheckpointSystem::Update(float deltaTime) {
@@ -104,4 +104,5 @@ void System::CheckpointSystem::RespawnPlayers() {
         player->GetNodeEntity()->GetComponent<Component::Health>()->health = player->GetNodeEntity()->GetComponent<Component::Health>()->maxHealth;
         player->Activate();
     }
+    timesDied++;
 }
