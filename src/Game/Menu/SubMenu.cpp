@@ -35,7 +35,7 @@ SubMenu::~SubMenu() {
     for (SuperMenuOption* menuOption : mMenuOptions)
         delete menuOption;
     
-    for(auto titleOption : mTitleOption)
+    for (auto titleOption : mTitleOption)
         delete titleOption;
 }
 
@@ -101,7 +101,7 @@ void SubMenu::RenderMenuOptions() {
     for (SuperMenuOption* menuOption : mMenuOptions)
         menuOption->Render(screenSize, mModelMatrix);
     
-    for(auto titleOption : mTitleOption)
+    for (auto titleOption : mTitleOption)
         titleOption->Render(screenSize, mModelMatrix);
 }
 

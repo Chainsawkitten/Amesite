@@ -35,7 +35,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
 
     mNode = CreateEntity();
     mNode->AddComponent<Component::Transform>()->scale *= 0.33f; //0.25f
-    mNode->AddComponent<Component::Controller>()->speed = 5000.f;
+    mNode->AddComponent<Component::Controller>()->speed = 80.f;
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Move);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
@@ -104,7 +104,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mBottomLight->AddComponent<Component::PointLight>();
     mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 1.f);
     mBottomLight->GetComponent<Component::PointLight>()->attenuation = 0.8f;
-    mBottomLight->GetComponent<Component::PointLight>()->intensity = 0.f;
+    mBottomLight->GetComponent<Component::PointLight>()->intensity = 3.f;
 
     mTurretBodyModel = Resources().CreateOBJModel("Resources/turret_body.obj");
     mTurretBarrelModel = Resources().CreateOBJModel("Resources/turret_barrel.obj");
@@ -451,7 +451,6 @@ void Player2::mUpdateFunction() {
         mMidPropellerParticles[3]->GetComponent<Component::ParticleEmitter>()->enabled = true;
 
     } else if (GetHealth() >= 1.f*(mNode->GetComponent<Component::Health>()->maxHealth / 3.f)) {
-        mBottomLight->GetComponent<Component::PointLight>()->intensity = 3.f;
         mState = MEDIUMDAMAGE;
         mLight->GetComponent<Component::SpotLight>()->color = glm::vec3(1.f, 1.0f, 0.0f);
         mBottomLight->GetComponent<Component::PointLight>()->color = glm::vec3(1.f, 1.f, 0.f);

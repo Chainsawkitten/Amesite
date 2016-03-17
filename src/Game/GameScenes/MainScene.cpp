@@ -24,6 +24,7 @@
 #include "../Component/Damage.hpp"
 #include "../Component/LifeTime.hpp"
 #include "../Component/Spawner.hpp"
+#include <Component/PointLight.hpp>
 
 #include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
@@ -193,7 +194,7 @@ MainScene::MainScene() {
     mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
     
     mWater.SetTextureRepeat(glm::vec2(100.f, 100.f));
-    mWater.SetPosition(glm::vec3(450.f, -5.f, 450.f));
+    mWater.SetPosition(glm::vec3(450.f, -3.f, 450.f));
     
     PreallocateTextures();
 }
@@ -321,10 +322,13 @@ void MainScene::Update(float deltaTime) {
     
     mParticleRenderSystem.UpdateBuffer(*this);
     
+    const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
+    
     // Render refractions.
     if (GameSettings::GetInstance().GetBool("Refractions")) {
-        mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionClippingPlane());
-        mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetRefractionClippingPlane());
+        mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionTarget()->GetSize(), mWater.GetRefractionClippingPlane());
+        // Don't render particle refractions as they're never below the water level.
+        //mParticleRenderSystem.Render(*this, mMainCamera->body, mWater.GetRefractionTarget()->GetSize(), mWater.GetRefractionClippingPlane());
     } else {
         mWater.GetRefractionTarget()->SetTarget();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -338,8 +342,8 @@ void MainScene::Update(float deltaTime) {
         cameraTransform->position = cameraTransform->position - glm::vec3(0.f, distance, 0.f);
         cameraTransform->pitch = -cameraTransform->pitch;
         cameraTransform->UpdateModelMatrix();
-        mRenderSystem.Render(*this, mWater.GetReflectionTarget(), mWater.GetReflectionClippingPlane());
-        mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize(), mWater.GetReflectionClippingPlane());
+        mRenderSystem.Render(*this, mWater.GetReflectionTarget(), mWater.GetReflectionTarget()->GetSize(), mWater.GetReflectionClippingPlane());
+        mParticleRenderSystem.Render(*this, mMainCamera->body, mWater.GetReflectionTarget()->GetSize(), mWater.GetReflectionClippingPlane());
         cameraTransform->pitch = -cameraTransform->pitch;
         cameraTransform->position = cameraTransform->position + glm::vec3(0.f, distance, 0.f);
         cameraTransform->UpdateModelMatrix();
@@ -350,7 +354,7 @@ void MainScene::Update(float deltaTime) {
     }
     
     // Render.
-    mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget());
+    mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget(), screenSize);
     
     if (GameSettings::GetInstance().GetBool("Refractions") || GameSettings::GetInstance().GetBool("Reflections"))
         mWater.Render();
@@ -360,15 +364,15 @@ void MainScene::Update(float deltaTime) {
     
     // Anti-aliasing.
     if (GameSettings::GetInstance().GetBool("FXAA")) {
-        mFxaaFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+        mFxaaFilter->SetScreenSize(screenSize);
         mFxaaFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
         mPostProcessing->ApplyFilter(mFxaaFilter);
     }
     
-    mParticleRenderSystem.Render(*this, mMainCamera->body, MainWindow::GetInstance()->GetSize());
+    mParticleRenderSystem.Render(*this, mMainCamera->body, screenSize);
     
     // Glow.
-    mGlowBlurFilter->SetScreenSize(MainWindow::GetInstance()->GetSize());
+    mGlowBlurFilter->SetScreenSize(screenSize);
     int blurAmount = 1;
     for (int i = 0; i < blurAmount; ++i) {
         mGlowBlurFilter->SetHorizontal(true);

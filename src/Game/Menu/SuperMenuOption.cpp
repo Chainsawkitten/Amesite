@@ -109,7 +109,7 @@ void SuperMenuOption::RenderSelected(const glm::vec2& screenSize, const glm::mat
     glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * modelMat));
     glUniformMatrix3fv(mSelectedShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3(normalMat)[0][0]);
     
-    glUniform4fv(mSelectedShaderProgram->GetUniformLocation("color"), 1, &glm::vec4(0.f, 0.f, 0.f, 0.65f)[0]);
+    glUniform4fv(mSelectedShaderProgram->GetUniformLocation("color"), 1, &glm::vec4(0.1f, 0.1f, 0.1f, 0.65f)[0]);
     
     glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     

@@ -485,7 +485,6 @@ bool Cave::GridCollide(Entity* entity, float deltaTime) {
 }
 
 bool Cave::WallIntersect(Entity* entity, float deltaTime) {
-
     Component::Transform* transform = entity->GetComponent<Component::Transform>();
     Component::Physics* physics = entity->GetComponent<Component::Physics>();
 
@@ -500,13 +499,10 @@ bool Cave::WallIntersect(Entity* entity, float deltaTime) {
 
     n = PointCollide(transform->CalculateWorldPosition(), velocity, deltaTime);
 
-    if (n != glm::vec3(0, -1, 0))
-        return true;
-
+    return (n != glm::vec3(0, -1, 0));
 }
 
 bool Cave::GridCollide(glm::vec3 point) {
-
     unsigned int x = glm::floor(point.x / scaleFactor);
     unsigned int z = glm::floor(point.z / scaleFactor);
 
@@ -574,14 +570,10 @@ bool Cave::GridCollide(glm::vec3 point) {
         case 15:
             return true;
             break;
-
         }
 
         return false;
-
     }
 
-
     return true;
-
 }

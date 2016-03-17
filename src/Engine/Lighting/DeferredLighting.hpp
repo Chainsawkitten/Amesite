@@ -5,7 +5,6 @@
 
 namespace Geometry {
     class Plane;
-    class Cube;
 }
 class Scene;
 class Entity;
@@ -73,7 +72,6 @@ class DeferredLighting {
 		glm::vec2 mSize;
         
         Geometry::Plane* mPlane;
-        Geometry::Cube* mCube;
         
         ShaderProgram* mShaderProgram;
         Shader* mVertexShader;
