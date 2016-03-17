@@ -194,7 +194,7 @@ MainScene::MainScene() {
     mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
     
     mWater.SetTextureRepeat(glm::vec2(100.f, 100.f));
-    mWater.SetPosition(glm::vec3(450.f, -3.f, 450.f));
+    mWater.SetPosition(glm::vec3(450.f, -4.f, 450.f));
     
     PreallocateTextures();
 }
@@ -318,7 +318,7 @@ void MainScene::Update(float deltaTime) {
         mMenu.Update(HubInstance().mPlayers[0], deltaTime);
     
     // Water.
-    mWater.Update(deltaTime, glm::vec3(1.f, 0.f, 0.f));
+    mWater.Update(deltaTime, glm::vec3(4.f, 0.f, 1.f));
     
     mParticleRenderSystem.UpdateBuffer(*this);
     
