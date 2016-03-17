@@ -137,6 +137,8 @@ MainScene::MainScene() {
     
     // Create a map.
     mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
+    // Ensure that killed scenery stays killed.
+    ClearKilled();
     
     float playerStartX = mCave->scaleFactor*(static_cast<float>(width) / 2.f);
     float playerStartZ = mCave->scaleFactor*(static_cast<float>(height) / 2.f);
