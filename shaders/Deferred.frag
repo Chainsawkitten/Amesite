@@ -4,7 +4,6 @@ Directional light (sunlight).
 */
 #version 400
 
-uniform sampler2D tShadowMap;
 uniform sampler2D tDiffuse;
 uniform sampler2D tNormals;
 uniform sampler2D tSpecular;
@@ -83,15 +82,14 @@ void main () {
     float depth = texture(tDepth, texCoords).r;
     vec3 position = ReconstructPos(texCoords, depth);
     vec3 diffuse = texture(tDiffuse, texCoords).rgb;
-    vec3 normal = texture(tNormals, texCoords).xyz;
+    vec3 normal = normalize(texture(tNormals, texCoords).xyz);
     vec3 specular = texture(tSpecular, texCoords).xyz;
     
     vec3 accumulatedLight;
     for (int i=0; i < lightCount; ++i) {
-        accumulatedLight += ApplyLight(diffuse, normalize(normal), position, specular, i);
+        accumulatedLight += ApplyLight(diffuse, normal, position, specular, i);
     }
     
-    //fragmentColor = vec4(ApplyLight(diffuse, normalize(normal), position, specular, 0), 1.0);
     fragmentColor = vec4(accumulatedLight, 1.0);
     extraOut = vec4(texture(tGlow, texCoords).rgb, 1.0);
     gl_FragDepth = depth;
