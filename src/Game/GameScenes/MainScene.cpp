@@ -187,14 +187,7 @@ MainScene::MainScene() {
     mBossCounter = mBossVector.size();
     
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
-    
-    // Directional light.
-    //    Entity* dirLight = CreateEntity();
-    //    dirLight->AddComponent<Component::Transform>()->pitch = 90.f;
-    //    dirLight->AddComponent<Component::DirectionalLight>();
-    //    dirLight->GetComponent<Component::DirectionalLight>()->color = glm::vec3(0.0000001f, 0.0000001f, 0.0000001f);
-    //    dirLight->GetComponent<Component::DirectionalLight>()->ambientCoefficient = 0.05f;
-    
+
     mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     mFxaaFilter = new FXAAFilter();
     mGammaCorrectionFilter = new GammaCorrectionFilter();
