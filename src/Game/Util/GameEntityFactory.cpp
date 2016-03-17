@@ -338,7 +338,7 @@ Bullet* GameEntityFactory::CreatePlayerBullet(const glm::vec3& position, const g
     gameObject->node->GetComponent<Component::Physics>()->maxVelocity = glm::length(direction);
     gameObject->node->GetComponent<Component::LifeTime>()->lifeTime = gameObject->node->GetComponent<Component::LifeTime>()->initialLifeTime = 1.3f;
     gameObject->node->GetComponent<Component::Damage>()->faction = faction;
-    gameObject->node->GetComponent<Component::PointLight>()->color = glm::vec3(0.f, 1.f, 0.f);
+    gameObject->node->GetComponent<Component::PointLight>()->color = glm::vec3(0.52f, 0.96f, 0.67f);
     gameObject->lightIntensity = 0.3f;
 
     Component::ParticleEmitter* emitter = gameObject->node->GetComponent<Component::ParticleEmitter>();
