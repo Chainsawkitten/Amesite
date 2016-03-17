@@ -42,9 +42,7 @@ RenderSystem::~RenderSystem() {
     Resources().FreeShaderProgram(mShaderProgram);
 }
 
-void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::vec4& clippingPlane) {
-    glm::vec2 screenSize = MainWindow::GetInstance()->GetSize();
-    
+void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::vec2& screenSize, const glm::vec4& clippingPlane) {
     mDeferredLighting->SetTarget();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     

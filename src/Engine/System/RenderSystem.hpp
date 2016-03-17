@@ -23,9 +23,10 @@ namespace System {
             /**
              * @param scene Contains a bunch of entities.
              * @param renderTarget Target to render to.
+             * @param screenSize Size of the render target in pixels.
              * @param clippingPlane Clipping plane.
              */
-            void Render(Scene& scene, RenderTarget* renderTarget, const glm::vec4& clippingPlane = glm::vec4(0.f, 0.f, 0.f, 0.f));
+            void Render(Scene& scene, RenderTarget* renderTarget, const glm::vec2& screenSize, const glm::vec4& clippingPlane = glm::vec4(0.f, 0.f, 0.f, 0.f));
 
         private:
             Shader* mVertexShader;
