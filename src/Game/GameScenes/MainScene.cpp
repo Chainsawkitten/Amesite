@@ -71,12 +71,20 @@ MainScene::MainScene() {
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::UP, InputHandler::JOYSTICK, InputHandler::D_PAD_UP);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::DOWN, InputHandler::JOYSTICK, InputHandler::D_PAD_DOWN);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::RIGHT, InputHandler::JOYSTICK, InputHandler::D_PAD_RIGHT);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LEFT, InputHandler::JOYSTICK, InputHandler::D_PAD_LEFT);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
     
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::JOYSTICK, InputHandler::D_PAD_UP);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::JOYSTICK, InputHandler::D_PAD_DOWN);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::JOYSTICK, InputHandler::D_PAD_RIGHT);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::JOYSTICK, InputHandler::D_PAD_LEFT);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
