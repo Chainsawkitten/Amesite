@@ -1,9 +1,13 @@
 #pragma once
 
-#include <unordered_map>
+#include <map>
 #include <typeinfo>
 #include "../Component/RelativeTransform.hpp"
 #include "../Scene/Scene.hpp"
+
+namespace GameObject {
+    class SuperGameObject;
+}
 
 /// %Entity containing various components.
 class Entity {
@@ -29,25 +33,45 @@ class Entity {
          */
         template <typename T> T* GetComponent();
 
-        /// Unordered map containing components.
+        /// Kill component of type T.
+        template <typename T> void KillComponent();
+
+        /// Kill entity, will be removed at end of frame by scene.
+        void Kill();
+        
+        /// Get whether entity has been killed.
         /**
-         * Maps component type to component.
+         * @return Whether the entity has been killed.
          */
-        std::unordered_map<const std::type_info*, Component::SuperComponent*> components;
+        bool IsKilled() const;
+
+        /// Pointer to which GameObject %Entity is contained.
+        /**
+         * Default: nullptr
+         */
+        GameObject::SuperGameObject* gameObject;
 
     private:
-        /// Pointer to which Scene %Entity is contained.
-        /**
-         * Default: Must point to a Scene
-         */
-        Scene* mScene;
-
-        ///Adds a component to this entity and to the scene.
-        /**
+        // Adds a component to this entity and to the scene.
+        /*
          * @param component The component that will be added.
          * @param componentType The type of the component.
          */
         void AddComponent(Component::SuperComponent* component, const std::type_info* componentType);
+
+        // Pointer to which Scene %Entity is contained.
+        /*
+         * Default: Must point to a Scene
+         */
+        Scene* mScene;
+
+        // Unordered map containing components.
+        /*
+         * Maps component type to component.
+         */
+        std::map<const std::type_info*, Component::SuperComponent*> components;
+        
+        bool mKilled;
 };
 
 template <typename T> T* Entity::GetComponent() {
@@ -72,9 +96,19 @@ template <> inline Component::RelativeTransform* Entity::AddComponent<Component:
 }
 
 template <typename T> T* Entity::AddComponent() {
+    const std::type_info* componentType = &typeid(T*);
+    if (components.find(componentType) != components.end())
+        return nullptr;
     T* component = new T(this);
-    const std::type_info* componentType = &typeid(component);
     AddComponent(component, componentType);
     mScene->AddComponentToList(component, componentType);
     return component;
+}
+
+template <typename T> void Entity::KillComponent() {
+    const std::type_info* componentType = &typeid(T*);
+    if (components.find(componentType) != components.end()) {
+        components[componentType]->Kill();
+        components.erase(componentType);
+    }
 }

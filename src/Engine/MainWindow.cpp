@@ -34,6 +34,8 @@ MainWindow::MainWindow(int width, int height, bool fullscreen, bool borderless, 
     
     mSize = glm::vec2(width, height);
     mInstance = this;
+    
+    mShouldClose = false;
 }
 
 MainWindow::~MainWindow() {
@@ -45,12 +47,13 @@ MainWindow* MainWindow::GetInstance() {
     return mInstance;
 }
 
-void MainWindow::Init() {
+void MainWindow::Init(bool showNotifications) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_CLIP_DISTANCE0);
     
     if (mDebugContext)
-        glDebugMessageCallback(DebugMessageCallback, nullptr);
+        glDebugMessageCallback(showNotifications ? DebugMessageCallback : DebugMessageCallbackIgnoreNotifications, nullptr);
 }
 
 void MainWindow::SetVsync(bool vsync) {
@@ -60,6 +63,9 @@ void MainWindow::SetVsync(bool vsync) {
 void MainWindow::Update() {
     mInput->Update();
     mInput->SetActive();
+    
+    if (glfwWindowShouldClose(mWindow) != GL_FALSE)
+        mShouldClose = true;
 }
 
 const glm::vec2& MainWindow::GetSize() const {
@@ -71,7 +77,11 @@ void MainWindow::SetTitle(const char *title) {
 }
 
 bool MainWindow::ShouldClose() const {
-    return glfwWindowShouldClose(mWindow) != GL_FALSE;
+    return mShouldClose;
+}
+
+void MainWindow::Close() {
+    mShouldClose = true;
 }
 
 void MainWindow::SwapBuffers() {

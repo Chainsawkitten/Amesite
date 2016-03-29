@@ -1,15 +1,24 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 #include <map>
 
 class Shader;
 class ShaderProgram;
 namespace Geometry {
+    class Map;
     class Cube;
+    class Plane;
     class Square;
+    class Model;
+    class OBJModel;
 }
 class Texture2D;
+namespace Audio {
+    class SoundBuffer;
+}
+class Font;
 
 /// Handles all resource loading.
 class ResourceManager {
@@ -59,6 +68,21 @@ class ResourceManager {
          * @param shaderProgram %Shader program to dereference.
          */
         void FreeShaderProgram(ShaderProgram* shaderProgram);
+
+        /// Create a map for rendering if it doesn't already exist.
+        /**
+        * @param data from which to generate the map.
+        * @param dataDimensions height and width of the data.
+        * @param wallHeight height of wall mesh. Default = 5.0
+        * @return The map instance.
+        */
+        Geometry::Map* CreateMap(bool **data, glm::uvec2 dataDimensions, float wallHeight = 5.f);
+
+        /// Free the reference to the map.
+        /**
+        * Deletes the instance if no more references exist.
+        */
+        void FreeMap();
         
         /// Create a cube for rendering if it doesn't already exist.
         /**
@@ -71,6 +95,18 @@ class ResourceManager {
          * Deletes the instance if no more references exist.
          */
         void FreeCube();
+        
+        /// Create a plane for rendering if it doesn't already exist.
+        /**
+         * @return The plane instance.
+         */
+        Geometry::Plane* CreatePlane();
+        
+        /// Free the reference to the plane.
+        /**
+         * Deletes the instance if no more references exist.
+         */
+        void FreePlane();
         
         /// Create a square for rendering if it doesn't already exist.
         /**
@@ -86,11 +122,33 @@ class ResourceManager {
         
         /// Create a 2D texture if it doesn't already exist.
         /**
-		 * @param data Image file data.
-		 * @param dataLength Length of the image file data.
-		 * @return The %Texture2D instance
-		 */
-        Texture2D* CreateTexture2D(const char* data, int dataLength);
+         * @param data Image file data.
+         * @param dataLength Length of the image file data.
+         * @param srgb Whether the image is in SRGB space and should be converted to linear space.
+         * @return The %Texture2D instance.
+         */
+        Texture2D* CreateTexture2D(const char* data, int dataLength, bool srgb = false);
+        
+        /// Create a 2D texture if it doesn't already exist.
+        /**
+         * @param filename Filename of image file.
+         * @param srgb Whether the image is in SRGB space and should be converted to linear space.
+         * @return The %Texture2D instance.
+         */
+        Texture2D* CreateTexture2DFromFile(std::string filename, bool srgb = false);
+
+        /// Create an OBJ model for rendering if it doesn't already exist.
+        /**
+        * @param filename Filename of model file.
+        * @return The model instance
+        */
+        Geometry::OBJModel* CreateOBJModel(std::string filename);
+
+        /// Free the reference to the model.
+        /**
+        * @param model %Model to dereference.
+        */
+        void FreeOBJModel(Geometry::OBJModel* model);
         
         /// Free the reference to the 2D texture.
         /**
@@ -99,19 +157,44 @@ class ResourceManager {
          */
         void FreeTexture2D(Texture2D* texture);
         
-        /// Create a 2D texture if it doesn't already exist.
+        /// Create a sound if it doesn't already exist.
         /**
-		 * @param filename Filename of image file.
-		 * @return The %Texture2D instance
-		 */
-        Texture2D* CreateTexture2DFromFile(std::string filename);
+         * Supported formats: 16-bit PCM Wave, Ogg Vorbis.
+         * @param filename Path to the sound file.
+         * @return The %SoundBuffer instance.
+         */
+        Audio::SoundBuffer* CreateSound(std::string filename);
         
-        /// Free the reference to the 2D texture.
+        /// Free the reference to the sound.
         /**
          * Deletes the instance if no more references exist.
-         * @param texture %Texture to dereference.
+         * @param soundBuffer %SoundBuffer to dereference.
          */
-        void FreeTexture2DFromFile(Texture2D* texture);
+        void FreeSound(Audio::SoundBuffer* soundBuffer);
+        
+        /// Create a font if it doesn't already exist.
+        /**
+         * @param source TTF source.
+         * @param sourceLength Length of the source.
+         * @param height Character height.
+         * @return The %Font instance
+         */
+        Font* CreateFontEmbedded(const char* source, int sourceLength, float height);
+        
+        /// Create a font if it doesn't already exist.
+        /**
+         * @param filename Filename of the TTF file.
+         * @param height Character height.
+         * @return The %Font instance
+         */
+        Font* CreateFontFromFile(std::string filename, float height);
+        
+        /// Free the reference to the font.
+        /**
+         * Deletes the instance if no more references exist.
+         * @param font %Font to dereference.
+         */
+        void FreeFont(Font* font);
         
     private:
         ResourceManager();
@@ -145,10 +228,18 @@ class ResourceManager {
         };
         std::map<ShaderProgramKey, ShaderProgramInstance> mShaderPrograms;
         std::map<ShaderProgram*, ShaderProgramKey> mShaderProgramsInverse;
+
+        // Map
+        Geometry::Map* mMap;
+        int mMapCount;
         
         // Cube
         Geometry::Cube* mCube;
         int mCubeCount;
+        
+        // Plane
+        Geometry::Plane* mPlane;
+        int mPlaneCount;
         
         // Square
         Geometry::Square* mSquare;
@@ -161,10 +252,54 @@ class ResourceManager {
         };
         std::map<const char*, Texture2DInstance> mTextures;
         std::map<Texture2D*, const char*> mTexturesInverse;
+
+        // OBJ Model
+        struct OBJModelInstance {
+            Geometry::OBJModel* model;
+            int count;
+        };
+        std::map<std::string, OBJModelInstance> objModels;
+        std::map<Geometry::OBJModel*, std::string> objModelsInverse;
         
         // Texture2D from file
         std::map<std::string, Texture2DInstance> mTexturesFromFile;
         std::map<Texture2D*, std::string> mTexturesFromFileInverse;
+        
+        // Sound
+        struct SoundInstance {
+            Audio::SoundBuffer* soundBuffer;
+            int count;
+        };
+        std::map<std::string, SoundInstance> mSounds;
+        std::map<Audio::SoundBuffer*, std::string> mSoundsInverse;
+        
+        // Font
+        struct FontInstance {
+            Font* font;
+            int count;
+        };
+        struct FontKey {
+            const char* source;
+            float height;
+            
+            FontKey();
+            
+            bool operator<(const FontKey& other) const;
+        };
+        std::map<FontKey, FontInstance> mFonts;
+        std::map<Font*, FontKey> mFontsInverse;
+        
+        // Font from file
+        struct FontFromFileKey {
+            std::string filename;
+            float height;
+            
+            FontFromFileKey();
+            
+            bool operator<(const FontFromFileKey& other) const;
+        };
+        std::map<FontFromFileKey, FontInstance> mFontsFromFile;
+        std::map<Font*, FontFromFileKey> mFontsFromFileInverse;
 };
 
 /// Get the resource manager.

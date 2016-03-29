@@ -2,10 +2,10 @@
 #include "../Util/Log.hpp"
 
 #include "../Resources.hpp"
-#include "../Geometry/Square.hpp"
+#include "../Geometry/Plane.hpp"
 #include "../Shader/Shader.hpp"
 #include "../Shader/ShaderProgram.hpp"
-#include "Post.vert.hpp"
+#include "Default3D.vert.hpp"
 #include "Deferred.frag.hpp"
 
 #include "../Entity/Entity.hpp"
@@ -14,16 +14,20 @@
 #include "../Component/DirectionalLight.hpp"
 #include "../Component/PointLight.hpp"
 #include "../Component/SpotLight.hpp"
+#include "../Component/Animation.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "../Physics/AxisAlignedBoundingBox.hpp"
+#include "../Physics/Frustum.hpp"
 
 DeferredLighting::DeferredLighting(const glm::vec2& size) {
     mSize = size;
     
-    mVertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
+    mVertexShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragmentShader = Resources().CreateShader(DEFERRED_FRAG, DEFERRED_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
     
-    mSquare = Resources().CreateSquare();
+    mPlane = Resources().CreatePlane();
     
     // Create the FBO
     glGenFramebuffers(1, &mFrameBufferObject);
@@ -35,9 +39,10 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
     
     unsigned int width = static_cast<unsigned int>(size.x);
     unsigned int height = static_cast<unsigned int>(size.y);
-    AttachTexture(mTextures[DIFFUSE], width, height, GL_COLOR_ATTACHMENT0 + DIFFUSE, GL_RGB);
+    AttachTexture(mTextures[DIFFUSE], width, height, GL_COLOR_ATTACHMENT0 + DIFFUSE, GL_RGB16F);
     AttachTexture(mTextures[NORMAL], width, height, GL_COLOR_ATTACHMENT0 + NORMAL, GL_RGB16F);
     AttachTexture(mTextures[SPECULAR], width, height, GL_COLOR_ATTACHMENT0 + SPECULAR, GL_RGB);
+    AttachTexture(mTextures[GLOW], width, height, GL_COLOR_ATTACHMENT0 + GLOW, GL_RGB);
     
     // Bind depthHandle
     glBindTexture(GL_TEXTURE_2D, mDepthHandle);
@@ -77,7 +82,7 @@ DeferredLighting::~DeferredLighting() {
     Resources().FreeShader(mVertexShader);
     Resources().FreeShader(mFragmentShader);
     
-    Resources().FreeSquare();
+    Resources().FreePlane();
 }
 
 void DeferredLighting::SetTarget() {
@@ -113,11 +118,14 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
     SetReadBuffer(DeferredLighting::SPECULAR);
     glBlitFramebuffer(0, 0, width, height, halfWidth, halfHeight, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
     
+    SetReadBuffer(DeferredLighting::GLOW);
+    glBlitFramebuffer(0, 0, width, height, halfWidth, 0, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    
     if (depthTest)
         glEnable(GL_DEPTH_TEST);
 }
 
-void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, float scale) {
+void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize) {
     // Disable depth testing
     GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
     glEnable(GL_DEPTH_TEST);
@@ -127,88 +135,134 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glDepthFunc(GL_ALWAYS);
     
     // Blending enabled for handling multiple light sources
-    GLboolean blend = glIsEnabled(GL_BLEND);
-    glEnable(GL_BLEND);
-    glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_ONE, GL_ONE);
+    GLboolean blend = glIsEnabledi(GL_BLEND, 0);
+    glEnablei(GL_BLEND, 0);
+    glBlendEquationi(0, GL_FUNC_ADD);
+    glBlendFunci(0, GL_ONE, GL_ONE);
     
     mShaderProgram->Use();
     
     BindForReading();
     glClear(GL_COLOR_BUFFER_BIT);
     
-    glBindVertexArray(mSquare->GetVertexArray());
+    glBindVertexArray(mPlane->GetVertexArray());
     
     // Set uniforms.
-    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetOrientation()*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
-    glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
-    
     glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::DIFFUSE);
     glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), DeferredLighting::NORMAL);
     glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
+    glUniform1i(mShaderProgram->GetUniformLocation("tGlow"), DeferredLighting::GLOW);
     glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
     
-    glUniform1f(mShaderProgram->GetUniformLocation("scale"), scale);
+    // For directional lights, use a 3D plane stretched to cover the screen, without considering the camera.
+    glm::mat4 projectionMat;
+    glm::mat4 modelMat = glm::scale(glm::mat4(), glm::vec3(2.f, 2.f, 1.f));
+    glm::mat4 viewMat;
+    glm::mat3 normalMat;
+    glm::mat4 viewProjectionMat(projectionMat * viewMat);
+    
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("viewProjection"), 1, GL_FALSE, &viewProjectionMat[0][0]);
+    glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &normalMat[0][0]);
+    
+    // Get the camera matrices.
+    viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
+    projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
+    viewProjectionMat = projectionMat * viewMat;
+    
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(projectionMat)[0][0]);
+    glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &screenSize[0]);
+    
+    int lightCount = 32;
+    int lightIndex = 0;
     
     // Render all directional lights.
     std::vector<Component::DirectionalLight*> directionalLights = scene.GetAll<Component::DirectionalLight>();
-    for (unsigned int i=0; i<directionalLights.size(); i++) {
-        Entity* lightEntity = directionalLights[i]->entity;
+    for (Component::DirectionalLight* light : directionalLights) {
+        Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
-            glm::vec4 direction = transform->GetOrientation() * glm::vec4(0.f, 0.f, 1.f, 0.f);
-            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * -direction)[0]);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &directionalLights[i]->color[0]);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), 1.f);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), directionalLights[i]->ambientCoefficient);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 0.f);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
+            glm::vec4 direction = glm::vec4(transform->GetWorldDirection(), 0.f);
+            glUniform4fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].position").c_str()), 1, &(viewMat * -direction)[0]);
+            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str()), 1, &light->color[0]);
+            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].attenuation").c_str()), 1.f);
+            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].ambientCoefficient").c_str()), light->ambientCoefficient);
+            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].coneAngle").c_str()), 0.f);
+            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].direction").c_str()), 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
             
-            glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
-        }
-    }
-    
-    // Render all point lights.
-    std::vector<Component::PointLight*> pointLights = scene.GetAll<Component::PointLight>();
-    for (unsigned int i=0; i<pointLights.size(); i++) {
-        Entity* lightEntity = pointLights[i]->entity;
-        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
-        if (transform != nullptr) {
-            glm::vec4 direction = viewMat * (transform->GetOrientation() * glm::vec4(0.f, 0.f, 1.f, 0.f));
-            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * glm::vec4(transform->GetWorldPosition(), 1.0))[0]);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &pointLights[i]->color[0]);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), pointLights[i]->attenuation);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), pointLights[i]->ambientCoefficient);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), 180.f);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(direction)[0]);
-            
-            glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+            if (++lightIndex >= lightCount) {
+                lightIndex = 0;
+                glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+            }
         }
     }
     
     // Render all spot lights.
     std::vector<Component::SpotLight*> spotLights = scene.GetAll<Component::SpotLight>();
-    for (unsigned int i=0; i<spotLights.size(); i++) {
-        Entity* lightEntity = spotLights[i]->entity;
+    for (Component::SpotLight* light : spotLights) {
+        Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
-            glm::vec4 direction = viewMat * (transform->GetOrientation() * glm::vec4(0.f, 0.f, 1.f, 0.f));
-            glUniform4fv(mShaderProgram->GetUniformLocation("light.position"), 1, &(viewMat * glm::vec4(transform->GetWorldPosition(), 1.0))[0]);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.intensities"), 1, &spotLights[i]->color[0]);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.attenuation"), spotLights[i]->attenuation);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.ambientCoefficient"), spotLights[i]->ambientCoefficient);
-            glUniform1f(mShaderProgram->GetUniformLocation("light.coneAngle"), spotLights[i]->coneAngle);
-            glUniform3fv(mShaderProgram->GetUniformLocation("light.direction"), 1, &glm::vec3(direction)[0]);
+            glm::vec4 direction = viewMat * glm::vec4(transform->GetWorldDirection(), 0.f);
+            glUniform4fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].position").c_str()), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
+            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str()), 1, &(light->color * light->intensity)[0]);
+            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].attenuation").c_str()), light->attenuation);
+            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].ambientCoefficient").c_str()), light->ambientCoefficient);
+            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].coneAngle").c_str()), light->coneAngle);
+            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].direction").c_str()), 1, &glm::vec3(direction)[0]);
             
-            glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+            if (++lightIndex >= lightCount) {
+                lightIndex = 0;
+                glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+            }
         }
+    }
+    
+    // At which point lights should be cut off (no longer contribute).
+    double cutOff = 0.0001;
+    
+    Physics::AxisAlignedBoundingBox aabb(glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.5f, 0.5f, 0.5f));
+    
+    lightIndex = 0;
+    
+    // Render all point lights.
+    std::vector<Component::PointLight*> pointLights = scene.GetAll<Component::PointLight>();
+    for (Component::PointLight* light : pointLights) {
+        Entity* lightEntity = light->entity;
+        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
+        if (transform != nullptr) {
+            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation);
+            modelMat = glm::translate(glm::mat4(), transform->GetWorldPosition()) * glm::scale(glm::mat4(), glm::vec3(1.f, 1.f, 1.f) * scale);
+            
+            Physics::Frustum frustum(viewProjectionMat * modelMat);
+            if (frustum.Collide(aabb)) {
+                glUniform4fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].position").c_str()), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
+                glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str()), 1, &(light->color * light->intensity)[0]);
+                glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].attenuation").c_str()), light->attenuation);
+                glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].ambientCoefficient").c_str()), light->ambientCoefficient);
+                glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].coneAngle").c_str()), 180.f);
+                glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].direction").c_str()), 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
+                
+                if (++lightIndex >= lightCount) {
+                    lightIndex = 0;
+                    glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+                }
+            }
+        }
+    }
+    
+    if (lightIndex != 0) {
+        for (; lightIndex <= lightCount; ++lightIndex) {
+            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str()), 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
+        }
+        
+        glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     }
     
     if (!depthTest)
         glDisable(GL_DEPTH_TEST);
     if (!blend)
-        glDisable(GL_BLEND);
+        glDisablei(GL_BLEND, 0);
     
     glDepthFunc(oldDepthFunctionMode);
 }

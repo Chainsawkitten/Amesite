@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 #include <string>
 #include <vector>
 
@@ -46,11 +47,14 @@ class InputHandler {
             AIM_X, ///< Aim in X axis
             AIM_Z, ///< Aim in Z axis
             SHOOT, ///< Fire bullet
+            BOOST, ///< Fire bullet
+            SHIELD, ///< Shield
             QUIT, ///< Quit game
             UP, ///< Move up
             DOWN, ///< Move down
             RIGHT, ///< Move right
             LEFT, ///< Move left
+            PROFILE, ///< Run profiling.
             BUTTONS, ///< Total number of inputs
         };
         
@@ -117,7 +121,19 @@ class InputHandler {
         
         /// Centers the cursor to the middle of the window.
         void CenterCursor();
-        
+
+        /// Get how far the cursor has traveled this frame.
+        /**
+         * @return distance traveled in X by cursor
+         */
+        double DeltaCursorX() const;
+
+        /// Get how far the cursor has traveled this frame.
+        /**
+         * @return distance traveled in Y by cursor
+         */
+        double DeltaCursorY() const;
+
         /// Assign a button binding.
         /**
          * See <a href="http://www.glfw.org/docs/latest/group__keys.html">GLFW keyboard documentation</a> for indices for keys.
@@ -185,10 +201,48 @@ class InputHandler {
         
         /// Check if the joystick is active/connected.
         /**
-        * @param player Player for whom to check joystick.
-        * @return Whether joystick is active or not.
-        */
+         * @param player Player for whom to check joystick.
+         * @return Whether joystick is active or not.
+         */
         bool JoystickActive(Player player);
+
+        /// Get the last valid aim 
+        /**
+         * @param player for whom to retrieve last valid direction.
+         * @return vector representing direction.
+         */
+        glm::vec2 LastValidAimDirection(Player player) const;
+
+        /// Get the last valid aim 
+        /**
+         * @param player for whom to set last valid direction.
+         * @param direction to store.
+         */
+        void SetLastValidAimDirection(Player player, glm::vec2 direction);
+
+        /// Get the deadzone for the aiming axis on the controller
+        /**
+         * @return The deadzone for aiming.
+         */
+        double AimDeadzone() const;
+
+        /// Get the deadzone for the moving axis on the controller
+        /**
+         * @return The deadzone for moving.
+         */
+        double MoveDeadzone() const;
+
+        /// Set the deadzone for the aiming axis on the controller
+        /**
+         * @param aimDeadzone The deadzone for aiming.
+         */
+        void SetAimDeadzone(double aimDeadzone);
+
+        /// Set the deadzone for the moving axis on the controller
+        /**
+         * @param moveDeadzone The deadzone for moving.
+         */
+        void SetMoveDeadzone(double moveDeadzone);
         
     private:
         static InputHandler* mActiveInstance;
@@ -204,16 +258,25 @@ class InputHandler {
             bool axis;
         };
         std::vector<Binding> mBindings;
+
+        // Data
+        struct ButtonData {
+            double value;
+            bool released;
+            bool triggered;
+        };
         
-        // Button values.
-        double mButtonValue[PLAYERS][BUTTONS];
-        bool mButtonReleased[PLAYERS][BUTTONS];
-        bool mButtonTriggered[PLAYERS][BUTTONS];
+        // Button data.
+        ButtonData mButtonData[PLAYERS][BUTTONS];
         
         // Mouse states.
         double mCursorX, mCursorY;
+        double mDeltaCursorX, mDeltaCursorY;
         double mLastScroll;
         double mScroll;
+
+        // Stores the last valid direction for player aiming.
+        glm::vec2 mLastValidAimDirection[PLAYERS];
         
         // Text input.
         std::string mText, mTempText;
@@ -221,8 +284,9 @@ class InputHandler {
         // Whether the joysticks are active.
         bool mJoystickActive[PLAYERS - 1];
         
-        // Joystick
-        const double mThreshold = 0.2;
+        // Joystick thresholds
+        double mMoveDeadzone;
+        double mAimDeadzone;
 };
 
 /// Get currently active input handler.

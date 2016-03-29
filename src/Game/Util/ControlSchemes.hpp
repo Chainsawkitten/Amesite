@@ -24,13 +24,6 @@ namespace ControlScheme {
      */
     void StickRotate(Component::Controller* controller, float deltaTime);
 
-    /// Move the entity with the keyboard.
-    /**
-     * @param controller Component to control.
-     * @param deltaTime Time since last frame (in seconds).
-     */
-    void ArrowKeyRotate(Component::Controller* controller, float deltaTime);
-
     /// Rotate the entity with the keyboard.
     void ArrowKeysMove(Component::Controller* controller, float deltaTime);
 
@@ -40,18 +33,88 @@ namespace ControlScheme {
     /// Moves the object in a random direction
     void RandomMove(Component::Controller* controller, float deltaTime);
 
-    /// Use a button to shoot.
-    /**
-     * @param controller Component to control.
-     * @param deltaTime Time since last frame (in seconds).
-     */
-    void ButtonShoot(Component::Controller* controller, float deltaTime);
-
     /// Constantly fires bullets.
     /**
      * @param controller Component to control.
      * @param deltaTime Time since last frame (in seconds).
      */
     void AlwaysShoot(Component::Controller* controller, float deltaTime);
+
+    /// Constantly fires bullets at closest player.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void AlwaysShootClosestPlayer(Component::Controller* controller, float deltaTime);
+    
+    /// Constantly fires bullets at random player.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void AlwaysShootRandomPlayer(Component::Controller* controller, float deltaTime);
+
+    /// Constantly looks at closest player.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void LookAtClosestPlayer(Component::Controller* controller, float deltaTime);
+
+    /// Accelerate towards closest player.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void AccelerateTowardsClosestPlayer(Component::Controller* controller, float deltaTime);
+    
+    /// Rotates the enitity with the AIM input.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void Aim(Component::Controller* controller, float deltaTime);
+    
+    /// Rotates the enitity with the mouse input.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void MouseAim(Component::Controller* controller, float deltaTime);
+
+    /// Shoots in the direction the object is facing.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void AimedFire(Component::Controller* controller, float deltaTime);
+    
+    /// Shoots automatically in the direction the object is facing.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void AutoAimedFire(Component::Controller* controller, float deltaTime);
+
+    /// Mouse rotation.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void MouseRotate(Component::Controller* controller, float deltaTime);
+
+    /// Boost.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void Boost(Component::Controller* controller, float deltaTime);
+
+    /// Shield.
+    /**
+     * @param controller Component to control.
+     * @param deltaTime Time since last frame (in seconds).
+     */
+    void Shield(Component::Controller* controller, float deltaTime);
 
 }

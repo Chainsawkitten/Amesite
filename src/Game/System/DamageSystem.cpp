@@ -1,12 +1,22 @@
 #include "DamageSystem.hpp"
-#include <Engine/Scene/Scene.hpp>
+#include <Scene/Scene.hpp>
 #include <Entity/Entity.hpp>
+#include <GameObject/SuperGameObject.hpp>
+
+#include <../Game/GameObject/DyingLight.hpp>
+
+#include "../Util/GameEntityFactory.hpp"
+
 #include <Component/Physics.hpp>
+#include <Component/ParticleEmitter.hpp>
+#include <Component/Collider2DCircle.hpp>
+#include <Component/PointLight.hpp>
 #include "../Component/Health.hpp"
-#include "../Component/Health.hpp"
+#include "../Component/Reflect.hpp"
 #include "../Component/Damage.hpp"
-#include "../Component/Controller.hpp"
-#include <Component\Collider2DCircle.hpp>
+#include "../Component/Explode.hpp"
+#include "../Component/LifeTime.hpp"
+#include "../Component/GridCollide.hpp"
 
 #include <vector>
 
@@ -22,63 +32,48 @@ DamageSystem::~DamageSystem() {
 
 void DamageSystem::Update(Scene& scene) {
     std::vector<Scene::Collision*>* collisionVector = scene.GetVector<Scene::Collision>();
-    int numberOfCollisions = collisionVector->size();
-    for (int i = 0; i < numberOfCollisions; i++) {                                                                      //Loop through collision vector
-        if((*collisionVector)[i]->entity->GetComponent<Component::Health>() != nullptr) {                               //Does the colliding entity have a health component?
-            int numberOfIntersections = (*collisionVector)[i]->intersect.size();
-            for (int j = 0; j < numberOfIntersections; j++) {
-                if ( (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>() != nullptr) {               //Does the intersecting entities have a damage component?    
-                    if ((*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->faction != (*collisionVector)[i]->entity->GetComponent<Component::Health>()->faction) {
-                        //Does the damaging entity belong to the same faction as the health entity.
-                        (*collisionVector)[i]->entity->GetComponent<Component::Health>()->health -= (*collisionVector)[i]->intersect[j]->GetComponent<Component::Damage>()->damageAmount;
-                        (*collisionVector)[i]->intersect[j]->GetComponent<Component::Collider2DCircle>()->radius = 0.f;
-                        (*collisionVector)[i]->intersect[j]->GetComponent<Component::Transform>()->position = glm::vec3(10000.f, 0, 0);
+    // Loop through collision vector
+    for (auto collisionX : *collisionVector) {
+        // Does the colliding entity have a health component or a reflect component?
+        Component::Health* HealthX = collisionX->entity->GetComponent<Component::Health>();
+        if (HealthX != nullptr && collisionX->entity->GetComponent<Component::Reflect>() == nullptr) {
+            for (auto collisionY : collisionX->intersect) {
+                // Does the intersecting entities have a damage component?
+                Component::Damage* damageY = collisionY->GetComponent<Component::Damage>();
+                if (damageY != nullptr) {
+                    // Does the damaging if entity doesn't belong to the same faction as the health entity.
+                    if (damageY->faction != HealthX->faction) {
+                        // Reduce health by damage.
+                        HealthX->health -= damageY->damageAmount;
+                        HealthX->cooldown = HealthX->maxCooldown;
+                        if (HealthX->damaged == -1)
+                            HealthX->damaged = 1;
                         
-                    }//Reduce health by damage.
-                    
-                                                                                                                                                                                            //scene.RemoveEntity((*collisionVector)[i]->entity);
-                     //TODO: EXTREMELY TEMPORARY SOLUTION!
+                        // Remove damage entity if it should be removed on impact
+                        if (damageY->removeOnImpact) {
+                            Component::Explode* explosionComponent = damageY->entity->GetComponent<Component::Explode>();
+
+                            if ( explosionComponent != nullptr) {
+
+                                explosionComponent->size += 10.f;
+                                GameObject::DyingLight* dyingLight = new GameObject::DyingLight(&scene);
+                                dyingLight->node->GetComponent<Component::Transform>()->position = damageY->entity->GetComponent<Component::Transform>()->GetWorldPosition();
+                                explosionComponent->type = Component::Explode::TYPE::ENEMY;
+                            }
+
+                            if (damageY->entity->gameObject != nullptr)
+                                damageY->entity->gameObject->Kill();
+                            else
+                                damageY->entity->Kill();
+
+                        }
+                        
+                        // Set the damage entity to have collided if it has a GridCollide component.
+                        Component::GridCollide* gridCollide = collisionY->GetComponent<Component::GridCollide>();
+                        if (gridCollide != nullptr)
+                            gridCollide->hasCollided = true;
+                    }
                 }
-            }
-        }
-    }
-
-    // TODO: CHECK COLLISION BETWEEN HEALTH AND DAMAGE COMPONENT
-
-    /* 
-    IF HIT
-    healthComponent->cooldown = healthComponent->maxCooldown;
-    healthComponent->health -= healthComponent->toughness * damageComponenet->damageAmount;
-
-    IF health < 0
-    remove entity(health)
-    remove enityt(damage)
-    */
-
-    for (auto health : scene.GetAll<Component::Health>()) {
-        if (health->health < 0.f) {
-            // If the killed entity is a player, do other stuff.
-            if (health->entity->GetComponent<Component::Controller>() != nullptr && health->activated == true && health->faction == 0) {
-                //TODO: Implement actual coop spawning
-                health->entity->GetComponent<Component::Transform>()->Move(0.f, -0.5f, 0.f);
-                health->entity->GetComponent<Component::Transform>()->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-                health->entity->GetComponent<Component::Physics>()->maxVelocity = 0.f;
-                health->cooldown = 10.f;
-                health->activated = false;
-            }
-            else if (health->entity->GetComponent<Component::Controller>() != nullptr && health->activated == false && health->faction == 0) {
-                health->cooldown -= 0.1f;
-                if (health->cooldown < 0.f) {
-                    health->health = 100.f;
-                    health->entity->GetComponent<Component::Transform>()->Move(0.f, 0.5f, 0.f);
-                    health->entity->GetComponent<Component::Transform>()->scale = glm::vec3(1.0f, 1.0f, 1.0f);
-                    health->entity->GetComponent<Component::Physics>()->maxVelocity = 20.f;
-                    health->activated = true;
-                }
-            } else {
-                //scene.RemoveEntity(health->entity);
-                health->entity->GetComponent<Component::Transform>()->position = glm::vec3(1000.f, 1000.f, 1000.f);
-                health->entity->GetComponent<Component::Collider2DCircle>()->radius = 0.f;
             }
         }
     }

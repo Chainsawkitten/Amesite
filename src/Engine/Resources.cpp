@@ -3,8 +3,18 @@
 #include "Shader/ShaderProgram.hpp"
 #include "Shader/Shader.hpp"
 #include "Geometry/Cube.hpp"
+#include "Geometry/Plane.hpp"
 #include "Geometry/Square.hpp"
+#include "Geometry/OBJModel.hpp"
+#include "Geometry/Map.hpp"
 #include "Texture/Texture2D.hpp"
+#include "Audio/SoundBuffer.hpp"
+#include "Audio/WaveFile.hpp"
+#include "Audio/VorbisFile.hpp"
+#include "Util/FileSystem.hpp"
+#include "Font/Font.hpp"
+
+#include "Util/Log.hpp"
 
 using namespace std;
 
@@ -33,8 +43,7 @@ Shader* ResourceManager::CreateShader(const char* source, int sourceLength, GLen
 void ResourceManager::FreeShader(Shader* shader) {
     const char* source = mShadersInverse[shader];
     
-    mShaders[source].count--;
-    if (mShaders[source].count <= 0) {
+    if (mShaders[source].count-- <= 1) {
         mShadersInverse.erase(shader);
         delete shader;
         mShaders.erase(source);
@@ -82,9 +91,8 @@ ShaderProgram* ResourceManager::CreateShaderProgram(std::initializer_list<const 
 
 void ResourceManager::FreeShaderProgram(ShaderProgram* shaderProgram) {
     ShaderProgramKey key = mShaderProgramsInverse[shaderProgram];
-    mShaderPrograms[key].count--;
     
-    if (mShaderPrograms[key].count <= 0) {
+    if (mShaderPrograms[key].count-- <= 1) {
         mShaderProgramsInverse.erase(shaderProgram);
         delete shaderProgram;
         mShaderPrograms.erase(key);
@@ -122,39 +130,79 @@ bool ResourceManager::ShaderProgramKey::operator<(const ShaderProgramKey& other)
     return false;
 }
 
+Geometry::Map* ResourceManager::CreateMap(bool **data, glm::uvec2 dataDimensions, float wallHeight) {
+    if (mMapCount++ == 0)
+        mMap = new Geometry::Map(data, dataDimensions, wallHeight);
+    
+    return mMap;
+}
+
+void ResourceManager::FreeMap() {
+    if (mMapCount-- <= 1)
+        delete mMap;
+}
+
 Geometry::Cube* ResourceManager::CreateCube() {
-    if (mCubeCount == 0)
+    if (mCubeCount++ == 0)
         mCube = new Geometry::Cube();
     
-    mCubeCount++;
     return mCube;
 }
 
 void ResourceManager::FreeCube() {
-    mCubeCount--;
-    
-    if (mCubeCount <= 0)
+    if (mCubeCount-- <= 1)
         delete mCube;
 }
 
+Geometry::Plane* ResourceManager::CreatePlane() {
+    if (mPlaneCount++ == 0)
+        mPlane = new Geometry::Plane();
+    
+    return mPlane;
+}
+
+void ResourceManager::FreePlane() {
+    if (mPlaneCount-- <= 1)
+        delete mPlane;
+}
+
+Geometry::OBJModel* ResourceManager::CreateOBJModel(std::string filename) {
+    if (objModels.find(filename) == objModels.end()) {
+        objModels[filename].model = new Geometry::OBJModel(filename.c_str());
+        objModelsInverse[objModels[filename].model] = filename;
+        objModels[filename].count = 1;
+    } else {
+        objModels[filename].count++;
+    }
+
+    return objModels[filename].model;
+}
+
+void ResourceManager::FreeOBJModel(Geometry::OBJModel* model) {
+    string filename = objModelsInverse[model];
+    
+    if (objModels[filename].count-- <= 1) {
+        objModelsInverse.erase(model);
+        delete model;
+        objModels.erase(filename);
+    }
+}
+
 Geometry::Square* ResourceManager::CreateSquare() {
-    if (mSquareCount == 0)
+    if (mSquareCount++ == 0)
         mSquare = new Geometry::Square();
     
-    mSquareCount++;
     return mSquare;
 }
 
 void ResourceManager::FreeSquare() {
-    mSquareCount--;
-    
-    if (mSquareCount <= 0)
+    if (mSquareCount-- <= 1)
         delete mSquare;
 }
 
-Texture2D* ResourceManager::CreateTexture2D(const char* data, int dataLength) {
+Texture2D* ResourceManager::CreateTexture2D(const char* data, int dataLength, bool srgb) {
     if (mTextures.find(data) == mTextures.end()) {
-        mTextures[data].texture = new Texture2D(data, dataLength);
+        mTextures[data].texture = new Texture2D(data, dataLength, srgb);
         mTexturesInverse[mTextures[data].texture] = data;
         mTextures[data].count = 1;
     } else {
@@ -164,20 +212,9 @@ Texture2D* ResourceManager::CreateTexture2D(const char* data, int dataLength) {
     return mTextures[data].texture;
 }
 
-void ResourceManager::FreeTexture2D(Texture2D* texture) {
-    const char* data = mTexturesInverse[texture];
-    
-    mTextures[data].count--;
-    if (mTextures[data].count <= 0) {
-        mTexturesInverse.erase(texture);
-        delete texture;
-        mTextures.erase(data);
-    }
-}
-
-Texture2D* ResourceManager::CreateTexture2DFromFile(std::string filename) {
+Texture2D* ResourceManager::CreateTexture2DFromFile(std::string filename, bool srgb) {
     if (mTexturesFromFile.find(filename) == mTexturesFromFile.end()) {
-        mTexturesFromFile[filename].texture = new Texture2D(filename.c_str());
+        mTexturesFromFile[filename].texture = new Texture2D(filename.c_str(), srgb);
         mTexturesFromFileInverse[mTexturesFromFile[filename].texture] = filename;
         mTexturesFromFile[filename].count = 1;
     } else {
@@ -187,18 +224,136 @@ Texture2D* ResourceManager::CreateTexture2DFromFile(std::string filename) {
     return mTexturesFromFile[filename].texture;
 }
 
-void ResourceManager::FreeTexture2DFromFile(Texture2D* texture) {
-    string filename = mTexturesFromFileInverse[texture];
+void ResourceManager::FreeTexture2D(Texture2D* texture) {
+    if (texture->IsFromFile()) {
+        string filename = mTexturesFromFileInverse[texture];
+        
+        if (mTexturesFromFile[filename].count-- <= 1) {
+            mTexturesFromFileInverse.erase(texture);
+            delete texture;
+            mTexturesFromFile.erase(filename);
+        }
+    } else {
+        const char* data = mTexturesInverse[texture];
+        
+        if (mTextures[data].count-- <= 1) {
+            mTexturesInverse.erase(texture);
+            delete texture;
+            mTextures.erase(data);
+        }
+    }
+}
+
+Audio::SoundBuffer* ResourceManager::CreateSound(string filename) {
+    if (mSounds.find(filename) == mSounds.end()) {
+        Audio::SoundFile* soundFile;
+        if (FileSystem::GetFileExtension(filename) == "ogg")
+            soundFile = new Audio::VorbisFile(filename.c_str());
+        else
+            soundFile = new Audio::WaveFile(filename.c_str());
+        mSounds[filename].soundBuffer = new Audio::SoundBuffer(soundFile);
+        delete soundFile;
+        mSoundsInverse[mSounds[filename].soundBuffer] = filename;
+        mSounds[filename].count = 1;
+    } else {
+        mSounds[filename].count++;
+    }
     
-    mTexturesFromFile[filename].count--;
-    if (mTexturesFromFile[filename].count <= 0) {
-        mTexturesFromFileInverse.erase(texture);
-        delete texture;
-        mTexturesFromFile.erase(filename);
+    return mSounds[filename].soundBuffer;
+}
+
+void ResourceManager::FreeSound(Audio::SoundBuffer* soundBuffer) {
+    string filename = mSoundsInverse[soundBuffer];
+    
+    if (mSounds[filename].count-- <= 1) {
+        mSoundsInverse.erase(soundBuffer);
+        delete soundBuffer;
+        mSounds.erase(filename);
+    }
+}
+
+ResourceManager::FontKey::FontKey() {
+    source = nullptr;
+    height = 0.f;
+}
+
+bool ResourceManager::FontKey::operator<(const FontKey& other) const {
+    if (source < other.source) return true;
+    if (source > other.source) return false;
+    
+    if (height < other.height) return true;
+    if (height > other.height) return false;
+    
+    return false;
+}
+
+Font* ResourceManager::CreateFontEmbedded(const char* source, int sourceLength, float height) {
+    FontKey key;
+    key.source = source;
+    key.height = height;
+    
+    if (mFonts.find(key) == mFonts.end()) {
+        mFonts[key].font = new Font(source, sourceLength, height);
+        mFontsInverse[mFonts[key].font] = key;
+        mFonts[key].count = 1;
+    } else {
+        mFonts[key].count++;
+    }
+    
+    return mFonts[key].font;
+}
+
+ResourceManager::FontFromFileKey::FontFromFileKey() {
+    filename = "";
+    height = 0.f;
+}
+
+bool ResourceManager::FontFromFileKey::operator<(const FontFromFileKey& other) const {
+    if (filename < other.filename) return true;
+    if (filename > other.filename) return false;
+    
+    if (height < other.height) return true;
+    if (height > other.height) return false;
+    
+    return false;
+}
+
+Font* ResourceManager::CreateFontFromFile(std::string filename, float height) {
+    FontFromFileKey key;
+    key.filename = filename;
+    key.height = height;
+    
+    if (mFontsFromFile.find(key) == mFontsFromFile.end()) {
+        mFontsFromFile[key].font = new Font(filename.c_str(), height);
+        mFontsFromFileInverse[mFontsFromFile[key].font] = key;
+        mFontsFromFile[key].count = 1;
+    } else {
+        mFontsFromFile[key].count++;
+    }
+    
+    return mFontsFromFile[key].font;
+}
+
+void ResourceManager::FreeFont(Font* font) {
+    if (font->IsFromFile()) {
+        FontFromFileKey key = mFontsFromFileInverse[font];
+        
+        if (mFontsFromFile[key].count-- <= 1) {
+            mFontsFromFileInverse.erase(font);
+            delete font;
+            mFontsFromFile.erase(key);
+        }
+    } else {
+        FontKey key = mFontsInverse[font];
+        
+        if (mFonts[key].count-- <= 1) {
+            mFontsInverse.erase(font);
+            delete font;
+            mFonts.erase(key);
+        }
     }
 }
 
 ResourceManager& Resources() {
     return ResourceManager::GetInstance();
 }
-

@@ -4,11 +4,10 @@ class Scene;
 class Entity;
 class Shader;
 class ShaderProgram;
+class Texture;
+class Texture2D;
 
 #include "ParticleSystem.hpp"
-#include "Particle.vert.hpp"
-#include "Particle.geom.hpp"
-#include "Particle.frag.hpp"
 
 namespace System {
     /// %System to render particles
@@ -20,15 +19,34 @@ namespace System {
 
             /// Destructor.
             ~ParticleRenderSystem();
+            
+            /// Update particle buffer.
+            /**
+             * Needs to be called before rendering (but only once a frame).
+             * @param scene The scene to render.
+             */
+            void UpdateBuffer(Scene& scene);
 
             /// Render
-            void Render(Scene& scene, Entity* camera, const glm::vec2& screenSize);
+            /**
+             * @param scene %Scene containing particles to render.
+             * @param camera Camera through which to render.
+             * @param screenSize Size of the screen in pixels.
+             * @param clippingPlane Clipping plane.
+             */
+            void Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, const glm::vec4& clippingPlane = glm::vec4(0.f, 0.f, 0.f, 0.f));
 
         private:
             Shader* mParticleVertShader;
             Shader* mParticleGeomShader;
             Shader* mParticleFragShader;
             ShaderProgram* mParticleShaderProgram;
+
+            // When rows are added to texture atlas this needs to be updated.
+            float mTextureAtlasNumRows;
+
+            // Texture atlas where the particle textures are found.
+            Texture2D* mTextureAtlas;
 
             // Vertex buffer.
             GLuint mVertexBuffer = 0;

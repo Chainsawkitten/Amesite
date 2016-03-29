@@ -16,8 +16,11 @@ namespace System {
 
             /// Destructor.
             ~CollisionSystem();
-
-            /// Update collision vector.
+            
+            /// Update the collisions in a scene.
+            /**
+             * @param scene Contains a bunch of entities.
+             */
             void Update(Scene& scene);
 
         private:
@@ -44,7 +47,7 @@ namespace System {
              *@param bCircle Second entity with circle component.
              *@return whether collision occured between a & b
              */
-            bool CircleVSCircle(Component::Collider2DCircle* aCircle, Component::Collider2DCircle* bCircle);
+            //bool CircleVSCircle(Component::Collider2DCircle* aCircle, Component::Collider2DCircle* bCircle);
         };
 
 

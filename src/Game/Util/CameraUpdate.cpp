@@ -10,7 +10,7 @@
 
 void UpdateCamera(Entity* camera, const std::vector<Entity*>& players){
     int numberOfPlayers = players.size();
-    glm::vec3 cameraPos = glm::vec3(0.f, 0.f, 0.f);
+    glm::vec3 cameraPos = glm::vec3(-30.f, 0.f, 60.f);
     glm::vec3 min = glm::vec3(std::numeric_limits<float>::max(), 0.f, std::numeric_limits<float>::max());
     glm::vec3 max = glm::vec3(-std::numeric_limits<float>::max(), 0.f, -std::numeric_limits<float>::max());
     
@@ -40,7 +40,7 @@ void UpdateCamera(Entity* camera, const std::vector<Entity*>& players){
     cameraPos.x *= playerFactor;
     cameraPos.z *= playerFactor;
     float distance = glm::distance(min, max)*0.75f;
-    distance = glm::clamp(distance, 30.f, 60.f);
+    distance = glm::clamp(distance, 50.f, 90.f);
     cameraPos.y = distance;
 
     camera->GetComponent<Component::Transform>()->position = cameraPos;

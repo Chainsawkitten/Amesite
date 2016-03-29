@@ -29,7 +29,10 @@ class MainWindow {
         static MainWindow* GetInstance();
         
         /// Initialize components.
-        void Init();
+        /**
+         * @param showNotifications Whether to show debug messages of notification priority.
+         */
+        void Init(bool showNotifications = false);
         
         /// Set whether vsync is enabled.
         /**
@@ -58,6 +61,9 @@ class MainWindow {
          */
         bool ShouldClose() const;
         
+        /// Close the window.
+        void Close();
+        
         /// Swap front- and backbuffers.
         void SwapBuffers();
         
@@ -68,4 +74,6 @@ class MainWindow {
         GLFWwindow* mWindow;
         bool mDebugContext;
         glm::vec2 mSize;
+        
+        bool mShouldClose;
 };

@@ -20,12 +20,37 @@ namespace Component {
             /// Update model matrix.
             void UpdateModelMatrix();
 
+            /// Get world position of the entity.
+            /**
+            * @return The entity's world position.
+            */
+            virtual glm::vec3 CalculateWorldPosition() const;
+
             /// Get scale of the entity.
             /**
              * @return The entity's scale relative to a parent.
              */
             glm::vec3 GetWorldScale() const;
             
+            /// Get rotation of the entity.
+            /**
+             * @return The entity's rotation (yaw, pitch and roll in degrees).
+             */
+            glm::vec3 GetWorldYawPitchRoll() const;
+
+            /// Get direction of the entity.
+            /**
+             * @return The entity's direction.
+             */
+            glm::vec3 GetWorldDirection() const;
+
+
+            /// Get orientation matrix.
+            /**
+             * @return The entity's orientation matrix.
+             */
+            glm::mat4 GetWorldOrientation() const;
+
             /// Parent Entity.
             /**
              * Default: nullptr

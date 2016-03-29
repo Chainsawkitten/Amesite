@@ -8,6 +8,7 @@ namespace Geometry {
 }
 class Shader;
 class ShaderProgram;
+class Font;
 
 /// A two-dimensional texture.
 /**
@@ -19,15 +20,24 @@ class Texture2D : public Texture {
         /**
          * Supported image formats: TGA.
          * @param filename Filename (relative or absolute) of the image file.
+         * @param srgb Whether the image is in SRGB space and should be converted to linear space.
          */
-        Texture2D(const char* filename);
+        Texture2D(const char* filename, bool srgb = false);
         
         /// Create new texture from given source string.
         /**
          * @param source Source string containing the image file.
          * @param sourceLength Length of the source string.
+         * @param srgb Whether the image is in SRGB space and should be converted to linear space.
          */
-        Texture2D(const char* source, int sourceLength);
+        Texture2D(const char* source, int sourceLength, bool srgb = false);
+        
+        /// Prerender a font to a texture.
+        /**
+         * @param font Font to use for rendering.
+         * @param text Text to render.
+         */
+        Texture2D(Font* font, const char* text);
         
         /// Destructor
         ~Texture2D();
@@ -62,12 +72,20 @@ class Texture2D : public Texture {
         /**
          * @param position Position on the screen, in pixels.
          * @param size Size in pixels.
+         * @param alpha Opacity (0.0 - 1.0).
          */
-        void Render(const glm::vec2& position, const glm::vec2& size) const;
+        void Render(const glm::vec2& position, const glm::vec2& size, float alpha = 1.f) const;
+        
+        /// Get whether the texture was created from file.
+        /**
+         * @return true if the texture was loaded from a file, false otherwise.
+         */
+        bool IsFromFile() const;
         
     private:
         GLuint mTexID;
         int mWidth, mHeight;
+        bool mIsFromFile;
         
         Geometry::Square* mSquare;
         
