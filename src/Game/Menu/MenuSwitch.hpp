@@ -41,6 +41,12 @@ class MenuSwitch : public SuperMenuOption {
         /// Press the menu option.
         void Press();
         
+        /// Set which option should be selected.
+        /**
+         * @param selected Which option should be selected.
+         */
+        void SetSelected(std::size_t selected);
+        
     private:
         std::vector<std::string> mOptions;
         Texture2D** mPrerenderedTexts;

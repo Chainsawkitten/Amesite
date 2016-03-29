@@ -19,26 +19,32 @@ OptionsMenu::OptionsMenu(Menu* parentMenu) : SubMenu() {
     options.push_back("Off");
     MenuSwitch* menuSwitch = new MenuSwitch(GetFont(), "Fullscreen", options, glm::vec3(0.f, 1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::Fullscreen, this, std::placeholders::_1);
+    menuSwitch->SetSelected(GameSettings::GetInstance().GetBool("Fullscreen") ? 0 : 1);
     AddMenuOption(menuSwitch);
 
     menuSwitch = new MenuSwitch(GetFont(), "FXAA", options, glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::FXAA, this, std::placeholders::_1);
+    menuSwitch->SetSelected(GameSettings::GetInstance().GetBool("FXAA") ? 0 : 1);
     AddMenuOption(menuSwitch);
     
     menuSwitch = new MenuSwitch(GetFont(), "Two Players", options, glm::vec3(0.f, 0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::TwoPlayers, this, std::placeholders::_1);
+    menuSwitch->SetSelected(GameSettings::GetInstance().GetBool("Two Players") ? 0 : 1);
     AddMenuOption(menuSwitch);
     
     menuSwitch = new MenuSwitch(GetFont(), "Player One Joystick Aim", options, glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::MouseAim, this, std::placeholders::_1);
+    menuSwitch->SetSelected(GameSettings::GetInstance().GetBool("Player One Joystick Aim") ? 0 : 1);
     AddMenuOption(menuSwitch);
     
     menuSwitch = new MenuSwitch(GetFont(), "Water Reflections", options, glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::WaterReflections, this, std::placeholders::_1);
+    menuSwitch->SetSelected(GameSettings::GetInstance().GetBool("Reflections") ? 0 : 1);
     AddMenuOption(menuSwitch);
     
     menuSwitch = new MenuSwitch(GetFont(), "Water Refractions", options, glm::vec3(0.f, -1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::WaterRefractions, this, std::placeholders::_1);
+    menuSwitch->SetSelected(GameSettings::GetInstance().GetBool("Refractions") ? 0 : 1);
     AddMenuOption(menuSwitch);
     
     std::vector<std::string> volumeOptions;
@@ -55,6 +61,7 @@ OptionsMenu::OptionsMenu(Menu* parentMenu) : SubMenu() {
     volumeOptions.push_back("1");
     menuSwitch = new MenuSwitch(GetFont(), "Volume", volumeOptions, glm::vec3(0.f, -1.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);
     menuSwitch->callback = std::bind(&OptionsMenu::AudioVolume, this, std::placeholders::_1);
+    menuSwitch->SetSelected(static_cast<std::size_t>(GameSettings::GetInstance().GetDouble("Audio Volume") * 10.0 + 0.0001));
     AddMenuOption(menuSwitch);
 
     MenuOption* menuOption = new MenuOption(GetFont(), "BACK", glm::vec3(0.f, -2.f, 0.f), glm::vec3(0.f, 0.f, 0.f), 0.35f);

@@ -31,3 +31,7 @@ void MenuSwitch::Press() {
     mSelected = (mSelected + 1) % mOptions.size();
     callback(mOptions[mSelected]);
 }
+
+void MenuSwitch::SetSelected(std::size_t selected) {
+    mSelected = selected;
+}
