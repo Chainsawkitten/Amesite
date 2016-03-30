@@ -112,7 +112,7 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
 
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     cameraTransform->position = (1.f - weight) * cameraTransform->GetWorldPosition() + weight * subMenuPosition;
-    cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * subMenuRotation.x;
+    cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * subMenuRotation.x - playerTransform->yaw;
     cameraTransform->pitch = (1.f - weight) * cameraTransform->pitch + weight * subMenuRotation.y;
     cameraTransform->roll = (1.f - weight) * cameraTransform->roll + weight * subMenuRotation.z;
     cameraTransform->UpdateModelMatrix();
