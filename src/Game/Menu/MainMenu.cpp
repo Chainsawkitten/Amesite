@@ -48,7 +48,7 @@ MainMenu::MainMenu(Menu* parentMenu) : SubMenu() {
     font->SetColor(glm::vec3(1.f, 1.f, 1.f));
     AddTitleOption(new MenuOption(font, "AMESITE", glm::vec3(11.f, 1.f, 8.5f), glm::vec3(270.f, 0.f, 314.f), 6.f));
 
-    AddTitleOption(new MenuOption(font, SubtitleString.c_str(), glm::vec3(7.f, -3.f, 7.5f), glm::vec3(270.f, 0.f, 314.f), 2.f));
+    AddTitleOption(new MenuOption(GetFont(), SubtitleString.c_str(), glm::vec3(7.f, -3.f, 7.5f), glm::vec3(270.f, 0.f, 314.f), 2.f));
     Resources().FreeFont(font);
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
