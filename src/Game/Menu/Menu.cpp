@@ -147,6 +147,11 @@ void Menu::RenderMenuOptions() {
         subMenu->RenderMenuOptions();
 }
 
+void Menu::PauseGame() {
+    mActive = true;
+    mFlyOut = false;
+}
+
 void Menu::ResumeGame() {
     mFlyOut = true;
 }

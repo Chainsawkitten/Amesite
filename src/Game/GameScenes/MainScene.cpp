@@ -221,6 +221,10 @@ MainScene::~MainScene() {
 }
 
 void MainScene::Update(float deltaTime) {
+    // Pause the game if the player presses the pause button.
+    if (!mMenu.IsActive() && Input()->Triggered(InputHandler::ANYONE, InputHandler::PAUSE))
+        mMenu.PauseGame();
+    
     // We're in the menu, don't update the regular systems.
     if (!mMenu.IsActive()) {
         // Update spawners
