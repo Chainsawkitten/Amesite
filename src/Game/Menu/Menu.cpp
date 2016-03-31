@@ -17,6 +17,7 @@
 #include "SubMenu.hpp"
 #include "MainMenu.hpp"
 #include "OptionsMenu.hpp"
+#include "PauseMenu.hpp"
 #include <Util/Picking.hpp>
 
 #include <Util/Log.hpp>
@@ -28,6 +29,7 @@ Menu::Menu() {
     
     mActive = true;
     mFlyOut = false;
+    mFlyIn = false;
     mTimer = 0.f;
     
     // Transition.
@@ -94,7 +96,7 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
         subMenuRotation = (1.f - mTransitionTimer) * subMenuRotation + mTransitionTimer * newRotation;
     }
     
-    Component::Transform* playerTransform = player->GetNodeEntity()->GetComponent<Component::Transform>();
+    Component::Transform* playerTransform = player->GetBodyEntity()->GetComponent<Component::Transform>();
     glm::mat4 playerModelMatrix(playerTransform->modelMatrix);
     subMenuPosition = glm::vec3(playerModelMatrix * glm::vec4(subMenuPosition, 1.f));
     
@@ -108,17 +110,25 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
         }
         
         weight = 1.f - mTimer;
+    } else if (mFlyIn) {
+        mTimer -= deltaTime;
+        if (mTimer <= 0.f) {
+            mTimer = 0.f;
+            mFlyIn = false;
+        }
+        
+        weight = 1.f - mTimer;
     }
 
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     cameraTransform->position = (1.f - weight) * cameraTransform->GetWorldPosition() + weight * subMenuPosition;
-    cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * subMenuRotation.x;
+    cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * subMenuRotation.x - playerTransform->GetWorldYawPitchRoll().x;
     cameraTransform->pitch = (1.f - weight) * cameraTransform->pitch + weight * subMenuRotation.y;
     cameraTransform->roll = (1.f - weight) * cameraTransform->roll + weight * subMenuRotation.z;
     cameraTransform->UpdateModelMatrix();
     
     // Update model matrix.
-    glm::vec2 playerScale(playerTransform->scale.x, playerTransform->scale.z);
+    glm::vec2 playerScale(playerTransform->GetWorldScale().x, playerTransform->GetWorldScale().z);
     
     glm::mat4 orientation;
     orientation = glm::rotate(orientation, glm::radians(mRotation.x), glm::vec3(0.f, 1.f, 0.f));
@@ -145,6 +155,24 @@ void Menu::RenderSelected() {
 void Menu::RenderMenuOptions() {
     for (SubMenu* subMenu : mSubMenus)
         subMenu->RenderMenuOptions();
+}
+
+void Menu::PauseGame() {
+    mActive = true;
+    mFlyOut = false;
+    mFlyIn = true;
+    mTimer = 1.f;
+    
+    for (SubMenu* subMenu : mSubMenus)
+        delete subMenu;
+    mSubMenus.clear();
+    
+    SubMenu* subMenu = new PauseMenu(this);
+    subMenu->SetPosition(glm::vec3(0.f, 3.1f, 8.6f));
+    subMenu->SetRotation(glm::vec3(0.f, 314.f, 0.f));
+    mSubMenus.push_back(subMenu);
+    
+    mSelected = 0;
 }
 
 void Menu::ResumeGame() {

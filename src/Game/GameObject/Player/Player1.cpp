@@ -346,6 +346,9 @@ Entity* Player1::GetNodeEntity() {
     return mNode;
 }
 
+Entity* Player1::GetBodyEntity() {
+    return mBody;
+}
 
 float Player1::GetHealth() {
     return mNode->GetComponent<Component::Health>()->health;

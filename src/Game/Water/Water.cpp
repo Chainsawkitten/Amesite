@@ -136,7 +136,7 @@ void Water::Render() const {
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     Component::Lens* cameraLens = camera->GetComponent<Component::Lens>();
     
-    glm::mat4 viewMat = cameraTransform->worldOrientationMatrix * glm::translate(glm::mat4(), -cameraTransform->GetWorldPosition());
+    glm::mat4 viewMat = cameraTransform->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -cameraTransform->GetWorldPosition());
     glm::mat4 normalMat = glm::transpose(glm::inverse(viewMat * GetModelMatrix()));
     glm::mat4 projectionMat = cameraLens->GetProjection(screenSize);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &GetModelMatrix()[0][0]);

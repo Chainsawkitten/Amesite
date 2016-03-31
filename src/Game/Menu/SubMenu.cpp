@@ -84,7 +84,7 @@ void SubMenu::Update(const glm::vec2& playerScale) {
     // Update menu selection (mouse picking).
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
-    glm::mat4 viewMat = cameraTransform->worldOrientationMatrix * glm::translate(glm::mat4(), -cameraTransform->GetWorldPosition());
+    glm::mat4 viewMat = cameraTransform->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -cameraTransform->GetWorldPosition());
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     glm::vec2 mouseCoordinates(Input()->CursorX(), Input()->CursorY());
     

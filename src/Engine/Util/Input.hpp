@@ -54,7 +54,8 @@ class InputHandler {
             DOWN, ///< Move down
             RIGHT, ///< Move right
             LEFT, ///< Move left
-            PROFILE, ///< Run profiling.
+            PAUSE, ///< Pause game
+            PROFILE, ///< Run profiling
             BUTTONS, ///< Total number of inputs
         };
         

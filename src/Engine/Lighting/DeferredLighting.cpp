@@ -166,7 +166,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glUniformMatrix3fv(mShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &normalMat[0][0]);
     
     // Get the camera matrices.
-    viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix*glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
+    viewMat = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
     projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     viewProjectionMat = projectionMat * viewMat;
     

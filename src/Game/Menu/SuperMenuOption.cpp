@@ -96,7 +96,7 @@ void SuperMenuOption::RenderSelected(const glm::vec2& screenSize, const glm::mat
     mSelectedShaderProgram->Use();
     
     Entity* camera = HubInstance().GetMainCamera().body;
-    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     glm::mat4 viewProjectionMat = projectionMat * viewMat;
     
@@ -135,7 +135,7 @@ void SuperMenuOption::Render(const glm::vec2& screenSize, const glm::mat4& menuM
     mTextShaderProgram->Use();
     
     Entity* camera = HubInstance().GetMainCamera().body;
-    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
     glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
     glm::mat4 viewProjectionMat = projectionMat * viewMat;
     

@@ -48,6 +48,13 @@ namespace GameObject {
              * @return Main Entity contaning tranform and physics components.
              */
             virtual Entity* GetNodeEntity() = 0;
+            
+            /// Gets body entity.
+            /**
+             * This is the entity containing the player's main mesh and is different from the node entity as the animation should not affect collision deteciton.
+             * @return The entity containing the player's main mesh.
+             */
+            virtual Entity* GetBodyEntity() = 0;
 
             /// Gets health of the player.
             /**

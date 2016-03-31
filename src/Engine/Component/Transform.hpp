@@ -57,12 +57,25 @@ namespace Component {
              * @return The entity's orientation matrix.
              */
             glm::mat4 GetLocalOrientation() const;
+            
+            /// Get orientation matrix (for camera).
+            /**
+             * Calculates the orientation matrix as if the entity was a camera.
+             * @return The entity's orientation matrix.
+             */
+            glm::mat4 GetLocalCameraOrientation() const;
 
             /// Get orientation matrix.
             /**
              * @return The entity's orientation matrix.
              */
             virtual glm::mat4 GetWorldOrientation() const;
+            
+            /// Get orientation matrix.
+            /**
+             * @return The entity's orientation matrix.
+             */
+            glm::mat4 GetWorldCameraOrientation() const;
 
             /// Set rotation by an offset.
             /**
