@@ -29,6 +29,7 @@ Menu::Menu() {
     
     mActive = true;
     mFlyOut = false;
+    mFlyIn = false;
     mTimer = 0.f;
     
     // Transition.
@@ -109,6 +110,14 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
         }
         
         weight = 1.f - mTimer;
+    } else if (mFlyIn) {
+        mTimer -= deltaTime;
+        if (mTimer <= 0.f) {
+            mTimer = 0.f;
+            mFlyIn = false;
+        }
+        
+        weight = 1.f - mTimer;
     }
 
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
@@ -151,6 +160,8 @@ void Menu::RenderMenuOptions() {
 void Menu::PauseGame() {
     mActive = true;
     mFlyOut = false;
+    mFlyIn = true;
+    mTimer = 1.f;
     
     for (SubMenu* subMenu : mSubMenus)
         delete subMenu;

@@ -62,6 +62,7 @@ class Menu {
     private:
         bool mActive;
         bool mFlyOut;
+        bool mFlyIn;
         float mTimer;
         
         glm::vec3 mPosition;
