@@ -17,6 +17,7 @@
 #include "SubMenu.hpp"
 #include "MainMenu.hpp"
 #include "OptionsMenu.hpp"
+#include "PauseMenu.hpp"
 #include <Util/Picking.hpp>
 
 #include <Util/Log.hpp>
@@ -150,6 +151,17 @@ void Menu::RenderMenuOptions() {
 void Menu::PauseGame() {
     mActive = true;
     mFlyOut = false;
+    
+    for (SubMenu* subMenu : mSubMenus)
+        delete subMenu;
+    mSubMenus.clear();
+    
+    SubMenu* subMenu = new PauseMenu(this);
+    subMenu->SetPosition(glm::vec3(0.f, 3.1f, 8.6f));
+    subMenu->SetRotation(glm::vec3(0.f, 314.f, 0.f));
+    mSubMenus.push_back(subMenu);
+    
+    mSelected = 0;
 }
 
 void Menu::ResumeGame() {
