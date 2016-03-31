@@ -21,6 +21,8 @@ SubMenu::SubMenu() {
     mPosition = glm::vec3(0.f, 0.f, 0.f);
     mRotation = glm::vec3(0.f, 0.f, 0.f);
     
+    mLastMoveInput = 0.0;
+    
     // Load font.
     float fontHeight = glm::ceil(MainWindow::GetInstance()->GetSize().y * 0.07f);
     mFont = Resources().CreateFontFromFile("Resources/ABeeZee.ttf", fontHeight);
@@ -65,11 +67,21 @@ void SubMenu::Update(const glm::vec2& playerScale) {
     Entity* camera = HubInstance().GetMainCamera().body;
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     
-    // Update menu selection.
+    // Update menu selection (buttons and sticks).
     int movement = Input()->Triggered(InputHandler::ANYONE, InputHandler::DOWN) - Input()->Triggered(InputHandler::ANYONE, InputHandler::UP);
+    
+    double moveInput = Input()->ButtonValue(InputHandler::ANYONE, InputHandler::MOVE_Z);
+    if (moveInput < -Input()->MoveDeadzone() && mLastMoveInput >= -Input()->MoveDeadzone()) {
+        movement = -1;
+    } else if (moveInput > Input()->MoveDeadzone() && mLastMoveInput <= Input()->MoveDeadzone()) {
+        movement = 1;
+    }
+    mLastMoveInput = moveInput;
+    
     if (mSelected + movement >= 0 && mSelected + movement < static_cast<int>(mMenuOptions.size()))
         mSelected += movement;
     
+    // Update menu selection (mouse picking).
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
     glm::mat4 viewMat = cameraTransform->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -cameraTransform->GetWorldPosition());
