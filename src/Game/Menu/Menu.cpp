@@ -94,7 +94,7 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
         subMenuRotation = (1.f - mTransitionTimer) * subMenuRotation + mTransitionTimer * newRotation;
     }
     
-    Component::Transform* playerTransform = player->GetNodeEntity()->GetComponent<Component::Transform>();
+    Component::Transform* playerTransform = player->GetBodyEntity()->GetComponent<Component::Transform>();
     glm::mat4 playerModelMatrix(playerTransform->modelMatrix);
     subMenuPosition = glm::vec3(playerModelMatrix * glm::vec4(subMenuPosition, 1.f));
     
@@ -112,13 +112,13 @@ void Menu::Update(GameObject::SuperPlayer* player, float deltaTime) {
 
     Component::Transform* cameraTransform = camera->GetComponent<Component::Transform>();
     cameraTransform->position = (1.f - weight) * cameraTransform->GetWorldPosition() + weight * subMenuPosition;
-    cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * subMenuRotation.x - playerTransform->yaw;
+    cameraTransform->yaw = (1.f - weight) * cameraTransform->yaw + weight * subMenuRotation.x - playerTransform->GetWorldYawPitchRoll().x;
     cameraTransform->pitch = (1.f - weight) * cameraTransform->pitch + weight * subMenuRotation.y;
     cameraTransform->roll = (1.f - weight) * cameraTransform->roll + weight * subMenuRotation.z;
     cameraTransform->UpdateModelMatrix();
     
     // Update model matrix.
-    glm::vec2 playerScale(playerTransform->scale.x, playerTransform->scale.z);
+    glm::vec2 playerScale(playerTransform->GetWorldScale().x, playerTransform->GetWorldScale().z);
     
     glm::mat4 orientation;
     orientation = glm::rotate(orientation, glm::radians(mRotation.x), glm::vec3(0.f, 1.f, 0.f));
