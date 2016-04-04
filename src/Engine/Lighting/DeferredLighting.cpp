@@ -192,12 +192,12 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
             glm::vec4 direction = glm::vec4(transform->GetWorldDirection(), 0.f);
-            glUniform4fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].position").c_str()), 1, &(viewMat * -direction)[0]);
-            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str()), 1, &light->color[0]);
-            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].attenuation").c_str()), 1.f);
-            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].ambientCoefficient").c_str()), light->ambientCoefficient);
-            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].coneAngle").c_str()), 0.f);
-            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].direction").c_str()), 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
+            glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * -direction)[0]);
+            glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &light->color[0]);
+            glUniform1f(mLightUniforms[lightIndex].attenuation, 1.f);
+            glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
+            glUniform1f(mLightUniforms[lightIndex].coneAngle, 0.f);
+            glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
             
             if (++lightIndex >= mLightCount) {
                 lightIndex = 0U;
@@ -213,12 +213,12 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
             glm::vec4 direction = viewMat * glm::vec4(transform->GetWorldDirection(), 0.f);
-            glUniform4fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].position").c_str()), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
-            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str()), 1, &(light->color * light->intensity)[0]);
-            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].attenuation").c_str()), light->attenuation);
-            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].ambientCoefficient").c_str()), light->ambientCoefficient);
-            glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].coneAngle").c_str()), light->coneAngle);
-            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].direction").c_str()), 1, &glm::vec3(direction)[0]);
+            glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
+            glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &(light->color * light->intensity)[0]);
+            glUniform1f(mLightUniforms[lightIndex].attenuation, light->attenuation);
+            glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
+            glUniform1f(mLightUniforms[lightIndex].coneAngle, light->coneAngle);
+            glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(direction)[0]);
             
             if (++lightIndex >= mLightCount) {
                 lightIndex = 0U;
@@ -243,12 +243,12 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             
             Physics::Frustum frustum(viewProjectionMat * modelMat);
             if (frustum.Collide(aabb)) {
-                glUniform4fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].position").c_str()), 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
-                glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str()), 1, &(light->color * light->intensity)[0]);
-                glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].attenuation").c_str()), light->attenuation);
-                glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].ambientCoefficient").c_str()), light->ambientCoefficient);
-                glUniform1f(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].coneAngle").c_str()), 180.f);
-                glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].direction").c_str()), 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
+                glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
+                glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &(light->color * light->intensity)[0]);
+                glUniform1f(mLightUniforms[lightIndex].attenuation, light->attenuation);
+                glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
+                glUniform1f(mLightUniforms[lightIndex].coneAngle, 180.f);
+                glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
                 
                 if (++lightIndex >= mLightCount) {
                     lightIndex = 0U;
@@ -259,8 +259,8 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     }
     
     if (lightIndex != 0U) {
-        for (; lightIndex <= mLightCount; ++lightIndex) {
-            glUniform3fv(mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str()), 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
+        for (; lightIndex < mLightCount; ++lightIndex) {
+            glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
         }
         
         glDrawElements(GL_TRIANGLES, mPlane->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
