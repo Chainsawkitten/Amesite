@@ -186,7 +186,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     unsigned int lightIndex = 0U;
     
     // Render all directional lights.
-    std::vector<Component::DirectionalLight*> directionalLights = scene.GetAll<Component::DirectionalLight>();
+    std::vector<Component::DirectionalLight*>& directionalLights = scene.GetAll<Component::DirectionalLight>();
     for (Component::DirectionalLight* light : directionalLights) {
         Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
@@ -207,7 +207,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     }
     
     // Render all spot lights.
-    std::vector<Component::SpotLight*> spotLights = scene.GetAll<Component::SpotLight>();
+    std::vector<Component::SpotLight*>& spotLights = scene.GetAll<Component::SpotLight>();
     for (Component::SpotLight* light : spotLights) {
         Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
@@ -233,7 +233,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     Physics::AxisAlignedBoundingBox aabb(glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.5f, 0.5f, 0.5f));
     
     // Render all point lights.
-    std::vector<Component::PointLight*> pointLights = scene.GetAll<Component::PointLight>();
+    std::vector<Component::PointLight*>& pointLights = scene.GetAll<Component::PointLight>();
     for (Component::PointLight* light : pointLights) {
         Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
