@@ -80,11 +80,11 @@ class DeferredLighting {
         // Store light uniform locations so we don't have to get them every frame.
         static const unsigned int mLightCount = 32U;
         struct {
-            GLuint position;
-            GLuint intensities;
-            GLuint attenuation;
-            GLuint ambientCoefficient;
-            GLuint coneAngle;
-            GLuint direction;
+            GLint position;
+            GLint intensities;
+            GLint attenuation;
+            GLint ambientCoefficient;
+            GLint coneAngle;
+            GLint direction;
         } mLightUniforms[mLightCount];
 };
