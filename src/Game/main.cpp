@@ -5,6 +5,7 @@
 #include <MainWindow.hpp>
 
 #include <Util/Log.hpp>
+#include <Util/Profiling.hpp>
 #include "Util/GameSettings.hpp"
 #include <Util/FileSystem.hpp>
 #include <System/SoundSystem.hpp>
@@ -49,6 +50,8 @@ int main() {
         Game::GetInstance().SetScene(new SplashScene());
     else
         Game::GetInstance().SetScene(new LoadingScene());
+    
+    Profiling::Init();
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -56,12 +59,16 @@ int main() {
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
+        
+        Profiling::BeginFrame();
 
         window->Update();
         Game::GetInstance().Update(static_cast<float>(deltaTime));
         
         // Wait for GPU to finish.
         glFinish();
+        
+        Profiling::LogResults();
         
         // Set window title to reflect screen update and render times.
         float frameTime = (glfwGetTime() - lastTime) * 1000.0f;
@@ -82,6 +89,7 @@ int main() {
         glfwPollEvents();
     }
     
+    Profiling::Free();
     Game::GetInstance().Free();
     delete soundSystem;
     delete window;
