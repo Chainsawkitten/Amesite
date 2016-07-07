@@ -62,7 +62,7 @@ int main() {
         
         Profiling::BeginFrame();
         
-        { Profiling p("Frame");
+        { PROFILE("Frame");
             // Update scene.
             window->Update();
             Game::GetInstance().Update(static_cast<float>(deltaTime));

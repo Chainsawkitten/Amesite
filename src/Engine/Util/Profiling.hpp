@@ -42,3 +42,5 @@ class Profiling {
         static Result first;
         static Result* current;
 };
+
+#define PROFILE(name) Profiling _p(name)

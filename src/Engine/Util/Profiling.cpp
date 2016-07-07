@@ -42,7 +42,7 @@ void Profiling::BeginFrame() {
 
 void Profiling::LogResults() {
     if (current != nullptr) {
-        Log() << current->name << " " << (current->duration * 1000) << " ms\n";
+        Log() << current->name << " " << (current->duration * 1000.0) << " ms\n";
     }
 }
 
