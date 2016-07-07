@@ -60,8 +60,8 @@ int main() {
         window->Update();
         Game::GetInstance().Update(static_cast<float>(deltaTime));
         
-        // Swap buffers and wait until next frame.
-        window->SwapBuffers();
+        // Wait for GPU to finish.
+        glFinish();
         
         // Set window title to reflect screen update and render times.
         float frameTime = (glfwGetTime() - lastTime) * 1000.0f;
@@ -69,6 +69,9 @@ int main() {
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))
             title += " - " + std::to_string(frameTime) + " ms";
         window->SetTitle(title.c_str());
+        
+        // Swap buffers and wait until next frame.
+        window->SwapBuffers();
         
         long wait = static_cast<long>((1.0 / GameSettings::GetInstance().GetLong("Target FPS") + lastTimeRender - glfwGetTime()) * 1000000.0);
         if (wait > 0)
