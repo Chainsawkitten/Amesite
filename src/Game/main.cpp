@@ -52,7 +52,7 @@ int main() {
         Game::GetInstance().SetScene(new LoadingScene());
     
     Profiling::Init();
-
+    
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
@@ -64,11 +64,13 @@ int main() {
         
         { PROFILE("Frame");
             // Update scene.
-            window->Update();
-            Game::GetInstance().Update(static_cast<float>(deltaTime));
+            { PROFILE("Update");
+                window->Update();
+                Game::GetInstance().Update(static_cast<float>(deltaTime));
+            }
             
+            // Wait for GPU to finish.
             { PROFILE("GPU Finish");
-                // Wait for GPU to finish.
                 glFinish();
             }
         }
@@ -104,7 +106,7 @@ int main() {
     GameSettings::GetInstance().Save();
     
     Log() << "Game ended - " << time(nullptr) << "\n";
-
+    
     //_CrtDumpMemoryLeaks();
     return 0;
 }
