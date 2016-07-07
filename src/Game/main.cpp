@@ -49,13 +49,6 @@ int main() {
         Game::GetInstance().SetScene(new SplashScene());
     else
         Game::GetInstance().SetScene(new LoadingScene());
-    
-    // Profiling variables.
-    bool profiling = false;
-    unsigned int profileFrames = 0;
-    float minFrameTime = 0.f;
-    float averageFrameTime = 0.f;
-    float maxFrameTime = 0.f;
 
     // Main game loop.
     double lastTime = glfwGetTime();
@@ -76,32 +69,6 @@ int main() {
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))
             title += " - " + std::to_string(frameTime) + " ms";
         window->SetTitle(title.c_str());
-        
-        // Profiling.
-        if (profiling) {
-            if (frameTime < minFrameTime)
-                minFrameTime = frameTime;
-            if (frameTime > maxFrameTime)
-                maxFrameTime = frameTime;
-            averageFrameTime += frameTime / 300.f;
-            
-            if (++profileFrames >= 300) {
-                Log() << "Profiling ended - " << time(nullptr) << "\n";
-                Log() << "Results:\n"
-                      << "Min: " << minFrameTime << "\n"
-                      << "Average: " << averageFrameTime << "\n"
-                      << "Max: " << maxFrameTime << "\n";
-                profiling = false;
-            }
-        } else if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE)) {
-            profiling = true;
-            profileFrames = 0;
-            minFrameTime = (std::numeric_limits<float>::max)();
-            averageFrameTime = 0.f;
-            maxFrameTime = 0.f;
-            
-            Log() << "Profiling started - " << time(nullptr) << "\n";
-        }
         
         long wait = static_cast<long>((1.0 / GameSettings::GetInstance().GetLong("Target FPS") + lastTimeRender - glfwGetTime()) * 1000000.0);
         if (wait > 0)
