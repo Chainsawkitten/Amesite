@@ -21,10 +21,10 @@ void ShaderProgram::Use() const {
     glUseProgram(mShaderProgram);
 }
 
-GLuint ShaderProgram::GetAttributeLocation(const char* name) const {
+GLint ShaderProgram::GetAttributeLocation(const char* name) const {
     return glGetAttribLocation(mShaderProgram, name);
 }
 
-GLuint ShaderProgram::GetUniformLocation(const char* name) const {
+GLint ShaderProgram::GetUniformLocation(const char* name) const {
     return glGetUniformLocation(mShaderProgram, name);
 }
