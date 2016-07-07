@@ -23,7 +23,6 @@
 #include "../Lighting/DeferredLighting.hpp"
 #include "../RenderTarget.hpp"
 #include "../Physics/Frustum.hpp"
-#include "../Util/Log.hpp"
 
 using namespace System;
 
@@ -114,10 +113,6 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
         //mDeferredLighting->ShowTextures(screenSize);
         glViewport(0, 0, static_cast<GLsizei>(screenSize.x), static_cast<GLsizei>(screenSize.y));
         
-        double startTime = glfwGetTime();
-        for (unsigned int i=0; i<1000; ++i) {
-            mDeferredLighting->Render(scene, camera, screenSize);
-        }
-        Log() << "DeferredLighting::Render: " << glfwGetTime() - startTime << " ms\n";
+        mDeferredLighting->Render(scene, camera, screenSize);
     }
 }
