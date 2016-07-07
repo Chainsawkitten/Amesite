@@ -67,8 +67,10 @@ int main() {
             window->Update();
             Game::GetInstance().Update(static_cast<float>(deltaTime));
             
-            // Wait for GPU to finish.
-            glFinish();
+            { PROFILE("GPU Finish");
+                // Wait for GPU to finish.
+                glFinish();
+            }
         }
         
         Profiling::LogResults();

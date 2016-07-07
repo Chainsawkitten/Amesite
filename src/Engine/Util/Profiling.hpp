@@ -32,9 +32,12 @@ class Profiling {
             std::string name;
             double duration;
             std::list<Result> children;
+            Result* parent;
             
-            Result(const std::string& name);
+            Result(const std::string& name, Result* parent);
         };
+        
+        static void LogResult(const Result& result, unsigned int indentation);
         
         Result* mResult;
         double mStart;

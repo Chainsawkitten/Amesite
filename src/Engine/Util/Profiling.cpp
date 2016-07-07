@@ -3,16 +3,17 @@
 #include "Log.hpp"
 #include <GLFW/glfw3.h>
 
-Profiling::Result Profiling::first("");
+Profiling::Result Profiling::first("", nullptr);
 Profiling::Result* Profiling::current = nullptr;
 
 Profiling::Profiling(const std::string& name) {
     if (Profiling::current == nullptr) {
         first.name = name;
+        first.parent = nullptr;
         current = &first;
         mResult = &first;
     } else {
-        current->children.push_back(Result(name));
+        current->children.push_back(Result(name, current));
         mResult = &current->children.back();
         current = mResult;
     }
@@ -22,6 +23,8 @@ Profiling::Profiling(const std::string& name) {
 
 Profiling::~Profiling() {
     mResult->duration = glfwGetTime() - mStart;
+    if (current == mResult)
+        current = mResult->parent;
 }
 
 void Profiling::Init() {
@@ -34,18 +37,27 @@ void Profiling::Free() {
 
 void Profiling::BeginFrame() {
     // Clear previous results.
-    if (current != nullptr) {
-        current->children.clear();
-        current = nullptr;
-    }
+    first.children.clear();
+    first.name = "";
+    first.duration = 0.0;
+    current = nullptr;
 }
 
 void Profiling::LogResults() {
-    if (current != nullptr) {
-        Log() << current->name << " " << (current->duration * 1000.0) << " ms\n";
-    }
+    LogResult(first, 0);
 }
 
-Profiling::Result::Result(const std::string& name) {
+void Profiling::LogResult(const Result& result, unsigned int indentation) {
+    for (unsigned int i=0; i<indentation; ++i)
+        Log() << "  ";
+    
+    Log() << result.name << " " << (result.duration * 1000.0) << " ms\n";
+    
+    for (const Result& child : result.children)
+        LogResult(child, indentation + 1);
+}
+
+Profiling::Result::Result(const std::string& name, Result* parent) {
     this->name = name;
+    this->parent = parent;
 }
