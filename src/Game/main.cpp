@@ -61,12 +61,15 @@ int main() {
         lastTime = glfwGetTime();
         
         Profiling::BeginFrame();
-
-        window->Update();
-        Game::GetInstance().Update(static_cast<float>(deltaTime));
         
-        // Wait for GPU to finish.
-        glFinish();
+        { Profiling p("Frame");
+            // Update scene.
+            window->Update();
+            Game::GetInstance().Update(static_cast<float>(deltaTime));
+            
+            // Wait for GPU to finish.
+            glFinish();
+        }
         
         Profiling::LogResults();
         
