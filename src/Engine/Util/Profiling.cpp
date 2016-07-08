@@ -73,7 +73,7 @@ void Profiling::LogResult(const Result& result, unsigned int indentation) {
         LogResult(child, indentation + 1);
 }
 
-void Profiling::DrawResult(const Result& result, float x, float& y) {
+void Profiling::DrawResult(Result& result, float x, float& y) {
     string resultString = result.name + " " + to_string(result.duration * 1000.0) + " ms";
     font->RenderText(resultString.c_str(), glm::vec2(x, y), 2000.f);
     
@@ -84,8 +84,17 @@ void Profiling::DrawResult(const Result& result, float x, float& y) {
     
     y += font->GetHeight();
     
-    for (const Result& child : result.children)
+    double otherTime = result.duration;
+    for (Result& child : result.children) {
         DrawResult(child, x + 100.f, y);
+        otherTime -= child.duration;
+    }
+    
+    if (!result.children.empty()) {
+        Result other("Other", &result);
+        other.duration = otherTime;
+        DrawResult(other, x + 100.f, y);
+    }
 }
 
 Profiling::Result::Result(const std::string& name, Result* parent) {

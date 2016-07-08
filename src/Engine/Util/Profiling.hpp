@@ -46,7 +46,7 @@ class Profiling {
         };
         
         static void LogResult(const Result& result, unsigned int indentation);
-        static void DrawResult(const Result& result, float x, float& y);
+        static void DrawResult(Result& result, float x, float& y);
         
         Result* mResult;
         double mStart;
