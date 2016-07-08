@@ -4,6 +4,9 @@
 #include <list>
 
 class Font;
+namespace Geometry {
+    class Square;
+}
 
 /// Run profiling.
 class Profiling {
@@ -52,6 +55,7 @@ class Profiling {
         static Result* current;
         
         static Font* font;
+        static Geometry::Square* square;
 };
 
 #define PROFILE(name) Profiling _p(name)
