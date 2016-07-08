@@ -3,6 +3,8 @@
 #include <string>
 #include <list>
 
+class Font;
+
 /// Run profiling.
 class Profiling {
     public:
@@ -27,6 +29,9 @@ class Profiling {
         /// Log the results of the profiling.
         static void LogResults();
         
+        /// Draw the results of the profiling.
+        static void DrawResults();
+        
     private:
         struct Result {
             std::string name;
@@ -38,12 +43,15 @@ class Profiling {
         };
         
         static void LogResult(const Result& result, unsigned int indentation);
+        static void DrawResult(const Result& result, float x, float& y);
         
         Result* mResult;
         double mStart;
         
         static Result first;
         static Result* current;
+        
+        static Font* font;
 };
 
 #define PROFILE(name) Profiling _p(name)

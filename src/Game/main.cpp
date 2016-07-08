@@ -75,7 +75,7 @@ int main() {
             }
         }
         
-        Profiling::LogResults();
+        Profiling::DrawResults();
         
         // Set window title to reflect screen update and render times.
         float frameTime = (glfwGetTime() - lastTime) * 1000.0f;
