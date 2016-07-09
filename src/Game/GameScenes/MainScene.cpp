@@ -374,7 +374,10 @@ void MainScene::Update(float deltaTime) {
     // Water.
     mWater.Update(deltaTime, glm::vec3(4.f, 0.f, 1.f));
     
-    mParticleRenderSystem.UpdateBuffer(*this);
+    { PROFILE("Update particle buffers");
+        mParticleRenderSystem.UpdateBuffer(*this);
+        glFinish();
+    }
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
@@ -389,6 +392,8 @@ void MainScene::Update(float deltaTime) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         }
+        
+        glFinish();
     }
     
     // Render reflections
@@ -409,11 +414,15 @@ void MainScene::Update(float deltaTime) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         }
+        
+        glFinish();
     }
     
     // Render.
     { PROFILE("Render system");
         mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget(), screenSize);
+        
+        glFinish();
     }
     
     if (GameSettings::GetInstance().GetBool("Refractions") || GameSettings::GetInstance().GetBool("Reflections"))
@@ -422,7 +431,7 @@ void MainScene::Update(float deltaTime) {
     if (mMenu.IsActive())
         mMenu.RenderSelected();
     
-    { PROFILE("Post-processing");
+    { PROFILE("Anti-aliasing");
         // Anti-aliasing.
         if (GameSettings::GetInstance().GetBool("FXAA")) {
             mFxaaFilter->SetScreenSize(screenSize);
@@ -430,9 +439,17 @@ void MainScene::Update(float deltaTime) {
             mPostProcessing->ApplyFilter(mFxaaFilter);
         }
         
+        glFinish();
+    }
+    
+    { PROFILE("Render particles");
         mParticleRenderSystem.Render(*this, mMainCamera->body, screenSize);
         
-        // Glow.
+        glFinish();
+    }
+    
+    // Glow.
+    { PROFILE("Glow");
         mGlowBlurFilter->SetScreenSize(screenSize);
         int blurAmount = 1;
         for (int i = 0; i < blurAmount; ++i) {
@@ -443,12 +460,22 @@ void MainScene::Update(float deltaTime) {
         }
         mPostProcessing->ApplyFilter(mGlowFilter);
         
-        // Gamma correction.
+        glFinish();
+    }
+    
+    // Gamma correction.
+    { PROFILE("Gamma correction");
         mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
         mPostProcessing->ApplyFilter(mGammaCorrectionFilter);
         
-        // Render to back buffer.
+        glFinish();
+    }
+    
+    // Render to back buffer.
+    { PROFILE("Render to back buffer");
         mPostProcessing->Render();
+        
+        glFinish();
     }
     
     if (mMenu.IsActive())
