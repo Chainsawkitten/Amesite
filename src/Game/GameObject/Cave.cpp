@@ -478,14 +478,14 @@ bool Cave::WallIntersect(Entity* entity, float deltaTime) {
 }
 
 bool Cave::GridCollide(glm::vec3 point) {
-    unsigned int x = glm::floor(point.x / scaleFactor);
-    unsigned int z = glm::floor(point.z / scaleFactor);
+    int x = glm::floor(point.x / scaleFactor);
+    int z = glm::floor(point.z / scaleFactor);
     
     float xPos = point.x / scaleFactor - x;
     float zPos = point.z / scaleFactor - z;
     
     if (x >= 0 && z >= 0 && x < mHeight - 1 && z < mWidth - 1) {
-        switch (this->mTypeMap[x][z]) {
+        switch (mTypeMap[x][z]) {
         case 1:
             if (zPos <= 0.5f - xPos)
                 return true;
