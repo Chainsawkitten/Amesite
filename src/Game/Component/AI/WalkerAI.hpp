@@ -37,7 +37,7 @@ namespace Component {
 
         private:
             // The index of the point we're targeting.
-            int mTarget;
+            unsigned int mTarget;
 
             // The points to travel through.
             std::vector<glm::vec3> mPoints;
