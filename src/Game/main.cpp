@@ -5,6 +5,7 @@
 #include <MainWindow.hpp>
 
 #include <Util/Log.hpp>
+#include <Util/Profiling.hpp>
 #include "Util/GameSettings.hpp"
 #include <Util/FileSystem.hpp>
 #include <System/SoundSystem.hpp>
@@ -50,25 +51,36 @@ int main() {
     else
         Game::GetInstance().SetScene(new LoadingScene());
     
-    // Profiling variables.
+    Profiling::Init();
     bool profiling = false;
-    unsigned int profileFrames = 0;
-    float minFrameTime = 0.f;
-    float averageFrameTime = 0.f;
-    float maxFrameTime = 0.f;
-
+    
     // Main game loop.
     double lastTime = glfwGetTime();
     double lastTimeRender = glfwGetTime();
     while (!window->ShouldClose()) {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
-
-        window->Update();
-        Game::GetInstance().Update(static_cast<float>(deltaTime));
         
-        // Swap buffers and wait until next frame.
-        window->SwapBuffers();
+        Profiling::BeginFrame();
+        
+        { PROFILE("Frame");
+            // Update scene.
+            { PROFILE("Update");
+                window->Update();
+                Game::GetInstance().Update(static_cast<float>(deltaTime));
+            }
+            
+            // Wait for GPU to finish.
+            { PROFILE("GPU Finish");
+                glFinish();
+            }
+        }
+        
+        if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE))
+            profiling = !profiling;
+        
+        if (profiling)
+            Profiling::DrawResults();
         
         // Set window title to reflect screen update and render times.
         float frameTime = (glfwGetTime() - lastTime) * 1000.0f;
@@ -77,31 +89,8 @@ int main() {
             title += " - " + std::to_string(frameTime) + " ms";
         window->SetTitle(title.c_str());
         
-        // Profiling.
-        if (profiling) {
-            if (frameTime < minFrameTime)
-                minFrameTime = frameTime;
-            if (frameTime > maxFrameTime)
-                maxFrameTime = frameTime;
-            averageFrameTime += frameTime / 300.f;
-            
-            if (++profileFrames >= 300) {
-                Log() << "Profiling ended - " << time(nullptr) << "\n";
-                Log() << "Results:\n"
-                      << "Min: " << minFrameTime << "\n"
-                      << "Average: " << averageFrameTime << "\n"
-                      << "Max: " << maxFrameTime << "\n";
-                profiling = false;
-            }
-        } else if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE)) {
-            profiling = true;
-            profileFrames = 0;
-            minFrameTime = (std::numeric_limits<float>::max)();
-            averageFrameTime = 0.f;
-            maxFrameTime = 0.f;
-            
-            Log() << "Profiling started - " << time(nullptr) << "\n";
-        }
+        // Swap buffers and wait until next frame.
+        window->SwapBuffers();
         
         long wait = static_cast<long>((1.0 / GameSettings::GetInstance().GetLong("Target FPS") + lastTimeRender - glfwGetTime()) * 1000000.0);
         if (wait > 0)
@@ -112,6 +101,7 @@ int main() {
         glfwPollEvents();
     }
     
+    Profiling::Free();
     Game::GetInstance().Free();
     delete soundSystem;
     delete window;
@@ -121,7 +111,7 @@ int main() {
     GameSettings::GetInstance().Save();
     
     Log() << "Game ended - " << time(nullptr) << "\n";
-
+    
     //_CrtDumpMemoryLeaks();
     return 0;
 }

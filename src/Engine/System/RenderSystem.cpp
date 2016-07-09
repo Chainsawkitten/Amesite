@@ -112,6 +112,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
         renderTarget->SetTarget();
         //mDeferredLighting->ShowTextures(screenSize);
         glViewport(0, 0, static_cast<GLsizei>(screenSize.x), static_cast<GLsizei>(screenSize.y));
+        
         mDeferredLighting->Render(scene, camera, screenSize);
     }
 }
