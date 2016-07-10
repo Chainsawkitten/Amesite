@@ -37,10 +37,6 @@ void PostProcessing::ApplyFilter(Filter* filter) {
     
     mBuffers[1 - mWhich]->SetTarget();
     
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    mBuffers[mWhich]->SetSource();
-    
     filter->GetShaderProgram()->Use();
     
     glUniform1i(filter->GetShaderProgram()->GetUniformLocation("tDiffuse"), 0);
