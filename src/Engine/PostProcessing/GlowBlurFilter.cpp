@@ -13,7 +13,10 @@ GlowBlurFilter::GlowBlurFilter() {
     Resources().FreeShader(vertexShader);
     Resources().FreeShader(fragmentShader);
     
+    mScreenSizeLocation = mShaderProgram->GetUniformLocation("screenSize");
+    
     mHorizontal = false;
+    mHorizontalLocation = mShaderProgram->GetUniformLocation("horizontal");
 }
 
 GlowBlurFilter::~GlowBlurFilter() {
@@ -25,8 +28,8 @@ ShaderProgram* GlowBlurFilter::GetShaderProgram() const {
 }
 
 void GlowBlurFilter::SetUniforms() {
-    glUniform2fv(mShaderProgram->GetUniformLocation("screenSize"), 1, &mScreenSize[0]);
-    glUniform1f(mShaderProgram->GetUniformLocation("horizontal"), mHorizontal);
+    glUniform2fv(mScreenSizeLocation, 1, &mScreenSize[0]);
+    glUniform1f(mHorizontalLocation, mHorizontal);
 }
 
 void GlowBlurFilter::SetScreenSize(const glm::vec2& screenSize) {
