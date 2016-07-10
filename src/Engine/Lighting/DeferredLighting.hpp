@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 namespace Geometry {
-    class Plane;
+    class Square;
 }
 class Scene;
 class Entity;
@@ -71,7 +71,7 @@ class DeferredLighting {
         
 		glm::vec2 mSize;
         
-        Geometry::Plane* mPlane;
+        Geometry::Square* mSquare;
         
         ShaderProgram* mShaderProgram;
         Shader* mVertexShader;
