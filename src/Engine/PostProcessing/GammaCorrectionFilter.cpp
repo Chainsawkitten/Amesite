@@ -25,7 +25,7 @@ ShaderProgram* GammaCorrectionFilter::GetShaderProgram() const {
 }
 
 void GammaCorrectionFilter::SetUniforms() {
-    glUniform1f(mShaderProgram->GetUniformLocation("brightness"), mBrightness);
+    glUniform1f(mShaderProgram->GetUniformLocation("brightness"), 1.f / mBrightness);
 }
 
 void GammaCorrectionFilter::SetBrightness(float brightness) {
