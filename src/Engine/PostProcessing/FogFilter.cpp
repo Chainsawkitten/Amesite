@@ -16,7 +16,12 @@ FogFilter::FogFilter(const glm::vec3& color) {
     Resources().FreeShader(fragmentShader);
     
     mColor = color;
+    mColorLocation = mShaderProgram->GetUniformLocation("color");
+    
+    mMatrixLocation = mShaderProgram->GetUniformLocation("inverseProjectionMatrix");
+    
     mDensity = 0.01f;
+    mDensityLocation = mShaderProgram->GetUniformLocation("density");
 }
 
 FogFilter::~FogFilter() {
@@ -44,7 +49,7 @@ ShaderProgram* FogFilter::GetShaderProgram() const {
 }
 
 void FogFilter::SetUniforms() {
-    glUniform3fv(mShaderProgram->GetUniformLocation("color"), 1, &mColor[0]);
-    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(mLens->GetProjection(mScreenSize))[0][0]);
-    glUniform1f(mShaderProgram->GetUniformLocation("density"), mDensity);
+    glUniform3fv(mColorLocation, 1, &mColor[0]);
+    glUniformMatrix4fv(mMatrixLocation, 1, GL_FALSE, &glm::inverse(mLens->GetProjection(mScreenSize))[0][0]);
+    glUniform1f(mDensityLocation, mDensity);
 }
