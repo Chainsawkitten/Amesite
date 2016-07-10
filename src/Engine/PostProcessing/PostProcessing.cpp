@@ -27,12 +27,7 @@ RenderTarget* PostProcessing::GetRenderTarget() const {
 }
 
 void PostProcessing::ApplyFilter(Filter* filter) {
-    // Disable depth testing
-    GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
-    glEnable(GL_DEPTH_TEST);
-    
-    GLint oldDepthFunctionMode;
-    glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunctionMode);
+    // Always pass depth test.
     glDepthFunc(GL_ALWAYS);
     
     mBuffers[1 - mWhich]->SetTarget();
@@ -57,10 +52,8 @@ void PostProcessing::ApplyFilter(Filter* filter) {
     
     glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     
-    if (depthTest)
-        glEnable(GL_DEPTH_TEST);
-    
-    glDepthFunc(oldDepthFunctionMode);
+    // Reset depth testing to standard value.
+    glDepthFunc(GL_LESS);
     
     mWhich = 1 - mWhich;
 }
