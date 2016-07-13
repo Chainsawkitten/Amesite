@@ -83,7 +83,6 @@ set(RESOURCES
         assets/quanttap.ttf
         assets/quantfh.ttf
         assets/Mugglorna.png
-        assets/PointLightFalloff.png
         assets/default/DefaultDiffuse.png
         assets/default/DefaultNormal.png
         assets/default/DefaultSpecular.png
