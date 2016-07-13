@@ -273,6 +273,14 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glUniformMatrix4fv(mFakeShaderProgram->GetUniformLocation("viewProjection"), 1, GL_FALSE, &viewProjectionMat[0][0]);
     glUniformMatrix3fv(mFakeShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3()[0][0]);
     glUniform4fv(mFakeShaderProgram->GetUniformLocation("clippingPlane"), 1, &glm::vec4(0.f, 0.f, 0.f, 0.f)[0]);
+    glUniform2fv(mFakeShaderProgram->GetUniformLocation("screenSize"), 1, &screenSize[0]);
+    
+    // Set textures.
+    glUniform1i(mFakeShaderProgram->GetUniformLocation("tDiffuse"), 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTextures[DIFFUSE]);
+    
+    cutOff *= 20.f * 20.f;
     
     // Get all the fake lights and render them.
     std::vector<Component::FakePointLight*>& fakeLights = scene.GetAll<Component::FakePointLight>();
@@ -280,12 +288,13 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
-            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation);
+            float scale = light->intensity * sqrt((1.0 / cutOff - 1.0) / light->attenuation);
             glm::mat4 modelMat(glm::translate(glm::mat4(), transform->GetWorldPosition()) * glm::rotate(glm::mat4(), glm::radians(270.f), glm::vec3(1.f, 0.f, 0.f)) * glm::scale(glm::mat4(), glm::vec3(1.f, 1.f, 1.f) * scale));
             
             Physics::Frustum frustum(viewProjectionMat * modelMat);
             if (frustum.Collide(aabb)) {
                 glUniformMatrix4fv(mFakeShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
+                glUniform3fv(mFakeShaderProgram->GetUniformLocation("lightColor"), 1, &light->color[0]);
                 
                 glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
             }
@@ -293,6 +302,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     }
     
     // Reset blending and depth function to standard values.
+    glEnable(GL_DEPTH_TEST);
     glDisablei(GL_BLEND, 0);
     glDepthFunc(GL_LESS);
 }
