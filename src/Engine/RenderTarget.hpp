@@ -71,4 +71,6 @@ class RenderTarget {
         // Shaders
         ShaderProgram* mShaderProgram;
         ShaderProgram* mDitherShaderProgram;
+        
+        float mDitherTime;
 };

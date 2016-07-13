@@ -6,6 +6,8 @@ Copy fragment shader (using dithering).
 uniform sampler2D tDiffuse;
 uniform sampler2D tDepth;
 
+uniform float time;
+
 in vec2 texCoords;
 
 out vec4 fragmentColor;
@@ -20,7 +22,7 @@ highp float rand(vec2 co) {
 }
 
 void main () {
-    float dither = rand(texCoords) / 255.0;
+    float dither = rand(texCoords + vec2(time, 0.0)) / 255.0;
     fragmentColor = texture(tDiffuse, texCoords) + vec4(dither);
     float depth = texture(tDepth, texCoords).r;
     gl_FragDepth = depth;

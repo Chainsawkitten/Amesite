@@ -77,6 +77,7 @@ RenderTarget::RenderTarget(const glm::vec2 &size) {
     Resources().FreeShader(vertexShader);
     
     mSquare = Resources().CreateSquare();
+    mDitherTime = 0.f;
 }
 
 RenderTarget::~RenderTarget() {
@@ -129,6 +130,11 @@ void RenderTarget::Render(bool dither) {
     glUniform1i(shader->GetUniformLocation("tDepth"), 1);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, mDepthBuffer);
+    
+    if (dither) {
+        glUniform1f(shader->GetUniformLocation("time"), mDitherTime);
+        mDitherTime = fmod(mDitherTime + 1.f, 255.f);
+    }
     
     glBindVertexArray(mSquare->GetVertexArray());
     
