@@ -281,7 +281,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
             float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation);
-            glm::mat4 modelMat = glm::translate(glm::mat4(), transform->GetWorldPosition()) * glm::scale(glm::mat4(), glm::vec3(1.f, 1.f, 1.f) * scale);
+            glm::mat4 modelMat(glm::translate(glm::mat4(), transform->GetWorldPosition()) * glm::rotate(glm::mat4(), glm::radians(270.f), glm::vec3(1.f, 0.f, 0.f)) * glm::scale(glm::mat4(), glm::vec3(1.f, 1.f, 1.f) * scale));
             
             Physics::Frustum frustum(viewProjectionMat * modelMat);
             if (frustum.Collide(aabb)) {
