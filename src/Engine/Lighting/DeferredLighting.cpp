@@ -3,16 +3,20 @@
 
 #include "../Resources.hpp"
 #include "../Geometry/Square.hpp"
+#include "../Geometry/Plane.hpp"
 #include "../Shader/Shader.hpp"
 #include "../Shader/ShaderProgram.hpp"
 #include "Post.vert.hpp"
 #include "Deferred.frag.hpp"
+#include "Default3D.vert.hpp"
+#include "FakeLight.frag.hpp"
 
 #include "../Entity/Entity.hpp"
 #include "../Component/Transform.hpp"
 #include "../Component/Lens.hpp"
 #include "../Component/DirectionalLight.hpp"
 #include "../Component/PointLight.hpp"
+#include "../Component/FakePointLight.hpp"
 #include "../Component/SpotLight.hpp"
 #include "../Component/Animation.hpp"
 #include <glm/gtc/matrix_transform.hpp>
@@ -76,6 +80,12 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
         mLightUniforms[lightIndex].coneAngle = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].coneAngle").c_str());
         mLightUniforms[lightIndex].direction = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].direction").c_str());
     }
+    
+    // Fake lights.
+    mPlane = Resources().CreatePlane();
+    mFakeVertexShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFakeFragmentShader = Resources().CreateShader(FAKELIGHT_FRAG, FAKELIGHT_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mFakeShaderProgram = Resources().CreateShaderProgram({ mFakeVertexShader, mFakeFragmentShader });
 }
 
 DeferredLighting::~DeferredLighting() {
@@ -93,6 +103,12 @@ DeferredLighting::~DeferredLighting() {
     Resources().FreeShader(mFragmentShader);
     
     Resources().FreeSquare();
+    
+    // Fake lights.
+    Resources().FreePlane();
+    Resources().FreeShaderProgram(mFakeShaderProgram);
+    Resources().FreeShader(mFakeVertexShader);
+    Resources().FreeShader(mFakeFragmentShader);
 }
 
 void DeferredLighting::SetTarget() {
@@ -245,6 +261,35 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         }
         
         glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+    }
+    
+    // Render fake lights.
+    glDisable(GL_DEPTH_TEST);
+    mFakeShaderProgram->Use();
+    
+    glBindVertexArray(mPlane->GetVertexArray());
+    
+    // Set uniforms.
+    glUniformMatrix4fv(mFakeShaderProgram->GetUniformLocation("viewProjection"), 1, GL_FALSE, &viewProjectionMat[0][0]);
+    glUniformMatrix3fv(mFakeShaderProgram->GetUniformLocation("normalMatrix"), 1, GL_FALSE, &glm::mat3()[0][0]);
+    glUniform4fv(mFakeShaderProgram->GetUniformLocation("clippingPlane"), 1, &glm::vec4(0.f, 0.f, 0.f, 0.f)[0]);
+    
+    // Get all the fake lights and render them.
+    std::vector<Component::FakePointLight*>& fakeLights = scene.GetAll<Component::FakePointLight>();
+    for (Component::FakePointLight* light : fakeLights) {
+        Entity* lightEntity = light->entity;
+        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
+        if (transform != nullptr) {
+            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation);
+            glm::mat4 modelMat = glm::translate(glm::mat4(), transform->GetWorldPosition()) * glm::scale(glm::mat4(), glm::vec3(1.f, 1.f, 1.f) * scale);
+            
+            Physics::Frustum frustum(viewProjectionMat * modelMat);
+            if (frustum.Collide(aabb)) {
+                glUniformMatrix4fv(mFakeShaderProgram->GetUniformLocation("model"), 1, GL_FALSE, &modelMat[0][0]);
+                
+                glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+            }
+        }
     }
     
     // Reset blending and depth function to standard values.

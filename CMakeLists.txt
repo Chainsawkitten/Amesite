@@ -221,6 +221,7 @@ set(EMBEDDED_INPUT
         shaders/PostGlow.frag
         shaders/PostGlowBlur.frag
         shaders/Deferred.frag
+        shaders/FakeLight.frag
         shaders/Particle.vert
         shaders/Particle.geom
         shaders/Particle.frag

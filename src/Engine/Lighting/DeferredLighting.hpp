@@ -5,6 +5,7 @@
 
 namespace Geometry {
     class Square;
+    class Plane;
 }
 class Scene;
 class Entity;
@@ -71,8 +72,8 @@ class DeferredLighting {
         
 		glm::vec2 mSize;
         
+        // Lights.
         Geometry::Square* mSquare;
-        
         ShaderProgram* mShaderProgram;
         Shader* mVertexShader;
         Shader* mFragmentShader;
@@ -87,4 +88,10 @@ class DeferredLighting {
             GLint coneAngle;
             GLint direction;
         } mLightUniforms[mLightCount];
+        
+        // Fake lights.
+        Geometry::Plane* mPlane;
+        ShaderProgram* mFakeShaderProgram;
+        Shader* mFakeVertexShader;
+        Shader* mFakeFragmentShader;
 };
