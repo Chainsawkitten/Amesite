@@ -26,6 +26,7 @@
 #include "../Component/LifeTime.hpp"
 #include "../Component/Spawner.hpp"
 #include <Component/PointLight.hpp>
+#include <Component/FakePointLight.hpp>
 
 #include <System/SoundSystem.hpp>
 #include <Audio/SoundBuffer.hpp>
@@ -175,6 +176,14 @@ MainScene::MainScene() {
     referenceLight->attenuation = 1.f;
     referenceLight->color = glm::vec3(0.25f, 0.96f, 0.37f);
     referenceLight->intensity = 15.f;
+    
+    Entity* referenceFakeLight = CreateEntity();
+    referenceTransform = referenceFakeLight->AddComponent<Component::Transform>();
+    referenceTransform->position = glm::vec3(playerStartX, 0.f, playerStartX + 20.f);
+    Component::FakePointLight* referenceFake = referenceFakeLight->AddComponent<Component::FakePointLight>();
+    referenceFake->attenuation = 1.f;
+    referenceFake->color = glm::vec3(0.25f, 0.96f, 0.37f);
+    referenceFake->intensity = 15.f;
     
     // Create bosses and pillars
     mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
