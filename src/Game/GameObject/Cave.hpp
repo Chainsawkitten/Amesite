@@ -24,7 +24,7 @@ namespace GameObject {
     /// A Cave
     class Cave : public SuperGameObject {
         public:
-            /// Create %Cave
+            /// Create cave.
             /**
              * @param scene Pointer to which Scene %Cave Enities' are contained.
              * @param width Map width.
@@ -41,44 +41,44 @@ namespace GameObject {
             /// Destructor
             ~Cave();
 
-            /// Gets width of the cave.
+            /// Gets the width of the cave.
             /**
-             * @return Width of the cave.
+             * @return The width of the cave.
              */
             int GetWidth() const;
 
-            /// Gets height of the cave.
+            /// Gets the height of the cave.
             /**
-             * @return Height of the cave.
+             * @return The height of the cave.
              */
             int GetHeight() const;
 
-            /// Gets radius of the boss room.
+            /// Gets the radius of the boss room.
             /**
-             * @return Radius of the boss room.
+             * @return The radius of the boss room.
              */
             int GetBossRoomRadius() const;
 
-            /// Grid collision
+            /// Test grid collision.
             /**
              * @param The entity
              * @param deltaTime Where the players start.
-             * @return Returns true if collision with map, else false.
+             * @return Whether there's a collision with the map.
              */
             bool GridCollide(Entity* entity, float deltaTime);
 
-            /// Does it intersect with a wall
+            /// Test intersection against the walls.
             /**
              * @param The entity
              * @param deltaTime Where the players start.
-             * @return Returns true if collision with map, else false.
+             * @return Whether there's a collision with the map.
              */
             bool WallIntersect(Entity* entity, float deltaTime);
 
-            /// Grid collision
+            /// Test grid collision.
             /**
-             * @param point to check.
-             * @return Returns true if collision with map, else false.
+             * @param point Point to check.
+             * @return Whether there's a collision with the map.
              */
             bool GridCollide(glm::vec3 point);
 
@@ -95,11 +95,11 @@ namespace GameObject {
              */
             void PlaceScenery(Entity* scenery, bool rotate);
 
-            /// Returns height value of the terrain
+            /// Get height value of the terrain.
             /**
              * @param x The x-position in the world to check terrian height (world space)
              * @param z The z-position in the world to check terrian height (world space)
-             * @return Returns y-position of terrian height (world space) 
+             * @return Y-position of terrain height (world space).
              */
             float GetTerrainHeight(float x, float z);
 
@@ -109,8 +109,10 @@ namespace GameObject {
             /// Map that contains marching cube info.
             int** mTypeMap;
 
-            /// Map of the %Cave
+            /// Map of the cave.
             Entity* map;
+            
+            /// Height map.
             Entity* heightMap;
 
             /// Rocks vector
@@ -127,8 +129,8 @@ namespace GameObject {
 
         private:
 
-            ///Takes a point and checks if it collides with a wall
-            /**
+            // Takes a point and checks if it collides with a wall
+            /*
              * @param The point too check for collision.
              * @param How far the point will move this frame
              * @param deltaTime Where the players start.
@@ -136,8 +138,8 @@ namespace GameObject {
              */
             glm::vec3 PointCollide(glm::vec3 point, glm::vec3 velocity, float deltaTime);
 
-            ///Takes a position and checks it agains the marching square type to see if it's in a wall
-            /**
+            // Takes a position and checks it agains the marching square type to see if it's in a wall
+            /*
              * @param the xPos (0 - 1) where 0 is far to the left and 1 is far to the right.
              * @param the yPos (0 - 1) where 0 is the top and 1 is the bottom.
              * @param the x coordinate of the cell
@@ -146,22 +148,22 @@ namespace GameObject {
              */
             glm::vec3 CellCollide(float xPos, float yPos, int x, int y);
             
-            /// cave X size.
+            // Cave X size.
             int mWidth;
 
-            /// cave Z size.
+            // Cave Z size.
             int mHeight;
 
-            /// radius of a boss room.
+            // Radius of a boss room.
             int mBossRadius;
 
-            /// The border geometry
+            // The border geometry.
             Geometry::Plane* mBorder;
 
-            /// The terrain geometry
+            // The terrain geometry.
             Geometry::Terrain* mTerrain;
 
-            ///The four border entites
+            // The four border entites.
             Entity* mTopBorder;
             Entity* mBottomBorder;
             Entity* mRightBorder;

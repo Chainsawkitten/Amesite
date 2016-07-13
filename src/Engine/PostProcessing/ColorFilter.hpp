@@ -2,6 +2,7 @@
 
 #include "Filter.hpp"
 #include <glm/glm.hpp>
+#include <GL/glew.h>
 
 /// Color adjustment filter.
 class ColorFilter : public Filter {
@@ -34,4 +35,5 @@ class ColorFilter : public Filter {
         ShaderProgram* mShaderProgram;
         
         glm::vec3 mColor;
+        GLint mColorLocation;
 };

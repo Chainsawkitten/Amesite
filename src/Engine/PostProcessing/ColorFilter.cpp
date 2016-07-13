@@ -12,7 +12,9 @@ ColorFilter::ColorFilter(const glm::vec3& color) {
     mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
     Resources().FreeShader(vertexShader);
     Resources().FreeShader(fragmentShader);
+    
     mColor = color;
+    mColorLocation = mShaderProgram->GetUniformLocation("color");
 }
 
 ColorFilter::~ColorFilter() {
@@ -24,7 +26,7 @@ ShaderProgram* ColorFilter::GetShaderProgram() const {
 }
 
 void ColorFilter::SetUniforms() {
-    glUniform3fv(mShaderProgram->GetUniformLocation("color"), 1, &mColor[0]);
+    glUniform3fv(mColorLocation, 1, &mColor[0]);
 }
 
 void ColorFilter::SetColor(const glm::vec3& color) {

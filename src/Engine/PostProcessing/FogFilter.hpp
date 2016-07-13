@@ -2,6 +2,7 @@
 
 #include "Filter.hpp"
 #include <glm/glm.hpp>
+#include <GL/glew.h>
 
 namespace Component {
     class Lens;
@@ -56,7 +57,12 @@ class FogFilter : public Filter {
         ShaderProgram* mShaderProgram;
         
         glm::vec3 mColor;
+        GLint mColorLocation;
+        
         const Component::Lens* mLens;
         glm::vec2 mScreenSize;
+        GLint mMatrixLocation;
+        
         float mDensity;
+        GLint mDensityLocation;
 };
