@@ -167,6 +167,15 @@ MainScene::MainScene() {
     
     HubInstance().SetPlayer2State(GameSettings::GetInstance().GetBool("Two Players"));
     
+    // Create reference lights.
+    Entity* referencePointLight = CreateEntity();
+    Component::Transform* referenceTransform = referencePointLight->AddComponent<Component::Transform>();
+    referenceTransform->position = glm::vec3(playerStartX + 20.f, 0.f, playerStartZ);
+    Component::PointLight* referenceLight = referencePointLight->AddComponent<Component::PointLight>();
+    referenceLight->attenuation = 1.f;
+    referenceLight->color = glm::vec3(0.25f, 0.96f, 0.37f);
+    referenceLight->intensity = 15.f;
+    
     // Create bosses and pillars
     mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
     mBossVector.push_back(GameEntityCreator().CreateShieldBoss(glm::vec3(mCave->scaleFactor*bossPositions[1].x, 0.f, mCave->scaleFactor*bossPositions[1].y)));
