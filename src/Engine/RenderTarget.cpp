@@ -111,19 +111,10 @@ GLuint RenderTarget::GetDepthTexture() const {
 }
 
 void RenderTarget::Render() {
-    // Disable depth testing
-    GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
-    glEnable(GL_DEPTH_TEST);
-    
-    GLint oldDepthFunctionMode;
-    glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunctionMode);
+    // Always pass depth test.
     glDepthFunc(GL_ALWAYS);
     
     mShaderProgram->Use();
-    
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    SetSource();
     
     glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), 0);
     glActiveTexture(GL_TEXTURE0);
@@ -137,8 +128,6 @@ void RenderTarget::Render() {
     
     glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     
-    if (depthTest)
-        glEnable(GL_DEPTH_TEST);
-    
-    glDepthFunc(oldDepthFunctionMode);
+    // Reset depth testing to standard value.
+    glDepthFunc(GL_LESS);
 }
