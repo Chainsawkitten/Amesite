@@ -280,7 +280,11 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTextures[DIFFUSE]);
     
-    cutOff *= 20.f * 20.f;
+    glUniform1i(mFakeShaderProgram->GetUniformLocation("tGlow"), 1);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mTextures[GLOW]);
+    
+    cutOff *= 15.f * 15.f;
     
     // Get all the fake lights and render them.
     std::vector<Component::FakePointLight*>& fakeLights = scene.GetAll<Component::FakePointLight>();
