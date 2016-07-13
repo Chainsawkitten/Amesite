@@ -213,6 +213,7 @@ set(EMBEDDED_INPUT
         shaders/SingleColor3D.frag
         shaders/Post.vert
         shaders/PostCopy.frag
+        shaders/PostDither.frag
         shaders/PostColor.frag
         shaders/PostFXAA.frag
         shaders/PostFog.frag
@@ -422,7 +423,6 @@ set(GAME_SRCS
         src/Game/System/LifeTimeSystem.cpp
         src/Game/System/ExplodeSystem.cpp
         src/Game/System/ReflectSystem.cpp
-        src/Game/System/AISystem.cpp
         src/Game/System/CheckpointSystem.cpp
         src/Game/System/EnemySpawnerSystem.cpp
         src/Game/System/UpdateSystem.cpp
@@ -437,14 +437,8 @@ set(GAME_SRCS
         src/Game/Component/Reflect.cpp
         src/Game/Component/Update.cpp
         src/Game/Component/GridCollide.cpp
-        src/Game/Component/AI/WalkerAI.cpp
-        src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
         src/Game/GameScenes/SplashScene.cpp
-        src/Game/GameScenes/PontusScene.cpp
-        src/Game/GameScenes/DanielScene.cpp
-        src/Game/GameScenes/IvarScene.cpp
-        src/Game/GameScenes/JonathanScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
         src/Game/GameScenes/WinScene.cpp
         src/Game/GameScenes/LoadingScene.cpp
@@ -499,7 +493,6 @@ set(GAME_HEADERS
         src/Game/System/LifeTimeSystem.hpp
         src/Game/System/ExplodeSystem.hpp
         src/Game/System/ReflectSystem.hpp
-        src/Game/System/AISystem.hpp
         src/Game/System/CheckpointSystem.hpp
         src/Game/System/EnemySpawnerSystem.hpp
         src/Game/System/UpdateSystem.hpp
@@ -514,14 +507,8 @@ set(GAME_HEADERS
         src/Game/Component/Reflect.hpp
         src/Game/Component/Update.hpp
         src/Game/Component/GridCollide.hpp
-        src/Game/Component/AI/WalkerAI.hpp
-        src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
         src/Game/GameScenes/SplashScene.hpp
-        src/Game/GameScenes/PontusScene.hpp
-        src/Game/GameScenes/DanielScene.hpp
-        src/Game/GameScenes/IvarScene.hpp
-        src/Game/GameScenes/JonathanScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
         src/Game/GameScenes/WinScene.hpp
         src/Game/GameScenes/LoadingScene.hpp

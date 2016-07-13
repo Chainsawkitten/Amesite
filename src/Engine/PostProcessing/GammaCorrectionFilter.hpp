@@ -2,6 +2,7 @@
 
 #include "Filter.hpp"
 #include <glm/glm.hpp>
+#include <GL/glew.h>
 
 /// Gamma correction filter.
 class GammaCorrectionFilter : public Filter {
@@ -31,4 +32,5 @@ class GammaCorrectionFilter : public Filter {
         ShaderProgram* mShaderProgram;
         
         float mBrightness;
+        GLint mBrightnessLocation;
 };

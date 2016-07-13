@@ -2,6 +2,7 @@
 
 #include "Filter.hpp"
 #include <glm/glm.hpp>
+#include <GL/glew.h>
 
 /// Glow filter (first pass).
 /**
@@ -40,5 +41,8 @@ class GlowBlurFilter : public Filter {
         ShaderProgram* mShaderProgram;
         
         glm::vec2 mScreenSize;
+        GLint mScreenSizeLocation;
+        
         float mHorizontal;
+        GLint mHorizontalLocation;
 };
