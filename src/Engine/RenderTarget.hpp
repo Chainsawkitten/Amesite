@@ -3,9 +3,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-class Shader;
 class ShaderProgram;
-
 namespace Geometry {
     class Square;
 }
@@ -54,7 +52,10 @@ class RenderTarget {
         GLuint GetDepthTexture() const;
         
         /// Render resulting image to screen.
-        void Render();
+        /**
+         * @param dither Whether to use dithering.
+         */
+        void Render(bool dither = false);
         
     private:
         unsigned int mWidth;
@@ -68,7 +69,8 @@ class RenderTarget {
         Geometry::Square* mSquare;
         
         // Shaders
-        Shader* mVertexShader;
-        Shader* mFragmentShader;
         ShaderProgram* mShaderProgram;
+        ShaderProgram* mDitherShaderProgram;
+        
+        GLuint mDitherTexture;
 };

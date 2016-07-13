@@ -473,7 +473,7 @@ void MainScene::Update(float deltaTime) {
     
     // Render to back buffer.
     { PROFILE("Render to back buffer");
-        mPostProcessing->Render();
+        mPostProcessing->Render(true);
         
         glFinish();
     }

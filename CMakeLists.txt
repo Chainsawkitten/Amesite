@@ -213,6 +213,7 @@ set(EMBEDDED_INPUT
         shaders/SingleColor3D.frag
         shaders/Post.vert
         shaders/PostCopy.frag
+        shaders/PostDither.frag
         shaders/PostColor.frag
         shaders/PostFXAA.frag
         shaders/PostFog.frag

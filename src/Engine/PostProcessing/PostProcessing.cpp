@@ -58,7 +58,7 @@ void PostProcessing::ApplyFilter(Filter* filter) {
     mWhich = 1 - mWhich;
 }
 
-void PostProcessing::Render() {
+void PostProcessing::Render(bool dither) {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    mBuffers[mWhich]->Render();
+    mBuffers[mWhich]->Render(dither);
 }
