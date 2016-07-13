@@ -128,7 +128,6 @@ void GameObject::RingBoss::FireBullets() {
         }
     }
     glm::vec3 targetDirection = targetPlayerPosition - transformWorldPosition;
-    glm::vec3 normTarget = glm::normalize(targetDirection);
     GameObject::Bullet* bullets[5];
 
     if (glm::length(targetDirection) > 0.001f) {
