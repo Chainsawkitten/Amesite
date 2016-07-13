@@ -77,25 +77,6 @@ RenderTarget::RenderTarget(const glm::vec2 &size) {
     Resources().FreeShader(vertexShader);
     
     mSquare = Resources().CreateSquare();
-    
-    // 8x8 Bayer ordered dithering pattern.
-    const char pattern[] = {
-        0, 32,  8, 40,  2, 34, 10, 42,
-        48, 16, 56, 24, 50, 18, 58, 26,
-        12, 44,  4, 36, 14, 46,  6, 38,
-        60, 28, 52, 20, 62, 30, 54, 22,
-        3, 35, 11, 43,  1, 33,  9, 41,
-        51, 19, 59, 27, 49, 17, 57, 25,
-        15, 47,  7, 39, 13, 45,  5, 37,
-        63, 31, 55, 23, 61, 29, 53, 21 };
-    
-    glGenTextures(1, &mDitherTexture);
-    glBindTexture(GL_TEXTURE_2D, mDitherTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 8, 8, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pattern);
 }
 
 RenderTarget::~RenderTarget() {
@@ -108,8 +89,6 @@ RenderTarget::~RenderTarget() {
     Resources().FreeShaderProgram(mDitherShaderProgram);
     
     Resources().FreeSquare();
-    
-    glDeleteTextures(1, &mDitherTexture);
 }
 
 void RenderTarget::SetTarget() {
@@ -150,12 +129,6 @@ void RenderTarget::Render(bool dither) {
     glUniform1i(shader->GetUniformLocation("tDepth"), 1);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, mDepthBuffer);
-    
-    if (dither) {
-        glUniform1i(shader->GetUniformLocation("tDither"), 2);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, mDitherTexture);
-    }
     
     glBindVertexArray(mSquare->GetVertexArray());
     

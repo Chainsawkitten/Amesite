@@ -71,6 +71,4 @@ class RenderTarget {
         // Shaders
         ShaderProgram* mShaderProgram;
         ShaderProgram* mDitherShaderProgram;
-        
-        GLuint mDitherTexture;
 };
