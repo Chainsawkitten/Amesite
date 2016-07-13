@@ -83,6 +83,7 @@ set(RESOURCES
         assets/quanttap.ttf
         assets/quantfh.ttf
         assets/Mugglorna.png
+        assets/PointLightFalloff.png
         assets/default/DefaultDiffuse.png
         assets/default/DefaultNormal.png
         assets/default/DefaultSpecular.png
@@ -304,6 +305,7 @@ set(ENGINE_SRCS
         src/Engine/Component/ParticleEmitter.cpp
         src/Engine/Component/DirectionalLight.cpp
         src/Engine/Component/PointLight.cpp
+        src/Engine/Component/FakePointLight.cpp
         src/Engine/Component/SpotLight.cpp
         src/Engine/Component/Animation.cpp
         src/Engine/Component/SoundSource.cpp
@@ -369,6 +371,7 @@ set(ENGINE_HEADERS
         src/Engine/Component/ParticleEmitter.hpp
         src/Engine/Component/DirectionalLight.hpp
         src/Engine/Component/PointLight.hpp
+        src/Engine/Component/FakePointLight.hpp
         src/Engine/Component/SpotLight.hpp
         src/Engine/Component/Animation.hpp
         src/Engine/Component/SoundSource.hpp
