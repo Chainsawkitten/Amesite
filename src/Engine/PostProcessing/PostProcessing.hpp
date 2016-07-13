@@ -33,7 +33,10 @@ class PostProcessing {
         void ApplyFilter(Filter* filter);
         
         /// Render resulting image to screen.
-        void Render();
+        /**
+         * @param dither Whether to use dithering.
+         */
+        void Render(bool dither = false);
         
     private:
         short int mWhich;
