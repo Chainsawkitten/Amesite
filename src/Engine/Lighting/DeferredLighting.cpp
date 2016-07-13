@@ -105,7 +105,6 @@ void DeferredLighting::ResetTarget() {
 
 void DeferredLighting::ShowTextures(const glm::vec2& size) {
     // Disable depth testing
-    GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
     glDisable(GL_DEPTH_TEST);
     
     int width = static_cast<int>(size.x);
@@ -131,21 +130,15 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
     SetReadBuffer(DeferredLighting::GLOW);
     glBlitFramebuffer(0, 0, width, height, halfWidth, 0, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
     
-    if (depthTest)
-        glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize) {
-    // Disable depth testing
-    GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
+    // Set depth testing to always pass.
     glEnable(GL_DEPTH_TEST);
-    
-    GLint oldDepthFunctionMode;
-    glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunctionMode);
     glDepthFunc(GL_ALWAYS);
     
     // Blending enabled for handling multiple light sources
-    GLboolean blend = glIsEnabledi(GL_BLEND, 0);
     glEnablei(GL_BLEND, 0);
     glBlendEquationi(0, GL_FUNC_ADD);
     glBlendFunci(0, GL_ONE, GL_ONE);
@@ -254,12 +247,9 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     }
     
-    if (!depthTest)
-        glDisable(GL_DEPTH_TEST);
-    if (!blend)
-        glDisablei(GL_BLEND, 0);
-    
-    glDepthFunc(oldDepthFunctionMode);
+    // Reset blending and depth function to standard values.
+    glDisablei(GL_BLEND, 0);
+    glDepthFunc(GL_LESS);
 }
 
 void DeferredLighting::AttachTexture(GLuint texture, unsigned int width, unsigned int height, GLenum attachment, GLint internalFormat) {
