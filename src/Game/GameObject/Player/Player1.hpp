@@ -77,6 +77,12 @@ namespace GameObject {
              */
             void SetPlayerID(InputHandler::Player id);
 
+            /// Set device
+            /**
+             * @param Device to control player
+             */
+            void SetDevice(InputHandler::Device device);
+
         private:
             Geometry::OBJModel* mBodyModel;
             Geometry::OBJModel* mFrontEngineModel;

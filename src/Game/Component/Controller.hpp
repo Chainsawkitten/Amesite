@@ -23,6 +23,12 @@ namespace Component {
              */
             InputHandler::Player playerID;
             
+            /// Which device is controlling the entity.
+            /**
+             * Default: InputHandler::NONE
+             */
+            InputHandler::Device device;
+
             /// The speed of the controller
             /**
              * Default: 100.f

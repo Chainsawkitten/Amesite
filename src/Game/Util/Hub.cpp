@@ -52,21 +52,25 @@ void Hub::SetPlayer1Joystick(bool joystick) {
     if (joystick && mPlayers.size() == 1) {
         player1->SetJoystickAim(joystick);
         player1->SetPlayerID(InputHandler::PLAYER_ONE);
+        player1->SetDevice(InputHandler::JOYSTICK);
     }
     // Mouse, one player
     else if (!joystick && mPlayers.size() == 1) {
         player1->SetJoystickAim(joystick);
         player1->SetPlayerID(InputHandler::PLAYER_TWO);
+        player1->SetDevice(InputHandler::KEYBOARD);
     }
     // Joystick, two players
     else if (joystick && mPlayers.size() == 2) {
         player1->SetJoystickAim(joystick);
         player1->SetPlayerID(InputHandler::PLAYER_TWO);
+        player1->SetDevice(InputHandler::JOYSTICK);
     }
     // Mouse, two players
     else {
         player1->SetJoystickAim(joystick);
         player1->SetPlayerID(InputHandler::PLAYER_TWO);
+        player1->SetDevice(InputHandler::KEYBOARD);
     }
 }
 
