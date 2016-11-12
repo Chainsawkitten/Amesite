@@ -128,82 +128,68 @@ MainScene::MainScene() {
     HubInstance().SetMainCamera(mMainCamera);
     
     // Create scene
-    int width;
-    int height = width = 120;
+    const float width = 300.f;
+    const float height = 300.f;
+    glm::vec3 offset = glm::vec3(width, 0.f, height);
     int seed = time(0);
     int percent = 50;
     int iterations = 10;
     int threshold = 200;
-    
-    CaveGenerator::Coordinate playerPosition(width / 2, height / 2);
-    CaveGenerator::Coordinate NorthWest(10, 10);
-    CaveGenerator::Coordinate SouthEast(height - 10, width - 10);
-    CaveGenerator::Coordinate NorthEast(height - 10, 10);
-    CaveGenerator::Coordinate SouthWest(10, width - 10);
-    
+    //
+    CaveGenerator::Coordinate mid(width / 2, width / 2);
+    CaveGenerator::Coordinate nort(width / 2, width * 0.1f);
+    CaveGenerator::Coordinate south(width / 2, width * 0.9f);
+    CaveGenerator::Coordinate west(width * 0.1, width / 2);
+    CaveGenerator::Coordinate east(width * 0.9f, width / 2);
+
     std::vector<CaveGenerator::Coordinate> bossPositions;
-    bossPositions.push_back(NorthWest);
-    bossPositions.push_back(SouthWest);
-    bossPositions.push_back(NorthEast);
-    bossPositions.push_back(SouthEast);
+    bossPositions.push_back(nort);
+    bossPositions.push_back(south);
+    bossPositions.push_back(west);
+    bossPositions.push_back(east);
     
     // Create a map.
-    mCave = GameEntityCreator().CreateMap(width, height, seed, percent, iterations, threshold, playerPosition, bossPositions);
+    //mCave = GameEntityCreator().CreateMap(120.f, 120.f, seed, percent, iterations, threshold, mid, bossPositions);
+    
+
+    //glm::vec3 mapMid = glm::vec3(mCave->scaleFactor*(static_cast<float>(width) / 2.f), 0.f, mCave->scaleFactor*(static_cast<float>(height) / 2.f));
+
+
     // Ensure that killed scenery stays killed.
     ClearKilled();
     
-    float playerStartX = mCave->scaleFactor*(static_cast<float>(width) / 2.f);
-    float playerStartZ = mCave->scaleFactor*(static_cast<float>(height) / 2.f);
-    
-    //Stores where the portal is located
-    mPortalPosition = glm::vec2(playerStartX, playerStartZ);
-    
-    // Create players 
-    Player1* player1 = GameEntityCreator().CreatePlayer1(glm::vec3(playerStartX + 1.f, 0.f, playerStartZ + 1.f));
+    // Create players.
+    Player1* player1 = GameEntityCreator().CreatePlayer1(glm::vec3(-5.f, 0.f, 0.f) + offset);
     HubInstance().mPlayers.push_back(player1);
-    Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX + 7.f, 0.f, playerStartZ + 6.f));
+    Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(5.f, 0.f, 0.) + offset);
     player2->SetYaw(-90);
     HubInstance().mPlayers.push_back(player2);
     
     HubInstance().SetPlayer2State(GameSettings::GetInstance().GetBool("Two Players"));
+
+    // Create bosses.
+    mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(-120.f, 0.f, 0.f) + offset));
+    mBossVector.push_back(GameEntityCreator().CreateShieldBoss(glm::vec3(0.f, 0.f, 120.f) + offset));
+    mBossVector.push_back(GameEntityCreator().CreateRingBoss(glm::vec3(0.f, 0.f, -120.f) + offset));
+    mBossVector.push_back(GameEntityCreator().CreateDivideBoss(glm::vec3(120.f, 0.f, 0.f) + offset));
     
-    // Create bosses and pillars
-    mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
-    mBossVector.push_back(GameEntityCreator().CreateShieldBoss(glm::vec3(mCave->scaleFactor*bossPositions[1].x, 0.f, mCave->scaleFactor*bossPositions[1].y)));
-    mBossVector.push_back(GameEntityCreator().CreateRingBoss(glm::vec3(mCave->scaleFactor*bossPositions[2].x, 0.f, mCave->scaleFactor*bossPositions[2].y)));
-    mBossVector.push_back(GameEntityCreator().CreateDivideBoss(glm::vec3(mCave->scaleFactor*bossPositions[3].x, 0.f, mCave->scaleFactor*bossPositions[3].y)));
-    int numberOfBossPositions = bossPositions.size();
-    
-    glm::vec3 pillarOrigin(mPortalPosition.x - 15.f, -0.f, mPortalPosition.y - 15.f);
-    int bossIndex = 0;
-    for (int i = 0; i < (numberOfBossPositions / 2); i++) {
-        for (int j = 0; j < (numberOfBossPositions / 2); j++) {
-            mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(pillarOrigin.x + i*40.f, pillarOrigin.y, pillarOrigin.z + j*40.f), mBossVector[bossIndex]->GetPosition()));
-            mNoSpawnRooms.push_back(glm::vec3(bossPositions[bossIndex].x, 0.f, bossPositions[bossIndex].y));
-            bossIndex++;
-        }
-    }
+    // Create pillars.
+    mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(-20.f, 0.f, 0.f) + offset, mBossVector[0]->GetPosition()));
+    mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(0.f, 0.f, 20.f) + offset, mBossVector[1]->GetPosition()));
+    mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(0.f, 0.f, -20.f) + offset, mBossVector[2]->GetPosition()));
+    mPillarVector.push_back(GameEntityCreator().CreatePillar(glm::vec3(20.f, 0.f, 0.f) + offset, mBossVector[3]->GetPosition()));
     
     // Create altar
-    GameEntityCreator().CreateAltar(glm::vec3(mPortalPosition.x, -16.f, mPortalPosition.y));
+    GameEntityCreator().CreateAltar(glm::vec3(0.f, -16.f, 0.f) + offset);
     
-    //Stores how many bosses exist
-    mBossCounter = mBossVector.size();
-    
-    mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
+    // Set check point.
+    mCheckpointSystem.MoveCheckpoint(glm::vec2(0.f, 0.f) + glm::vec2(offset.x, offset.z));
     
     mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     mFxaaFilter = new FXAAFilter();
     mGammaCorrectionFilter = new GammaCorrectionFilter();
     mGlowFilter = new GlowFilter();
     mGlowBlurFilter = new GlowBlurFilter();
-    
-    GameEntityCreator().CreateEnemySpawner(Component::Spawner::PYLON, 2);
-    GameEntityCreator().CreateEnemySpawner(Component::Spawner::ROCKET, 5);
-    GameEntityCreator().CreateEnemySpawner(Component::Spawner::NEST, 2);
-    
-    // Push boss positions here to avoid spawning enemies.
-    mNoSpawnRooms.push_back(glm::vec3(playerStartX / mCave->scaleFactor, 0.f, playerStartZ / mCave->scaleFactor));
     
     mWater.SetTextureRepeat(glm::vec2(100.f, 100.f));
     mWater.SetPosition(glm::vec3(450.f, -4.f, 450.f));
@@ -248,7 +234,7 @@ void MainScene::Update(float deltaTime) {
         
         { PROFILE("Player collision");
             for (auto player : HubInstance().mPlayers) {
-                mCave->GridCollide(player->GetNodeEntity(), deltaTime);
+                //mCave->GridCollide(player->GetNodeEntity(), deltaTime);
                 if (player->GetHealth() < 0.01f && player->Active()) {
                     player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
                     player->Deactivate();
@@ -291,12 +277,12 @@ void MainScene::Update(float deltaTime) {
         
         // Update enemy spawning
         { PROFILE("Enemy spawner system");
-            mEnemySpawnerSystem.Update(*this, deltaTime, mCave, mNoSpawnRooms);
+            //mEnemySpawnerSystem.Update(*this, deltaTime, mCave, mNoSpawnRooms);
         }
         
         // Check grid collisions.
         { PROFILE("Grid collide system");
-            mGridCollideSystem.Update(*this, deltaTime, *mCave);
+            //mGridCollideSystem.Update(*this, deltaTime, *mCave);
         }
         
         // Update health
