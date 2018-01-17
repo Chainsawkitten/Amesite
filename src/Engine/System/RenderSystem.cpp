@@ -110,7 +110,6 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
             }
             
             glBindVertexArray(0);
-            glFinish();
         }
         
         { PROFILE("Lighting");
@@ -119,7 +118,6 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
             glViewport(0, 0, static_cast<GLsizei>(screenSize.x), static_cast<GLsizei>(screenSize.y));
             
             mDeferredLighting->Render(scene, camera, screenSize);
-            glFinish();
         }
     }
 }

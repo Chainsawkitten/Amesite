@@ -376,7 +376,6 @@ void MainScene::Update(float deltaTime) {
     
     { PROFILE("Update particle buffers");
         mParticleRenderSystem.UpdateBuffer(*this);
-        glFinish();
     }
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
@@ -392,8 +391,6 @@ void MainScene::Update(float deltaTime) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         }
-        
-        glFinish();
     }
     
     // Render reflections
@@ -414,15 +411,11 @@ void MainScene::Update(float deltaTime) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         }
-        
-        glFinish();
     }
     
     // Render.
     { PROFILE("Render system");
         mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget(), screenSize);
-        
-        glFinish();
     }
     
     if (GameSettings::GetInstance().GetBool("Refractions") || GameSettings::GetInstance().GetBool("Reflections"))
@@ -438,14 +431,10 @@ void MainScene::Update(float deltaTime) {
             mFxaaFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
             mPostProcessing->ApplyFilter(mFxaaFilter);
         }
-        
-        glFinish();
     }
     
     { PROFILE("Render particles");
         mParticleRenderSystem.Render(*this, mMainCamera->body, screenSize);
-        
-        glFinish();
     }
     
     // Glow.
@@ -459,23 +448,17 @@ void MainScene::Update(float deltaTime) {
             mPostProcessing->ApplyFilter(mGlowBlurFilter);
         }
         mPostProcessing->ApplyFilter(mGlowFilter);
-        
-        glFinish();
     }
     
     // Gamma correction.
     { PROFILE("Gamma correction");
         mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
         mPostProcessing->ApplyFilter(mGammaCorrectionFilter);
-        
-        glFinish();
     }
     
     // Render to back buffer.
     { PROFILE("Render to back buffer");
         mPostProcessing->Render(GameSettings::GetInstance().GetBool("Dithering"));
-        
-        glFinish();
     }
     
     if (mMenu.IsActive())
