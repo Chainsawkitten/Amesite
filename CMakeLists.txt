@@ -56,24 +56,6 @@ function(create_directory_groups)
     endforeach()
 endfunction()
 
-# Coding style
-find_program(VERA vera++
-    DOC "Location of vera++"
-)
-if(NOT ${VERA} MATCHES "VERA-NOTFOUND")
-    file(GLOB_RECURSE VERA_SRCS
-            ${CMAKE_SOURCE_DIR}/src/*.cpp
-            ${CMAKE_SOURCE_DIR}/src/*.h
-        )
-    add_custom_target(VeraStyle ALL
-            ${VERA}
-            -r ${CMAKE_SOURCE_DIR}/vera
-            -p modership
-            --warning
-            ${VERA_SRCS}
-        )
-endif()
-
 # Copy resources
 set(RESOURCES
         assets/ABeeZee.ttf
