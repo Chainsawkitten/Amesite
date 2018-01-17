@@ -1,6 +1,7 @@
 #pragma once
 
-#include <GameObject/SuperGameObject.hpp>
+#include <Engine/GameObject/SuperGameObject.hpp>
+#include "../../Component/Controller.hpp"
 
 #include <glm/glm.hpp>
 
@@ -67,6 +68,12 @@ namespace GameObject {
              * @return State of the player (active or not).
              */
             bool Active();
+
+            /// Set device
+            /**
+             * @param Device to control player
+             */
+            virtual void SetDevice(InputHandler::Device device) = 0;
 
             /// Activates the player.
             virtual void Activate() = 0;

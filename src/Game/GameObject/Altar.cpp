@@ -1,24 +1,24 @@
 #include "Altar.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Resources.hpp>
-#include <Geometry/Geometry3D.hpp>
-#include <Geometry/OBJModel.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Geometry/Geometry3D.hpp>
+#include <Engine/Geometry/OBJModel.hpp>
 
 #include "../Component/Health.hpp"
 #include "../Component/Spawner.hpp"
 #include "../Component/Explode.hpp"
 #include "../Component/Controller.hpp"
-#include <Component/Transform.hpp>
-#include <Component/RelativeTransform.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/Animation.hpp>
-#include <Component/ParticleEmitter.hpp>
-#include <Component/SpotLight.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/RelativeTransform.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/Animation.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/SpotLight.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 
@@ -29,10 +29,10 @@ Altar::Altar(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::Transform>()->scale *= 1.3f;
     node->GetComponent<Component::Transform>()->yaw = 20.f;
     node->AddComponent<Component::Material>();
-    node->GetComponent<Component::Material>()->SetDiffuse("Resources/Altar_Dif.png");
-    node->GetComponent<Component::Material>()->SetNormal("Resources/Altar_NM.png");
-    node->GetComponent<Component::Material>()->SetGlow("Resources/Altar_Glo.png");
-    node->AddComponent<Component::Mesh>()->geometry = mAltarModel = Resources().CreateOBJModel("Resources/Altar2.obj");
+    node->GetComponent<Component::Material>()->SetDiffuse("Resources/spawn/altar/Altar_Dif.png");
+    node->GetComponent<Component::Material>()->SetNormal("Resources/spawn/altar/Altar_NM.png");
+    node->GetComponent<Component::Material>()->SetGlow("Resources/spawn/altar/Altar_Glo.png");
+    node->AddComponent<Component::Mesh>()->geometry = mAltarModel = Resources().CreateOBJModel("Resources/spawn/altar/Altar2.obj");
 
     light = CreateEntity();
     light->AddComponent<Component::RelativeTransform>()->parentEntity = node;

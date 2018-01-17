@@ -1,11 +1,11 @@
 #include "SpinBoss.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Resources.hpp>
-#include <Geometry/Geometry3D.hpp>
-#include <Geometry/OBJModel.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Geometry/Geometry3D.hpp>
+#include <Engine/Geometry/OBJModel.hpp>
 
 #include "../../Component/Health.hpp"
 #include "../../Component/Explode.hpp"
@@ -16,14 +16,14 @@
 #include "../../Component/Update.hpp"
 #include "../../Component/Damage.hpp"
 
-#include <Component/Transform.hpp>
-#include <Component/RelativeTransform.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/Animation.hpp>
-#include <Component/ParticleEmitter.hpp>
-#include <Component/Physics.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/RelativeTransform.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/Animation.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/Physics.hpp>
 
 #include "../Bullet.hpp"
 
@@ -40,16 +40,16 @@ SpinBoss::SpinBoss(Scene* scene) : SuperBoss(scene) {
     node->AddComponent<Component::Physics>()->angularVelocity.y = 0.1f;
     node->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
 
-    mNoReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon_glow.png");
-    mReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon_spec.png");
+    mNoReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon/pylon_glow.png");
+    mReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon/pylon_spec.png");
 
     body->AddComponent<Component::Damage>()->faction = 1;
     body->GetComponent<Component::Damage>()->removeOnImpact = false;
-    body->AddComponent<Component::Mesh>()->geometry = mBody = Resources().CreateOBJModel("Resources/pylon.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mBody = Resources().CreateOBJModel("Resources/pylon/pylon.obj");
     body->AddComponent<Component::Material>();
     Resources().FreeTexture2D(body->GetComponent<Component::Material>()->glow);
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon_diff.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon/pylon_diff.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon/pylon_spec.png");
     body->GetComponent<Component::Material>()->glow = mReflectTexture;
     body->AddComponent<Component::Reflect>();
     body->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
@@ -104,9 +104,9 @@ void SpinBoss::CreateArm(Entity* entity) {
     entity->GetComponent<Component::Health>()->faction = 1;
     entity->AddComponent<Component::Mesh>()->geometry = mBody;
     entity->AddComponent<Component::Material>();
-    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon_diff.png");
-    entity->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
-    entity->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
+    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon/pylon_diff.png");
+    entity->GetComponent<Component::Material>()->SetSpecular("Resources/pylon/pylon_spec.png");
+    entity->GetComponent<Component::Material>()->SetGlow("Resources/pylon/pylon_glow.png");
     entity->AddComponent<Component::Spawner>()->faction = 1;
     entity->GetComponent<Component::Spawner>()->delay = mCurrentSpawnerDelay;
     entity->AddComponent<Component::Explode>()->size = 120.f;

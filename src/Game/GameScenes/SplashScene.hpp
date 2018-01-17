@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Scene/Scene.hpp>
+#include <Engine/Scene/Scene.hpp>
 #include <vector>
 
 class Texture2D;

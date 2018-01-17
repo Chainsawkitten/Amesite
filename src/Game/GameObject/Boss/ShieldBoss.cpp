@@ -1,11 +1,11 @@
 #include "ShieldBoss.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Resources.hpp>
-#include <Geometry/Geometry3D.hpp>
-#include <Geometry/OBJModel.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Geometry/Geometry3D.hpp>
+#include <Engine/Geometry/OBJModel.hpp>
 
 #include "../../Component/Health.hpp"
 #include "../../Component/Explode.hpp"
@@ -14,15 +14,15 @@
 #include "../../Component/Reflect.hpp"
 #include "../../Component/Controller.hpp"
 #include "../../Component/Damage.hpp"
-#include <Component/Transform.hpp>
-#include <Component/RelativeTransform.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/Animation.hpp>
-#include <Component/ParticleEmitter.hpp>
-#include <Component/Physics.hpp>
-#include <Component/PointLight.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/RelativeTransform.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/Animation.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/Physics.hpp>
+#include <Engine/Component/PointLight.hpp>
 
 #include "../Bullet.hpp"
 
@@ -44,11 +44,11 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
     node->GetComponent<Component::PointLight>()->ambientCoefficient = .005f;
 
     body->GetComponent<Component::Transform>()->scale *= 1.2f;
-    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond_body.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond/diamond_body.obj");
     body->AddComponent<Component::Material>();
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon_diff.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
-    body->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon/pylon_diff.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon/pylon_spec.png");
+    body->GetComponent<Component::Material>()->SetGlow("Resources/pylon/pylon_glow.png");
     body->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
     body->AddComponent<Component::Explode>()->size = 120.f;
     body->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
@@ -63,7 +63,7 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
     body->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     body->GetComponent<Component::Physics>()->angularVelocity.y = -0.1f;
 
-    mCoverModel = Resources().CreateOBJModel("Resources/ring_segment.obj");
+    mCoverModel = Resources().CreateOBJModel("Resources/ringSegment/ring_segment.obj");
     for (int i = 0; i < 3; i++) {
         coverArr[i].node = CreateEntity();
         coverArr[i].leftShield = CreateEntity();

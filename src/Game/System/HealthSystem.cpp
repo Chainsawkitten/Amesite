@@ -1,8 +1,8 @@
 #include "HealthSystem.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
-#include <GameObject/SuperGameObject.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
+#include <Engine/GameObject/SuperGameObject.hpp>
 
 #include "../Component/Health.hpp"
 #include "../Component/Explode.hpp"

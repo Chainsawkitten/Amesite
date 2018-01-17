@@ -2,7 +2,7 @@
 
 #include "SuperPlayer.hpp"
 
-#include <util/Input.hpp>
+#include <Engine/Util/Input.hpp>
 
 class Texture2D;
 
@@ -76,6 +76,12 @@ namespace GameObject {
              * @param id Player id
              */
             void SetPlayerID(InputHandler::Player id);
+
+            /// Set device
+            /**
+             * @param Device to control player
+             */
+            void SetDevice(InputHandler::Device device);
 
         private:
             Geometry::OBJModel* mBodyModel;

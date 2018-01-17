@@ -1,0 +1,160 @@
+set(GAME_SRCS
+    main.cpp
+    Game.cpp
+    Util/GameSettings.cpp
+    Util/PerlinNoise.cpp
+    Util/GameEntityFactory.cpp
+    Util/ControlSchemes.cpp
+    Util/Hub.cpp
+    Util/CaveGenerator.cpp
+    System/ControllerSystem.cpp
+    System/HealthSystem.cpp
+    System/DamageSystem.cpp
+    System/LifeTimeSystem.cpp
+    System/ExplodeSystem.cpp
+    System/ReflectSystem.cpp
+    System/CheckpointSystem.cpp
+    System/EnemySpawnerSystem.cpp
+    System/UpdateSystem.cpp
+    System/GridCollideSystem.cpp
+    System/SpawnerSystem.cpp
+    Component/Controller.cpp
+    Component/Spawner.cpp
+    Component/Health.cpp
+    Component/Damage.cpp
+    Component/LifeTime.cpp
+    Component/Explode.cpp
+    Component/Reflect.cpp
+    Component/Update.cpp
+    Component/GridCollide.cpp
+    GameScenes/MainScene.cpp
+    GameScenes/SplashScene.cpp
+    GameScenes/EmptyScene.cpp
+    GameScenes/WinScene.cpp
+    GameScenes/LoadingScene.cpp
+    GameObject/Bullet.cpp
+    GameObject/Player/SuperPlayer.cpp
+    GameObject/Player/Player1.cpp
+    GameObject/Player/Player2.cpp
+    GameObject/Camera.cpp
+    GameObject/Cave.cpp
+    GameObject/Dust.cpp
+    GameObject/Explosion.cpp
+    GameObject/DyingLight.cpp
+    GameObject/Shield.cpp
+    GameObject/EnemySpawner.cpp
+    GameObject/Enemy/SuperEnemy.cpp
+    GameObject/Enemy/Pylon.cpp
+    GameObject/Enemy/Rocket.cpp
+    GameObject/Enemy/Nest.cpp
+    GameObject/Boss/SuperBoss.cpp
+    GameObject/Boss/SpinBoss.cpp
+    GameObject/Boss/ShieldBoss.cpp
+    GameObject/Boss/DivideBoss.cpp
+    GameObject/Boss/RingBoss.cpp
+    GameObject/Altar.cpp
+    GameObject/Pillar.cpp
+    GameObject/PillarBall.cpp
+    GameObject/Portal.cpp
+    GameObject/ReviveCircle.cpp
+    Menu/Menu.cpp
+    Menu/SubMenu.cpp
+    Menu/MainMenu.cpp
+    Menu/OptionsMenu.cpp
+    Menu/PauseMenu.cpp
+    Menu/SuperMenuOption.cpp
+    Menu/MenuOption.cpp
+    Menu/MenuSwitch.cpp
+    Water/Water.cpp
+)
+
+set(GAME_HEADERS
+    Game.hpp
+    Util/GameSettings.hpp
+    Util/PerlinNoise.hpp
+    Util/GameSettings.hpp
+    Util/GameEntityFactory.hpp
+    Util/ControlSchemes.hpp
+    Util/Hub.hpp
+    Util/CaveGenerator.hpp
+    System/ControllerSystem.hpp
+    System/HealthSystem.hpp
+    System/DamageSystem.hpp
+    System/LifeTimeSystem.hpp
+    System/ExplodeSystem.hpp
+    System/ReflectSystem.hpp
+    System/CheckpointSystem.hpp
+    System/EnemySpawnerSystem.hpp
+    System/UpdateSystem.hpp
+    System/GridCollideSystem.hpp
+    System/SpawnerSystem.hpp
+    Component/Controller.hpp
+    Component/Spawner.hpp
+    Component/Health.hpp
+    Component/Damage.hpp
+    Component/LifeTime.hpp
+    Component/Explode.hpp
+    Component/Reflect.hpp
+    Component/Update.hpp
+    Component/GridCollide.hpp
+    GameScenes/MainScene.hpp
+    GameScenes/SplashScene.hpp
+    GameScenes/EmptyScene.hpp
+    GameScenes/WinScene.hpp
+    GameScenes/LoadingScene.hpp
+    GameObject/Bullet.hpp
+    GameObject/Player/SuperPlayer.hpp
+    GameObject/Player/Player1.hpp
+    GameObject/Player/Player2.hpp
+    GameObject/Camera.hpp
+    GameObject/Cave.hpp
+    GameObject/Dust.hpp
+    GameObject/Explosion.hpp
+    GameObject/DyingLight.hpp
+    GameObject/Shield.hpp
+    GameObject/EnemySpawner.hpp
+    GameObject/Enemy/SuperEnemy.hpp
+    GameObject/Enemy/Pylon.hpp
+    GameObject/Enemy/Rocket.hpp
+    GameObject/Enemy/Nest.hpp
+    GameObject/Boss/SuperBoss.hpp
+    GameObject/Boss/SpinBoss.hpp
+    GameObject/Boss/ShieldBoss.hpp
+    GameObject/Boss/DivideBoss.hpp
+    GameObject/Boss/RingBoss.hpp
+    GameObject/Altar.hpp
+    GameObject/Pillar.hpp
+    GameObject/PillarBall.hpp
+    GameObject/Portal.hpp
+    GameObject/ReviveCircle.hpp
+    Menu/Menu.hpp
+    Menu/SubMenu.hpp
+    Menu/MainMenu.hpp
+    Menu/OptionsMenu.hpp
+    Menu/PauseMenu.hpp
+    Menu/SuperMenuOption.hpp
+    Menu/MenuOption.hpp
+    Menu/MenuSwitch.hpp
+    Water/Water.hpp
+)
+
+# Setup embedded source
+set(EMBEDDED_INPUT
+    ../../shaders/Default3D.vert
+    ../../shaders/Default3D.frag
+    ../../shaders/Text3D.frag
+    ../../shaders/SingleColor3D.frag
+    ../../shaders/Water.vert
+    ../../shaders/Water.frag
+)
+
+foreach(item ${EMBEDDED_INPUT})
+    ProcessWithHeaderize(EMBEDDED_HEADER EMBEDDED_SOURCE ${item} ${CMAKE_CURRENT_BINARY_DIR})
+endforeach()
+
+create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
+
+add_executable(Amesite ${GAME_SRCS} ${GAME_HEADERS} ${EMBEDDED_SOURCE})
+target_link_libraries(Amesite Engine)
+set_property(TARGET Amesite PROPERTY CXX_STANDARD 11)
+set_property(TARGET Amesite PROPERTY CXX_STANDARD_REQUIRED ON)

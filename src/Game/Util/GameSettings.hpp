@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Util/Settings.hpp>
+#include <Engine/Util/Settings.hpp>
 
 /// %Settings for the game.
 /**

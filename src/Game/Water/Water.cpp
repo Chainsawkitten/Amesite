@@ -1,23 +1,23 @@
 #include "Water.hpp"
 
-#include <Resources.hpp>
-#include <Texture/Texture2D.hpp>
-#include <Shader/Shader.hpp>
-#include <Shader/ShaderProgram.hpp>
-#include <Geometry/Plane.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Texture/Texture2D.hpp>
+#include <Engine/Shader/Shader.hpp>
+#include <Engine/Shader/ShaderProgram.hpp>
+#include <Engine/Geometry/Plane.hpp>
 
 #include "Water.vert.hpp"
 #include "Water.frag.hpp"
 
 #include "../Util/Hub.hpp"
 #include "../GameObject/Camera.hpp"
-#include <Entity/Entity.hpp>
-#include <Component/Transform.hpp>
-#include <Component/Lens.hpp>
-#include <MainWindow.hpp>
+#include <Engine/Entity/Entity.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/Lens.hpp>
+#include <Engine/MainWindow.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <RenderTarget.hpp>
+#include <Engine/RenderTarget.hpp>
 
 Water::Water() {
     // Initialize shaders.
@@ -29,9 +29,9 @@ Water::Water() {
     
     mPlane = Resources().CreatePlane();
     
-    mWaterTexture = Resources().CreateTexture2DFromFile("Resources/Water.png");
-    mDudvMap = Resources().CreateTexture2DFromFile("Resources/WaterDUDV.png");
-    mNormalMap = Resources().CreateTexture2DFromFile("Resources/WaterNormal.png");
+    mWaterTexture = Resources().CreateTexture2DFromFile("Resources/water/Water.png");
+    mDudvMap = Resources().CreateTexture2DFromFile("Resources/water/WaterDUDV.png");
+    mNormalMap = Resources().CreateTexture2DFromFile("Resources/water/WaterNormal.png");
     mTextureRepeat = glm::vec2(1.f, 1.f);
     
     mTextureOffset = glm::vec2(0.f, 0.f);

@@ -2,15 +2,15 @@
 
 #include <glm/glm.hpp>
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
 #include "../../Util/Hub.hpp"
 #include "../Player/Player1.hpp"
 #include "../Player/Player2.hpp"
 #include "../../Component/Health.hpp"
 
-#include <Util\Log.hpp>
+#include <Engine/Util/Log.hpp>
 
 using namespace GameObject;
 

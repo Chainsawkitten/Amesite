@@ -1,8 +1,8 @@
 #include "SplashScene.hpp"
 
-#include <Resources.hpp>
-#include <Texture/Texture2D.hpp>
-#include <MainWindow.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Texture/Texture2D.hpp>
+#include <Engine/MainWindow.hpp>
 #include "../Game.hpp"
 #include "LoadingScene.hpp"
 

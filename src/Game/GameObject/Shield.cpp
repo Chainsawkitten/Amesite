@@ -1,22 +1,22 @@
 #include "Shield.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Resources.hpp>
-#include <Geometry/Geometry3D.hpp>
-#include <Geometry/OBJModel.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Geometry/Geometry3D.hpp>
+#include <Engine/Geometry/OBJModel.hpp>
 
 #include "../Component/Health.hpp"
 #include "../Component/Explode.hpp"
 #include "../Component/LifeTime.hpp"
-#include <Component/Transform.hpp>
-#include <Component/RelativeTransform.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/Animation.hpp>
-#include <Component/ParticleEmitter.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/RelativeTransform.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/Animation.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
 
 #include "../Util/ControlSchemes.hpp"
 
@@ -34,11 +34,11 @@ Shield::Shield(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::LifeTime>();
     body->AddComponent<Component::Health>()->faction = 0;
     body->GetComponent<Component::Health>()->health = 50.f;
-    body->AddComponent<Component::Mesh>()->geometry = mShield = Resources().CreateOBJModel("Resources/shield.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mShield = Resources().CreateOBJModel("Resources/shield/shield.obj");
     body->AddComponent<Component::Material>();
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/shield_diff.png");
-    body->GetComponent<Component::Material>()->SetGlow("Resources/shield_glow.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/shield_spec.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/shield/shield_diff.png");
+    body->GetComponent<Component::Material>()->SetGlow("Resources/shield/shield_glow.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/shield/shield_spec.png");
 }
 
 Shield::~Shield() {

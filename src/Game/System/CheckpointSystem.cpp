@@ -7,21 +7,21 @@
 
 #include "../Component/Health.hpp"
 
-#include <Component/ParticleEmitter.hpp>
-#include <Component/Transform.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Entity/Entity.hpp>
 
 #include <glm/glm.hpp>
 #include <vector>
-#include <System/SoundSystem.hpp>
-#include <Audio/SoundBuffer.hpp>
-#include <Resources.hpp>
+#include <Engine/System/SoundSystem.hpp>
+#include <Engine/Audio/SoundBuffer.hpp>
+#include <Engine/Resources.hpp>
 #include "../GameObject/Player/SuperPlayer.hpp"
 
 #include "../Util/Hub.hpp"
 
 System::CheckpointSystem::CheckpointSystem() {
-    mLowHPSoundBuffer = Resources().CreateSound("Resources/LowHPBeep.ogg");
+    mLowHPSoundBuffer = Resources().CreateSound("Resources/sound/LowHPBeep.ogg");
     alGenSources(1, &mBeepSource);
     alSourcei(mBeepSource, AL_BUFFER, mLowHPSoundBuffer->Buffer());
     alSourcei(mBeepSource, AL_LOOPING, AL_TRUE);

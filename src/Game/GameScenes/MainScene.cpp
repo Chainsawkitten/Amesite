@@ -1,48 +1,48 @@
 #include "MainScene.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Util/Input.hpp>
+#include <Engine/Util/Input.hpp>
 #include "../Util/GameEntityFactory.hpp"
 #include "../Util/ControlSchemes.hpp"
-#include <Util/Profiling.hpp>
+#include <Engine/Util/Profiling.hpp>
 
-#include <Component/Transform.hpp>
-#include <Component/Lens.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/RelativeTransform.hpp>
-#include <Component/DirectionalLight.hpp>
-#include <Component/SpotLight.hpp>
-#include <Component/Listener.hpp>
-#include <Component/Physics.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/SoundSource.hpp>
-#include <Component/Listener.hpp>
-#include <Component/ParticleEmitter.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/Lens.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/RelativeTransform.hpp>
+#include <Engine/Component/DirectionalLight.hpp>
+#include <Engine/Component/SpotLight.hpp>
+#include <Engine/Component/Listener.hpp>
+#include <Engine/Component/Physics.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/SoundSource.hpp>
+#include <Engine/Component/Listener.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
 #include "../Component/Health.hpp"
 #include "../Component/Damage.hpp"
 #include "../Component/LifeTime.hpp"
 #include "../Component/Spawner.hpp"
-#include <Component/PointLight.hpp>
+#include <Engine/Component/PointLight.hpp>
 
-#include <System/SoundSystem.hpp>
-#include <Audio/SoundBuffer.hpp>
+#include <Engine/System/SoundSystem.hpp>
+#include <Engine/Audio/SoundBuffer.hpp>
 
-#include <Resources.hpp>
-#include <Texture/Texture2D.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Texture/Texture2D.hpp>
 
-#include <PostProcessing/PostProcessing.hpp>
-#include <PostProcessing/FXAAFilter.hpp>
-#include <PostProcessing/GlowFilter.hpp>
-#include <PostProcessing/GlowBlurFilter.hpp>
-#include <PostProcessing/GammaCorrectionFilter.hpp>
-#include <MainWindow.hpp>
+#include <Engine/PostProcessing/PostProcessing.hpp>
+#include <Engine/PostProcessing/FXAAFilter.hpp>
+#include <Engine/PostProcessing/GlowFilter.hpp>
+#include <Engine/PostProcessing/GlowBlurFilter.hpp>
+#include <Engine/PostProcessing/GammaCorrectionFilter.hpp>
+#include <Engine/MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
 #include "../Util/Hub.hpp"
 #include "../Util/CaveGenerator.hpp"
-#include <Util/Log.hpp>
+#include <Engine/Util/Log.hpp>
 
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
@@ -58,11 +58,11 @@
 #include "../GameObject/Pillar.hpp"
 #include "../GameObject/Enemy/SuperEnemy.hpp"
 
-#include <RenderTarget.hpp>
+#include <Engine/RenderTarget.hpp>
 #include "../Game.hpp"
 #include "WinScene.hpp"
 
-#include "Geometry/OBJModel.hpp"
+#include <Engine/Geometry/OBJModel.hpp>
 
 using namespace GameObject;
 
@@ -100,12 +100,12 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::PAUSE, InputHandler::KEYBOARD, GLFW_KEY_ESCAPE);
     
     // Music
-    mCalmSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
+    mCalmSoundBuffer = Resources().CreateSound("Resources/sound/MusicCalm.ogg");
     alGenSources(1, &mCalmSource);
     alSourcei(mCalmSource, AL_BUFFER, mCalmSoundBuffer->Buffer());
     alSourcei(mCalmSource, AL_LOOPING, AL_TRUE);
     
-    mActionSoundBuffer = Resources().CreateSound("Resources/MusicAction.ogg");
+    mActionSoundBuffer = Resources().CreateSound("Resources/sound/MusicAction.ogg");
     alGenSources(1, &mActionSource);
     alSourcef(mActionSource, AL_GAIN, 0.f);
     alSourcei(mActionSource, AL_BUFFER, mActionSoundBuffer->Buffer());
@@ -521,18 +521,18 @@ void MainScene::Update(float deltaTime) {
 }
 
 void MainScene::PreallocateTextures() {
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/wall_gray.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_spec.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_diff.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_spec.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_glow.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/DefaultBlue.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_spec.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/DefaultSpecular.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/Pillar_Albedo.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/Pillar_NM.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/Pillar_Glow2.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/DefaultGray.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/stone_02_glow.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/stone_02_diff.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/wall_gray.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/enemy_spec.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/enemy_diff.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/enemy_spec.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/enemy_glow.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/DefaultBlue.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/enemy_spec.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/default/DefaultSpecular.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/spawn/pillar/Pillar_Albedo.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/spawn/pillar/Pillar_NM.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/spawn/pillar/Pillar_Glow2.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/DefaultGray.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/stones/stone_02_glow.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/stones/stone_02_diff.png"));
 }

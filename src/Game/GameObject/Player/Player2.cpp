@@ -1,36 +1,36 @@
 #include "Player2.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Resources.hpp>
-#include <Geometry/Geometry3D.hpp>
-#include <Geometry/OBJModel.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Geometry/Geometry3D.hpp>
+#include <Engine/Geometry/OBJModel.hpp>
 
 #include "../../Component/Controller.hpp"
 #include "../../Component/Health.hpp"
 #include "../../Component/Spawner.hpp"
 #include "../../Component/Update.hpp"
-#include <Component/Transform.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/Physics.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/SpotLight.hpp>
-#include <Component/PointLight.hpp>
-#include <Component/Animation.hpp>
-#include <Component/ParticleEmitter.hpp>
-#include <Component/SoundSource.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/Physics.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/SpotLight.hpp>
+#include <Engine/Component/PointLight.hpp>
+#include <Engine/Component/Animation.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/SoundSource.hpp>
 
 #include "../../Util/ControlSchemes.hpp"
 
 using namespace GameObject;
 
 Player2::Player2(Scene* scene) : SuperPlayer(scene) {
-    mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff.png");
-    mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_medium_damage.png");
-    mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_heavy_damage.png");
-    mDeadTexture = Resources().CreateTexture2DFromFile("Resources/player2_diff_dead.png");
+    mHealthyTexture = Resources().CreateTexture2DFromFile("Resources/player2/player2_diff.png");
+    mMediumDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2/player2_diff_medium_damage.png");
+    mHeavyDamageTexture = Resources().CreateTexture2DFromFile("Resources/player2/player2_diff_heavy_damage.png");
+    mDeadTexture = Resources().CreateTexture2DFromFile("Resources/player2/player2_diff_dead.png");
     mCollisionRadius = 10.f;
 
     mNode = CreateEntity();
@@ -40,6 +40,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
     mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
+    mNode->GetComponent<Component::Controller>()->device = InputHandler::JOYSTICK;
     mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     mNode->AddComponent<Component::Health>()->removeOnLowHealth = false;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth = 30.f;
@@ -79,13 +80,13 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
 
     mBody = CreateEntity();
     mBody->AddComponent<Component::RelativeTransform>()->parentEntity = mNode;
-    mBody->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/player2_body.obj");
+    mBody->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/player2/player2_body.obj");
     mBody->AddComponent<Component::Material>();
 
     Resources().FreeTexture2D(mBody->GetComponent<Component::Material>()->diffuse);
     mBody->GetComponent<Component::Material>()->diffuse = mHealthyTexture;
-    mBody->GetComponent<Component::Material>()->SetSpecular("Resources/player2_spec.png");
-    mBody->GetComponent<Component::Material>()->SetGlow("Resources/player2_glow.png");
+    mBody->GetComponent<Component::Material>()->SetSpecular("Resources/player2/player2_spec.png");
+    mBody->GetComponent<Component::Material>()->SetGlow("Resources/player2/player2_glow.png");
     mBody->AddComponent<Component::Animation>();
 
     mLight = CreateEntity();
@@ -106,8 +107,8 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mBottomLight->GetComponent<Component::PointLight>()->attenuation = 0.8f;
     mBottomLight->GetComponent<Component::PointLight>()->intensity = 3.f;
 
-    mTurretBodyModel = Resources().CreateOBJModel("Resources/turret_body.obj");
-    mTurretBarrelModel = Resources().CreateOBJModel("Resources/turret_barrel.obj");
+    mTurretBodyModel = Resources().CreateOBJModel("Resources/turret/turret_body.obj");
+    mTurretBarrelModel = Resources().CreateOBJModel("Resources/turret/turret_barrel.obj");
 
     // Left Turret
     mLeftTurretBody = CreateEntity();
@@ -117,8 +118,8 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mLeftTurretBody->GetComponent<Component::RelativeTransform>()->scale *= 0.6f;
     mLeftTurretBody->AddComponent<Component::Animation>();
     mLeftTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
-    mLeftTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
-    mLeftTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
+    mLeftTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret/turret_diff.png");
+    mLeftTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret/turret_spec.png");
 
     mLeftTurretBarrel.node = CreateEntity();
     mLeftTurretBarrel.node->AddComponent<Component::RelativeTransform>()->parentEntity = mLeftTurretBody;
@@ -133,7 +134,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mLeftSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
     mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
     Component::SoundSource* sound = mLeftSpawnNode->AddComponent<Component::SoundSource>();
-    mShootSound = Resources().CreateSound("Resources/Laser.ogg");
+    mShootSound = Resources().CreateSound("Resources/sound/Laser.ogg");
     sound->soundBuffer = mShootSound;
     sound->gain = 2.f;
 
@@ -145,8 +146,8 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mRightTurretBody->GetComponent<Component::RelativeTransform>()->scale *= 0.6f;
     mRightTurretBody->AddComponent<Component::Animation>();
     mRightTurretBody->AddComponent<Component::Mesh>()->geometry = mTurretBodyModel;
-    mRightTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
-    mRightTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret_spec.png");
+    mRightTurretBody->AddComponent<Component::Material>()->SetDiffuse("Resources/turret/turret_diff.png");
+    mRightTurretBody->GetComponent<Component::Material>()->SetSpecular("Resources/turret/turret_spec.png");
 
     mRightTurretBarrel.node = CreateEntity();
     mRightTurretBarrel.node->AddComponent<Component::RelativeTransform>()->parentEntity = mRightTurretBody;
@@ -161,8 +162,8 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mRightSpawnNode->AddComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::AimedFire);
     mRightSpawnNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
 
-    mEngineModel = Resources().CreateOBJModel("Resources/player2_engine.obj");
-    mPropellerModel = Resources().CreateOBJModel("Resources/player2_propeller.obj");
+    mEngineModel = Resources().CreateOBJModel("Resources/player2/player2_engine.obj");
+    mPropellerModel = Resources().CreateOBJModel("Resources/player2/player2_propeller.obj");
 
 
     mMidPropeller = CreateEntity();
@@ -363,8 +364,8 @@ void Player2::AddEngine(Entity* entity, glm::vec3 position, glm::vec3 scale) {
     entity->AddComponent<Component::Animation>();
     entity->AddComponent<Component::Mesh>()->geometry = mEngineModel;
     entity->AddComponent<Component::Material>();
-    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_rest_diff.png");
-    entity->GetComponent<Component::Material>()->SetSpecular("Resources/player2_rest_spec.png");
+    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2/player2_rest_diff.png");
+    entity->GetComponent<Component::Material>()->SetSpecular("Resources/player2/player2_rest_spec.png");
 }
 
 void Player2::AddMidPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale) {
@@ -376,8 +377,8 @@ void Player2::AddMidPropeller(Entity* entity, glm::vec3 position, glm::vec3 scal
     entity->AddComponent<Component::Animation>();
     entity->AddComponent<Component::Mesh>()->geometry = mPropellerModel;
     entity->AddComponent<Component::Material>();
-    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_rest_diff.png");
-    entity->GetComponent<Component::Material>()->SetSpecular("Resources/player2_rest_spec.png");
+    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2/player2_rest_diff.png");
+    entity->GetComponent<Component::Material>()->SetSpecular("Resources/player2/player2_rest_spec.png");
 
     for (int i = 0; i < 4; i++) {
         mMidPropellerParticles[i] = CreateEntity();
@@ -414,8 +415,8 @@ void Player2::AddPropeller(Entity* entity, glm::vec3 position, glm::vec3 scale) 
     entity->AddComponent<Component::Animation>();
     entity->AddComponent<Component::Mesh>()->geometry = mPropellerModel;
     entity->AddComponent<Component::Material>();
-    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2_rest_diff.png");
-    entity->GetComponent<Component::Material>()->SetSpecular("Resources/player2_rest_spec.png");
+    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/player2/player2_rest_diff.png");
+    entity->GetComponent<Component::Material>()->SetSpecular("Resources/player2/player2_rest_spec.png");
 }
 
 void Player2::CreateBarrel(Barrel* barrel) {
@@ -425,14 +426,14 @@ void Player2::CreateBarrel(Barrel* barrel) {
     barrel->barrel[0]->AddComponent<Component::RelativeTransform>()->parentEntity = barrel->node;
     barrel->barrel[0]->GetComponent<Component::Transform>()->Move(1.f, 0.f, 0.f);
     barrel->barrel[0]->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
-    barrel->barrel[0]->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    barrel->barrel[0]->AddComponent<Component::Material>()->SetDiffuse("Resources/turret/turret_diff.png");
     barrel->barrel[0]->AddComponent<Component::Animation>();
 
     barrel->barrel[1] = CreateEntity();
     barrel->barrel[1]->AddComponent<Component::RelativeTransform>()->parentEntity = barrel->node;
     barrel->barrel[1]->GetComponent<Component::Transform>()->Move(-1.f, 0.f, 0.f);
     barrel->barrel[1]->AddComponent<Component::Mesh>()->geometry = mTurretBarrelModel;
-    barrel->barrel[1]->AddComponent<Component::Material>()->SetDiffuse("Resources/turret_diff.png");
+    barrel->barrel[1]->AddComponent<Component::Material>()->SetDiffuse("Resources/turret/turret_diff.png");
     barrel->barrel[1]->AddComponent<Component::Animation>();
 }
 
@@ -546,4 +547,8 @@ void Player2::mUpdateFunction() {
 
 void Player2::SetYaw(float yaw) {
     mNode->GetComponent<Component::Transform>()->yaw = yaw;
+}
+
+void Player2::SetDevice(InputHandler::Device device) {
+    mNode->GetComponent<Component::Controller>()->device = device;
 }

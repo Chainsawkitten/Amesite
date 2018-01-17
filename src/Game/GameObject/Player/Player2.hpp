@@ -53,6 +53,12 @@ namespace GameObject {
              * @return Health of the player.
              */
             float GetHealth();
+
+            /// Set device
+            /**
+             * @param Device to control player
+             */
+            void SetDevice(InputHandler::Device device);
     
             /// Activates the player.
             void Activate();

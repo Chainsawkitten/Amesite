@@ -1,25 +1,25 @@
 #include "ControlSchemes.hpp"
 
-#include <Util/Input.hpp>
+#include <Engine/Util/Input.hpp>
 
-#include <Entity/Entity.hpp>
-#include <Component/Physics.hpp>
+#include <Engine/Entity/Entity.hpp>
+#include <Engine/Component/Physics.hpp>
 
-#include <../Game/Component/Controller.hpp>
-#include <Component/Transform.hpp>
-#include <Component/Lens.hpp>
-#include <Component/PointLight.hpp>
+#include "../Component/Controller.hpp"
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/Lens.hpp>
+#include <Engine/Component/PointLight.hpp>
 #include "../Component/Spawner.hpp"
 #include "../Component/Damage.hpp"
 #include "../Component/Health.hpp"
-#include <Component/SoundSource.hpp>
+#include <Engine/Component/SoundSource.hpp>
 #include "../GameObject/Bullet.hpp"
 #include "../Util/GameEntityFactory.hpp"
-#include <Util/Picking.hpp>
+#include <Engine/Util/Picking.hpp>
 #include "../Util/Hub.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include <MainWindow.hpp>
-#include <Util/Log.hpp>
+#include <Engine/MainWindow.hpp>
+#include <Engine/Util/Log.hpp>
 #include <random>
 
 #include "../Game/GameObject/Bullet.hpp"
@@ -34,14 +34,18 @@ void ControlScheme::Move(Component::Controller* controller, float deltaTime) {
     // Move the player
     double x = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_X);
     double z = Input()->ButtonValue(controller->playerID, InputHandler::MOVE_Z);
+
     glm::vec2 direction = glm::vec2(x, z);
     
-    if (glm::length(direction)<Input()->MoveDeadzone()) {
+    if (glm::length(direction) < Input()->MoveDeadzone()) {
         x = Input()->ButtonValue(controller->playerID, InputHandler::RIGHT) - Input()->ButtonValue(controller->playerID, InputHandler::LEFT);
         z = Input()->ButtonValue(controller->playerID, InputHandler::DOWN) - Input()->ButtonValue(controller->playerID, InputHandler::UP);
         direction = glm::vec2(x, z);
     }
     
+    if (controller->device == InputHandler::JOYSTICK)
+        z = -z;
+
     glm::vec3 speedVec = glm::vec3(x * controller->speed, 0, z * controller->speed);
     
     Component::Physics* physicsComponent = controller->entity->GetComponent<Component::Physics>();
@@ -276,7 +280,7 @@ void ControlScheme::Aim(Component::Controller* controller, float deltaTime) {
 
     // Move the player
     float x = Input()->ButtonValue(controller->playerID, InputHandler::AIM_X);
-    float z = Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z);
+    float z = -Input()->ButtonValue(controller->playerID, InputHandler::AIM_Z);
     
     glm::vec3 movement = glm::vec3(x, 0, z);
     

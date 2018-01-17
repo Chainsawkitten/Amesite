@@ -3,9 +3,9 @@
 #include "../Game.hpp"
 #include "MainScene.hpp"
 
-#include <Resources.hpp>
-#include <Texture/Texture2D.hpp>
-#include <MainWindow.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Texture/Texture2D.hpp>
+#include <Engine/MainWindow.hpp>
 
 LoadingScene::LoadingScene() {
     mLoadingImage = Resources().CreateTexture2DFromFile("Resources/Loading.png");

@@ -1,11 +1,11 @@
 #include "PauseMenu.hpp"
 
 #include "MenuOption.hpp"
-#include <MainWindow.hpp>
+#include <Engine/MainWindow.hpp>
 #include "Menu.hpp"
 
-#include <Resources.hpp>
-#include <Font/Font.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Font/Font.hpp>
 
 PauseMenu::PauseMenu(Menu* parentMenu) : SubMenu() {
     // Define menu options.

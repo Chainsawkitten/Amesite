@@ -1,20 +1,20 @@
 #include "Pillar.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Resources.hpp>
-#include <Geometry/Geometry3D.hpp>
-#include <Geometry/OBJModel.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Geometry/Geometry3D.hpp>
+#include <Engine/Geometry/OBJModel.hpp>
 
 
-#include <Component/Transform.hpp>
-#include <Component/RelativeTransform.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/PointLight.hpp>
-#include <Component/Physics.hpp>
-#include <Component/Animation.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/RelativeTransform.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/PointLight.hpp>
+#include <Engine/Component/Physics.hpp>
+#include <Engine/Component/Animation.hpp>
 #include "../Component/Update.hpp"
 #include "../Component/Spawner.hpp"
 #include "../Component/LifeTime.hpp"
@@ -33,20 +33,20 @@ Pillar::Pillar(Scene* scene, glm::vec3 bossPosition) : SuperGameObject(scene) {
     node->AddComponent<Component::Transform>();
     node->GetComponent<Component::Transform>()->yaw = (rand() % 11) * 36.f;
     node->AddComponent<Component::Material>();
-    node->GetComponent<Component::Material>()->SetDiffuse("Resources/Pillar_Albedo.png");
-    node->GetComponent<Component::Material>()->SetNormal("Resources/Pillar_NM.png");
-    node->GetComponent<Component::Material>()->SetGlow("Resources/Pillar_Glow2.png");
-    node->AddComponent<Component::Mesh>()->geometry = mPillarModel = Resources().CreateOBJModel("Resources/Pillar2.obj");
-    //node->GetComponent<Component::Material>()->SetDiffuse("Resources/pillar_diff.png");
-    //node->GetComponent<Component::Material>()->SetGlow("Resources/pillar_glow.png");
-    //node->AddComponent<Component::Mesh>()->geometry = mPillarModel = Resources().CreateOBJModel("Resources/pillar.obj");
+    node->GetComponent<Component::Material>()->SetDiffuse("Resources/spawn/pillar/Pillar_Albedo.png");
+    node->GetComponent<Component::Material>()->SetNormal("Resources/spawn/pillar/Pillar_NM.png");
+    node->GetComponent<Component::Material>()->SetGlow("Resources/spawn/pillar/Pillar_Glow2.png");
+    node->AddComponent<Component::Mesh>()->geometry = mPillarModel = Resources().CreateOBJModel("Resources/spawn/pillar/Pillar2.obj");
+    //node->GetComponent<Component::Material>()->SetDiffuse("Resources/spawn/pillar/pillar_diff.png");
+    //node->GetComponent<Component::Material>()->SetGlow("Resources/spawn/pillar/pillar_glow.png");
+    //node->AddComponent<Component::Mesh>()->geometry = mPillarModel = Resources().CreateOBJModel("Resources/spawn/pillar/pillar.obj");
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&Pillar::mUpdateFunction, this);
     node->AddComponent<Component::Spawner>()->delay = 1.5f;
 
     mState = State::DEACTIVATED;
     mLastState = State::DEACTIVATED;
 
-    mLightModel = Resources().CreateOBJModel("Resources/pylon.obj");
+    mLightModel = Resources().CreateOBJModel("Resources/pylon/pylon.obj");
 
 }
 
@@ -101,9 +101,9 @@ void Pillar::CreateLight() {
     mLight->GetComponent<Component::RelativeTransform>()->Move(0.f, 8.f, 0.f);
     mLight->GetComponent<Component::RelativeTransform>()->scale *= 0.17f;
     mLight->AddComponent<Component::Material>();
-    mLight->GetComponent<Component::Material>()->SetDiffuse("Resources/DefaultBlue.png");
-    mLight->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
-    mLight->GetComponent<Component::Material>()->SetGlow("Resources/DefaultSpecular.png");
+    mLight->GetComponent<Component::Material>()->SetDiffuse("Resources/color/DefaultBlue.png");
+    mLight->GetComponent<Component::Material>()->SetSpecular("Resources/color/enemy_spec.png");
+    mLight->GetComponent<Component::Material>()->SetGlow("Resources/default/DefaultSpecular.png");
     mLight->AddComponent<Component::Mesh>()->geometry = mLightModel;
     mLight->AddComponent<Component::PointLight>()->attenuation = 1.f;
     mLight->GetComponent<Component::PointLight>()->color = glm::vec3(109.f, 242.f, 207.f) * 0.01f;
