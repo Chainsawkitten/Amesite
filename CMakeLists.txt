@@ -10,35 +10,8 @@ if(UNIX OR MINGW)
     set(CMAKE_CXX_FLAGS "-g -gdwarf-2 -O3 -static-libstdc++ -Wall")
 endif()
 
-# GLFW
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Don't build GLFW examples" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "Don't build GLFW tests" FORCE)
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "Don't build GLFW docs" FORCE)
-add_subdirectory(externals/glfw)
-include_directories(externals/glfw/include)
-
-# GLEW
-add_subdirectory(externals/glew/build/cmake)
-include_directories(externals/glew/include)
-
-# SimpleIni
-include_directories(externals/simpleini)
-
-# GLM
-include_directories(externals/glm)
-
-# STB
-include_directories(externals/stb)
-
-# OpenAL Soft
-set(ALSOFT_EXAMPLES OFF CACHE BOOL "Don't build OpenAL Soft examples" FORCE)
-add_subdirectory(externals/openal-soft)
-include_directories(externals/openal-soft/include)
-if(WIN32)
-    set(OPENAL_LIB OpenAL32)
-else()
-    set(OPENAL_LIB openal)
-endif()
+# Externals
+add_subdirectory(externals)
 
 # This function should be passed a list of all files in a target. It will automatically generate
 # file groups following the directory hierarchy, so that the layout of the files in IDEs matches the
@@ -97,7 +70,6 @@ set(EMBEDDED_INPUT
     )
 
 # Headerize
-add_subdirectory(externals/Headerize)
 macro(ProcessWithHeaderize headervar sourcevar inputfile outdir)
     get_filename_component(basefile ${inputfile} NAME)
     set(outputfile ${outdir}/${basefile})
@@ -269,6 +241,7 @@ set(ENGINE_HEADERS
 create_directory_groups(${ENGINE_SRCS} ${ENGINE_HEADERS})
 
 add_library(Engine STATIC ${ENGINE_SRCS} ${ENGINE_HEADERS} ${EMBEDDED_SOURCE})
+target_link_libraries(Engine glew glfw ${GLFW_LIBRARIES} glm OpenALSoft simpleini stb)
 set_property(TARGET Engine PROPERTY CXX_STANDARD 11)
 set_property(TARGET Engine PROPERTY CXX_STANDARD_REQUIRED ON)
 
@@ -418,6 +391,5 @@ create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
 add_executable(Amesite ${GAME_SRCS} ${GAME_HEADERS})
 target_link_libraries(Amesite Engine)
 target_include_directories(Amesite PUBLIC src/Engine)
-target_link_libraries(Amesite glew glfw ${GLFW_LIBRARIES} ${OPENAL_LIB})
 set_property(TARGET Amesite PROPERTY CXX_STANDARD 11)
 set_property(TARGET Amesite PROPERTY CXX_STANDARD_REQUIRED ON)
