@@ -173,10 +173,10 @@ GameObject::Pillar* GameEntityFactory::CreatePillar(const glm::vec3& origin, glm
 Entity* GameEntityFactory::CreateCrashSite1() {
 
     Entity* crash = mScene->CreateEntity();
-    crash->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/player1_body.obj");
-    crash->AddComponent<Component::Material>()->SetDiffuse("Resources/player1_body_diff_dead.png");
-    crash->GetComponent<Component::Material>()->SetSpecular("Resources/player1_body_spec.png");
-    crash->GetComponent<Component::Material>()->SetGlow("Resources/player1_body_glow.png");
+    crash->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/player1/player1_body.obj");
+    crash->AddComponent<Component::Material>()->SetDiffuse("Resources/player1/player1_body_diff_dead.png");
+    crash->GetComponent<Component::Material>()->SetSpecular("Resources/player1/player1_body_spec.png");
+    crash->GetComponent<Component::Material>()->SetGlow("Resources/player1/player1_body_glow.png");
     crash->AddComponent<Component::Transform>()->scale *= 0.25f;
 
     return crash;
@@ -186,10 +186,10 @@ Entity* GameEntityFactory::CreateCrashSite1() {
 Entity* GameEntityFactory::CreateCrashSite2() {
 
     Entity* crash = mScene->CreateEntity();
-    crash->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/player2_body.obj");
-    crash->AddComponent<Component::Material>()->SetDiffuse("Resources/player2_diff_dead.png");
-    crash->GetComponent<Component::Material>()->SetSpecular("Resources/player2_spec.png");
-    crash->GetComponent<Component::Material>()->SetGlow("Resources/player2_glow.png");
+    crash->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/player2/player2_body.obj");
+    crash->AddComponent<Component::Material>()->SetDiffuse("Resources/player2/player2_diff_dead.png");
+    crash->GetComponent<Component::Material>()->SetSpecular("Resources/player2/player2_spec.png");
+    crash->GetComponent<Component::Material>()->SetGlow("Resources/player2/player2_glow.png");
     crash->AddComponent<Component::Transform>()->scale *= 0.25f;
 
     return crash;
@@ -199,10 +199,10 @@ Entity* GameEntityFactory::CreateCrashSite2() {
 Entity* GameEntityFactory::CreateGlowingStone() {
 
     Entity* stone = mScene->CreateEntity();
-    stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
-    stone->AddComponent<Component::Material>()->SetDiffuse("Resources/stone_02_diff.png");
-    stone->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
-    stone->GetComponent<Component::Material>()->SetGlow("Resources/stone_02_glow.png");
+    stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stones/stone_01.obj");
+    stone->AddComponent<Component::Material>()->SetDiffuse("Resources/stones/stone_02_diff.png");
+    stone->GetComponent<Component::Material>()->SetSpecular("Resources/color/enemy_spec.png");
+    stone->GetComponent<Component::Material>()->SetGlow("Resources/stones/stone_02_glow.png");
     stone->AddComponent<Component::Transform>()->scale *= 0.3f;
 
     Component::ParticleEmitter* emitter = stone->AddComponent<Component::ParticleEmitter>();
@@ -232,9 +232,9 @@ Entity* GameEntityFactory::CreateGlowingStone() {
 Entity* GameEntityFactory::CreateStone() {
 
     Entity* stone = mScene->CreateEntity();
-    stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
-    stone->AddComponent<Component::Material>()->SetDiffuse("Resources/DefaultGray.png");
-    stone->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    stone->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stones/stone_01.obj");
+    stone->AddComponent<Component::Material>()->SetDiffuse("Resources/color/DefaultGray.png");
+    stone->GetComponent<Component::Material>()->SetSpecular("Resources/color/enemy_spec.png");
     stone->AddComponent<Component::Transform>()->scale *= 0.3f;
 
     return stone;
@@ -244,10 +244,10 @@ Entity* GameEntityFactory::CreateStone() {
 Entity* GameEntityFactory::CreateFallenPillar() {
 
     Entity* pillar = mScene->CreateEntity();
-    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/Pillar2.obj");
-    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/Pillar_Albedo.png");
-    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/Pillar_NM.png");
-    pillar->GetComponent<Component::Material>()->SetGlow("Resources/Pillar_Glow2.png");
+    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/spawn/pillar/Pillar2.obj");
+    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/spawn/pillar/Pillar_Albedo.png");
+    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/spawn/pillar/Pillar_NM.png");
+    pillar->GetComponent<Component::Material>()->SetGlow("Resources/spawn/pillar/Pillar_Glow2.png");
     pillar->AddComponent<Component::Transform>();
 
     return pillar;
@@ -257,10 +257,10 @@ Entity* GameEntityFactory::CreateFallenPillar() {
 Entity* GameEntityFactory::CreateBrokenFallenPillar() {
 
     Entity* pillar = mScene->CreateEntity();
-    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/pillar_bot.obj");
-    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/Pillar_Albedo.png");
-    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/Pillar_NM.png");
-    pillar->GetComponent<Component::Material>()->SetGlow("Resources/Pillar_Glow2.png");
+    pillar->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/spawn/pillar/pillar_bot.obj");
+    pillar->AddComponent<Component::Material>()->SetDiffuse("Resources/spawn/pillar/Pillar_Albedo.png");
+    pillar->GetComponent<Component::Material>()->SetSpecular("Resources/spawn/pillar/Pillar_NM.png");
+    pillar->GetComponent<Component::Material>()->SetGlow("Resources/spawn/pillar/Pillar_Glow2.png");
     pillar->AddComponent<Component::Transform>();
 
     return pillar;
@@ -270,10 +270,10 @@ Entity* GameEntityFactory::CreateBrokenFallenPillar() {
 Entity* GameEntityFactory::CreateCrystalLight() {
 
     Entity* crystal = mScene->CreateEntity();
-    crystal->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/crystal.obj");
-    crystal->AddComponent<Component::Material>()->SetDiffuse("Resources/DefaultBlue.png");
-    crystal->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
-    crystal->GetComponent<Component::Material>()->SetGlow("Resources/DefaultSpecular.png");
+    crystal->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/crystal/crystal.obj");
+    crystal->AddComponent<Component::Material>()->SetDiffuse("Resources/color/DefaultBlue.png");
+    crystal->GetComponent<Component::Material>()->SetSpecular("Resources/color/enemy_spec.png");
+    crystal->GetComponent<Component::Material>()->SetGlow("Resources/default/DefaultSpecular.png");
     crystal->AddComponent<Component::Transform>()->scale *= 0.2f;
 
     crystal->AddComponent<Component::PointLight>();
@@ -290,15 +290,15 @@ Entity* GameEntityFactory::CreateShrapnel(glm::vec3 position, unsigned int amoun
         if (explodeComponent != nullptr) {
             switch (explodeComponent->type) {
                 case Component::Explode::CAVE:
-                    shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
-                    shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/wall_gray.png");
-                    shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+                    shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stones/stone_01.obj");
+                    shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/color/wall_gray.png");
+                    shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/color/enemy_spec.png");
                     break;
                 case Component::Explode::ENEMY:
-                    shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stone_01.obj");
-                    shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
-                    shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
-                    shrapnel->GetComponent<Component::Material>()->SetGlow("Resources/enemy_glow.png");
+                    shrapnel->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/stones/stone_01.obj");
+                    shrapnel->AddComponent<Component::Material>()->SetDiffuse("Resources/color/enemy_diff.png");
+                    shrapnel->GetComponent<Component::Material>()->SetSpecular("Resources/color/enemy_spec.png");
+                    shrapnel->GetComponent<Component::Material>()->SetGlow("Resources/color/enemy_glow.png");
                     break;
                 default:
                     break;

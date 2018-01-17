@@ -100,12 +100,12 @@ MainScene::MainScene() {
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::PAUSE, InputHandler::KEYBOARD, GLFW_KEY_ESCAPE);
     
     // Music
-    mCalmSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
+    mCalmSoundBuffer = Resources().CreateSound("Resources/sound/MusicCalm.ogg");
     alGenSources(1, &mCalmSource);
     alSourcei(mCalmSource, AL_BUFFER, mCalmSoundBuffer->Buffer());
     alSourcei(mCalmSource, AL_LOOPING, AL_TRUE);
     
-    mActionSoundBuffer = Resources().CreateSound("Resources/MusicAction.ogg");
+    mActionSoundBuffer = Resources().CreateSound("Resources/sound/MusicAction.ogg");
     alGenSources(1, &mActionSource);
     alSourcef(mActionSource, AL_GAIN, 0.f);
     alSourcei(mActionSource, AL_BUFFER, mActionSoundBuffer->Buffer());
@@ -494,18 +494,18 @@ void MainScene::Update(float deltaTime) {
 }
 
 void MainScene::PreallocateTextures() {
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/wall_gray.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_spec.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_diff.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_spec.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_glow.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/DefaultBlue.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/enemy_spec.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/DefaultSpecular.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/Pillar_Albedo.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/Pillar_NM.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/Pillar_Glow2.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/DefaultGray.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/stone_02_glow.png"));
-    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/stone_02_diff.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/wall_gray.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/enemy_spec.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/enemy_diff.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/enemy_spec.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/enemy_glow.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/DefaultBlue.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/enemy_spec.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/default/DefaultSpecular.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/spawn/pillar/Pillar_Albedo.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/spawn/pillar/Pillar_NM.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/spawn/pillar/Pillar_Glow2.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/color/DefaultGray.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/stones/stone_02_glow.png"));
+    mPreallocatedTextures.push_back(Resources().CreateTexture2DFromFile("Resources/stones/stone_02_diff.png"));
 }

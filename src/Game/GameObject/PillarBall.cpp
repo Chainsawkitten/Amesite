@@ -32,7 +32,7 @@ PillarBall::PillarBall(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::LifeTime>()->lifeTime = 10.f;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&PillarBall::mUpdateFunction, this);
 
-    //mBallModel = Resources().CreateOBJModel("Resources/portal.obj");
+    //mBallModel = Resources().CreateOBJModel("Resources/spawn/portal/portal.obj");
 
     ball1 = CreateEntity();
     ball1->AddComponent<Component::RelativeTransform>()->parentEntity = node;

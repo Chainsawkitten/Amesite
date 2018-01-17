@@ -57,126 +57,13 @@ function(create_directory_groups)
 endfunction()
 
 # Copy resources
-set(RESOURCES
-        assets/ABeeZee.ttf
-        assets/quantrnd.ttf
-        assets/quantrh.ttf
-        assets/quantflt.ttf
-        assets/quanttap.ttf
-        assets/quantfh.ttf
-        assets/Mugglorna.png
-        assets/default/DefaultDiffuse.png
-        assets/default/DefaultNormal.png
-        assets/default/DefaultSpecular.png
-        assets/default/DefaultGlow.png
-        assets/color/defaultGreen.png
-        assets/color/defaultBlue.png
-        assets/color/defaultYellow.png
-        assets/color/defaultGray.png
-        assets/color/ground_sand.png
-        assets/color/wall_gray.png
-        assets/color/enemy_diff.png
-        assets/color/enemy_glow.png
-        assets/color/enemy_spec.png
-        assets/ParticleAtlas.png
-        assets/ParticleAtlasOne.png
-        assets/player1/player1_body_diff_healthy.png
-        assets/player1/player1_body_diff_heavy_damage.png
-        assets/player1/player1_body_diff_medium_damage.png
-        assets/player1/player1_body_diff_dead.png
-        assets/player1/player1_spec.png
-        assets/player1/player1_body_glow.png
-        assets/player1/player1_frontEngine_diff.png
-        assets/player1/player1_backEngine_diff.png
-        assets/player1/player1_body.obj
-        assets/player1/player1_frontEngine.obj
-        assets/player1/player1_backEngine.obj
-        assets/player2/player2_diff.png
-        assets/player2/player2_diff_medium_damage.png
-        assets/player2/player2_diff_heavy_damage.png
-        assets/player2/player2_diff_dead.png
-        assets/player2/player2_glow.png
-        assets/player2/player2_norm.png
-        assets/player2/player2_spec.png
-        assets/player2/player2_rest_diff.png
-        assets/player2/player2_rest_spec.png
-        assets/player2/player2_body.obj
-        assets/player2/player2_engine.obj
-        assets/player2/player2_propeller.obj
-        assets/turret/turret_diff.png
-        assets/turret/turret_spec.png
-        assets/turret/turret_barrel.obj
-        assets/turret/turret_body.obj
-        assets/pylon/pylon_spec.png
-        assets/pylon/pylon_glow.png
-        assets/pylon/pylon_diff.png
-        assets/pylon/pylon.obj
-        assets/shield/shield_diff.png
-        assets/shield/shield_glow.png
-        assets/shield/shield_spec.png
-        assets/shield/shield.obj
-        assets/reviveCircle/reviveCircle_diff.png
-        assets/reviveCircle/reviveCircle_glow.png
-        assets/reviveCircle/reviveCircle_circle.obj
-        assets/reviveCircle/reviveCircle_ring.obj
-        assets/spawn/altar/altar_diff.png
-        assets/spawn/altar/altar_glow.png
-        assets/spawn/altar/altar.obj
-        assets/spawn/altar/Altar_Dif.png
-        assets/spawn/altar/Altar_NM.png
-        assets/spawn/altar/Altar_Glo.png
-        assets/spawn/altar/Altar2.obj
-        assets/spawn/pillar/pillar_diff.png
-        assets/spawn/pillar/pillar_glow.png
-        assets/spawn/pillar/pillar.obj
-        assets/spawn/pillar/Pillar_Albedo.png
-        assets/spawn/pillar/Pillar_NM.png
-        assets/spawn/pillar/Pillar_Glow2.png
-        assets/spawn/pillar/pillar_top.obj
-        assets/spawn/pillar/pillar_bot.obj
-        assets/spawn/pillar/Pillar2.obj
-        assets/spawn/portal/portal.obj
-        assets/stones/stone_01_glow.png
-        assets/stones/stone_01_diff.png
-        assets/stones/stone_02_glow.png
-        assets/stones/stone_02_diff.png
-        assets/stones/stone_01.obj
-        assets/stones/stone_02.obj
-        assets/stones/stone_03.obj
-        assets/diamond/diamond_body.obj
-        assets/crystal/crystal.obj
-        assets/ring/ring_body.obj
-        assets/ringSegment/ring_segment.obj
-        assets/rocket/rocket_body.obj
-        assets/SwirlingPortal.png
-        assets/sound/Explosion01.ogg
-        assets/sound/Explosion02.ogg
-        assets/sound/Explosion03.ogg
-        assets/sound/Explosion04.ogg
-        assets/sound/Explosion05.ogg
-        assets/sound/MusicAction.ogg
-        assets/sound/MusicCalm.ogg
-        assets/sound/Laser.ogg
-        assets/sound/LowHPBeep.ogg
-        assets/Loading.png
-        assets/water/Water.png
-        assets/water/WaterDUDV.png
-        assets/water/WaterNormal.png
-    )
-
 add_custom_target(ResourceTarget ALL)
-
-function(CopyAsset inputfile outdir)
-    get_filename_component(basefile ${inputfile} NAME)
-    set(outputfile ${outdir}/${basefile})
-    
-    add_custom_command(
-        TARGET ResourceTarget
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${inputfile} ${outputfile}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT "Copying ${inputfile}"
-    )
-endfunction()
+add_custom_command(
+    TARGET ResourceTarget
+    COMMAND ${CMAKE_COMMAND} -E copy_directory assets ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Copying assets."
+)
 
 foreach(item ${RESOURCES})
     CopyAsset(${item} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Resources)

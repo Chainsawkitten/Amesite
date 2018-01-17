@@ -25,9 +25,9 @@ Portal::Portal(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::Physics>()->angularVelocity.y = 1.f;
     node->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
     node->AddComponent<Component::Material>();
-    node->GetComponent<Component::Material>()->SetDiffuse("Resources/defaultBlue.png");
-    node->GetComponent<Component::Material>()->SetGlow("Resources/DefaultSpecular.png");
-    node->AddComponent<Component::Mesh>()->geometry = mPortalModel = Resources().CreateOBJModel("Resources/portal.obj");
+    node->GetComponent<Component::Material>()->SetDiffuse("Resources/color/defaultBlue.png");
+    node->GetComponent<Component::Material>()->SetGlow("Resources/default/DefaultSpecular.png");
+    node->AddComponent<Component::Mesh>()->geometry = mPortalModel = Resources().CreateOBJModel("Resources/portal/portal.obj");
     node->AddComponent<Component::Animation>();
     Component::Animation::AnimationClip* idleNode = node->GetComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleNode->CreateKeyFrame(glm::vec3(0.3f, 0.f, 0.f), 0.f, 0.f, 0, 1.5f, false, true);

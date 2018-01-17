@@ -82,8 +82,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     map->GetComponent<Component::Transform>()->Rotate(0.f, 0.f, 0.f);
     map->GetComponent<Component::Transform>()->Move(glm::vec3(scaleFactor*static_cast<float>(mWidth) / 2.f - scaleFactor / 2.f, 3.f, scaleFactor*static_cast<float>(mWidth) / 2.f - scaleFactor / 2.f));
     map->GetComponent<Component::Transform>()->scale = glm::vec3(scaleFactor, 5.f, scaleFactor);
-    map->GetComponent<Component::Material>()->SetDiffuse("Resources/defaultGray.png");
-    map->GetComponent<Component::Material>()->SetSpecular("Resources/defaultGray.png");
+    map->GetComponent<Component::Material>()->SetDiffuse("Resources/color/defaultGray.png");
+    map->GetComponent<Component::Material>()->SetSpecular("Resources/color/defaultGray.png");
     
     heightMap = CreateEntity();
     
@@ -128,8 +128,8 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mTerrain = new Geometry::Terrain(floatMap, height, width, glm::vec2(scaleFactor, scaleFactor));
     
     heightMap->GetComponent<Component::Mesh>()->geometry = mTerrain;
-    heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/defaultYellow.png");
-    heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/defaultYellow.png");
+    heightMap->GetComponent<Component::Material>()->SetDiffuse("Resources/color/defaultYellow.png");
+    heightMap->GetComponent<Component::Material>()->SetSpecular("Resources/color/defaultYellow.png");
     
     for (int i = 0; i < 150; i++)
         PlaceScenery(GameEntityCreator().CreateStone(), true);
@@ -188,7 +188,7 @@ Cave::Cave(Scene* scene, int width, int height, int seed, int percent, int itera
     mLeftBorder->GetComponent<Component::Mesh>()->geometry = mBorder;
     
     //Set the texture
-    std::string texture = "Resources/defaultGray.png";
+    std::string texture = "Resources/color/defaultGray.png";
     mTopBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());
     mTopBorder->GetComponent<Component::Material>()->SetSpecular(texture.c_str());
     mBottomBorder->GetComponent<Component::Material>()->SetDiffuse(texture.c_str());

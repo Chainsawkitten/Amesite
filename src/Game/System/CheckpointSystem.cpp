@@ -21,7 +21,7 @@
 #include "../Util/Hub.hpp"
 
 System::CheckpointSystem::CheckpointSystem() {
-    mLowHPSoundBuffer = Resources().CreateSound("Resources/LowHPBeep.ogg");
+    mLowHPSoundBuffer = Resources().CreateSound("Resources/sound/LowHPBeep.ogg");
     alGenSources(1, &mBeepSource);
     alSourcei(mBeepSource, AL_BUFFER, mLowHPSoundBuffer->Buffer());
     alSourcei(mBeepSource, AL_LOOPING, AL_TRUE);

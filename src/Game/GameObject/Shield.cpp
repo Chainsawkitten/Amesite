@@ -34,11 +34,11 @@ Shield::Shield(Scene* scene) : SuperGameObject(scene) {
     body->AddComponent<Component::LifeTime>();
     body->AddComponent<Component::Health>()->faction = 0;
     body->GetComponent<Component::Health>()->health = 50.f;
-    body->AddComponent<Component::Mesh>()->geometry = mShield = Resources().CreateOBJModel("Resources/shield.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mShield = Resources().CreateOBJModel("Resources/shield/shield.obj");
     body->AddComponent<Component::Material>();
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/shield_diff.png");
-    body->GetComponent<Component::Material>()->SetGlow("Resources/shield_glow.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/shield_spec.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/shield/shield_diff.png");
+    body->GetComponent<Component::Material>()->SetGlow("Resources/shield/shield_glow.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/shield/shield_spec.png");
 }
 
 Shield::~Shield() {

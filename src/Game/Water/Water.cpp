@@ -29,9 +29,9 @@ Water::Water() {
     
     mPlane = Resources().CreatePlane();
     
-    mWaterTexture = Resources().CreateTexture2DFromFile("Resources/Water.png");
-    mDudvMap = Resources().CreateTexture2DFromFile("Resources/WaterDUDV.png");
-    mNormalMap = Resources().CreateTexture2DFromFile("Resources/WaterNormal.png");
+    mWaterTexture = Resources().CreateTexture2DFromFile("Resources/water/Water.png");
+    mDudvMap = Resources().CreateTexture2DFromFile("Resources/water/WaterDUDV.png");
+    mNormalMap = Resources().CreateTexture2DFromFile("Resources/water/WaterNormal.png");
     mTextureRepeat = glm::vec2(1.f, 1.f);
     
     mTextureOffset = glm::vec2(0.f, 0.f);

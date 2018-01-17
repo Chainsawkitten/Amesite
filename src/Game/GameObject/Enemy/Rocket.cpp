@@ -29,7 +29,7 @@
 using namespace GameObject;
 
 Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
-    mActiveGlow = Resources().CreateTexture2DFromFile("Resources/enemy_glow.png");
+    mActiveGlow = Resources().CreateTexture2DFromFile("Resources/color/enemy_glow.png");
 
     node->AddComponent<Component::Transform>()->scale *= 0.15f;
     node->AddComponent<Component::Collider2DCircle>()->radius = 9.0f;
@@ -53,10 +53,10 @@ Rocket::Rocket(Scene* scene) : SuperEnemy(scene) {
 
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/rocket_body.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/rocket/rocket_body.obj");
     body->AddComponent<Component::Material>();
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/color/enemy_diff.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/color/enemy_spec.png");
     mDeactiveGlow = body->GetComponent<Component::Material>()->glow;
     Component::Animation::AnimationClip* idleHead = body->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleHead->CreateKeyFrame(glm::vec3(-0.15f, 0.f, 0.f), 0.f, 0.f, 0, 3.f, false, true);

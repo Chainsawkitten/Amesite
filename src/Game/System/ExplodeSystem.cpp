@@ -17,11 +17,11 @@
 using namespace System;
 
 ExplodeSystem::ExplodeSystem() {
-    mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion01.ogg"));
-    mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion02.ogg"));
-    mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion03.ogg"));
-    mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion04.ogg"));
-    mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion05.ogg"));
+    mExplosionSounds.push_back(Resources().CreateSound("Resources/sound/Explosion01.ogg"));
+    mExplosionSounds.push_back(Resources().CreateSound("Resources/sound/Explosion02.ogg"));
+    mExplosionSounds.push_back(Resources().CreateSound("Resources/sound/Explosion03.ogg"));
+    mExplosionSounds.push_back(Resources().CreateSound("Resources/sound/Explosion04.ogg"));
+    mExplosionSounds.push_back(Resources().CreateSound("Resources/sound/Explosion05.ogg"));
     
     mRNG.seed(time(0));
 }

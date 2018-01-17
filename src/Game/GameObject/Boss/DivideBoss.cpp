@@ -35,11 +35,11 @@ DivideBoss::DivideBoss(Scene* scene) : SuperBoss(scene) {
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&DivideBoss::mUpdateFunction, this);
 
     body->GetComponent<Component::Transform>()->scale *= 1.5f;
-    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond_body.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond/diamond_body.obj");
     body->AddComponent<Component::Material>();
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon_diff.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
-    body->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon/pylon_diff.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon/pylon_spec.png");
+    body->GetComponent<Component::Material>()->SetGlow("Resources/pylon/pylon_glow.png");
     body->AddComponent<Component::Collider2DCircle>()->radius = 14.f;
     body->AddComponent<Component::Explode>()->size = 120.f;
     body->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;

@@ -36,18 +36,18 @@ ReviveCircle::ReviveCircle(Scene* scene, SuperPlayer* player) : SuperGameObject(
 
     outerRing = CreateEntity();
     outerRing->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    outerRing->AddComponent<Component::Mesh>()->geometry = mRingModel = Resources().CreateOBJModel("Resources/reviveCircle_ring.obj");
+    outerRing->AddComponent<Component::Mesh>()->geometry = mRingModel = Resources().CreateOBJModel("Resources/reviveCircle/reviveCircle_ring.obj");
     outerRing->AddComponent<Component::Material>();
-    outerRing->GetComponent<Component::Material>()->SetDiffuse("Resources/reviveCircle_diff.png");
-    outerRing->GetComponent<Component::Material>()->SetGlow("Resources/reviveCircle_glow.png");
+    outerRing->GetComponent<Component::Material>()->SetDiffuse("Resources/reviveCircle/reviveCircle_diff.png");
+    outerRing->GetComponent<Component::Material>()->SetGlow("Resources/reviveCircle/reviveCircle_glow.png");
     outerRing->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
 
     innerCircle = CreateEntity();
     innerCircle->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    innerCircle->AddComponent<Component::Mesh>()->geometry = mCircleModel = Resources().CreateOBJModel("Resources/reviveCircle_circle.obj");
+    innerCircle->AddComponent<Component::Mesh>()->geometry = mCircleModel = Resources().CreateOBJModel("Resources/reviveCircle/reviveCircle_circle.obj");
     innerCircle->AddComponent<Component::Material>();
-    innerCircle->GetComponent<Component::Material>()->SetDiffuse("Resources/reviveCircle_diff.png");
-    innerCircle->GetComponent<Component::Material>()->SetGlow("Resources/reviveCircle_glow.png");
+    innerCircle->GetComponent<Component::Material>()->SetDiffuse("Resources/reviveCircle/reviveCircle_diff.png");
+    innerCircle->GetComponent<Component::Material>()->SetGlow("Resources/reviveCircle/reviveCircle_glow.png");
 }
 
 ReviveCircle::~ReviveCircle() {

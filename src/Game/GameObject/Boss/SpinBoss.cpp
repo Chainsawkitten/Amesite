@@ -40,16 +40,16 @@ SpinBoss::SpinBoss(Scene* scene) : SuperBoss(scene) {
     node->AddComponent<Component::Physics>()->angularVelocity.y = 0.1f;
     node->GetComponent<Component::Physics>()->angularDragFactor = 0.f;
 
-    mNoReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon_glow.png");
-    mReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon_spec.png");
+    mNoReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon/pylon_glow.png");
+    mReflectTexture = Resources().CreateTexture2DFromFile("Resources/pylon/pylon_spec.png");
 
     body->AddComponent<Component::Damage>()->faction = 1;
     body->GetComponent<Component::Damage>()->removeOnImpact = false;
-    body->AddComponent<Component::Mesh>()->geometry = mBody = Resources().CreateOBJModel("Resources/pylon.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mBody = Resources().CreateOBJModel("Resources/pylon/pylon.obj");
     body->AddComponent<Component::Material>();
     Resources().FreeTexture2D(body->GetComponent<Component::Material>()->glow);
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon_diff.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon/pylon_diff.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon/pylon_spec.png");
     body->GetComponent<Component::Material>()->glow = mReflectTexture;
     body->AddComponent<Component::Reflect>();
     body->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
@@ -104,9 +104,9 @@ void SpinBoss::CreateArm(Entity* entity) {
     entity->GetComponent<Component::Health>()->faction = 1;
     entity->AddComponent<Component::Mesh>()->geometry = mBody;
     entity->AddComponent<Component::Material>();
-    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon_diff.png");
-    entity->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
-    entity->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
+    entity->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon/pylon_diff.png");
+    entity->GetComponent<Component::Material>()->SetSpecular("Resources/pylon/pylon_spec.png");
+    entity->GetComponent<Component::Material>()->SetGlow("Resources/pylon/pylon_glow.png");
     entity->AddComponent<Component::Spawner>()->faction = 1;
     entity->GetComponent<Component::Spawner>()->delay = mCurrentSpawnerDelay;
     entity->AddComponent<Component::Explode>()->size = 120.f;

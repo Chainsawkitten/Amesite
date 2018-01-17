@@ -29,10 +29,10 @@ Altar::Altar(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::Transform>()->scale *= 1.3f;
     node->GetComponent<Component::Transform>()->yaw = 20.f;
     node->AddComponent<Component::Material>();
-    node->GetComponent<Component::Material>()->SetDiffuse("Resources/Altar_Dif.png");
-    node->GetComponent<Component::Material>()->SetNormal("Resources/Altar_NM.png");
-    node->GetComponent<Component::Material>()->SetGlow("Resources/Altar_Glo.png");
-    node->AddComponent<Component::Mesh>()->geometry = mAltarModel = Resources().CreateOBJModel("Resources/Altar2.obj");
+    node->GetComponent<Component::Material>()->SetDiffuse("Resources/spawn/altar/Altar_Dif.png");
+    node->GetComponent<Component::Material>()->SetNormal("Resources/spawn/altar/Altar_NM.png");
+    node->GetComponent<Component::Material>()->SetGlow("Resources/spawn/altar/Altar_Glo.png");
+    node->AddComponent<Component::Mesh>()->geometry = mAltarModel = Resources().CreateOBJModel("Resources/spawn/altar/Altar2.obj");
 
     light = CreateEntity();
     light->AddComponent<Component::RelativeTransform>()->parentEntity = node;

@@ -42,11 +42,11 @@ RingBoss::RingBoss(Scene* scene) : SuperBoss(scene) {
     node->GetComponent<Component::PointLight>()->ambientCoefficient = .004f;
 
     body->GetComponent<Component::Transform>()->scale *= 0.8f;
-    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond_body.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond/diamond_body.obj");
     body->AddComponent<Component::Material>();
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon_diff.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon_spec.png");
-    body->GetComponent<Component::Material>()->SetGlow("Resources/pylon_glow.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/pylon/pylon_diff.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/pylon/pylon_spec.png");
+    body->GetComponent<Component::Material>()->SetGlow("Resources/pylon/pylon_glow.png");
     body->AddComponent<Component::Collider2DCircle>()->radius = 6.f;
     body->AddComponent<Component::Explode>()->size = 120.f;
     body->GetComponent<Component::Explode>()->particleTextureIndex = Component::ParticleEmitter::PURPLE;
@@ -82,7 +82,7 @@ void RingBoss::CreateRing() {
     Component::RelativeTransform* transform = ring.node->AddComponent<Component::RelativeTransform>();
     transform->parentEntity = node;
     transform->scale *= 1.8f;
-    ring.node->AddComponent<Component::Mesh>()->geometry = mRingModel = Resources().CreateOBJModel("Resources/ring_body.obj");
+    ring.node->AddComponent<Component::Mesh>()->geometry = mRingModel = Resources().CreateOBJModel("Resources/ring/ring_body.obj");
     ring.node->AddComponent<Component::Material>();
     //ring.node->AddComponent<Component::Controller>()->controlSchemes.push_back(ControlScheme::LookAtClosestPlayer);
     ring.node->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
