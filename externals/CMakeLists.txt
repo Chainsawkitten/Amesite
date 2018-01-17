@@ -1,4 +1,5 @@
 # GLEW
+set(BUILD_UTILS OFF CACHE BOOL "Don't build GLEW utility programs" FORCE)
 add_subdirectory(glew/build/cmake)
 target_include_directories(glew INTERFACE glew/include)
 
