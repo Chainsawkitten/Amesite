@@ -40,6 +40,7 @@ Player1::Player1(Scene* scene) : SuperPlayer(scene) {
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
     mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_TWO;
+    mNode->GetComponent<Component::Controller>()->device = InputHandler::JOYSTICK;
     mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     mNode->AddComponent<Component::Health>()->removeOnLowHealth = false;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth = 30.f;
@@ -346,6 +347,9 @@ Entity* Player1::GetNodeEntity() {
     return mNode;
 }
 
+Entity* Player1::GetBodyEntity() {
+    return mBody;
+}
 
 float Player1::GetHealth() {
     return mNode->GetComponent<Component::Health>()->health;
@@ -523,4 +527,8 @@ void Player1::SetPlayerID(InputHandler::Player id) {
     mNode->GetComponent<Component::Controller>()->playerID = id;
     mLeftSpawnNode->GetComponent<Component::Controller>()->playerID = id;
     mRightSpawnNode->GetComponent<Component::Controller>()->playerID = id;
+}
+
+void Player1::SetDevice(InputHandler::Device device) {
+    mNode->GetComponent<Component::Controller>()->device = device;
 }

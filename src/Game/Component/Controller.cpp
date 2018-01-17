@@ -7,6 +7,7 @@ using namespace Component;
 
 Controller::Controller(Entity* entity) : SuperComponent(entity) {
     playerID = InputHandler::PLAYER_ONE;
+    device = InputHandler::NONE;
     speed = 100.f;
     enabled = true;
 }

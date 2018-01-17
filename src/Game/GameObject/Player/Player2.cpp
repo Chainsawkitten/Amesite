@@ -40,6 +40,7 @@ Player2::Player2(Scene* scene) : SuperPlayer(scene) {
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Shield);
     mNode->GetComponent<Component::Controller>()->controlSchemes.push_back(&ControlScheme::Aim);
     mNode->GetComponent<Component::Controller>()->playerID = InputHandler::PLAYER_ONE;
+    mNode->GetComponent<Component::Controller>()->device = InputHandler::JOYSTICK;
     mNode->AddComponent<Component::Physics>()->velocityDragFactor = 3.f;
     mNode->AddComponent<Component::Health>()->removeOnLowHealth = false;
     mNode->GetComponent<Component::Health>()->health = mNode->GetComponent<Component::Health>()->maxHealth = 30.f;
@@ -323,6 +324,9 @@ Entity* Player2::GetNodeEntity() {
     return mNode;
 }
 
+Entity* Player2::GetBodyEntity() {
+    return mBody;
+}
 
 float Player2::GetHealth() {
     return mNode->GetComponent<Component::Health>()->health;
@@ -543,4 +547,8 @@ void Player2::mUpdateFunction() {
 
 void Player2::SetYaw(float yaw) {
     mNode->GetComponent<Component::Transform>()->yaw = yaw;
+}
+
+void Player2::SetDevice(InputHandler::Device device) {
+    mNode->GetComponent<Component::Controller>()->device = device;
 }

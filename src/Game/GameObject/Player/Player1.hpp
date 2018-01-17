@@ -42,6 +42,13 @@ namespace GameObject {
              * @return Main Entity contaning tranform and physics components.
              */
             Entity* GetNodeEntity();
+            
+            /// Gets body entity.
+            /**
+             * This is the entity containing the player's main mesh and is different from the node entity as the animation should not affect collision deteciton.
+             * @return The entity containing the player's main mesh.
+             */
+            Entity* GetBodyEntity();
 
             /// Gets health of the player.
             /**
@@ -51,6 +58,7 @@ namespace GameObject {
 
             /// Activates the player.
             void Activate();
+            
             /// Deactivates the player.
             void Deactivate();
 
@@ -68,6 +76,12 @@ namespace GameObject {
              * @param id Player id
              */
             void SetPlayerID(InputHandler::Player id);
+
+            /// Set device
+            /**
+             * @param Device to control player
+             */
+            void SetDevice(InputHandler::Device device);
 
         private:
             Geometry::OBJModel* mBodyModel;

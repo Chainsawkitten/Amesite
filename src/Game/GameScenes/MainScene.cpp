@@ -6,6 +6,7 @@
 #include <Util/Input.hpp>
 #include "../Util/GameEntityFactory.hpp"
 #include "../Util/ControlSchemes.hpp"
+#include <Util/Profiling.hpp>
 
 #include <Component/Transform.hpp>
 #include <Component/Lens.hpp>
@@ -71,22 +72,33 @@ MainScene::MainScene() {
     // Assign input
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::UP, InputHandler::JOYSTICK, InputHandler::D_PAD_UP);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::DOWN, InputHandler::JOYSTICK, InputHandler::D_PAD_DOWN);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::RIGHT, InputHandler::JOYSTICK, InputHandler::D_PAD_RIGHT);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LEFT, InputHandler::JOYSTICK, InputHandler::D_PAD_LEFT);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::PAUSE, InputHandler::JOYSTICK, InputHandler::START);
     
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_X, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::MOVE_Z, InputHandler::JOYSTICK, InputHandler::LEFT_STICK_Y, true);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::JOYSTICK, InputHandler::D_PAD_UP);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::JOYSTICK, InputHandler::D_PAD_DOWN);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::JOYSTICK, InputHandler::D_PAD_RIGHT);
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::JOYSTICK, InputHandler::D_PAD_LEFT);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_X, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_X, true);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::AIM_Z, InputHandler::JOYSTICK, InputHandler::RIGHT_STICK_Y, true);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::JOYSTICK, InputHandler::RIGHT_BUMPER);
-
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::PAUSE, InputHandler::JOYSTICK, InputHandler::START);
+    
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::UP, InputHandler::KEYBOARD, GLFW_KEY_W);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::DOWN, InputHandler::KEYBOARD, GLFW_KEY_S);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::RIGHT, InputHandler::KEYBOARD, GLFW_KEY_D);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::LEFT, InputHandler::KEYBOARD, GLFW_KEY_A);
     Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::SHOOT, InputHandler::MOUSE, GLFW_MOUSE_BUTTON_1);
-
+    Input()->AssignButton(InputHandler::PLAYER_TWO, InputHandler::PAUSE, InputHandler::KEYBOARD, GLFW_KEY_ESCAPE);
+    
     // Music
     mCalmSoundBuffer = Resources().CreateSound("Resources/MusicCalm.ogg");
     alGenSources(1, &mCalmSource);
@@ -152,9 +164,9 @@ MainScene::MainScene() {
     Player2* player2 = GameEntityCreator().CreatePlayer2(glm::vec3(playerStartX + 7.f, 0.f, playerStartZ + 6.f));
     player2->SetYaw(-90);
     HubInstance().mPlayers.push_back(player2);
-
+    
     HubInstance().SetPlayer2State(GameSettings::GetInstance().GetBool("Two Players"));
-
+    
     // Create bosses and pillars
     mBossVector.push_back(GameEntityCreator().CreateSpinBoss(glm::vec3(mCave->scaleFactor*bossPositions[0].x, 0.f, mCave->scaleFactor*bossPositions[0].y)));
     mBossVector.push_back(GameEntityCreator().CreateShieldBoss(glm::vec3(mCave->scaleFactor*bossPositions[1].x, 0.f, mCave->scaleFactor*bossPositions[1].y)));
@@ -179,7 +191,7 @@ MainScene::MainScene() {
     mBossCounter = mBossVector.size();
     
     mCheckpointSystem.MoveCheckpoint(glm::vec2(playerStartX, playerStartZ));
-
+    
     mPostProcessing = new PostProcessing(MainWindow::GetInstance()->GetSize());
     mFxaaFilter = new FXAAFilter();
     mGammaCorrectionFilter = new GammaCorrectionFilter();
@@ -218,69 +230,105 @@ MainScene::~MainScene() {
 }
 
 void MainScene::Update(float deltaTime) {
+    // Pause the game if the player presses the pause button.
+    if (!mMenu.IsActive() && Input()->Triggered(InputHandler::ANYONE, InputHandler::PAUSE))
+        mMenu.PauseGame();
+    
     // We're in the menu, don't update the regular systems.
     if (!mMenu.IsActive()) {
         // Update spawners
-        mSpawnerSystem.Update(*this, deltaTime);
+        { PROFILE("Spawner system");
+            mSpawnerSystem.Update(*this, deltaTime);
+        }
         
         // ControllerSystem
-        mControllerSystem.Update(*this, deltaTime);
-
-        for (auto player : HubInstance().mPlayers) {
-            mCave->GridCollide(player->GetNodeEntity(), deltaTime);
-            if (player->GetHealth() < 0.01f && player->Active()) {
-                player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
-                player->Deactivate();
-                GameEntityCreator().CreateExplosion(player->GetPosition(), 1.f, 10.f, Component::ParticleEmitter::BLUE);
-                GameEntityCreator().CreateReviveCircle(player);
+        { PROFILE("Controller system");
+            mControllerSystem.Update(*this, deltaTime);
+        }
+        
+        { PROFILE("Player collision");
+            for (auto player : HubInstance().mPlayers) {
+                mCave->GridCollide(player->GetNodeEntity(), deltaTime);
+                if (player->GetHealth() < 0.01f && player->Active()) {
+                    player->GetNodeEntity()->GetComponent<Component::Physics>()->angularVelocity.y = 2.5f;
+                    player->Deactivate();
+                    GameEntityCreator().CreateExplosion(player->GetPosition(), 1.f, 10.f, Component::ParticleEmitter::BLUE);
+                    GameEntityCreator().CreateReviveCircle(player);
+                }
+                glm::vec2 playerPosition(player->GetPosition().x, player->GetPosition().z);
+                
+                if (mBossCounter == 0 && glm::distance(playerPosition, mPortalPosition) < 2.f)
+                    Game::GetInstance().SetScene(new WinScene(mTimer, mEnemySpawnerSystem.GetEnemiesKilled(), mCheckpointSystem.timesDied));
             }
-            glm::vec2 playerPosition(player->GetPosition().x, player->GetPosition().z);
-            
-            if (mBossCounter == 0 && glm::distance(playerPosition, mPortalPosition) < 2.f)
-                Game::GetInstance().SetScene(new WinScene(mTimer, mEnemySpawnerSystem.GetEnemiesKilled(), mCheckpointSystem.timesDied));
         }
         
         // AnimationSystem.
-        mAnimationSystem.Update(*this, deltaTime);
+        { PROFILE("Animation system");
+            mAnimationSystem.Update(*this, deltaTime);
+        }
         
         // PhysicsSystem.
-        mPhysicsSystem.Update(*this, deltaTime);
+        { PROFILE("Physics system");
+            mPhysicsSystem.Update(*this, deltaTime);
+        }
     }
     
     // Updates model matrices for this frame.
-    UpdateModelMatrices();
+    { PROFILE("Update model matrices");
+        UpdateModelMatrices();
+    }
     
     // ParticleSystem
-    System::Particle().Update(*this, deltaTime);
+    { PROFILE("Particle system");
+        System::Particle().Update(*this, deltaTime);
+    }
     
     if (!mMenu.IsActive()) {
         // Check collisions.
-        mCollisionSystem.Update(*this);
+        { PROFILE("Collision system");
+            mCollisionSystem.Update(*this);
+        }
         
         // Update enemy spawning
-        mEnemySpawnerSystem.Update(*this, deltaTime, mCave, mNoSpawnRooms);
+        { PROFILE("Enemy spawner system");
+            mEnemySpawnerSystem.Update(*this, deltaTime, mCave, mNoSpawnRooms);
+        }
         
         // Check grid collisions.
-        mGridCollideSystem.Update(*this, deltaTime, *mCave);
+        { PROFILE("Grid collide system");
+            mGridCollideSystem.Update(*this, deltaTime, *mCave);
+        }
         
         // Update health
-        mHealthSystem.Update(*this, deltaTime);
+        { PROFILE("Health system");
+            mHealthSystem.Update(*this, deltaTime);
+        }
         
         // Update reflection
-        mReflectSystem.Update(*this, deltaTime);
+        { PROFILE("Reflect system");
+            mReflectSystem.Update(*this, deltaTime);
+        }
         
         // Update damage
-        mDamageSystem.Update(*this);
+        { PROFILE("Damage system");
+            mDamageSystem.Update(*this);
+        }
         
         // Update lifetimes
-        mLifeTimeSystem.Update(*this, deltaTime);
+        { PROFILE("Lifetime system");
+            mLifeTimeSystem.Update(*this, deltaTime);
+        }
         
         // UpdateSystem.
-        mUpdateSystem.Update(*this, deltaTime);
+        { PROFILE("Update system");
+            mUpdateSystem.Update(*this, deltaTime);
+        }
     }
     
     // Update sounds.
-    System::SoundSystem::GetInstance()->Update(*this);
+    { PROFILE("Sound system");
+        System::SoundSystem::GetInstance()->Update(*this);
+    }
     
     // Update camera.
     Component::Transform* cameraTransform = mMainCamera->body->GetComponent<Component::Transform>();
@@ -291,8 +339,10 @@ void MainScene::Update(float deltaTime) {
     mMainCamera->UpdateRelativePosition(mBossVector, deltaTime);
     
     if (!mMenu.IsActive()) {
-        //If all players are disabled, respawn them.
-        mCheckpointSystem.Update(deltaTime);
+        // If all players are disabled, respawn them.
+        { PROFILE("Checkpoint system");
+            mCheckpointSystem.Update(deltaTime);
+        }
         
         int bossVectorSize = mBossVector.size();
         for (int i = 0; i < bossVectorSize; i++) {
@@ -308,10 +358,14 @@ void MainScene::Update(float deltaTime) {
         }
         
         // Update explosion system
-        mExplodeSystem.Update(*this);
+        { PROFILE("Explosion system");
+            mExplodeSystem.Update(*this);
+        }
         
         // Remove killed entities
-        ClearKilled();
+        { PROFILE("Clear killed");
+            ClearKilled();
+        }
     }
     
     if (mMenu.IsActive())
@@ -325,36 +379,42 @@ void MainScene::Update(float deltaTime) {
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
     // Render refractions.
-    if (GameSettings::GetInstance().GetBool("Refractions")) {
-        mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionTarget()->GetSize(), mWater.GetRefractionClippingPlane());
-        // Don't render particle refractions as they're never below the water level.
-        //mParticleRenderSystem.Render(*this, mMainCamera->body, mWater.GetRefractionTarget()->GetSize(), mWater.GetRefractionClippingPlane());
-    } else {
-        mWater.GetRefractionTarget()->SetTarget();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    { PROFILE("Render refractions");
+        if (GameSettings::GetInstance().GetBool("Refractions")) {
+            mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionTarget()->GetSize(), mWater.GetRefractionClippingPlane());
+            // Don't render particle refractions as they're never below the water level.
+            //mParticleRenderSystem.Render(*this, mMainCamera->body, mWater.GetRefractionTarget()->GetSize(), mWater.GetRefractionClippingPlane());
+        } else {
+            mWater.GetRefractionTarget()->SetTarget();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+        }
     }
     
     // Render reflections
-    if (GameSettings::GetInstance().GetBool("Reflections")) {
-        /// @todo Don't hardcore camera inversion.
-        float distance = 2.f * (cameraTransform->position.y - mWater.GetPosition().y);
-        cameraTransform->position = cameraTransform->position - glm::vec3(0.f, distance, 0.f);
-        cameraTransform->pitch = -cameraTransform->pitch;
-        cameraTransform->UpdateModelMatrix();
-        mRenderSystem.Render(*this, mWater.GetReflectionTarget(), mWater.GetReflectionTarget()->GetSize(), mWater.GetReflectionClippingPlane());
-        mParticleRenderSystem.Render(*this, mMainCamera->body, mWater.GetReflectionTarget()->GetSize(), mWater.GetReflectionClippingPlane());
-        cameraTransform->pitch = -cameraTransform->pitch;
-        cameraTransform->position = cameraTransform->position + glm::vec3(0.f, distance, 0.f);
-        cameraTransform->UpdateModelMatrix();
-    } else {
-        mWater.GetReflectionTarget()->SetTarget();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    { PROFILE("Render reflections");
+        if (GameSettings::GetInstance().GetBool("Reflections")) {
+            /// @todo Don't hardcore camera inversion.
+            float distance = 2.f * (cameraTransform->position.y - mWater.GetPosition().y);
+            cameraTransform->position = cameraTransform->position - glm::vec3(0.f, distance, 0.f);
+            cameraTransform->pitch = -cameraTransform->pitch;
+            cameraTransform->UpdateModelMatrix();
+            mRenderSystem.Render(*this, mWater.GetReflectionTarget(), mWater.GetReflectionTarget()->GetSize(), mWater.GetReflectionClippingPlane());
+            mParticleRenderSystem.Render(*this, mMainCamera->body, mWater.GetReflectionTarget()->GetSize(), mWater.GetReflectionClippingPlane());
+            cameraTransform->pitch = -cameraTransform->pitch;
+            cameraTransform->position = cameraTransform->position + glm::vec3(0.f, distance, 0.f);
+            cameraTransform->UpdateModelMatrix();
+        } else {
+            mWater.GetReflectionTarget()->SetTarget();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+        }
     }
     
     // Render.
-    mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget(), screenSize);
+    { PROFILE("Render system");
+        mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget(), screenSize);
+    }
     
     if (GameSettings::GetInstance().GetBool("Refractions") || GameSettings::GetInstance().GetBool("Reflections"))
         mWater.Render();
@@ -362,32 +422,34 @@ void MainScene::Update(float deltaTime) {
     if (mMenu.IsActive())
         mMenu.RenderSelected();
     
-    // Anti-aliasing.
-    if (GameSettings::GetInstance().GetBool("FXAA")) {
-        mFxaaFilter->SetScreenSize(screenSize);
-        mFxaaFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
-        mPostProcessing->ApplyFilter(mFxaaFilter);
+    { PROFILE("Post-processing");
+        // Anti-aliasing.
+        if (GameSettings::GetInstance().GetBool("FXAA")) {
+            mFxaaFilter->SetScreenSize(screenSize);
+            mFxaaFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
+            mPostProcessing->ApplyFilter(mFxaaFilter);
+        }
+        
+        mParticleRenderSystem.Render(*this, mMainCamera->body, screenSize);
+        
+        // Glow.
+        mGlowBlurFilter->SetScreenSize(screenSize);
+        int blurAmount = 1;
+        for (int i = 0; i < blurAmount; ++i) {
+            mGlowBlurFilter->SetHorizontal(true);
+            mPostProcessing->ApplyFilter(mGlowBlurFilter);
+            mGlowBlurFilter->SetHorizontal(false);
+            mPostProcessing->ApplyFilter(mGlowBlurFilter);
+        }
+        mPostProcessing->ApplyFilter(mGlowFilter);
+        
+        // Gamma correction.
+        mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
+        mPostProcessing->ApplyFilter(mGammaCorrectionFilter);
+        
+        // Render to back buffer.
+        mPostProcessing->Render();
     }
-    
-    mParticleRenderSystem.Render(*this, mMainCamera->body, screenSize);
-    
-    // Glow.
-    mGlowBlurFilter->SetScreenSize(screenSize);
-    int blurAmount = 1;
-    for (int i = 0; i < blurAmount; ++i) {
-        mGlowBlurFilter->SetHorizontal(true);
-        mPostProcessing->ApplyFilter(mGlowBlurFilter);
-        mGlowBlurFilter->SetHorizontal(false);
-        mPostProcessing->ApplyFilter(mGlowBlurFilter);
-    }
-    mPostProcessing->ApplyFilter(mGlowFilter);
-    
-    // Gamma correction.
-    mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
-    mPostProcessing->ApplyFilter(mGammaCorrectionFilter);
-    
-    // Render to back buffer.
-    mPostProcessing->Render();
     
     if (mMenu.IsActive())
         mMenu.RenderMenuOptions();
@@ -419,7 +481,7 @@ void MainScene::Update(float deltaTime) {
             }
         }
     }
-
+    
     if (mTargetMix > mMix)
         mMix += deltaTime;
     else if (mTargetMix < mMix)

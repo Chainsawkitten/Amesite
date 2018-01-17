@@ -291,6 +291,7 @@ set(ENGINE_SRCS
         src/Engine/Util/Settings.cpp
         src/Engine/Util/Input.cpp
         src/Engine/Util/Picking.cpp
+        src/Engine/Util/Profiling.cpp
         src/Engine/Component/SuperComponent.cpp
         src/Engine/Component/Lens.cpp
         src/Engine/Component/Transform.cpp
@@ -355,6 +356,7 @@ set(ENGINE_HEADERS
         src/Engine/Util/Settings.hpp
         src/Engine/Util/Input.hpp
         src/Engine/Util/Picking.hpp
+        src/Engine/Util/Profiling.hpp
         src/Engine/Component/SuperComponent.hpp
         src/Engine/Component/Lens.hpp
         src/Engine/Component/Transform.hpp
@@ -417,7 +419,6 @@ set(GAME_SRCS
         src/Game/System/LifeTimeSystem.cpp
         src/Game/System/ExplodeSystem.cpp
         src/Game/System/ReflectSystem.cpp
-        src/Game/System/AISystem.cpp
         src/Game/System/CheckpointSystem.cpp
         src/Game/System/EnemySpawnerSystem.cpp
         src/Game/System/UpdateSystem.cpp
@@ -432,14 +433,8 @@ set(GAME_SRCS
         src/Game/Component/Reflect.cpp
         src/Game/Component/Update.cpp
         src/Game/Component/GridCollide.cpp
-        src/Game/Component/AI/WalkerAI.cpp
-        src/Game/Component/AI/LookerAI.cpp
         src/Game/GameScenes/MainScene.cpp
         src/Game/GameScenes/SplashScene.cpp
-        src/Game/GameScenes/PontusScene.cpp
-        src/Game/GameScenes/DanielScene.cpp
-        src/Game/GameScenes/IvarScene.cpp
-        src/Game/GameScenes/JonathanScene.cpp
         src/Game/GameScenes/EmptyScene.cpp
         src/Game/GameScenes/WinScene.cpp
         src/Game/GameScenes/LoadingScene.cpp
@@ -472,6 +467,7 @@ set(GAME_SRCS
         src/Game/Menu/SubMenu.cpp
         src/Game/Menu/MainMenu.cpp
         src/Game/Menu/OptionsMenu.cpp
+        src/Game/Menu/PauseMenu.cpp
         src/Game/Menu/SuperMenuOption.cpp
         src/Game/Menu/MenuOption.cpp
         src/Game/Menu/MenuSwitch.cpp
@@ -493,7 +489,6 @@ set(GAME_HEADERS
         src/Game/System/LifeTimeSystem.hpp
         src/Game/System/ExplodeSystem.hpp
         src/Game/System/ReflectSystem.hpp
-        src/Game/System/AISystem.hpp
         src/Game/System/CheckpointSystem.hpp
         src/Game/System/EnemySpawnerSystem.hpp
         src/Game/System/UpdateSystem.hpp
@@ -508,14 +503,8 @@ set(GAME_HEADERS
         src/Game/Component/Reflect.hpp
         src/Game/Component/Update.hpp
         src/Game/Component/GridCollide.hpp
-        src/Game/Component/AI/WalkerAI.hpp
-        src/Game/Component/AI/LookerAI.hpp
         src/Game/GameScenes/MainScene.hpp
         src/Game/GameScenes/SplashScene.hpp
-        src/Game/GameScenes/PontusScene.hpp
-        src/Game/GameScenes/DanielScene.hpp
-        src/Game/GameScenes/IvarScene.hpp
-        src/Game/GameScenes/JonathanScene.hpp
         src/Game/GameScenes/EmptyScene.hpp
         src/Game/GameScenes/WinScene.hpp
         src/Game/GameScenes/LoadingScene.hpp
@@ -548,6 +537,7 @@ set(GAME_HEADERS
         src/Game/Menu/SubMenu.hpp
         src/Game/Menu/MainMenu.hpp
         src/Game/Menu/OptionsMenu.hpp
+        src/Game/Menu/PauseMenu.hpp
         src/Game/Menu/SuperMenuOption.hpp
         src/Game/Menu/MenuOption.hpp
         src/Game/Menu/MenuSwitch.hpp

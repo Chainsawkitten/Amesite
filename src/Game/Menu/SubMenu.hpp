@@ -90,6 +90,8 @@ class SubMenu {
         glm::vec3 mRotation;
         glm::mat4 mModelMatrix;
         
+        double mLastMoveInput;
+        
         // Text.
         Font* mFont;
         

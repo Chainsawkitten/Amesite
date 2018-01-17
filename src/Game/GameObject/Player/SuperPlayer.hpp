@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GameObject/SuperGameObject.hpp>
+#include "../../Component/Controller.hpp"
 
 #include <glm/glm.hpp>
 
@@ -48,6 +49,13 @@ namespace GameObject {
              * @return Main Entity contaning tranform and physics components.
              */
             virtual Entity* GetNodeEntity() = 0;
+            
+            /// Gets body entity.
+            /**
+             * This is the entity containing the player's main mesh and is different from the node entity as the animation should not affect collision deteciton.
+             * @return The entity containing the player's main mesh.
+             */
+            virtual Entity* GetBodyEntity() = 0;
 
             /// Gets health of the player.
             /**
@@ -60,6 +68,12 @@ namespace GameObject {
              * @return State of the player (active or not).
              */
             bool Active();
+
+            /// Set device
+            /**
+             * @param Device to control player
+             */
+            virtual void SetDevice(InputHandler::Device device) = 0;
 
             /// Activates the player.
             virtual void Activate() = 0;

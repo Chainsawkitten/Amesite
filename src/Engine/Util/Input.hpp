@@ -17,9 +17,8 @@ class InputHandler {
         enum XBOXAxisIndex {
             LEFT_STICK_X = 0, ///< Left stick X axis
             LEFT_STICK_Y, ///< Left stick Y axis
-            LEFT_RIGHT_TRIGGER, ///< Left and right trigger value
-            RIGHT_STICK_Y, ///< Right stick X axis
-            RIGHT_STICK_X, ///< Right stick Y axis
+            RIGHT_STICK_X, ///< Right stick X axis
+            RIGHT_STICK_Y, ///< Right stick Y axis
         };
         
         /// Xbox 360 controller button index
@@ -54,7 +53,8 @@ class InputHandler {
             DOWN, ///< Move down
             RIGHT, ///< Move right
             LEFT, ///< Move left
-            PROFILE, ///< Run profiling.
+            PAUSE, ///< Pause game
+            PROFILE, ///< Run profiling
             BUTTONS, ///< Total number of inputs
         };
         
@@ -68,7 +68,8 @@ class InputHandler {
         
         /// Input device codes
         enum Device {
-            KEYBOARD = 0, ///< Keyboard input
+            NONE = 0, ///< No input device
+            KEYBOARD, ///< Keyboard input
             MOUSE, ///< Mouse buttons
             JOYSTICK, ///< Joystick input
             INPUT_DEVICES, ///< Number of input devices

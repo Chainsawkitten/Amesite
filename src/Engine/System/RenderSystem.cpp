@@ -61,7 +61,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
     
     // Render from camera.
     if (camera != nullptr) {
-        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->worldOrientationMatrix * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
+        glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
         glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(windowSize);
         glm::mat4 viewProjectionMat = projectionMat * viewMat;
         
@@ -112,6 +112,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
         renderTarget->SetTarget();
         //mDeferredLighting->ShowTextures(screenSize);
         glViewport(0, 0, static_cast<GLsizei>(screenSize.x), static_cast<GLsizei>(screenSize.y));
+        
         mDeferredLighting->Render(scene, camera, screenSize);
     }
 }

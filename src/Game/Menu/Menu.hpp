@@ -47,6 +47,9 @@ class Menu {
         /// Render menu options.
         void RenderMenuOptions();
         
+        /// Pause game and enter the pause menu.
+        void PauseGame();
+        
         /// Pan out camera and resume game.
         void ResumeGame();
         
@@ -59,6 +62,7 @@ class Menu {
     private:
         bool mActive;
         bool mFlyOut;
+        bool mFlyIn;
         float mTimer;
         
         glm::vec3 mPosition;
