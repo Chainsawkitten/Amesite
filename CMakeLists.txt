@@ -231,7 +231,7 @@ foreach(item ${EMBEDDED_INPUT})
 endforeach()
 
 # Doxygen documentation
-option(ModershipBuildDocs "Build the doxygen documentation" ON)
+option(ModershipBuildDocs "Build the doxygen documentation" OFF)
 find_package(Doxygen)
 if(DOXYGEN_FOUND AND ModershipBuildDocs)
     add_custom_target(EngineDoc ALL
