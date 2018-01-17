@@ -14,7 +14,9 @@ add_subdirectory(glfw)
 add_subdirectory(Headerize)
 
 # OpenAL Soft
+set(ALSOFT_UTILS OFF CACHE BOOL "Don't build OpenAL Soft utility programs" FORCE)
 set(ALSOFT_EXAMPLES OFF CACHE BOOL "Don't build OpenAL Soft examples" FORCE)
+set(ALSOFT_TESTS OFF CACHE BOOL "Don't build OpenAL Soft tests" FORCE)
 add_subdirectory(openal-soft)
 add_library(OpenALSoft INTERFACE)
 if(WIN32)
