@@ -1,4 +1,3 @@
-## Engine ##
 set(ENGINE_SRCS
     MainWindow.cpp
     RenderTarget.cpp
@@ -152,25 +151,7 @@ set(EMBEDDED_INPUT
     ../../shaders/Particle.vert
     ../../shaders/Particle.geom
     ../../shaders/Particle.frag
-    ../../shaders/Water.vert
-    ../../shaders/Water.frag
 )
-
-# Headerize
-macro(ProcessWithHeaderize headervar sourcevar inputfile outdir)
-    get_filename_component(basefile ${inputfile} NAME)
-    set(outputfile ${outdir}/${basefile})
-    set_source_files_properties(${outputfile} PROPERTIES HEADER_ONLY TRUE)
-    add_custom_command(
-        OUTPUT ${outputfile}.hpp ${outputfile}.cpp
-        COMMAND Headerize ${inputfile} ${outputfile}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        DEPENDS ${inputfile}
-        COMMENT "Generating headers for ${inputfile}"
-    )
-    list(APPEND ${headervar} ${outputfile}.hpp)
-    list(APPEND ${sourcevar} ${outputfile}.cpp)
-endmacro()
 
 foreach(item ${EMBEDDED_INPUT})
     ProcessWithHeaderize(EMBEDDED_HEADER EMBEDDED_SOURCE ${item} ${CMAKE_CURRENT_BINARY_DIR})
