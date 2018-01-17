@@ -7,11 +7,9 @@
 #include "PostFXAA.frag.hpp"
 
 FXAAFilter::FXAAFilter() {
-    Shader* vertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragmentShader = Resources().CreateShader(POSTFXAA_FRAG, POSTFXAA_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
-    Resources().FreeShader(fragmentShader);
+    mVertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(POSTFXAA_FRAG, POSTFXAA_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
     
     mScreenSizeLocation = mShaderProgram->GetUniformLocation("screenSize");
     
@@ -21,6 +19,8 @@ FXAAFilter::FXAAFilter() {
 
 FXAAFilter::~FXAAFilter() {
     Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mFragmentShader);
 }
 
 ShaderProgram* FXAAFilter::GetShaderProgram() const {

@@ -9,11 +9,9 @@
 #include "../Component/Lens.hpp"
 
 FogFilter::FogFilter(const glm::vec3& color) {
-    Shader* vertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragmentShader = Resources().CreateShader(POSTFOG_FRAG, POSTFOG_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
-    Resources().FreeShader(fragmentShader);
+    mVertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(POSTFOG_FRAG, POSTFOG_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
     
     mColor = color;
     mColorLocation = mShaderProgram->GetUniformLocation("color");
@@ -26,6 +24,8 @@ FogFilter::FogFilter(const glm::vec3& color) {
 
 FogFilter::~FogFilter() {
     Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mFragmentShader);
 }
 
 void FogFilter::SetColor(const glm::vec3& color) {

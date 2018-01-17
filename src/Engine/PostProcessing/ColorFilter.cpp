@@ -7,11 +7,9 @@
 #include "PostColor.frag.hpp"
 
 ColorFilter::ColorFilter(const glm::vec3& color) {
-    Shader* vertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragmentShader = Resources().CreateShader(POSTCOLOR_FRAG, POSTCOLOR_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
-    Resources().FreeShader(fragmentShader);
+    mVertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(POSTCOLOR_FRAG, POSTCOLOR_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
     
     mColor = color;
     mColorLocation = mShaderProgram->GetUniformLocation("color");
@@ -19,6 +17,8 @@ ColorFilter::ColorFilter(const glm::vec3& color) {
 
 ColorFilter::~ColorFilter() {
     Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mFragmentShader);
 }
 
 ShaderProgram* ColorFilter::GetShaderProgram() const {

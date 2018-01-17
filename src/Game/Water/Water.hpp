@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 class Texture2D;
+class Shader;
 class ShaderProgram;
 namespace Geometry {
     class Plane;
@@ -71,6 +72,8 @@ class Water {
         void SetTextureRepeat(const glm::vec2& textureRepeat);
         
     private:
+        Shader* mVertexShader;
+        Shader* mFragmentShader;
         ShaderProgram* mShaderProgram;
         
         // Render targets.

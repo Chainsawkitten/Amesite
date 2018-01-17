@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 
+class Shader;
+
 /// Color adjustment filter.
 class ColorFilter : public Filter {
     public:
@@ -32,6 +34,8 @@ class ColorFilter : public Filter {
         void SetUniforms();
         
     private:
+        Shader* mVertexShader;
+        Shader* mFragmentShader;
         ShaderProgram* mShaderProgram;
         
         glm::vec3 mColor;

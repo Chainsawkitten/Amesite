@@ -7,11 +7,9 @@
 #include "PostGamma.frag.hpp"
 
 GammaCorrectionFilter::GammaCorrectionFilter() {
-    Shader* vertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragmentShader = Resources().CreateShader(POSTGAMMA_FRAG, POSTGAMMA_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
-    Resources().FreeShader(fragmentShader);
+    mVertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(POSTGAMMA_FRAG, POSTGAMMA_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
     
     mBrightness = 2.2f;
     mBrightnessLocation = mShaderProgram->GetUniformLocation("brightness");
@@ -19,6 +17,8 @@ GammaCorrectionFilter::GammaCorrectionFilter() {
 
 GammaCorrectionFilter::~GammaCorrectionFilter() {
     Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mFragmentShader);
 }
 
 ShaderProgram* GammaCorrectionFilter::GetShaderProgram() const {

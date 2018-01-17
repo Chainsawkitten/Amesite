@@ -4,6 +4,7 @@
 #include <stb_truetype.h>
 #include <glm/glm.hpp>
 
+class Shader;
 class ShaderProgram;
 namespace Geometry {
     class Square;
@@ -91,6 +92,8 @@ class Font {
         Geometry::Square* mSquare;
         
         // Shaders
+        Shader* mVertexShader;
+        Shader* mFragmentShader;
         ShaderProgram* mShaderProgram;
         
         float RenderCharacter(char character, const glm::vec2& position, const glm::vec2& screenSize);

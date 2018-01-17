@@ -67,14 +67,12 @@ RenderTarget::RenderTarget(const glm::vec2 &size) {
     // Default framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     
-    Shader* vertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragmentShader = Resources().CreateShader(POSTCOPY_FRAG, POSTCOPY_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(fragmentShader);
+    mVertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(POSTCOPY_FRAG, POSTCOPY_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
     
-    fragmentShader = Resources().CreateShader(POSTDITHER_FRAG, POSTDITHER_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mDitherShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
+    mDitherFragmentShader = Resources().CreateShader(POSTDITHER_FRAG, POSTDITHER_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mDitherShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mDitherFragmentShader });
     
     mSquare = Resources().CreateSquare();
     mDitherTime = 0.f;
@@ -88,6 +86,9 @@ RenderTarget::~RenderTarget() {
     
     Resources().FreeShaderProgram(mShaderProgram);
     Resources().FreeShaderProgram(mDitherShaderProgram);
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mFragmentShader);
+    Resources().FreeShader(mDitherFragmentShader);
     
     Resources().FreeSquare();
 }
