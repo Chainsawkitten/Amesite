@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+class Shader;
 class ShaderProgram;
 namespace Geometry {
     class Square;
@@ -69,7 +70,11 @@ class RenderTarget {
         Geometry::Square* mSquare;
         
         // Shaders
+        Shader* mVertexShader;
+        Shader* mFragmentShader;
         ShaderProgram* mShaderProgram;
+        
+        Shader* mDitherFragmentShader;
         ShaderProgram* mDitherShaderProgram;
         
         float mDitherTime;

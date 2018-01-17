@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 
+class Shader;
 namespace Component {
     class Lens;
 }
@@ -54,6 +55,8 @@ class FogFilter : public Filter {
         void SetUniforms();
         
     private:
+        Shader* mVertexShader;
+        Shader* mFragmentShader;
         ShaderProgram* mShaderProgram;
         
         glm::vec3 mColor;

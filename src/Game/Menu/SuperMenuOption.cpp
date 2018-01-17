@@ -24,21 +24,21 @@ SuperMenuOption::SuperMenuOption(const glm::vec3& position, const glm::vec3& rot
     
     // Initialize shaders.
     mPlane = Resources().CreatePlane();
-    Shader* vertexShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragmentShader = Resources().CreateShader(TEXT3D_FRAG, TEXT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mTextShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(fragmentShader);
+    mVertexShader = Resources().CreateShader(DEFAULT3D_VERT, DEFAULT3D_VERT_LENGTH, GL_VERTEX_SHADER);
+    mTextFragmentShader = Resources().CreateShader(TEXT3D_FRAG, TEXT3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mTextShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mTextFragmentShader });
     
-    fragmentShader = Resources().CreateShader(SINGLECOLOR3D_FRAG, SINGLECOLOR3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mSelectedShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
-    Resources().FreeShader(fragmentShader);
+    mSelectedFragmentShader = Resources().CreateShader(SINGLECOLOR3D_FRAG, SINGLECOLOR3D_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mSelectedShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mSelectedFragmentShader });
 }
 
 SuperMenuOption::~SuperMenuOption() {
     Resources().FreePlane();
     Resources().FreeShaderProgram(mTextShaderProgram);
     Resources().FreeShaderProgram(mSelectedShaderProgram);
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mTextFragmentShader);
+    Resources().FreeShader(mSelectedFragmentShader);
 }
 
 glm::mat4 SuperMenuOption::GetModelMatrix() const {

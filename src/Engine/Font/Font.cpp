@@ -55,11 +55,9 @@ Font::Font(const char* filename, float height) {
     // Resources.
     mSquare = Resources().CreateSquare();
     
-    Shader* vertexShader = Resources().CreateShader(FONT_VERT, FONT_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragmentShader = Resources().CreateShader(FONT_FRAG, FONT_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
-    Resources().FreeShader(fragmentShader);
+    mVertexShader = Resources().CreateShader(FONT_VERT, FONT_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(FONT_FRAG, FONT_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
     
     mColor = glm::vec3(0.f, 0.f, 0.f);
     mIsFromFile = true;
@@ -84,11 +82,9 @@ Font::Font(const char* source, int sourceLength, float height) {
     // Resources.
     mSquare = Resources().CreateSquare();
     
-    Shader* vertexShader = Resources().CreateShader(FONT_VERT, FONT_VERT_LENGTH, GL_VERTEX_SHADER);
-    Shader* fragmentShader = Resources().CreateShader(FONT_FRAG, FONT_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
-    Resources().FreeShader(vertexShader);
-    Resources().FreeShader(fragmentShader);
+    mVertexShader = Resources().CreateShader(FONT_VERT, FONT_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(FONT_FRAG, FONT_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
     
     mColor = glm::vec3(0.f, 0.f, 0.f);
     mIsFromFile = false;
@@ -97,6 +93,8 @@ Font::Font(const char* source, int sourceLength, float height) {
 Font::~Font() {
     glDeleteTextures(1, &mTexture);
     
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mFragmentShader);
     Resources().FreeShaderProgram(mShaderProgram);
     
     Resources().FreeSquare();

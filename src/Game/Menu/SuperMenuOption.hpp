@@ -6,6 +6,7 @@ class Texture2D;
 namespace Geometry {
     class Plane;
 }
+class Shader;
 class ShaderProgram;
 
 /// Menu option interface.
@@ -70,7 +71,10 @@ class SuperMenuOption {
     private:
         // Used to render 3D text.
         Geometry::Plane* mPlane;
+        Shader* mVertexShader;
+        Shader* mTextFragmentShader;
         ShaderProgram* mTextShaderProgram;
+        Shader* mSelectedFragmentShader;
         ShaderProgram* mSelectedShaderProgram;
         
         glm::vec3 mPosition;

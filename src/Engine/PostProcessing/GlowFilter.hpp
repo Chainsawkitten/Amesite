@@ -3,6 +3,8 @@
 #include "Filter.hpp"
 #include <glm/glm.hpp>
 
+class Shader;
+
 /// Glow filter (second pass).
 /**
  * Applies the blurred glow map to the screen.
@@ -25,5 +27,7 @@ class GlowFilter : public Filter {
         void SetUniforms();
         
     private:
+        Shader* mVertexShader;
+        Shader* mFragmentShader;
         ShaderProgram* mShaderProgram;
 };

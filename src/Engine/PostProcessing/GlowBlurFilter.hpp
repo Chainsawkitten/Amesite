@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 
+class Shader;
+
 /// Glow filter (first pass).
 /**
  * Blurs the glow buffer along a specified axis.
@@ -38,6 +40,8 @@ class GlowBlurFilter : public Filter {
         void SetHorizontal(bool horizontal);
         
     private:
+        Shader* mVertexShader;
+        Shader* mFragmentShader;
         ShaderProgram* mShaderProgram;
         
         glm::vec2 mScreenSize;
