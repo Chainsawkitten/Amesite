@@ -1,25 +1,25 @@
 #include "ControlSchemes.hpp"
 
-#include <Util/Input.hpp>
+#include <Engine/Util/Input.hpp>
 
-#include <Entity/Entity.hpp>
-#include <Component/Physics.hpp>
+#include <Engine/Entity/Entity.hpp>
+#include <Engine/Component/Physics.hpp>
 
-#include <../Game/Component/Controller.hpp>
-#include <Component/Transform.hpp>
-#include <Component/Lens.hpp>
-#include <Component/PointLight.hpp>
+#include "../Component/Controller.hpp"
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/Lens.hpp>
+#include <Engine/Component/PointLight.hpp>
 #include "../Component/Spawner.hpp"
 #include "../Component/Damage.hpp"
 #include "../Component/Health.hpp"
-#include <Component/SoundSource.hpp>
+#include <Engine/Component/SoundSource.hpp>
 #include "../GameObject/Bullet.hpp"
 #include "../Util/GameEntityFactory.hpp"
-#include <Util/Picking.hpp>
+#include <Engine/Util/Picking.hpp>
 #include "../Util/Hub.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include <MainWindow.hpp>
-#include <Util/Log.hpp>
+#include <Engine/MainWindow.hpp>
+#include <Engine/Util/Log.hpp>
 #include <random>
 
 #include "../Game/GameObject/Bullet.hpp"

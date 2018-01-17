@@ -1,13 +1,13 @@
 #include "CaveGenerator.hpp"
+
 #include <random>
-#include <Util/Log.hpp>
+#include <Engine/Util/Log.hpp>
 #include <vector>
 #include <queue>
 #include <algorithm>
 #include <glm/glm.hpp>
 
 namespace CaveGenerator {
-
     CaveMap::CaveMap(int rowCount, int columnCount, int seed) {
         
         Log() << "Cave Generator seed: " << seed << "\n";

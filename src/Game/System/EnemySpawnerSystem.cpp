@@ -1,9 +1,9 @@
 #include "EnemySpawnerSystem.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
-#include <GameObject/SuperGameObject.hpp>
-#include <Component/Transform.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
+#include <Engine/GameObject/SuperGameObject.hpp>
+#include <Engine/Component/Transform.hpp>
 
 #include "../Util/GameEntityFactory.hpp"
 
@@ -23,7 +23,7 @@
 #include "../Util/Hub.hpp"
 
 #include <vector>
-#include <Util/Log.hpp>
+#include <Engine/Util/Log.hpp>
 
 using namespace System;
 

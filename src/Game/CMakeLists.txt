@@ -156,6 +156,5 @@ create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
 
 add_executable(Amesite ${GAME_SRCS} ${GAME_HEADERS} ${EMBEDDED_SOURCE})
 target_link_libraries(Amesite Engine)
-target_include_directories(Amesite PUBLIC ../Engine)
 set_property(TARGET Amesite PROPERTY CXX_STANDARD 11)
 set_property(TARGET Amesite PROPERTY CXX_STANDARD_REQUIRED ON)

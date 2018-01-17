@@ -1,16 +1,17 @@
 #include "DamageSystem.hpp"
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
-#include <GameObject/SuperGameObject.hpp>
+
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
+#include <Engine/GameObject/SuperGameObject.hpp>
 
 #include <../Game/GameObject/DyingLight.hpp>
 
 #include "../Util/GameEntityFactory.hpp"
 
-#include <Component/Physics.hpp>
-#include <Component/ParticleEmitter.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/PointLight.hpp>
+#include <Engine/Component/Physics.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/PointLight.hpp>
 #include "../Component/Health.hpp"
 #include "../Component/Reflect.hpp"
 #include "../Component/Damage.hpp"
@@ -20,7 +21,7 @@
 
 #include <vector>
 
-#include <Util/Log.hpp>
+#include <Engine/Util/Log.hpp>
 
 using namespace System;
 

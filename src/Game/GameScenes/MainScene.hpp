@@ -1,10 +1,10 @@
 #pragma once
-#include <Scene/Scene.hpp>
+#include <Engine/Scene/Scene.hpp>
 
-#include <System/RenderSystem.hpp>
-#include <System/PhysicsSystem.hpp>
-#include <System/CollisionSystem.hpp>
-#include <System/AnimationSystem.hpp>
+#include <Engine/System/RenderSystem.hpp>
+#include <Engine/System/PhysicsSystem.hpp>
+#include <Engine/System/CollisionSystem.hpp>
+#include <Engine/System/AnimationSystem.hpp>
 #include "../System/CheckpointSystem.hpp"
 #include "../System/HealthSystem.hpp"
 #include "../System/DamageSystem.hpp"
@@ -16,7 +16,7 @@
 #include "../System/EnemySpawnerSystem.hpp"
 #include "../System/UpdateSystem.hpp"
 #include "../System/SpawnerSystem.hpp"
-#include <System/ParticleSystem.hpp>
+#include <Engine/System/ParticleSystem.hpp>
 #include "../Menu/Menu.hpp"
 #include "../Water/Water.hpp"
 

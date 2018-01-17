@@ -1,24 +1,24 @@
 #include "Cave.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Resources.hpp>
-#include <Geometry/Geometry3D.hpp>
-#include <Geometry/Cube.hpp>
-#include <Geometry/Map.hpp>
-#include "Geometry/Plane.hpp"
-#include <Geometry/OBJModel.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Geometry/Geometry3D.hpp>
+#include <Engine/Geometry/Cube.hpp>
+#include <Engine/Geometry/Map.hpp>
+#include <Engine/Geometry/Plane.hpp>
+#include <Engine/Geometry/OBJModel.hpp>
 
 #include "../Component/Controller.hpp"
 #include "../Component/Health.hpp"
-#include <Component/Transform.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/Physics.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/SpotLight.hpp>
-#include <Geometry/Terrain.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/Physics.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/SpotLight.hpp>
+#include <Engine/Geometry/Terrain.hpp>
 #include "../Util/GameEntityFactory.hpp"
 #include "../Util/CaveGenerator.hpp"
 

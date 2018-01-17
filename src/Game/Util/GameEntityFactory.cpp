@@ -1,17 +1,18 @@
 #include "GameEntityFactory.hpp"
-#include <Entity/Entity.hpp>
-#include <Resources.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Lens.hpp>
-#include <Component/Transform.hpp>
-#include <Component/RelativeTransform.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/Collider2DRectangle.hpp>
-#include <Component/Physics.hpp>
-#include <Component/SpotLight.hpp>
-#include <Component/PointLight.hpp>
-#include <Component/ParticleEmitter.hpp>
-#include <Component/Material.hpp>
+
+#include <Engine/Entity/Entity.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Lens.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/RelativeTransform.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/Collider2DRectangle.hpp>
+#include <Engine/Component/Physics.hpp>
+#include <Engine/Component/SpotLight.hpp>
+#include <Engine/Component/PointLight.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/Material.hpp>
 #include "../Component/Spawner.hpp"
 #include "../Component/Controller.hpp"
 #include "../Component/Damage.hpp"
@@ -20,15 +21,15 @@
 #include "../Component/GridCollide.hpp"
 #include "../Component/Explode.hpp"
 
-#include <Geometry/Geometry3D.hpp>
-#include <Geometry/Cube.hpp>
-#include <Geometry/OBJModel.hpp>
+#include <Engine/Geometry/Geometry3D.hpp>
+#include <Engine/Geometry/Cube.hpp>
+#include <Engine/Geometry/OBJModel.hpp>
 
-#include <Texture/Texture2D.hpp>
+#include <Engine/Texture/Texture2D.hpp>
 
-#include <Scene/Scene.hpp>
+#include <Engine/Scene/Scene.hpp>
 
-#include <../Game/Util/ControlSchemes.hpp>
+#include "../Util/ControlSchemes.hpp"
 #include "../Util/CaveGenerator.hpp"
 
 #include "../GameObject/Bullet.hpp"

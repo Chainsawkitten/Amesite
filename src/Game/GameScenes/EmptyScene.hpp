@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Scene/Scene.hpp>
+#include <Engine/Scene/Scene.hpp>
 
 /// Empty scene that does nothing
 class EmptyScene : public Scene {

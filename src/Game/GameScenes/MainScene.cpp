@@ -1,48 +1,48 @@
 #include "MainScene.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Util/Input.hpp>
+#include <Engine/Util/Input.hpp>
 #include "../Util/GameEntityFactory.hpp"
 #include "../Util/ControlSchemes.hpp"
-#include <Util/Profiling.hpp>
+#include <Engine/Util/Profiling.hpp>
 
-#include <Component/Transform.hpp>
-#include <Component/Lens.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/RelativeTransform.hpp>
-#include <Component/DirectionalLight.hpp>
-#include <Component/SpotLight.hpp>
-#include <Component/Listener.hpp>
-#include <Component/Physics.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/SoundSource.hpp>
-#include <Component/Listener.hpp>
-#include <Component/ParticleEmitter.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/Lens.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/RelativeTransform.hpp>
+#include <Engine/Component/DirectionalLight.hpp>
+#include <Engine/Component/SpotLight.hpp>
+#include <Engine/Component/Listener.hpp>
+#include <Engine/Component/Physics.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/SoundSource.hpp>
+#include <Engine/Component/Listener.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
 #include "../Component/Health.hpp"
 #include "../Component/Damage.hpp"
 #include "../Component/LifeTime.hpp"
 #include "../Component/Spawner.hpp"
-#include <Component/PointLight.hpp>
+#include <Engine/Component/PointLight.hpp>
 
-#include <System/SoundSystem.hpp>
-#include <Audio/SoundBuffer.hpp>
+#include <Engine/System/SoundSystem.hpp>
+#include <Engine/Audio/SoundBuffer.hpp>
 
-#include <Resources.hpp>
-#include <Texture/Texture2D.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Texture/Texture2D.hpp>
 
-#include <PostProcessing/PostProcessing.hpp>
-#include <PostProcessing/FXAAFilter.hpp>
-#include <PostProcessing/GlowFilter.hpp>
-#include <PostProcessing/GlowBlurFilter.hpp>
-#include <PostProcessing/GammaCorrectionFilter.hpp>
-#include <MainWindow.hpp>
+#include <Engine/PostProcessing/PostProcessing.hpp>
+#include <Engine/PostProcessing/FXAAFilter.hpp>
+#include <Engine/PostProcessing/GlowFilter.hpp>
+#include <Engine/PostProcessing/GlowBlurFilter.hpp>
+#include <Engine/PostProcessing/GammaCorrectionFilter.hpp>
+#include <Engine/MainWindow.hpp>
 #include "../Util/GameSettings.hpp"
 #include "../Util/Hub.hpp"
 #include "../Util/CaveGenerator.hpp"
-#include <Util/Log.hpp>
+#include <Engine/Util/Log.hpp>
 
 #include "../GameObject/Player/Player1.hpp"
 #include "../GameObject/Player/Player2.hpp"
@@ -58,11 +58,11 @@
 #include "../GameObject/Pillar.hpp"
 #include "../GameObject/Enemy/SuperEnemy.hpp"
 
-#include <RenderTarget.hpp>
+#include <Engine/RenderTarget.hpp>
 #include "../Game.hpp"
 #include "WinScene.hpp"
 
-#include "Geometry/OBJModel.hpp"
+#include <Engine/Geometry/OBJModel.hpp>
 
 using namespace GameObject;
 

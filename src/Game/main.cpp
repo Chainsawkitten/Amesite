@@ -2,13 +2,13 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <MainWindow.hpp>
+#include <Engine/MainWindow.hpp>
 
-#include <Util/Log.hpp>
-#include <Util/Profiling.hpp>
+#include <Engine/Util/Log.hpp>
+#include <Engine/Util/Profiling.hpp>
 #include "Util/GameSettings.hpp"
-#include <Util/FileSystem.hpp>
-#include <System/SoundSystem.hpp>
+#include <Engine/Util/FileSystem.hpp>
+#include <Engine/System/SoundSystem.hpp>
 
 #include "Game.hpp"
 #include "GameScenes/SplashScene.hpp"

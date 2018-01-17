@@ -1,7 +1,7 @@
 #include "ControllerSystem.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
 #include "../Component/Controller.hpp"
 #include "../Util/ControlSchemes.hpp"

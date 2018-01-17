@@ -1,11 +1,11 @@
 #include "DyingLight.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Component/Transform.hpp>
-#include <Component/ParticleEmitter.hpp>
-#include <Component/PointLight.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/PointLight.hpp>
 #include "../Component/LifeTime.hpp"
 #include "../Component/Update.hpp"
 

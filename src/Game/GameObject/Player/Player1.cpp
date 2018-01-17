@@ -1,26 +1,26 @@
 #include "Player1.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Resources.hpp>
-#include <Geometry/Geometry3D.hpp>
-#include <Geometry/OBJModel.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Geometry/Geometry3D.hpp>
+#include <Engine/Geometry/OBJModel.hpp>
 
 #include "../../Component/Controller.hpp"
 #include "../../Component/Health.hpp"
 #include "../../Component/Spawner.hpp"
 #include "../../Component/Update.hpp"
-#include <Component/Transform.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/Physics.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/SpotLight.hpp>
-#include <Component/PointLight.hpp>
-#include <Component/Animation.hpp>
-#include <Component/ParticleEmitter.hpp>
-#include <Component/SoundSource.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/Physics.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/SpotLight.hpp>
+#include <Engine/Component/PointLight.hpp>
+#include <Engine/Component/Animation.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/SoundSource.hpp>
 
 #include "../../Util/ControlSchemes.hpp"
 
