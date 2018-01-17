@@ -1,19 +1,19 @@
 #include "PillarBall.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Resources.hpp>
-#include <Geometry/Geometry3D.hpp>
-#include <Geometry/OBJModel.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Geometry/Geometry3D.hpp>
+#include <Engine/Geometry/OBJModel.hpp>
 
-#include <Component/Transform.hpp>
-#include <Component/RelativeTransform.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/PointLight.hpp>
-#include <Component/Physics.hpp>
-#include <Component/ParticleEmitter.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/RelativeTransform.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/PointLight.hpp>
+#include <Engine/Component/Physics.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
 #include "../Component/Update.hpp"
 #include "../Component/Spawner.hpp"
 #include "../Component/LifeTime.hpp"
@@ -32,7 +32,7 @@ PillarBall::PillarBall(Scene* scene) : SuperGameObject(scene) {
     node->AddComponent<Component::LifeTime>()->lifeTime = 10.f;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&PillarBall::mUpdateFunction, this);
 
-    //mBallModel = Resources().CreateOBJModel("Resources/portal.obj");
+    //mBallModel = Resources().CreateOBJModel("Resources/spawn/portal/portal.obj");
 
     ball1 = CreateEntity();
     ball1->AddComponent<Component::RelativeTransform>()->parentEntity = node;

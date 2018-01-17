@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Component/SuperComponent.hpp>
+#include <Engine/Component/SuperComponent.hpp>
 
 namespace Component {
     /// %Component spawning other entities.

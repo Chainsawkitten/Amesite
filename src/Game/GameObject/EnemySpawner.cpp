@@ -1,7 +1,7 @@
 #include "EnemySpawner.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
 #include "../Component/Spawner.hpp"
 #include "Enemy/SuperEnemy.hpp"

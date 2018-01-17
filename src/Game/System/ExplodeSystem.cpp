@@ -1,27 +1,27 @@
 #include "ExplodeSystem.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
 #include "../Component/Explode.hpp"
-#include <Component/Transform.hpp>
-#include <Component/SoundSource.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/SoundSource.hpp>
 #include "../GameObject/Explosion.hpp"
 #include "../Component/LifeTime.hpp"
 
 #include "../Util/GameEntityFactory.hpp"
-#include <Resources.hpp>
-#include <Audio/SoundBuffer.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Audio/SoundBuffer.hpp>
 #include <ctime>
 
 using namespace System;
 
 ExplodeSystem::ExplodeSystem() {
-    mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion01.ogg"));
-    mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion02.ogg"));
-    mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion03.ogg"));
-    mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion04.ogg"));
-    mExplosionSounds.push_back(Resources().CreateSound("Resources/Explosion05.ogg"));
+    mExplosionSounds.push_back(Resources().CreateSound("Resources/sound/Explosion01.ogg"));
+    mExplosionSounds.push_back(Resources().CreateSound("Resources/sound/Explosion02.ogg"));
+    mExplosionSounds.push_back(Resources().CreateSound("Resources/sound/Explosion03.ogg"));
+    mExplosionSounds.push_back(Resources().CreateSound("Resources/sound/Explosion04.ogg"));
+    mExplosionSounds.push_back(Resources().CreateSound("Resources/sound/Explosion05.ogg"));
     
     mRNG.seed(time(0));
 }

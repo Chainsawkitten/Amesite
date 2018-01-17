@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-#include <Scene/Scene.hpp>
+#include <Engine/Scene/Scene.hpp>
 
 Game& Game::GetInstance() {
     static Game instance;

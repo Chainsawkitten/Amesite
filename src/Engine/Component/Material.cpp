@@ -6,10 +6,10 @@
 using namespace Component;
 
 Material::Material(Entity* entity) : SuperComponent(entity) {
-    diffuse = Resources().CreateTexture2DFromFile("Resources/DefaultDiffuse.png", true);
-    normal = Resources().CreateTexture2DFromFile("Resources/DefaultNormal.png");
-    specular = Resources().CreateTexture2DFromFile("Resources/DefaultSpecular.png");
-    glow = Resources().CreateTexture2DFromFile("Resources/DefaultGlow.png");
+    diffuse = Resources().CreateTexture2DFromFile("Resources/default/DefaultDiffuse.png", true);
+    normal = Resources().CreateTexture2DFromFile("Resources/default/DefaultNormal.png");
+    specular = Resources().CreateTexture2DFromFile("Resources/default/DefaultSpecular.png");
+    glow = Resources().CreateTexture2DFromFile("Resources/default/DefaultGlow.png");
 }
 
 Material::~Material() {

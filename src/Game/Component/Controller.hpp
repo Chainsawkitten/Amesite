@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Component/SuperComponent.hpp>
-#include <Util/Input.hpp>
+#include <Engine/Component/SuperComponent.hpp>
+#include <Engine/Util/Input.hpp>
 #include <vector>
 
 namespace Component {

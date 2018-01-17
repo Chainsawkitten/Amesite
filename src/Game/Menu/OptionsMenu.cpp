@@ -2,15 +2,15 @@
 
 #include "MenuOption.hpp"
 #include "MenuSwitch.hpp"
-#include <MainWindow.hpp>
+#include <Engine/MainWindow.hpp>
 #include "Menu.hpp"
 
 #include "../Util/GameSettings.hpp"
 #include "../Util/Hub.hpp"
 #include "../GameObject/Player/Player1.hpp"
 
-#include <Resources.hpp>
-#include <Font/Font.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Font/Font.hpp>
 
 OptionsMenu::OptionsMenu(Menu* parentMenu) : SubMenu() {
     // Define menu options.

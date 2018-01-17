@@ -1,10 +1,10 @@
 #include "GameSettings.hpp"
 
-#include <Util/FileSystem.hpp>
+#include <Engine/Util/FileSystem.hpp>
 
 GameSettings::GameSettings() {
     mIni.SetUnicode(true);
-    mIni.LoadFile(FileSystem::SavePath("Modership", "GameSettings.ini").c_str());
+    mIni.LoadFile(FileSystem::SavePath("Amesite", "GameSettings.ini").c_str());
     
     AddBoolSetting("Logging", "Debug", "Logging", false);
     AddBoolSetting("Debug Context", "Debug", "Debug Context", false);
@@ -39,5 +39,5 @@ GameSettings& GameSettings::GetInstance() {
 }
 
 void GameSettings::Save() {
-    mIni.SaveFile(FileSystem::SavePath("Modership", "GameSettings.ini").c_str());
+    mIni.SaveFile(FileSystem::SavePath("Amesite", "GameSettings.ini").c_str());
 }

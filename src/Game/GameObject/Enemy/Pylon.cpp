@@ -1,11 +1,11 @@
 #include "Pylon.hpp"
 
-#include <Scene/Scene.hpp>
-#include <Entity/Entity.hpp>
+#include <Engine/Scene/Scene.hpp>
+#include <Engine/Entity/Entity.hpp>
 
-#include <Resources.hpp>
-#include <Geometry/Geometry3D.hpp>
-#include <Geometry/OBJModel.hpp>
+#include <Engine/Resources.hpp>
+#include <Engine/Geometry/Geometry3D.hpp>
+#include <Engine/Geometry/OBJModel.hpp>
 
 #include "../../Component/Health.hpp"
 #include "../../Component/Spawner.hpp"
@@ -13,15 +13,15 @@
 #include "../../Component/Controller.hpp"
 #include "../../Component/Update.hpp"
 #include "../../Component/GridCollide.hpp"
-#include <Component/Physics.hpp>
-#include <Component/Transform.hpp>
-#include <Component/RelativeTransform.hpp>
-#include <Component/Mesh.hpp>
-#include <Component/Material.hpp>
-#include <Component/Collider2DCircle.hpp>
-#include <Component/Animation.hpp>
-#include <Component/ParticleEmitter.hpp>
-#include <Component/PointLight.hpp>
+#include <Engine/Component/Physics.hpp>
+#include <Engine/Component/Transform.hpp>
+#include <Engine/Component/RelativeTransform.hpp>
+#include <Engine/Component/Mesh.hpp>
+#include <Engine/Component/Material.hpp>
+#include <Engine/Component/Collider2DCircle.hpp>
+#include <Engine/Component/Animation.hpp>
+#include <Engine/Component/ParticleEmitter.hpp>
+#include <Engine/Component/PointLight.hpp>
 
 
 #include "../../Util/ControlSchemes.hpp"
@@ -29,9 +29,9 @@
 using namespace GameObject;
 
 Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
-    mActiveGlowBody = Resources().CreateTexture2DFromFile("Resources/enemy_glow.png");
-    mActiveGlowPylon1 = Resources().CreateTexture2DFromFile("Resources/enemy_glow.png");
-    mActiveGlowPylon2 = Resources().CreateTexture2DFromFile("Resources/enemy_glow.png");
+    mActiveGlowBody = Resources().CreateTexture2DFromFile("Resources/color/enemy_glow.png");
+    mActiveGlowPylon1 = Resources().CreateTexture2DFromFile("Resources/color/enemy_glow.png");
+    mActiveGlowPylon2 = Resources().CreateTexture2DFromFile("Resources/color/enemy_glow.png");
 
     node->AddComponent<Component::Transform>()->scale *= 0.2f;
     node->AddComponent<Component::Collider2DCircle>()->radius = 9.f;
@@ -53,10 +53,10 @@ Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
 
     body = CreateEntity();
     body->AddComponent<Component::RelativeTransform>()->parentEntity = node;
-    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/pylon.obj");
+    body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/pylon/pylon.obj");
     body->AddComponent<Component::Material>();
-    body->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
-    body->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    body->GetComponent<Component::Material>()->SetDiffuse("Resources/color/enemy_diff.png");
+    body->GetComponent<Component::Material>()->SetSpecular("Resources/color/enemy_spec.png");
     mDeactiveGlowBody = body->GetComponent<Component::Material>()->glow;
     Component::Animation::AnimationClip* idleBody = body->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idleBody->CreateKeyFrame(glm::vec3(0.3f, 0.f, 0.f), 0.f, 0.f, 0, 1.5f, false, true);
@@ -68,10 +68,10 @@ Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
     pylon1 = CreateEntity();
     pylon1->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     pylon1->GetComponent<Component::RelativeTransform>()->scale *= 0.5f;
-    pylon1->AddComponent<Component::Mesh>()->geometry = mPylon1 = Resources().CreateOBJModel("Resources/pylon.obj");
+    pylon1->AddComponent<Component::Mesh>()->geometry = mPylon1 = Resources().CreateOBJModel("Resources/pylon/pylon.obj");
     pylon1->AddComponent<Component::Material>();
-    pylon1->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
-    pylon1->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    pylon1->GetComponent<Component::Material>()->SetDiffuse("Resources/color/enemy_diff.png");
+    pylon1->GetComponent<Component::Material>()->SetSpecular("Resources/color/enemy_spec.png");
     mDeactiveGlowPylon1 = pylon1->GetComponent<Component::Material>()->glow;
     Component::Animation::AnimationClip* idlePylon1 = pylon1->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idlePylon1->CreateKeyFrame(glm::vec3(0.f, 0.f, 3.f), 0.f, 0.f, 0, 3.f * 0.1f, true, false);
@@ -87,10 +87,10 @@ Pylon::Pylon(Scene* scene) : SuperEnemy(scene) {
     pylon2 = CreateEntity();
     pylon2->AddComponent<Component::RelativeTransform>()->parentEntity = node;
     pylon2->GetComponent<Component::RelativeTransform>()->scale *= 0.5f;
-    pylon2->AddComponent<Component::Mesh>()->geometry = mPylon2 = Resources().CreateOBJModel("Resources/pylon.obj");
+    pylon2->AddComponent<Component::Mesh>()->geometry = mPylon2 = Resources().CreateOBJModel("Resources/pylon/pylon.obj");
     pylon2->AddComponent<Component::Material>();
-    pylon2->GetComponent<Component::Material>()->SetDiffuse("Resources/enemy_diff.png");
-    pylon2->GetComponent<Component::Material>()->SetSpecular("Resources/enemy_spec.png");
+    pylon2->GetComponent<Component::Material>()->SetDiffuse("Resources/color/enemy_diff.png");
+    pylon2->GetComponent<Component::Material>()->SetSpecular("Resources/color/enemy_spec.png");
     mDeactiveGlowPylon2 = pylon2->GetComponent<Component::Material>()->glow;
     Component::Animation::AnimationClip* idlePylon2 = pylon2->AddComponent<Component::Animation>()->CreateAnimationClip("idle");
     idlePylon2->CreateKeyFrame(glm::vec3(0.f, 0.f, -3.f), 0.f, 0.f, 0, 3.f * 0.1f, true, false);
