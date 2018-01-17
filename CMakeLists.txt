@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-project(Modership)
+project(Amesite)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -118,9 +118,9 @@ foreach(item ${EMBEDDED_INPUT})
 endforeach()
 
 # Doxygen documentation
-option(ModershipBuildDocs "Build the doxygen documentation" OFF)
+option(AMESITE_BUILD_DOCS "Build the doxygen documentation" OFF)
 find_package(Doxygen)
-if(DOXYGEN_FOUND AND ModershipBuildDocs)
+if(DOXYGEN_FOUND AND AMESITE_BUILD_DOCS)
     add_custom_target(EngineDoc ALL
         ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/EngineDoxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -415,9 +415,9 @@ set(GAME_HEADERS
 
 create_directory_groups(${GAME_SRCS} ${GAME_HEADERS})
 
-add_executable(Modership ${GAME_SRCS} ${GAME_HEADERS})
-target_link_libraries(Modership Engine)
-target_include_directories(Modership PUBLIC src/Engine)
-target_link_libraries(Modership glew glfw ${GLFW_LIBRARIES} ${OPENAL_LIB})
-set_property(TARGET Modership PROPERTY CXX_STANDARD 11)
-set_property(TARGET Modership PROPERTY CXX_STANDARD_REQUIRED ON)
+add_executable(Amesite ${GAME_SRCS} ${GAME_HEADERS})
+target_link_libraries(Amesite Engine)
+target_include_directories(Amesite PUBLIC src/Engine)
+target_link_libraries(Amesite glew glfw ${GLFW_LIBRARIES} ${OPENAL_LIB})
+set_property(TARGET Amesite PROPERTY CXX_STANDARD 11)
+set_property(TARGET Amesite PROPERTY CXX_STANDARD_REQUIRED ON)

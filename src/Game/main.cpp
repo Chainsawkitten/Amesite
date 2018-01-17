@@ -29,14 +29,14 @@ int main() {
     
     //Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
-        freopen(FileSystem::SavePath("Modership", "GameLog.txt").c_str(), "a", stderr);
+        freopen(FileSystem::SavePath("Amesite", "GameLog.txt").c_str(), "a", stderr);
     
     Log() << "Game started - " << time(nullptr) << "\n";
     
     if (!glfwInit())
         return 1;
     
-    MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Modership", GameSettings::GetInstance().GetBool("Debug Context"));
+    MainWindow* window = new MainWindow(GameSettings::GetInstance().GetLong("Screen Width"), GameSettings::GetInstance().GetLong("Screen Height"), GameSettings::GetInstance().GetBool("Fullscreen"), GameSettings::GetInstance().GetBool("Borderless"), "Amesite", GameSettings::GetInstance().GetBool("Debug Context"));
     glewInit();
     window->Init(GameSettings::GetInstance().GetBool("Show Notifications"));
     window->SetVsync(GameSettings::GetInstance().GetBool("VSync"));
@@ -84,7 +84,7 @@ int main() {
         
         // Set window title to reflect screen update and render times.
         float frameTime = (glfwGetTime() - lastTime) * 1000.0f;
-        std::string title = "Modership";
+        std::string title = "Amesite";
         if (GameSettings::GetInstance().GetBool("Show Frame Times"))
             title += " - " + std::to_string(frameTime) + " ms";
         window->SetTitle(title.c_str());
