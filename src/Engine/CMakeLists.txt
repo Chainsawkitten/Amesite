@@ -142,6 +142,7 @@ set(EMBEDDED_INPUT
     ../../shaders/Post.vert
     ../../shaders/PostCopy.frag
     ../../shaders/PostColor.frag
+    ../../shaders/PostDither.frag
     ../../shaders/PostFXAA.frag
     ../../shaders/PostFog.frag
     ../../shaders/PostGamma.frag

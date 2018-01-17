@@ -9,6 +9,7 @@
 #include "Resources.hpp"
 #include "Post.vert.hpp"
 #include "PostCopy.frag.hpp"
+#include "PostDither.frag.hpp"
 
 RenderTarget::RenderTarget(const glm::vec2 &size) {
     mWidth = static_cast<int>(size.x);
@@ -66,11 +67,17 @@ RenderTarget::RenderTarget(const glm::vec2 &size) {
     // Default framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     
-    mVertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
-    mFragmentShader = Resources().CreateShader(POSTCOPY_FRAG, POSTCOPY_FRAG_LENGTH, GL_FRAGMENT_SHADER);
-    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
+    Shader* vertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
+    Shader* fragmentShader = Resources().CreateShader(POSTCOPY_FRAG, POSTCOPY_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
+    Resources().FreeShader(fragmentShader);
+    
+    fragmentShader = Resources().CreateShader(POSTDITHER_FRAG, POSTDITHER_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mDitherShaderProgram = Resources().CreateShaderProgram({ vertexShader, fragmentShader });
+    Resources().FreeShader(vertexShader);
     
     mSquare = Resources().CreateSquare();
+    mDitherTime = 0.f;
 }
 
 RenderTarget::~RenderTarget() {
@@ -80,8 +87,7 @@ RenderTarget::~RenderTarget() {
     glDeleteFramebuffers(1, &mFrameBuffer);
     
     Resources().FreeShaderProgram(mShaderProgram);
-    Resources().FreeShader(mVertexShader);
-    Resources().FreeShader(mFragmentShader);
+    Resources().FreeShaderProgram(mDitherShaderProgram);
     
     Resources().FreeSquare();
 }
@@ -110,35 +116,30 @@ GLuint RenderTarget::GetDepthTexture() const {
     return mDepthBuffer;
 }
 
-void RenderTarget::Render() {
-    // Disable depth testing
-    GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
-    glEnable(GL_DEPTH_TEST);
-    
-    GLint oldDepthFunctionMode;
-    glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunctionMode);
+void RenderTarget::Render(bool dither) {
+    // Always pass depth test.
     glDepthFunc(GL_ALWAYS);
     
-    mShaderProgram->Use();
+    ShaderProgram* shader = dither ? mDitherShaderProgram : mShaderProgram;
+    shader->Use();
     
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    SetSource();
-    
-    glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), 0);
+    glUniform1i(shader->GetUniformLocation("tDiffuse"), 0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mColorBuffer);
     
-    glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), 1);
+    glUniform1i(shader->GetUniformLocation("tDepth"), 1);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, mDepthBuffer);
+    
+    if (dither) {
+        glUniform1f(shader->GetUniformLocation("time"), mDitherTime);
+        mDitherTime = fmod(mDitherTime + 1.f, 255.f);
+    }
     
     glBindVertexArray(mSquare->GetVertexArray());
     
     glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     
-    if (depthTest)
-        glEnable(GL_DEPTH_TEST);
-    
-    glDepthFunc(oldDepthFunctionMode);
+    // Reset depth testing to standard value.
+    glDepthFunc(GL_LESS);
 }
