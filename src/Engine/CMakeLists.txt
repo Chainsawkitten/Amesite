@@ -22,7 +22,6 @@ set(ENGINE_SRCS
     Util/Settings.cpp
     Util/Input.cpp
     Util/Picking.cpp
-    Util/Profiling.cpp
     Component/SuperComponent.cpp
     Component/Lens.cpp
     Component/Transform.cpp
@@ -60,6 +59,8 @@ set(ENGINE_SRCS
     GameObject/SuperGameObject.cpp
     Physics/AxisAlignedBoundingBox.cpp
     Physics/Frustum.cpp
+    Profiling/ProfilingManager.cpp
+    Profiling/CPUProfiling.cpp
 )
 
 set(ENGINE_HEADERS
@@ -87,7 +88,6 @@ set(ENGINE_HEADERS
     Util/Settings.hpp
     Util/Input.hpp
     Util/Picking.hpp
-    Util/Profiling.hpp
     Component/SuperComponent.hpp
     Component/Lens.hpp
     Component/Transform.hpp
@@ -126,6 +126,8 @@ set(ENGINE_HEADERS
     GameObject/SuperGameObject.hpp
     Physics/AxisAlignedBoundingBox.hpp
     Physics/Frustum.hpp
+    Profiling/ProfilingManager.hpp
+    Profiling/CPUProfiling.hpp
 )
 
 # Setup embedded source

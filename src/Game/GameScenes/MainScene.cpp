@@ -6,7 +6,7 @@
 #include <Engine/Util/Input.hpp>
 #include "../Util/GameEntityFactory.hpp"
 #include "../Util/ControlSchemes.hpp"
-#include <Engine/Util/Profiling.hpp>
+#include <Engine/Profiling/CPUProfiling.hpp>
 
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Lens.hpp>
@@ -237,16 +237,16 @@ void MainScene::Update(float deltaTime) {
     // We're in the menu, don't update the regular systems.
     if (!mMenu.IsActive()) {
         // Update spawners
-        { PROFILE("Spawner system");
+        { PROFILE_CPU("Spawner system");
             mSpawnerSystem.Update(*this, deltaTime);
         }
         
         // ControllerSystem
-        { PROFILE("Controller system");
+        { PROFILE_CPU("Controller system");
             mControllerSystem.Update(*this, deltaTime);
         }
         
-        { PROFILE("Player collision");
+        { PROFILE_CPU("Player collision");
             for (auto player : HubInstance().mPlayers) {
                 mCave->GridCollide(player->GetNodeEntity(), deltaTime);
                 if (player->GetHealth() < 0.01f && player->Active()) {
@@ -263,70 +263,70 @@ void MainScene::Update(float deltaTime) {
         }
         
         // AnimationSystem.
-        { PROFILE("Animation system");
+        { PROFILE_CPU("Animation system");
             mAnimationSystem.Update(*this, deltaTime);
         }
         
         // PhysicsSystem.
-        { PROFILE("Physics system");
+        { PROFILE_CPU("Physics system");
             mPhysicsSystem.Update(*this, deltaTime);
         }
     }
     
     // Updates model matrices for this frame.
-    { PROFILE("Update model matrices");
+    { PROFILE_CPU("Update model matrices");
         UpdateModelMatrices();
     }
     
     // ParticleSystem
-    { PROFILE("Particle system");
+    { PROFILE_CPU("Particle system");
         System::Particle().Update(*this, deltaTime);
     }
     
     if (!mMenu.IsActive()) {
         // Check collisions.
-        { PROFILE("Collision system");
+        { PROFILE_CPU("Collision system");
             mCollisionSystem.Update(*this);
         }
         
         // Update enemy spawning
-        { PROFILE("Enemy spawner system");
+        { PROFILE_CPU("Enemy spawner system");
             mEnemySpawnerSystem.Update(*this, deltaTime, mCave, mNoSpawnRooms);
         }
         
         // Check grid collisions.
-        { PROFILE("Grid collide system");
+        { PROFILE_CPU("Grid collide system");
             mGridCollideSystem.Update(*this, deltaTime, *mCave);
         }
         
         // Update health
-        { PROFILE("Health system");
+        { PROFILE_CPU("Health system");
             mHealthSystem.Update(*this, deltaTime);
         }
         
         // Update reflection
-        { PROFILE("Reflect system");
+        { PROFILE_CPU("Reflect system");
             mReflectSystem.Update(*this, deltaTime);
         }
         
         // Update damage
-        { PROFILE("Damage system");
+        { PROFILE_CPU("Damage system");
             mDamageSystem.Update(*this);
         }
         
         // Update lifetimes
-        { PROFILE("Lifetime system");
+        { PROFILE_CPU("Lifetime system");
             mLifeTimeSystem.Update(*this, deltaTime);
         }
         
         // UpdateSystem.
-        { PROFILE("Update system");
+        { PROFILE_CPU("Update system");
             mUpdateSystem.Update(*this, deltaTime);
         }
     }
     
     // Update sounds.
-    { PROFILE("Sound system");
+    { PROFILE_CPU("Sound system");
         System::SoundSystem::GetInstance()->Update(*this);
     }
     
@@ -340,7 +340,7 @@ void MainScene::Update(float deltaTime) {
     
     if (!mMenu.IsActive()) {
         // If all players are disabled, respawn them.
-        { PROFILE("Checkpoint system");
+        { PROFILE_CPU("Checkpoint system");
             mCheckpointSystem.Update(deltaTime);
         }
         
@@ -358,12 +358,12 @@ void MainScene::Update(float deltaTime) {
         }
         
         // Update explosion system
-        { PROFILE("Explosion system");
+        { PROFILE_CPU("Explosion system");
             mExplodeSystem.Update(*this);
         }
         
         // Remove killed entities
-        { PROFILE("Clear killed");
+        { PROFILE_CPU("Clear killed");
             ClearKilled();
         }
     }
@@ -374,14 +374,14 @@ void MainScene::Update(float deltaTime) {
     // Water.
     mWater.Update(deltaTime, glm::vec3(4.f, 0.f, 1.f));
     
-    { PROFILE("Update particle buffers");
+    { PROFILE_CPU("Update particle buffers");
         mParticleRenderSystem.UpdateBuffer(*this);
     }
     
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
     // Render refractions.
-    { PROFILE("Render refractions");
+    { PROFILE_CPU("Render refractions");
         if (GameSettings::GetInstance().GetBool("Refractions")) {
             mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionTarget()->GetSize(), mWater.GetRefractionClippingPlane());
             // Don't render particle refractions as they're never below the water level.
@@ -394,7 +394,7 @@ void MainScene::Update(float deltaTime) {
     }
     
     // Render reflections
-    { PROFILE("Render reflections");
+    { PROFILE_CPU("Render reflections");
         if (GameSettings::GetInstance().GetBool("Reflections")) {
             /// @todo Don't hardcore camera inversion.
             float distance = 2.f * (cameraTransform->position.y - mWater.GetPosition().y);
@@ -414,7 +414,7 @@ void MainScene::Update(float deltaTime) {
     }
     
     // Render.
-    { PROFILE("Render system");
+    { PROFILE_CPU("Render system");
         mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget(), screenSize);
     }
     
@@ -424,7 +424,7 @@ void MainScene::Update(float deltaTime) {
     if (mMenu.IsActive())
         mMenu.RenderSelected();
     
-    { PROFILE("Anti-aliasing");
+    { PROFILE_CPU("Anti-aliasing");
         // Anti-aliasing.
         if (GameSettings::GetInstance().GetBool("FXAA")) {
             mFxaaFilter->SetScreenSize(screenSize);
@@ -433,12 +433,12 @@ void MainScene::Update(float deltaTime) {
         }
     }
     
-    { PROFILE("Render particles");
+    { PROFILE_CPU("Render particles");
         mParticleRenderSystem.Render(*this, mMainCamera->body, screenSize);
     }
     
     // Glow.
-    { PROFILE("Glow");
+    { PROFILE_CPU("Glow");
         mGlowBlurFilter->SetScreenSize(screenSize);
         int blurAmount = 1;
         for (int i = 0; i < blurAmount; ++i) {
@@ -451,13 +451,13 @@ void MainScene::Update(float deltaTime) {
     }
     
     // Gamma correction.
-    { PROFILE("Gamma correction");
+    { PROFILE_CPU("Gamma correction");
         mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
         mPostProcessing->ApplyFilter(mGammaCorrectionFilter);
     }
     
     // Render to back buffer.
-    { PROFILE("Render to back buffer");
+    { PROFILE_CPU("Render to back buffer");
         mPostProcessing->Render(GameSettings::GetInstance().GetBool("Dithering"));
     }
     
