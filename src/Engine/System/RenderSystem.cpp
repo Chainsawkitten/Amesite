@@ -19,7 +19,7 @@
 #include "../Component/Material.hpp"
 #include "../Texture/Texture2D.hpp"
 #include <string>
-#include "../Profiling/CPUProfiling.hpp"
+#include "../Profiling/GPUProfiling.hpp"
 
 #include "../Lighting/DeferredLighting.hpp"
 #include "../RenderTarget.hpp"
@@ -62,7 +62,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
     
     // Render from camera.
     if (camera != nullptr) {
-        { PROFILE_CPU("Render meshes");
+        { PROFILE_GPU("Render meshes");
             glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
             glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(windowSize);
             glm::mat4 viewProjectionMat = projectionMat * viewMat;
@@ -112,7 +112,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
             glBindVertexArray(0);
         }
         
-        { PROFILE_CPU("Lighting");
+        { PROFILE_GPU("Lighting");
             renderTarget->SetTarget();
             //mDeferredLighting->ShowTextures(screenSize);
             glViewport(0, 0, static_cast<GLsizei>(screenSize.x), static_cast<GLsizei>(screenSize.y));

@@ -4,6 +4,7 @@
 #include "../Resources.hpp"
 #include "../Font/Font.hpp"
 #include "../Geometry/Square.hpp"
+#include "Query.hpp"
 #include <GLFW/glfw3.h>
 
 ProfilingManager::ProfilingManager() : active(false) {
@@ -54,7 +55,12 @@ void ProfilingManager::BeginFrame() {
 }
 
 void ProfilingManager::EndFrame() {
-    
+    // Resolve and reset queries.
+    for (auto& it : queryMap) {
+        it.first->duration = it.second->Resolve() / 1000000.0;
+        queryPool.push_back(it.second);
+    }
+    queryMap.clear();
 }
 
 bool ProfilingManager::IsActive() const {
@@ -73,6 +79,20 @@ ProfilingManager::Result* ProfilingManager::StartResult(const std::string& name,
     Result* result = &current[type]->children.back();
     current[type] = result;
     
+    // Begin query if type is GPU.
+    if (type == Type::GPU_TIME) {
+        // Find available query.
+        Query* query;
+        if (queryPool.empty())
+            query = new Query();
+        else {
+            query = queryPool.back();
+            queryPool.pop_back();
+        }
+        queryMap[result] = query;
+        query->Begin();
+    }
+    
     return result;
 }
 
@@ -81,16 +101,22 @@ void ProfilingManager::FinishResult(Result* result, Type type) {
     assert(type != COUNT);
     assert(result == current[type]);
     
+    // End query if type is GPU.
+    if (type == Type::GPU_TIME)
+        queryMap[result]->End();
+    
     current[type] = result->parent;
 }
 
 void ProfilingManager::LogResults() {
     LogResult(*root[CPU_TIME], 0);
+    LogResult(*root[GPU_TIME], 0);
 }
 
 void ProfilingManager::DrawResults() {
     float y = 0.f;
     DrawResult(*root[CPU_TIME], 0.f, y);
+    DrawResult(*root[GPU_TIME], 0.f, y);
 }
 
 void ProfilingManager::LogResult(const Result& result, unsigned int indentation) {
@@ -131,6 +157,9 @@ std::string ProfilingManager::TypeToString(ProfilingManager::Type type) {
     switch (type) {
     case ProfilingManager::CPU_TIME:
         return "CPU time (ms)";
+        break;
+    case ProfilingManager::GPU_TIME:
+        return "GPU time (ms)";
         break;
     default:
         assert(false);

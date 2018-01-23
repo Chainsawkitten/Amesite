@@ -6,6 +6,7 @@
 
 #include <Engine/Util/Log.hpp>
 #include <Engine/Profiling/CPUProfiling.hpp>
+#include <Engine/Profiling/GPUProfiling.hpp>
 #include "Util/GameSettings.hpp"
 #include <Engine/Util/FileSystem.hpp>
 #include <Engine/System/SoundSystem.hpp>
@@ -13,10 +14,6 @@
 #include "Game.hpp"
 #include "GameScenes/SplashScene.hpp"
 #include "GameScenes/LoadingScene.hpp"
-
-//#define _CRTDBG_MAP_ALLOC
-//#include <stdlib.h>
-//#include <crtdbg.h>
 
 #include <thread>
 #include <vector>
@@ -66,7 +63,7 @@ int main() {
         if (profiling)
             Profiling().BeginFrame();
         
-        { PROFILE_CPU("Frame");
+        { PROFILE_CPU("CPU"); PROFILE_GPU("GPU");
             // Update scene.
             { PROFILE_CPU("Update");
                 window->Update();
@@ -80,8 +77,8 @@ int main() {
         }
         
         if (profiling) {
-            Profiling().DrawResults();
             Profiling().EndFrame();
+            Profiling().DrawResults();
         }
         
         // Set window title to reflect screen update and render times.
@@ -114,6 +111,5 @@ int main() {
     
     Log() << "Game ended - " << time(nullptr) << "\n";
     
-    //_CrtDumpMemoryLeaks();
     return 0;
 }

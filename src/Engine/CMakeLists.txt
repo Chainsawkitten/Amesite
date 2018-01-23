@@ -61,6 +61,8 @@ set(ENGINE_SRCS
     Physics/Frustum.cpp
     Profiling/ProfilingManager.cpp
     Profiling/CPUProfiling.cpp
+    Profiling/GPUProfiling.cpp
+    Profiling/Query.cpp
 )
 
 set(ENGINE_HEADERS
@@ -128,6 +130,8 @@ set(ENGINE_HEADERS
     Physics/Frustum.hpp
     Profiling/ProfilingManager.hpp
     Profiling/CPUProfiling.hpp
+    Profiling/GPUProfiling.hpp
+    Profiling/Query.hpp
 )
 
 # Setup embedded source

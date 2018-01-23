@@ -7,6 +7,7 @@
 #include "../Util/GameEntityFactory.hpp"
 #include "../Util/ControlSchemes.hpp"
 #include <Engine/Profiling/CPUProfiling.hpp>
+#include <Engine/Profiling/GPUProfiling.hpp>
 
 #include <Engine/Component/Transform.hpp>
 #include <Engine/Component/Lens.hpp>
@@ -381,7 +382,7 @@ void MainScene::Update(float deltaTime) {
     const glm::vec2& screenSize = MainWindow::GetInstance()->GetSize();
     
     // Render refractions.
-    { PROFILE_CPU("Render refractions");
+    { PROFILE_CPU("Render refractions"); PROFILE_GPU("Render refractions");
         if (GameSettings::GetInstance().GetBool("Refractions")) {
             mRenderSystem.Render(*this, mWater.GetRefractionTarget(), mWater.GetRefractionTarget()->GetSize(), mWater.GetRefractionClippingPlane());
             // Don't render particle refractions as they're never below the water level.
@@ -394,7 +395,7 @@ void MainScene::Update(float deltaTime) {
     }
     
     // Render reflections
-    { PROFILE_CPU("Render reflections");
+    { PROFILE_CPU("Render reflections"); PROFILE_GPU("Render reflections");
         if (GameSettings::GetInstance().GetBool("Reflections")) {
             /// @todo Don't hardcore camera inversion.
             float distance = 2.f * (cameraTransform->position.y - mWater.GetPosition().y);
@@ -414,7 +415,7 @@ void MainScene::Update(float deltaTime) {
     }
     
     // Render.
-    { PROFILE_CPU("Render system");
+    { PROFILE_CPU("Render system"); PROFILE_GPU("Render system");
         mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget(), screenSize);
     }
     
@@ -424,7 +425,7 @@ void MainScene::Update(float deltaTime) {
     if (mMenu.IsActive())
         mMenu.RenderSelected();
     
-    { PROFILE_CPU("Anti-aliasing");
+    { PROFILE_GPU("Anti-aliasing");
         // Anti-aliasing.
         if (GameSettings::GetInstance().GetBool("FXAA")) {
             mFxaaFilter->SetScreenSize(screenSize);
@@ -433,12 +434,12 @@ void MainScene::Update(float deltaTime) {
         }
     }
     
-    { PROFILE_CPU("Render particles");
+    { PROFILE_GPU("Render particles");
         mParticleRenderSystem.Render(*this, mMainCamera->body, screenSize);
     }
     
     // Glow.
-    { PROFILE_CPU("Glow");
+    { PROFILE_GPU("Glow");
         mGlowBlurFilter->SetScreenSize(screenSize);
         int blurAmount = 1;
         for (int i = 0; i < blurAmount; ++i) {
@@ -451,13 +452,13 @@ void MainScene::Update(float deltaTime) {
     }
     
     // Gamma correction.
-    { PROFILE_CPU("Gamma correction");
+    { PROFILE_GPU("Gamma correction");
         mGammaCorrectionFilter->SetBrightness((float)GameSettings::GetInstance().GetDouble("Gamma"));
         mPostProcessing->ApplyFilter(mGammaCorrectionFilter);
     }
     
     // Render to back buffer.
-    { PROFILE_CPU("Render to back buffer");
+    { PROFILE_GPU("Render to back buffer");
         mPostProcessing->Render(GameSettings::GetInstance().GetBool("Dithering"));
     }
     

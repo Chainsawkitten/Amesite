@@ -8,16 +8,19 @@ class Font;
 namespace Geometry {
     class Square;
 }
+class Query;
 
 /// Handles profiling.
 class ProfilingManager {
     friend class Hub;
     friend class CPUProfiling;
+    friend class GPUProfiling;
     
     public:
         /// The type of profiling to perform.
         enum Type {
             CPU_TIME = 0,
+            GPU_TIME = 1,
             COUNT
         };
         
@@ -81,6 +84,9 @@ class ProfilingManager {
         static std::string TypeToString(Type type);
         
         bool active;
+        
+        std::list<Query*> queryPool;
+        std::map<Result*, Query*> queryMap;
         
         Result* root[Type::COUNT];
         Result* current[Type::COUNT];
