@@ -38,7 +38,7 @@ ParticleRenderSystem::ParticleRenderSystem() {
     // Vertex buffer
     glGenBuffers(1, &mVertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, Particle().MaxParticleCount() *sizeof(ParticleSystem::Particle), NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, Particle().MaxParticleCount() * sizeof(ParticleSystem::Particle), NULL, GL_DYNAMIC_DRAW);
     
     // Define vertex data layout
     glGenVertexArrays(1, &mVertexAttribute);
@@ -76,6 +76,12 @@ ParticleRenderSystem::~ParticleRenderSystem() {
 
 void ParticleRenderSystem::UpdateBuffer(Scene& scene) {
     glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+    
+    // Orphan buffer.
+    // See https://www.khronos.org/opengl/wiki/Buffer_Object_Streaming
+    glBufferData(GL_ARRAY_BUFFER, Particle().MaxParticleCount() * sizeof(ParticleSystem::Particle), NULL, GL_DYNAMIC_DRAW);
+    
+    // Transfer particle data.
     glBufferSubData(GL_ARRAY_BUFFER, 0, scene.GetParticleCount() * sizeof(ParticleSystem::Particle), scene.GetParticles());
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
