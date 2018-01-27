@@ -38,6 +38,7 @@ int main() {
     Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::PROFILE, InputHandler::KEYBOARD, GLFW_KEY_F2);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LOG_PROFILE, InputHandler::KEYBOARD, GLFW_KEY_F3);
     
     System::SoundSystem* soundSystem = new System::SoundSystem();
     
@@ -56,9 +57,10 @@ int main() {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
         
-        if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE))
+        if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE)) {
             profiling = !profiling;
-        Profiling().SetActive(profiling);
+            Profiling().SetActive(profiling);
+        }
         
         if (profiling)
             Profiling().BeginFrame();
@@ -79,6 +81,9 @@ int main() {
         if (profiling) {
             Profiling().EndFrame();
             Profiling().DrawResults();
+            
+            if (Input()->Pressed(InputHandler::ANYONE, InputHandler::LOG_PROFILE))
+                Profiling().LogResults();
         }
         
         // Set window title to reflect screen update and render times.

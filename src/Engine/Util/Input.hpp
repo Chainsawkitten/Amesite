@@ -55,6 +55,7 @@ class InputHandler {
             LEFT, ///< Move left
             PAUSE, ///< Pause game
             PROFILE, ///< Run profiling
+            LOG_PROFILE, ///< Output profiling results to log.
             BUTTONS, ///< Total number of inputs
         };
         
