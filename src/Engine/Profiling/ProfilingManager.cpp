@@ -109,6 +109,7 @@ void ProfilingManager::FinishResult(Result* result, Type type) {
 }
 
 void ProfilingManager::LogResults() {
+    Log() << "Frame\n";
     LogResult(*root[CPU_TIME], 0);
     LogResult(*root[GPU_TIME], 0);
 }
@@ -120,10 +121,12 @@ void ProfilingManager::DrawResults() {
 }
 
 void ProfilingManager::LogResult(const Result& result, unsigned int indentation) {
-    for (unsigned int i=0; i<indentation; ++i)
-        Log() << "  ";
-    
-    Log() << result.name << " " << (result.duration) << " ms\n";
+    if (result.parent != nullptr) {
+        for (unsigned int i=0; i<indentation; ++i)
+            Log() << "  ";
+        
+        Log() << result.name << " " << (result.duration) << " ms\n";
+    }
     
     for (const Result& child : result.children)
         LogResult(child, indentation + 1);
