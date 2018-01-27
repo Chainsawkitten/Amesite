@@ -375,7 +375,7 @@ void MainScene::Update(float deltaTime) {
     // Water.
     mWater.Update(deltaTime, glm::vec3(4.f, 0.f, 1.f));
     
-    { PROFILE_CPU("Update particle buffers"); PROFILE_GPU("Update particle buffers");
+    { PROFILE_CPU("Update particle buffers"); PROFILE_GPU("Update particle buffers (" + std::to_string(GetParticleCount()) + ")");
         mParticleRenderSystem.UpdateBuffer(*this);
     }
     
