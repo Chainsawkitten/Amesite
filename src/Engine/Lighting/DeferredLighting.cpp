@@ -156,6 +156,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
     glUniform1i(mShaderProgram->GetUniformLocation("tGlow"), DeferredLighting::GLOW);
     glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
+    glUniform1i(mShaderProgram->GetUniformLocation("lightCount"), mLightCount);
     
     // Get the camera matrices.
     glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
@@ -240,10 +241,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     }
     
     if (lightIndex != 0U) {
-        for (; lightIndex < mLightCount; ++lightIndex) {
-            glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
-        }
-        
+        glUniform1i(mShaderProgram->GetUniformLocation("lightCount"), lightIndex);
         glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     }
     

@@ -21,8 +21,9 @@ struct Light {
     vec3 direction;
 };
 
-const int lightCount = 32;
-uniform Light lights[lightCount];
+const int maxLightCount = 32;
+uniform Light lights[maxLightCount];
+uniform int lightCount;
 
 in vec2 texCoords;
 
