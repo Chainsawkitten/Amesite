@@ -67,15 +67,8 @@ int main() {
         
         { PROFILE_CPU("CPU"); PROFILE_GPU("GPU");
             // Update scene.
-            { PROFILE_CPU("Update");
-                window->Update();
-                Game::GetInstance().Update(static_cast<float>(deltaTime));
-            }
-            
-            // Wait for GPU to finish.
-            { PROFILE_CPU("GPU Finish");
-                glFinish();
-            }
+            window->Update();
+            Game::GetInstance().Update(static_cast<float>(deltaTime));
         }
         
         if (profiling) {
@@ -85,6 +78,9 @@ int main() {
             if (Input()->Pressed(InputHandler::ANYONE, InputHandler::LOG_PROFILE))
                 Profiling().LogResults();
         }
+        
+        // Wait for GPU to finish.
+        glFinish();
         
         // Set window title to reflect screen update and render times.
         float frameTime = (glfwGetTime() - lastTime) * 1000.0f;
