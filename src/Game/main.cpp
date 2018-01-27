@@ -5,7 +5,8 @@
 #include <Engine/MainWindow.hpp>
 
 #include <Engine/Util/Log.hpp>
-#include <Engine/Util/Profiling.hpp>
+#include <Engine/Profiling/CPUProfiling.hpp>
+#include <Engine/Profiling/GPUProfiling.hpp>
 #include "Util/GameSettings.hpp"
 #include <Engine/Util/FileSystem.hpp>
 #include <Engine/System/SoundSystem.hpp>
@@ -14,10 +15,6 @@
 #include "GameScenes/SplashScene.hpp"
 #include "GameScenes/LoadingScene.hpp"
 
-//#define _CRTDBG_MAP_ALLOC
-//#include <stdlib.h>
-//#include <crtdbg.h>
-
 #include <thread>
 #include <vector>
 #include <fstream>
@@ -25,8 +22,6 @@
 using namespace std;
 
 int main() {
-    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    
     //Enable logging if requested.
     if (GameSettings::GetInstance().GetBool("Logging"))
         freopen(FileSystem::SavePath("Amesite", "GameLog.txt").c_str(), "a", stderr);
@@ -43,6 +38,7 @@ int main() {
     Input()->SetAimDeadzone(GameSettings::GetInstance().GetDouble("Aim Deadzone"));
     Input()->SetMoveDeadzone(GameSettings::GetInstance().GetDouble("Move Deadzone"));
     Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::PROFILE, InputHandler::KEYBOARD, GLFW_KEY_F2);
+    Input()->AssignButton(InputHandler::PLAYER_ONE, InputHandler::LOG_PROFILE, InputHandler::KEYBOARD, GLFW_KEY_F3);
     
     System::SoundSystem* soundSystem = new System::SoundSystem();
     
@@ -51,7 +47,7 @@ int main() {
     else
         Game::GetInstance().SetScene(new LoadingScene());
     
-    Profiling::Init();
+    Profiling().Init();
     bool profiling = false;
     
     // Main game loop.
@@ -61,26 +57,30 @@ int main() {
         double deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
         
-        Profiling::BeginFrame();
-        
-        { PROFILE("Frame");
-            // Update scene.
-            { PROFILE("Update");
-                window->Update();
-                Game::GetInstance().Update(static_cast<float>(deltaTime));
-            }
-            
-            // Wait for GPU to finish.
-            { PROFILE("GPU Finish");
-                glFinish();
-            }
+        if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE)) {
+            profiling = !profiling;
+            Profiling().SetActive(profiling);
         }
         
-        if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE))
-            profiling = !profiling;
-        
         if (profiling)
-            Profiling::DrawResults();
+            Profiling().BeginFrame();
+        
+        { PROFILE_CPU("CPU"); PROFILE_GPU("GPU");
+            // Update scene.
+            window->Update();
+            Game::GetInstance().Update(static_cast<float>(deltaTime));
+        }
+        
+        if (profiling) {
+            Profiling().EndFrame();
+            Profiling().DrawResults();
+            
+            if (Input()->Pressed(InputHandler::ANYONE, InputHandler::LOG_PROFILE))
+                Profiling().LogResults();
+        }
+        
+        // Wait for GPU to finish.
+        glFinish();
         
         // Set window title to reflect screen update and render times.
         float frameTime = (glfwGetTime() - lastTime) * 1000.0f;
@@ -101,7 +101,7 @@ int main() {
         glfwPollEvents();
     }
     
-    Profiling::Free();
+    Profiling().Free();
     Game::GetInstance().Free();
     delete soundSystem;
     delete window;
@@ -112,6 +112,5 @@ int main() {
     
     Log() << "Game ended - " << time(nullptr) << "\n";
     
-    //_CrtDumpMemoryLeaks();
     return 0;
 }
