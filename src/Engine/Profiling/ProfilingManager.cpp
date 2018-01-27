@@ -125,11 +125,21 @@ void ProfilingManager::LogResult(const Result& result, unsigned int indentation)
         for (unsigned int i=0; i<indentation; ++i)
             Log() << "  ";
         
-        Log() << result.name << " " << (result.duration) << " ms\n";
+        Log() << result.name << " " << result.duration << " ms\n";
     }
     
-    for (const Result& child : result.children)
+    double otherTime = result.duration;
+    for (const Result& child : result.children) {
         LogResult(child, indentation + 1);
+        otherTime -= child.duration;
+    }
+    
+    if (result.parent != nullptr && !result.children.empty()) {
+        for (unsigned int i=0; i < indentation + 1; ++i)
+            Log() << "  ";
+        
+        Log() << "Other " << otherTime << " ms\n";
+    }
 }
 
 void ProfilingManager::DrawResult(Result& result, float x, float& y) {
