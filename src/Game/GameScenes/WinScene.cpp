@@ -20,7 +20,7 @@ WinScene::WinScene(float totalTime, int enemiesKilled, int timesDied) {
     RNG.seed(time(0));
 
     std::vector<std::string> introStrings;
-    introStrings.push_back("You cause was just and your aim was true.\n");
+    introStrings.push_back("Your cause was just and your aim was true.\n");
     introStrings.push_back("As you enter the portal, you feel a deep longing for home.\n");
     introStrings.push_back("Your head is filled with visions of home.\n");
     introStrings.push_back("Wonder how long time has passed since you left home?\n");
