@@ -176,7 +176,7 @@ Entity* GameEntityFactory::CreateCrashSite1() {
     Entity* crash = mScene->CreateEntity();
     crash->AddComponent<Component::Mesh>()->geometry = Resources().CreateOBJModel("Resources/player1/player1_body.obj");
     crash->AddComponent<Component::Material>()->SetDiffuse("Resources/player1/player1_body_diff_dead.png");
-    crash->GetComponent<Component::Material>()->SetSpecular("Resources/player1/player1_body_spec.png");
+    crash->GetComponent<Component::Material>()->SetSpecular("Resources/player1/player1_spec.png");
     crash->GetComponent<Component::Material>()->SetGlow("Resources/player1/player1_body_glow.png");
     crash->AddComponent<Component::Transform>()->scale *= 0.25f;
 
