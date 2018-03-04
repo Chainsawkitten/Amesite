@@ -20,6 +20,9 @@
 #include "../Physics/AxisAlignedBoundingBox.hpp"
 #include "../Physics/Frustum.hpp"
 
+#include "../Profiling/CPUProfiling.hpp"
+#include <string>
+
 DeferredLighting::DeferredLighting(const glm::vec2& size) {
     mSize = size;
     
@@ -150,6 +153,8 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     
     glBindVertexArray(mSquare->GetVertexArray());
     
+    unsigned int renderedLights = 0;
+    
     // Set uniforms.
     glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::DIFFUSE);
     glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), DeferredLighting::NORMAL);
@@ -181,6 +186,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             glUniform1f(mLightUniforms[lightIndex].coneAngle, 0.f);
             glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
             
+            ++renderedLights;
             if (++lightIndex >= mLightCount) {
                 lightIndex = 0U;
                 glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
@@ -202,6 +208,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             glUniform1f(mLightUniforms[lightIndex].coneAngle, light->coneAngle);
             glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(direction)[0]);
             
+            ++renderedLights;
             if (++lightIndex >= mLightCount) {
                 lightIndex = 0U;
                 glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
@@ -232,6 +239,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
                 glUniform1f(mLightUniforms[lightIndex].coneAngle, 180.f);
                 glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
                 
+                ++renderedLights;
                 if (++lightIndex >= mLightCount) {
                     lightIndex = 0U;
                     glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
@@ -243,6 +251,9 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     if (lightIndex != 0U) {
         glUniform1i(mShaderProgram->GetUniformLocation("lightCount"), lightIndex);
         glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+    }
+    
+    { PROFILE_CPU((std::to_string(renderedLights) + " lights").c_str());
     }
     
     // Reset blending and depth function to standard values.
