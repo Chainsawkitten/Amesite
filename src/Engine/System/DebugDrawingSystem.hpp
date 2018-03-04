@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+class Entity;
 class Shader;
 class ShaderProgram;
 
@@ -40,20 +41,13 @@ namespace System {
              */
             void Update(float deltaTime);
             
+            /// Render the debug primitives.
+            /**
+             * @param camera The camera to render through.
+             */
+            void Render(Entity* camera);
+            
         private:
-            DebugDrawingSystem(const DebugDrawingSystem&) = delete;
-            void operator=(const DebugDrawingSystem&) = delete;
-            
-            static void CreateVertexArray(const glm::vec3* positions, unsigned int positionCount, GLuint& vertexBuffer, GLuint& vertexArray);
-            void CreateSphere(glm::vec3*& positions, unsigned int& vertexCount, unsigned int detail);
-            
-            static DebugDrawingSystem* mActiveInstance;
-            
-            // Shaders.
-            Shader* mVertexShader;
-            Shader* mFragmentShader;
-            ShaderProgram* mShaderProgram;
-            
             struct Sphere {
                 glm::vec3 position;
                 float radius;
@@ -62,6 +56,22 @@ namespace System {
                 float duration;
                 bool depthTesting;
             };
+            
+            DebugDrawingSystem(const DebugDrawingSystem&) = delete;
+            void operator=(const DebugDrawingSystem&) = delete;
+            
+            static void CreateVertexArray(const glm::vec3* positions, unsigned int positionCount, GLuint& vertexBuffer, GLuint& vertexArray);
+            void CreateSphere(glm::vec3*& positions, unsigned int& vertexCount, unsigned int detail);
+            
+            void DrawSphere(const Sphere& sphere);
+            
+            static DebugDrawingSystem* mActiveInstance;
+            
+            // Shaders.
+            Shader* mVertexShader;
+            Shader* mFragmentShader;
+            ShaderProgram* mShaderProgram;
+            
             // Uniform locations.
             GLuint mViewProjectionLocation;
             GLuint mModelLocation;

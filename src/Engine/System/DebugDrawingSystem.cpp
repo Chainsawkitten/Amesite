@@ -1,10 +1,15 @@
 #include "DebugDrawingSystem.hpp"
 
 #include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "../Shader/ShaderProgram.hpp"
 #include "../Resources.hpp"
 #include "DebugDrawing.vert.hpp"
 #include "DebugDrawing.frag.hpp"
+#include "../Entity/Entity.hpp"
+#include "../Component/Transform.hpp"
+#include "../Component/Lens.hpp"
+#include "../MainWindow.hpp"
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
@@ -70,6 +75,22 @@ void DebugDrawingSystem::Update(float deltaTime) {
     }
 }
 
+void DebugDrawingSystem::Render(Entity* camera) {
+    // Bind render target.
+    mShaderProgram->Use();
+    glm::mat4 viewMatrix = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->GetWorldPosition());
+    glm::mat4 projectionMatrix = camera->GetComponent<Component::Lens>()->GetProjection(MainWindow::GetInstance()->GetSize());
+    glUniformMatrix4fv(mViewProjectionLocation, 1, GL_FALSE, &(projectionMatrix * viewMatrix)[0][0]);
+    
+    // Spheres.
+    glBindVertexArray(mSphereVertexArray);
+    for (const Sphere& sphere : mSpheres)
+        DrawSphere(sphere);
+    
+    glEnable(GL_DEPTH_TEST);
+    glBindVertexArray(0);
+}
+
 void DebugDrawingSystem::CreateVertexArray(const glm::vec3* positions, unsigned int positionCount, GLuint& vertexBuffer, GLuint& vertexArray) {
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -120,4 +141,16 @@ void DebugDrawingSystem::CreateSphere(glm::vec3*& positions, unsigned int& verte
                 positions[i++] = glm::vec3(x * cos(parallel), y, x * sin(parallel));
         }
     }
+}
+
+void DebugDrawingSystem::DrawSphere(const Sphere& sphere) {
+    glm::mat4 model(glm::scale(glm::mat4(), glm::vec3(sphere.radius, sphere.radius, sphere.radius)));
+    model = glm::translate(glm::mat4(), sphere.position) * model;
+    
+    glUniformMatrix4fv(mModelLocation, 1, GL_FALSE, &model[0][0]);
+    sphere.depthTesting ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+    glUniform3fv(mColorLocation, 1, &sphere.color[0]);
+    glUniform1f(mSizeLocation, 10.f);
+    glLineWidth(sphere.lineWidth);
+    glDrawArrays(GL_LINES, 0, mSphereVertexCount);
 }

@@ -505,6 +505,7 @@ void MainScene::Update(float deltaTime) {
     
     // Debug drawing.
     mDebugDrawingSystem.Update(deltaTime);
+    mDebugDrawingSystem.Render(mMainCamera->body);
 }
 
 void MainScene::PreallocateTextures() {
