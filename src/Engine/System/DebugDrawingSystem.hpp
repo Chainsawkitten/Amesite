@@ -30,6 +30,12 @@ namespace System {
              */
             void AddSphere(const glm::vec3& position, float radius, const glm::vec3& color, float lineWidth = 1.f, float duration = 0.f, bool depthTesting = true);
             
+            /// Update the debug geometry.
+            /**
+             * @param deltaTime Time since last frame (in seconds).
+             */
+            void Update(float deltaTime);
+            
         private:
             DebugDrawingSystem(const DebugDrawingSystem&) = delete;
             void operator=(const DebugDrawingSystem&) = delete;
