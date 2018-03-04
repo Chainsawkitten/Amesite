@@ -4,6 +4,9 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+class Shader;
+class ShaderProgram;
+
 namespace System {
     /// Handles debug geometry.
     class DebugDrawingSystem {
@@ -45,6 +48,11 @@ namespace System {
             void CreateSphere(glm::vec3*& positions, unsigned int& vertexCount, unsigned int detail);
             
             static DebugDrawingSystem* mActiveInstance;
+            
+            // Shaders.
+            Shader* mVertexShader;
+            Shader* mFragmentShader;
+            ShaderProgram* mShaderProgram;
             
             struct Sphere {
                 glm::vec3 position;
