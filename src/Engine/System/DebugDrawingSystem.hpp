@@ -1,5 +1,8 @@
 #pragma once
 
+#include <glm/glm.hpp>
+#include <vector>
+
 namespace System {
     /// Handles debug geometry.
     class DebugDrawingSystem {
@@ -16,7 +19,31 @@ namespace System {
              */
             static DebugDrawingSystem* GetActiveInstance();
             
+            /// Add a sphere to the world.
+            /**
+             * @param position The position of the sphere.
+             * @param radius The radius of the sphere.
+             * @param color Color of the lines.
+             * @param lineWidth The width of the lines used to draw the sphere.
+             * @param duration How long the sphere should stay in the world (in seconds).
+             * @param depthTesting Whether to enable depth testing.
+             */
+            void AddSphere(const glm::vec3& position, float radius, const glm::vec3& color, float lineWidth = 1.f, float duration = 0.f, bool depthTesting = true);
+            
         private:
+            DebugDrawingSystem(const DebugDrawingSystem&) = delete;
+            void operator=(const DebugDrawingSystem&) = delete;
+            
             static DebugDrawingSystem* mActiveInstance;
+            
+            struct Sphere {
+                glm::vec3 position;
+                float radius;
+                glm::vec3 color;
+                float lineWidth;
+                float duration;
+                bool depthTesting;
+            };
+            std::vector<Sphere> mSpheres;
     };
 }
