@@ -1,5 +1,6 @@
 #pragma once
 
+#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -40,6 +41,9 @@ namespace System {
             DebugDrawingSystem(const DebugDrawingSystem&) = delete;
             void operator=(const DebugDrawingSystem&) = delete;
             
+            static void CreateVertexArray(const glm::vec3* positions, unsigned int positionCount, GLuint& vertexBuffer, GLuint& vertexArray);
+            void CreateSphere(glm::vec3*& positions, unsigned int& vertexCount, unsigned int detail);
+            
             static DebugDrawingSystem* mActiveInstance;
             
             struct Sphere {
@@ -51,5 +55,10 @@ namespace System {
                 bool depthTesting;
             };
             std::vector<Sphere> mSpheres;
+            
+            // Geometry.
+            GLuint mSphereVertexBuffer;
+            GLuint mSphereVertexArray;
+            unsigned int mSphereVertexCount;
     };
 }
