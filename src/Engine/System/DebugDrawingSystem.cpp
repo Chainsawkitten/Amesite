@@ -1,6 +1,7 @@
 #include "DebugDrawingSystem.hpp"
 
 #include <glm/gtc/constants.hpp>
+#include "../Shader/ShaderProgram.hpp"
 #include "../Resources.hpp"
 #include "DebugDrawing.vert.hpp"
 #include "DebugDrawing.frag.hpp"
@@ -17,6 +18,12 @@ DebugDrawingSystem::DebugDrawingSystem() {
     mVertexShader = Resources().CreateShader(DEBUGDRAWING_VERT, DEBUGDRAWING_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragmentShader = Resources().CreateShader(DEBUGDRAWING_FRAG, DEBUGDRAWING_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
+    
+    // Get uniform locations.
+    mViewProjectionLocation = mShaderProgram->GetUniformLocation("viewProjection");
+    mModelLocation = mShaderProgram->GetUniformLocation("model");
+    mColorLocation = mShaderProgram->GetUniformLocation("color");
+    mSizeLocation = mShaderProgram->GetUniformLocation("size");
     
     // Create sphere vertex array.
     glm::vec3* sphere;
