@@ -502,6 +502,9 @@ void MainScene::Update(float deltaTime) {
     
     alSourcef(mCalmSource, AL_GAIN, 1.f - mMix);
     alSourcef(mActionSource, AL_GAIN, mMix);
+    
+    // Debug drawing.
+    mDebugDrawingSystem.Update(deltaTime);
 }
 
 void MainScene::PreallocateTextures() {

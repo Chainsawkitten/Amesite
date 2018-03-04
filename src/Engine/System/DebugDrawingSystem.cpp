@@ -26,3 +26,15 @@ void DebugDrawingSystem::AddSphere(const glm::vec3& position, float radius, cons
     sphere.depthTesting = depthTesting;
     mSpheres.push_back(sphere);
 }
+
+void DebugDrawingSystem::Update(float deltaTime) {
+    // Spheres.
+    for (std::size_t i=0; i < mSpheres.size(); ++i) {
+        if (mSpheres[i].duration < 0.f) {
+            mSpheres[i] = mSpheres[mSpheres.size() - 1];
+            mSpheres.pop_back();
+            --i;
+        } else
+            mSpheres[i].duration -= deltaTime;
+    }
+}
