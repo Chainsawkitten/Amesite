@@ -141,6 +141,8 @@ set(EMBEDDED_INPUT
     ../../shaders/Default3D.frag
     ../../shaders/Default3D.vert
     ../../shaders/Default2D.vert
+    ../../shaders/DebugDrawing.vert
+    ../../shaders/DebugDrawing.frag
     ../../shaders/SingleColor2D.frag
     ../../shaders/Texture2D.frag
     ../../shaders/Font.vert

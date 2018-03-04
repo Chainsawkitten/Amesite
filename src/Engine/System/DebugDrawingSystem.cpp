@@ -1,6 +1,9 @@
 #include "DebugDrawingSystem.hpp"
 
 #include <glm/gtc/constants.hpp>
+#include "../Resources.hpp"
+#include "DebugDrawing.vert.hpp"
+#include "DebugDrawing.frag.hpp"
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
@@ -10,6 +13,10 @@ DebugDrawingSystem* DebugDrawingSystem::mActiveInstance = nullptr;
 
 DebugDrawingSystem::DebugDrawingSystem() {
     mActiveInstance = this;
+    
+    mVertexShader = Resources().CreateShader(DEBUGDRAWING_VERT, DEBUGDRAWING_VERT_LENGTH, GL_VERTEX_SHADER);
+    mFragmentShader = Resources().CreateShader(DEBUGDRAWING_FRAG, DEBUGDRAWING_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
     
     // Create sphere vertex array.
     glm::vec3* sphere;
@@ -23,6 +30,10 @@ DebugDrawingSystem::~DebugDrawingSystem() {
     
     glDeleteBuffers(1, &mSphereVertexBuffer);
     glDeleteVertexArrays(1, &mSphereVertexArray);
+    
+    Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShader(mVertexShader);
+    Resources().FreeShader(mFragmentShader);
 }
 
 DebugDrawingSystem* DebugDrawingSystem::GetActiveInstance() {
