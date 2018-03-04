@@ -62,6 +62,12 @@ namespace System {
                 float duration;
                 bool depthTesting;
             };
+            // Uniform locations.
+            GLuint mViewProjectionLocation;
+            GLuint mModelLocation;
+            GLuint mColorLocation;
+            GLuint mSizeLocation;
+            
             std::vector<Sphere> mSpheres;
             
             // Geometry.
