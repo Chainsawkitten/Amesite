@@ -47,6 +47,7 @@ set(ENGINE_SRCS
     System/ParticleRenderSystem.cpp
     System/AnimationSystem.cpp
     System/SoundSystem.cpp
+    System/DebugDrawingSystem.cpp
     Texture/Texture.cpp
     Texture/Texture2D.cpp
     PostProcessing/PostProcessing.cpp
@@ -115,6 +116,7 @@ set(ENGINE_HEADERS
     System/ParticleRenderSystem.hpp
     System/AnimationSystem.hpp
     System/SoundSystem.hpp
+    System/DebugDrawingSystem.hpp
     Texture/Texture.hpp
     Texture/Texture2D.hpp
     PostProcessing/PostProcessing.hpp

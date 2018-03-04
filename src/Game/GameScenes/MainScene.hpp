@@ -17,6 +17,7 @@
 #include "../System/UpdateSystem.hpp"
 #include "../System/SpawnerSystem.hpp"
 #include <Engine/System/ParticleSystem.hpp>
+#include <Engine/System/DebugDrawingSystem.hpp>
 #include "../Menu/Menu.hpp"
 #include "../Water/Water.hpp"
 
@@ -106,6 +107,9 @@ class MainScene : public Scene {
 
         // Particle Render system.
         System::ParticleRenderSystem mParticleRenderSystem;
+        
+        // Debug drawing system.
+        System::DebugDrawingSystem mDebugDrawingSystem;
 
         // Bosses
         std::vector<GameObject::SuperBoss*> mBossVector;
