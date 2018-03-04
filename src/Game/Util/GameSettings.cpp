@@ -10,6 +10,7 @@ GameSettings::GameSettings() {
     AddBoolSetting("Debug Context", "Debug", "Debug Context", false);
     AddBoolSetting("Show Notifications", "Debug", "Show Notification Messages", false);
     AddBoolSetting("Show Frame Times", "Debug", "Show Frame Times", false);
+    AddBoolSetting("Show Light Volumes", "Debug", "Show Light Volumes", false);
     
     AddLongSetting("Screen Width", "Graphics", "Width", 800);
     AddLongSetting("Screen Height", "Graphics", "Height", 600);

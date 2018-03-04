@@ -19,6 +19,7 @@
 
 #include "../Physics/AxisAlignedBoundingBox.hpp"
 #include "../Physics/Frustum.hpp"
+#include "../System/DebugDrawingSystem.hpp"
 
 DeferredLighting::DeferredLighting(const glm::vec2& size) {
     mSize = size;
@@ -133,7 +134,7 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
     glEnable(GL_DEPTH_TEST);
 }
 
-void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize) {
+void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, bool showLightVolumes) {
     // Set depth testing to always pass.
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_ALWAYS);
@@ -224,7 +225,8 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             
             Physics::Frustum frustum(viewProjectionMat * modelMat);
             if (frustum.Collide(aabb)) {
-                glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
+                glm::vec4 position = glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0);
+                glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * position)[0]);
                 glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &(light->color * light->intensity)[0]);
                 glUniform1f(mLightUniforms[lightIndex].attenuation, light->attenuation);
                 glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
@@ -235,6 +237,9 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
                     lightIndex = 0U;
                     glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
                 }
+                
+                if (showLightVolumes)
+                    System::DebugDrawingSystem::GetActiveInstance()->AddSphere(glm::vec3(position), scale, glm::vec3(1.0f, 1.0f, 1.0f));
             }
         }
     }
