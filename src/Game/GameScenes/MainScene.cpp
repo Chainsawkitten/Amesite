@@ -416,7 +416,7 @@ void MainScene::Update(float deltaTime) {
     
     // Render.
     { PROFILE_CPU("Render system"); PROFILE_GPU("Render system");
-        mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget(), screenSize);
+        mRenderSystem.Render(*this, mPostProcessing->GetRenderTarget(), screenSize, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f), GameSettings::GetInstance().GetBool("Show Light Volumes"));
     }
     
     if (GameSettings::GetInstance().GetBool("Refractions") || GameSettings::GetInstance().GetBool("Reflections"))
