@@ -25,8 +25,9 @@ namespace System {
              * @param renderTarget Target to render to.
              * @param screenSize Size of the render target in pixels.
              * @param clippingPlane Clipping plane.
+             * @param showLightVolumes Show light volumes as spheres.
              */
-            void Render(Scene& scene, RenderTarget* renderTarget, const glm::vec2& screenSize, const glm::vec4& clippingPlane = glm::vec4(0.f, 0.f, 0.f, 0.f));
+            void Render(Scene& scene, RenderTarget* renderTarget, const glm::vec2& screenSize, const glm::vec4& clippingPlane = glm::vec4(0.f, 0.f, 0.f, 0.f), bool showLightVolumes = false);
 
         private:
             Shader* mVertexShader;

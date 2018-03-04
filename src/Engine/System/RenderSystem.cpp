@@ -43,7 +43,7 @@ RenderSystem::~RenderSystem() {
     Resources().FreeShaderProgram(mShaderProgram);
 }
 
-void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::vec2& screenSize, const glm::vec4& clippingPlane) {
+void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::vec2& screenSize, const glm::vec4& clippingPlane, bool showLightVolumes) {
     mDeferredLighting->SetTarget();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     const glm::vec2& windowSize = MainWindow::GetInstance()->GetSize();
@@ -117,7 +117,7 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
             //mDeferredLighting->ShowTextures(screenSize);
             glViewport(0, 0, static_cast<GLsizei>(screenSize.x), static_cast<GLsizei>(screenSize.y));
             
-            mDeferredLighting->Render(scene, camera, screenSize);
+            mDeferredLighting->Render(scene, camera, screenSize, showLightVolumes);
         }
     }
 }

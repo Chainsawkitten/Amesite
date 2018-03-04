@@ -55,8 +55,9 @@ class DeferredLighting {
          * @param scene Scene to get the lights from.
 		 * @param camera Camera to use.
 		 * @param screenSize Size of the screen in pixels.
+		 * @param showLightVolumes Render light volumes as spheres.
 		 */
-		void Render(Scene& scene, Entity* camera, const glm::vec2& screenSize);
+		void Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, bool showLightVolumes = false);
         
 	private:
         static void AttachTexture(GLuint texture, unsigned int width, unsigned int height, GLenum attachment, GLint internalFormat);
