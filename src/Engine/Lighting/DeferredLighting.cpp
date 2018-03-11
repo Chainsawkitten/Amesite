@@ -198,7 +198,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     }
     
     // At which point lights should be cut off (no longer contribute).
-    const double cutOff = 0.0001;
+    const double cutOff = 0.001;
     
     // Render all spot lights.
     std::vector<Component::SpotLight*>& spotLights = scene.GetAll<Component::SpotLight>();
@@ -206,7 +206,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
-            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation);
+            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation * light->intensity);
             glm::vec4 direction = viewMat * glm::vec4(transform->GetWorldDirection(), 0.f);
             glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
             glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &(light->color * light->intensity)[0]);
@@ -232,7 +232,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
-            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation);
+            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation * light->intensity);
             glm::mat4 modelMat = glm::translate(glm::mat4(), transform->GetWorldPosition()) * glm::scale(glm::mat4(), glm::vec3(1.f, 1.f, 1.f) * scale);
             
             Physics::Frustum frustum(viewProjectionMat * modelMat);
