@@ -28,3 +28,7 @@ GLint ShaderProgram::GetAttributeLocation(const char* name) const {
 GLint ShaderProgram::GetUniformLocation(const char* name) const {
     return glGetUniformLocation(mShaderProgram, name);
 }
+
+GLuint ShaderProgram::GetUniformBlockIndex(const char* name) const {
+    return glGetUniformBlockIndex(mShaderProgram, name);
+}

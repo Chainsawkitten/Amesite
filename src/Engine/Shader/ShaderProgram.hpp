@@ -47,6 +47,13 @@ class ShaderProgram {
 		 * @return The location of a uniform variable or -1 if name does not correspond to an active uniform variable in program, if name starts with the reserved prefix "gl_", or if name is associated with an atomic counter or a named uniform block
 		 */
 		GLint GetUniformLocation(const char* name) const;
+        
+        /// Get uniform block index.
+		/**
+		 * @param name The name of the uniform block whose index is to be queried.
+		 * @return The index of the uniform block or GL_INVALID_INDEX.
+		 */
+		GLuint GetUniformBlockIndex(const char* name) const;
 
 	private:
 		GLuint mShaderProgram;
