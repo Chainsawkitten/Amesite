@@ -1,6 +1,7 @@
 #include "Frustum.hpp"
 
 #include "AxisAlignedBoundingBox.hpp"
+#include "Sphere.hpp"
 #include <glm/gtc/matrix_access.hpp>
 
 namespace Physics {
@@ -56,6 +57,16 @@ namespace Physics {
             if (!inside)
                 return false;
         }
+        return true;
+    }
+    
+    bool Frustum::Collide(const Sphere& sphere) const {
+        // Check the signed distance between the sphere and the frustum planes.
+        for (int plane = 0; plane < 6; ++plane) {
+            if (DistanceToPoint(mPlanes[plane], sphere.position) < -sphere.radius)
+                return false;
+        }
+        
         return true;
     }
     

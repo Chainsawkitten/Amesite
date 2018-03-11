@@ -4,6 +4,7 @@
 
 namespace Physics {
     class AxisAlignedBoundingBox;
+    class Sphere;
     
     /// A viewing frustum.
     /**
@@ -23,6 +24,13 @@ namespace Physics {
              * @return Whether there was a collision
              */
             bool Collide(const AxisAlignedBoundingBox& aabb) const;
+            
+            /// Check collision between frustum and a sphere.
+            /**
+             * @param sphere The sphere to check collision against.
+             * @return Whether there was a collision
+             */
+            bool Collide(const Sphere& sphere) const;
     
         private:
             glm::vec4 mPlanes[6];
