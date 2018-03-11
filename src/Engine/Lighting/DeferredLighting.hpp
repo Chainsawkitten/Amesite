@@ -84,8 +84,9 @@ class DeferredLighting {
             GLint position;
             GLint intensities;
             GLint attenuation;
+            GLint direction;
             GLint ambientCoefficient;
             GLint coneAngle;
-            GLint direction;
+            GLint distance;
         } mLightUniforms[mLightCount];
 };

@@ -76,9 +76,10 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
         mLightUniforms[lightIndex].position = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].position").c_str());
         mLightUniforms[lightIndex].intensities = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str());
         mLightUniforms[lightIndex].attenuation = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].attenuation").c_str());
+        mLightUniforms[lightIndex].direction = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].direction").c_str());
         mLightUniforms[lightIndex].ambientCoefficient = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].ambientCoefficient").c_str());
         mLightUniforms[lightIndex].coneAngle = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].coneAngle").c_str());
-        mLightUniforms[lightIndex].direction = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].direction").c_str());
+        mLightUniforms[lightIndex].distance = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].distance").c_str());
     }
 }
 
@@ -183,9 +184,10 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * -direction)[0]);
             glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &light->color[0]);
             glUniform1f(mLightUniforms[lightIndex].attenuation, 1.f);
+            glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
             glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
             glUniform1f(mLightUniforms[lightIndex].coneAngle, 0.f);
-            glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
+            glUniform1f(mLightUniforms[lightIndex].distance, 0.f);
             
             ++renderedLights;
             if (++lightIndex >= mLightCount) {
@@ -205,9 +207,10 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
             glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &(light->color * light->intensity)[0]);
             glUniform1f(mLightUniforms[lightIndex].attenuation, light->attenuation);
+            glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(direction)[0]);
             glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
             glUniform1f(mLightUniforms[lightIndex].coneAngle, light->coneAngle);
-            glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(direction)[0]);
+            glUniform1f(mLightUniforms[lightIndex].distance, 0.f);
             
             ++renderedLights;
             if (++lightIndex >= mLightCount) {
@@ -237,9 +240,10 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
                 glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * position)[0]);
                 glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &(light->color * light->intensity)[0]);
                 glUniform1f(mLightUniforms[lightIndex].attenuation, light->attenuation);
+                glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
                 glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
                 glUniform1f(mLightUniforms[lightIndex].coneAngle, 180.f);
-                glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
+                glUniform1f(mLightUniforms[lightIndex].distance, 0.f);
                 
                 ++renderedLights;
                 if (++lightIndex >= mLightCount) {
