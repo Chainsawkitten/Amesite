@@ -78,15 +78,18 @@ class DeferredLighting {
         Shader* mVertexShader;
         Shader* mFragmentShader;
         
-        // Store light uniform locations so we don't have to get them every frame.
-        static const unsigned int mLightCount = 32U;
-        struct {
-            GLint position;
-            GLint intensities;
-            GLint attenuation;
-            GLint direction;
-            GLint ambientCoefficient;
-            GLint coneAngle;
-            GLint distance;
-        } mLightUniforms[mLightCount];
+        static const unsigned int mLightCount = 128U;
+        struct Light {
+            glm::vec4 position;
+            glm::vec3 intensities;
+            float attenuation;
+            glm::vec3 direction;
+            float ambientCoefficient;
+            float coneAngle;
+            float distance;
+            float padding1;
+            float padding2;
+        } mLights[mLightCount];
+        GLuint mLightBuffer;
+        GLuint mLightBufferIndex;
 };
