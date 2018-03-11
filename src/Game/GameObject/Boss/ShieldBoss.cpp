@@ -41,7 +41,6 @@ ShieldBoss::ShieldBoss(Scene* scene) : SuperBoss(scene) {
     node->AddComponent<Component::Spawner>()->delay = mMaxSpawnerDelay;
     node->AddComponent<Component::Physics>()->angularDragFactor = 0.f;
     node->GetComponent<Component::Physics>()->angularVelocity.y = 0.15f;
-    node->GetComponent<Component::PointLight>()->ambientCoefficient = .005f;
 
     body->GetComponent<Component::Transform>()->scale *= 1.2f;
     body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond/diamond_body.obj");

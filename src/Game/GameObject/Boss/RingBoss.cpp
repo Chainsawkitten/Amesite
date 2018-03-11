@@ -39,7 +39,6 @@ RingBoss::RingBoss(Scene* scene) : SuperBoss(scene) {
 
     node->AddComponent<Component::Transform>()->scale *= 0.6f;
     node->AddComponent<Component::Update>()->updateFunction = std::bind(&RingBoss::mUpdateFunction, this);
-    node->GetComponent<Component::PointLight>()->ambientCoefficient = .004f;
 
     body->GetComponent<Component::Transform>()->scale *= 0.8f;
     body->AddComponent<Component::Mesh>()->geometry = mBodyModel = Resources().CreateOBJModel("Resources/diamond/diamond_body.obj");
