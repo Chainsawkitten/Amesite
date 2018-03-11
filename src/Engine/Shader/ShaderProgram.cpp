@@ -32,3 +32,7 @@ GLint ShaderProgram::GetUniformLocation(const char* name) const {
 GLuint ShaderProgram::GetUniformBlockIndex(const char* name) const {
     return glGetUniformBlockIndex(mShaderProgram, name);
 }
+
+void ShaderProgram::BindUniformBlock(GLuint uniformBlockIndex, GLuint bindingPointIndex) {
+    glUniformBlockBinding(mShaderProgram, uniformBlockIndex, bindingPointIndex);
+}

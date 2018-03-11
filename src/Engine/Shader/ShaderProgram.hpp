@@ -54,6 +54,13 @@ class ShaderProgram {
 		 * @return The index of the uniform block or GL_INVALID_INDEX.
 		 */
 		GLuint GetUniformBlockIndex(const char* name) const;
+        
+        /// Bind a uniform block.
+        /**
+         * @param uniformBlockIndex The index of the uniform block in the shader program.
+         * @param bindingPointIndex The binding point of the uniform buffer.
+         */
+        void BindUniformBlock(GLuint uniformBlockIndex, GLuint bindingPointIndex);
 
 	private:
 		GLuint mShaderProgram;
