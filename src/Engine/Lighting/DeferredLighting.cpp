@@ -197,12 +197,16 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         }
     }
     
+    // At which point lights should be cut off (no longer contribute).
+    const double cutOff = 0.0001;
+    
     // Render all spot lights.
     std::vector<Component::SpotLight*>& spotLights = scene.GetAll<Component::SpotLight>();
     for (Component::SpotLight* light : spotLights) {
         Entity* lightEntity = light->entity;
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
+            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation);
             glm::vec4 direction = viewMat * glm::vec4(transform->GetWorldDirection(), 0.f);
             glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
             glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &(light->color * light->intensity)[0]);
@@ -210,7 +214,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(direction)[0]);
             glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
             glUniform1f(mLightUniforms[lightIndex].coneAngle, light->coneAngle);
-            glUniform1f(mLightUniforms[lightIndex].distance, 0.f);
+            glUniform1f(mLightUniforms[lightIndex].distance, scale);
             
             ++renderedLights;
             if (++lightIndex >= mLightCount) {
@@ -219,9 +223,6 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             }
         }
     }
-    
-    // At which point lights should be cut off (no longer contribute).
-    double cutOff = 0.0001;
     
     Physics::AxisAlignedBoundingBox aabb(glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.5f, 0.5f, 0.5f));
     
@@ -243,7 +244,7 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
                 glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
                 glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
                 glUniform1f(mLightUniforms[lightIndex].coneAngle, 180.f);
-                glUniform1f(mLightUniforms[lightIndex].distance, 0.f);
+                glUniform1f(mLightUniforms[lightIndex].distance, scale);
                 
                 ++renderedLights;
                 if (++lightIndex >= mLightCount) {

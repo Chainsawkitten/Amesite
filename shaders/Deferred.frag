@@ -44,7 +44,14 @@ vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecu
         // Point light.
         vec3 toLight = lights[light].position.xyz - position;
         surfaceToLight = normalize(toLight);
-        attenuation = 1.0 / (1.0 + lights[light].attenuation * (toLight.x * toLight.x + toLight.y * toLight.y + toLight.z * toLight.z));
+        float lightDist = toLight.x * toLight.x + toLight.y * toLight.y + toLight.z * toLight.z;
+        attenuation = 1.0 / (1.0 + lights[light].attenuation * lightDist);
+        
+        // Fade-out close to cutoff distance.
+        lightDist = sqrt(lightDist) / lights[light].distance;
+        const float curveTransition = 0.7;
+        const float k = 1.0 / (1.0 - curveTransition);
+        attenuation *= clamp(k - k * lightDist, 0.0, 1.0);
         
         // Spot light.
         float lightToSurfaceAngle = degrees(acos(dot(-surfaceToLight, normalize(lights[light].direction))));
