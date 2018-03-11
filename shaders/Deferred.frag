@@ -20,10 +20,14 @@ struct Light {
     float ambientCoefficient;
     float coneAngle;
     float distance;
+    float padding1;
+    float padding2;
 };
 
-const int maxLightCount = 32;
-uniform Light lights[maxLightCount];
+const int maxLightCount = 128;
+layout (std140) uniform light_data {
+    Light lights[maxLightCount];
+};
 uniform int lightCount;
 
 in vec2 texCoords;

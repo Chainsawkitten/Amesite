@@ -71,19 +71,19 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
     // Default framebuffer
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     
-    // Store light uniform locations.
-    for (unsigned int lightIndex = 0; lightIndex < mLightCount; ++lightIndex) {
-        mLightUniforms[lightIndex].position = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].position").c_str());
-        mLightUniforms[lightIndex].intensities = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].intensities").c_str());
-        mLightUniforms[lightIndex].attenuation = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].attenuation").c_str());
-        mLightUniforms[lightIndex].direction = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].direction").c_str());
-        mLightUniforms[lightIndex].ambientCoefficient = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].ambientCoefficient").c_str());
-        mLightUniforms[lightIndex].coneAngle = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].coneAngle").c_str());
-        mLightUniforms[lightIndex].distance = mShaderProgram->GetUniformLocation(("lights[" + std::to_string(lightIndex) + "].distance").c_str());
-    }
+    // Light uniform buffer.
+    glGenBuffers(1, &mLightBuffer);
+    glBindBuffer(GL_UNIFORM_BUFFER, mLightBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(Light) * mLightCount, NULL, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    
+    // Get light buffer index.
+    mLightBufferIndex = mShaderProgram->GetUniformBlockIndex("light_data");
 }
 
 DeferredLighting::~DeferredLighting() {
+    glDeleteBuffers(1, &mLightBuffer);
+    
     if (mFrameBufferObject != 0)
         glDeleteFramebuffers(1, &mFrameBufferObject);
     
@@ -155,15 +155,12 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     
     glBindVertexArray(mSquare->GetVertexArray());
     
-    unsigned int renderedLights = 0;
-    
     // Set uniforms.
     glUniform1i(mShaderProgram->GetUniformLocation("tDiffuse"), DeferredLighting::DIFFUSE);
     glUniform1i(mShaderProgram->GetUniformLocation("tNormals"), DeferredLighting::NORMAL);
     glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
     glUniform1i(mShaderProgram->GetUniformLocation("tGlow"), DeferredLighting::GLOW);
     glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
-    glUniform1i(mShaderProgram->GetUniformLocation("lightCount"), mLightCount);
     
     // Get the camera matrices.
     glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
@@ -181,19 +178,15 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
         if (transform != nullptr) {
             glm::vec4 direction = glm::vec4(transform->GetWorldDirection(), 0.f);
-            glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * -direction)[0]);
-            glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &light->color[0]);
-            glUniform1f(mLightUniforms[lightIndex].attenuation, 1.f);
-            glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(0.f, 0.f, 0.f)[0]);
-            glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
-            glUniform1f(mLightUniforms[lightIndex].coneAngle, 0.f);
-            glUniform1f(mLightUniforms[lightIndex].distance, 0.f);
+            mLights[lightIndex].position = viewMat * -direction;
+            mLights[lightIndex].intensities = light->color;
+            mLights[lightIndex].attenuation = 1.f;
+            mLights[lightIndex].direction = glm::vec3(0.f, 0.f, 0.f);
+            mLights[lightIndex].ambientCoefficient = light->ambientCoefficient;
+            mLights[lightIndex].coneAngle = 0.f;
+            mLights[lightIndex].distance = 0.f;
             
-            ++renderedLights;
-            if (++lightIndex >= mLightCount) {
-                lightIndex = 0U;
-                glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
-            }
+            ++lightIndex;
         }
     }
     
@@ -208,19 +201,15 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
         if (transform != nullptr) {
             float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation * light->intensity);
             glm::vec4 direction = viewMat * glm::vec4(transform->GetWorldDirection(), 0.f);
-            glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0)))[0]);
-            glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &(light->color * light->intensity)[0]);
-            glUniform1f(mLightUniforms[lightIndex].attenuation, light->attenuation);
-            glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(direction)[0]);
-            glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
-            glUniform1f(mLightUniforms[lightIndex].coneAngle, light->coneAngle);
-            glUniform1f(mLightUniforms[lightIndex].distance, scale);
+            mLights[lightIndex].position = viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0));
+            mLights[lightIndex].intensities = light->color * light->intensity;
+            mLights[lightIndex].attenuation = light->attenuation;
+            mLights[lightIndex].direction = glm::vec3(direction);
+            mLights[lightIndex].ambientCoefficient = light->ambientCoefficient;
+            mLights[lightIndex].coneAngle = light->coneAngle;
+            mLights[lightIndex].distance = scale;
             
-            ++renderedLights;
-            if (++lightIndex >= mLightCount) {
-                lightIndex = 0U;
-                glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
-            }
+            ++lightIndex;
         }
     }
     
@@ -238,19 +227,15 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
             Physics::Frustum frustum(viewProjectionMat * modelMat);
             if (frustum.Collide(aabb)) {
                 glm::vec4 position = glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0);
-                glUniform4fv(mLightUniforms[lightIndex].position, 1, &(viewMat * position)[0]);
-                glUniform3fv(mLightUniforms[lightIndex].intensities, 1, &(light->color * light->intensity)[0]);
-                glUniform1f(mLightUniforms[lightIndex].attenuation, light->attenuation);
-                glUniform3fv(mLightUniforms[lightIndex].direction, 1, &glm::vec3(1.f, 0.f, 0.f)[0]);
-                glUniform1f(mLightUniforms[lightIndex].ambientCoefficient, light->ambientCoefficient);
-                glUniform1f(mLightUniforms[lightIndex].coneAngle, 180.f);
-                glUniform1f(mLightUniforms[lightIndex].distance, scale);
+                mLights[lightIndex].position = viewMat * position;
+                mLights[lightIndex].intensities = light->color * light->intensity;
+                mLights[lightIndex].attenuation = light->attenuation;
+                mLights[lightIndex].direction = glm::vec3(1.f, 0.f, 0.f);
+                mLights[lightIndex].ambientCoefficient = light->ambientCoefficient;
+                mLights[lightIndex].coneAngle = 180.f;
+                mLights[lightIndex].distance = scale;
                 
-                ++renderedLights;
-                if (++lightIndex >= mLightCount) {
-                    lightIndex = 0U;
-                    glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
-                }
+                ++lightIndex;
                 
                 if (showLightVolumes)
                     System::DebugDrawingSystem::GetActiveInstance()->AddSphere(glm::vec3(position), scale, glm::vec3(1.0f, 1.0f, 1.0f));
@@ -259,11 +244,20 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     }
     
     if (lightIndex != 0U) {
+        // Update uniform buffer.
+        glBindBuffer(GL_UNIFORM_BUFFER, mLightBuffer);
+        GLvoid* data = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
+        memcpy(data, mLights, sizeof(Light) * mLightCount);
+        glUnmapBuffer(GL_UNIFORM_BUFFER);
+        
+        // Draw lights.
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, mLightBuffer);
+        mShaderProgram->BindUniformBlock(mLightBufferIndex, 0);
         glUniform1i(mShaderProgram->GetUniformLocation("lightCount"), lightIndex);
         glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
     }
     
-    { PROFILE_CPU((std::to_string(renderedLights) + " lights").c_str());
+    { PROFILE_CPU((std::to_string(lightIndex) + " lights").c_str());
     }
     
     // Reset blending and depth function to standard values.
