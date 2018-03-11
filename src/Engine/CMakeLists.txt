@@ -60,6 +60,7 @@ set(ENGINE_SRCS
     GameObject/SuperGameObject.cpp
     Physics/AxisAlignedBoundingBox.cpp
     Physics/Frustum.cpp
+    Physics/Sphere.cpp
     Profiling/ProfilingManager.cpp
     Profiling/CPUProfiling.cpp
     Profiling/GPUProfiling.cpp
@@ -130,6 +131,7 @@ set(ENGINE_HEADERS
     GameObject/SuperGameObject.hpp
     Physics/AxisAlignedBoundingBox.hpp
     Physics/Frustum.hpp
+    Physics/Sphere.hpp
     Profiling/ProfilingManager.hpp
     Profiling/CPUProfiling.hpp
     Profiling/GPUProfiling.hpp
