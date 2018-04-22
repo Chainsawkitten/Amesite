@@ -118,23 +118,4 @@ void main () {
     fragmentColor = vec4(accumulatedLight, 1.0);
     extraOut = vec4(texture(tGlow, texCoords).rgb, 1.0);
     gl_FragDepth = depth;
-    
-    // TEMP: EXTRA!
-    
-    // Count lights in the tile.
-    /*uint lightCount = 0;
-    for (uint i=0; i < maxTileLights; ++i) {
-        uint lightIndex = texelFetch(tLightTiles, ivec2(hTile, vTile * maxTileLights + i), 0).r;
-        if (lightIndex == 0)
-            break;
-        
-        ++lightCount;
-    }*/
-    
-    //lightCount = texture(tLightTiles, texCoords).r;
-    
-    float ln = float(lightCount) / float(maxTileLights);
-    //fragmentColor = vec4(float(hTile) / 240.0, float(vTile) / 135.0, ln, 0.0);
-    /*fragmentColor = vec4(ln, ln, ln, 1.0);
-    extraOut = vec4(0.0, 0.0, 0.0, 1.0);*/
 }
