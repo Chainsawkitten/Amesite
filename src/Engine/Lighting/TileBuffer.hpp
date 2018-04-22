@@ -15,8 +15,9 @@ class TileBuffer {
         /// Create new tile buffer.
         /**
          * @param screenSize Size of the screen (in pixels).
+         * @param lightBuffer Light uniform buffer.
          */
-        TileBuffer(const glm::vec2& screenSize);
+        TileBuffer(const glm::vec2& screenSize, GLuint lightBuffer);
         
         /// Destructor.
         ~TileBuffer();
@@ -28,7 +29,10 @@ class TileBuffer {
         GLuint GetTexture() const;
         
         /// Determine which lights contribute to each tile.
-        void Calculate();
+        /**
+         * @param lightCount The number of lights currently in view.
+         */
+        void Calculate(unsigned int lightCount);
         
     private:
         // Size of teach tile.
@@ -48,4 +52,7 @@ class TileBuffer {
         
         unsigned int mHorizontalTiles;
         unsigned int mVerticalTiles;
+        
+        GLuint mLightBuffer;
+        GLuint mLightBufferIndex;
 };

@@ -9,13 +9,17 @@
 
 #include "../Util/Log.hpp"
 
-TileBuffer::TileBuffer(const glm::vec2& screenSize) {
+TileBuffer::TileBuffer(const glm::vec2& screenSize, GLuint lightBuffer) {
+    mLightBuffer = lightBuffer;
+    mSquare = Resources().CreateSquare();
+    
     // Create shader program.
     mVertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragmentShader = Resources().CreateShader(LIGHTTILES_FRAG, LIGHTTILES_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
     
-    mSquare = Resources().CreateSquare();
+    // Get light buffer index.
+    mLightBufferIndex = mShaderProgram->GetUniformBlockIndex("light_data");
     
     // Create the FBO
     glGenFramebuffers(1, &mFrameBuffer);
@@ -64,7 +68,7 @@ GLuint TileBuffer::GetTexture() const {
     return mTexture;
 }
 
-void TileBuffer::Calculate() {
+void TileBuffer::Calculate(unsigned int lightCount) {
     mShaderProgram->Use();
     
     // Set framebuffer.
@@ -73,6 +77,14 @@ void TileBuffer::Calculate() {
     // Clear framebuffer.
     glViewport(0, 0, mHorizontalTiles, mVerticalTiles * mMaxLights);
     glClear(GL_COLOR_BUFFER_BIT);
+    
+    if (lightCount == 0)
+        return;
+    
+    // Set uniforms.
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mLightBuffer);
+    mShaderProgram->BindUniformBlock(mLightBufferIndex, 0);
+    glUniform1i(mShaderProgram->GetUniformLocation("lightCount"), lightCount);
     
     glBindVertexArray(mSquare->GetVertexArray());
     

@@ -85,7 +85,7 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
     mLightBufferIndex = mShaderProgram->GetUniformBlockIndex("light_data");
     
     // Create tile buffer.
-    mTileBuffer = new TileBuffer(size);
+    mTileBuffer = new TileBuffer(size, mLightBuffer);
 }
 
 DeferredLighting::~DeferredLighting() {
@@ -159,7 +159,7 @@ void DeferredLighting::Render(Scene& scene, RenderTarget* renderTarget, Entity* 
     glDepthFunc(GL_ALWAYS);
     
     // Determine which lights contribute to each tile.
-    mTileBuffer->Calculate();
+    mTileBuffer->Calculate(lightIndex);
     
     // Blending enabled for handling multiple light sources
     glEnablei(GL_BLEND, 0);
