@@ -31,6 +31,9 @@ layout (std140) uniform light_data {
 };
 uniform int lightCount;
 
+const uint tileSize = 8;
+const uint maxTileLights = 16;
+
 in vec2 texCoords;
 
 layout(location = 0) out vec4 fragmentColor;
@@ -108,9 +111,25 @@ void main () {
     gl_FragDepth = depth;
     
     // TEMP: EXTRA!
-    uint lightCount = texture(tLightTiles, texCoords).r;
-    uint maxTileLights = 16;
+    
+    // Figure out which tile we're in.
+    uint hTile = uint(gl_FragCoord.x) / tileSize;
+    uint vTile = uint(gl_FragCoord.y) / tileSize;
+    
+    // Count lights in the tile.
+    uint lightCount = 0;
+    for (uint i=0; i < maxTileLights; ++i) {
+        uint lightIndex = texelFetch(tLightTiles, ivec2(hTile * tileSize, vTile * tileSize + i), 0).r;
+        if (lightIndex == 0)
+            break;
+        
+        ++lightCount;
+    }
+    
+    //lightCount = texture(tLightTiles, texCoords).r;
+    
     float ln = float(lightCount) / float(maxTileLights);
+    //fragmentColor = vec4(float(hTile) / 240.0, float(vTile) / 135.0, ln, 0.0);
     fragmentColor = vec4(ln, ln, ln, 1.0);
     extraOut = vec4(0.0, 0.0, 0.0, 1.0);
 }
