@@ -11,6 +11,8 @@
  * Debug Context          | Create an OpenGL Debug Context.     | bool   | false
  * Show Notifications     | Show notification messages.         | bool   | false
  * Show Frame Times       | Display update and render times.    | bool   | false
+ * Show Light Volumes     | Display light volumes.              | bool   | false
+ * Tiles                  | Whether to visualize light tiles.   | bool   | false
  * Screen Width           | Width of the game window.           | long   | 800
  * Screen Height          | Height of the game window.          | long   | 600
  * Fullscreen             | Play in fullscreen mode.            | bool   | false
@@ -22,7 +24,6 @@
  * Refractions            | Water refractions.                  | bool   | true
  * Gamma                  | Gamma brightness.                   | double | 2.2
  * Dithering              | Whether to use dithering.           | bool   | true
- * Tiles                  | Whether to visualize light tiles.   | bool   | false
  * Audio Volume           | How loud to play sounds.            | double | 1.0
  * Aim Deadzone           | Deadzone on controller aim vector.  | double | 0.3
  * Move Deadzone          | Deadzone on controller move vector. | double | 0.3

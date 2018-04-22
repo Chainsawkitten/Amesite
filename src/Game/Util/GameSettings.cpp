@@ -11,6 +11,7 @@ GameSettings::GameSettings() {
     AddBoolSetting("Show Notifications", "Debug", "Show Notification Messages", false);
     AddBoolSetting("Show Frame Times", "Debug", "Show Frame Times", false);
     AddBoolSetting("Show Light Volumes", "Debug", "Show Light Volumes", false);
+    AddBoolSetting("Tiles", "Debug", "Visualize Tiles", false);
     
     AddLongSetting("Screen Width", "Graphics", "Width", 800);
     AddLongSetting("Screen Height", "Graphics", "Height", 600);
@@ -23,7 +24,6 @@ GameSettings::GameSettings() {
     AddBoolSetting("Refractions", "Graphics", "Water Refractions", true);
     AddDoubleSetting("Gamma", "Graphics", "Brightness", 2.2);
     AddBoolSetting("Dithering", "Graphics", "Dithering", true);
-    AddBoolSetting("Tiles", "Graphics", "Visualize Tiles", false);
     
     AddDoubleSetting("Audio Volume", "Sound", "Volume", 1.0);
     

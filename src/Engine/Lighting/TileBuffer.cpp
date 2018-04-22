@@ -89,6 +89,8 @@ void TileBuffer::Calculate(unsigned int lightCount, const glm::mat4& view, const
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mLightBuffer);
     mShaderProgram->BindUniformBlock(mLightBufferIndex, 0);
     glUniform1i(mShaderProgram->GetUniformLocation("lightCount"), lightCount);
+    glUniform1f(mShaderProgram->GetUniformLocation("hTiles"), mHorizontalTiles);
+    glUniform1f(mShaderProgram->GetUniformLocation("vTiles"), mVerticalTiles);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseView"), 1, GL_FALSE, &glm::inverse(view)[0][0]);
     glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projection[0][0]);

@@ -25,6 +25,9 @@ uniform mat4 view;
 uniform mat4 inverseView;
 uniform mat4 projection;
 
+uniform float hTiles;
+uniform float vTiles;
+
 const uint tileSize = 8;
 const uint maxTileLights = 16;
 
@@ -107,11 +110,19 @@ bool LightVisible(in Frustum frustum, in uint light) {
 void main () {
     lightIndex = 0;
     
-    // TODO: Figure out which tile we are.
+    // Figure out which tile we are.
+    uint hTile = uint(gl_FragCoord.x);
+    uint vTile = uint(gl_FragCoord.y) / maxTileLights;
     
     // Calculate view projection matrix.
-    // TODO: Adjust depending on which tile we're in.
-    mat4 viewProjection = projection * view;
+    // Adjust depending on which tile we're in.
+    float hPos = (1.0 - float(hTile) * 2.0 / hTiles) * hTiles;
+    float vPos = (1.0 - float(vTile) * 2.0 / vTiles) * vTiles;
+    mat4 tile = mat4(hTiles, 0.0,    0.0, 0.0,
+                     0.0,    vTiles, 0.0, 0.0,
+                     0.0,    0.0,    1.0, 0.0,
+                     hPos,   vPos,   0.0, 1.0);
+    mat4 viewProjection = tile * (projection * view);
     
     // Extract frustum from view projection matrix.
     Frustum frustum;
