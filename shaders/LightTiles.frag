@@ -73,19 +73,39 @@ void ExtractFrustum(in mat4 matrix, out Frustum frustum) {
     frustum.planes[5] /= length(vec3(frustum.planes[5]));
 }
 
+// Frustum-sphere intersection test.
+bool FrustumVsSphere(in Frustum frustum, in Sphere sphere) {
+    // Check the signed distance between the sphere and the frustum planes.
+    for (int planeNumber = 0; planeNumber < 6; ++planeNumber) {
+        vec4 plane = frustum.planes[planeNumber];
+        vec3 point = sphere.position;
+        float signedDistance = plane.x * point.x + plane.y * point.y + plane.z * point.z + plane.w;
+        
+        if (signedDistance < -sphere.radius)
+            return false;
+    }
+    
+    return true;
+}
+
 // Determine whether a light is visible inside a given tile using frustum culling.
 bool LightVisible(in Frustum frustum, in uint light) {
+    // Don't frustum cull directional and spot lights.
+    const float epsilon = 0.01;
+    if (lights[light].position.w == 0.0)// || lights[light].coneAngle < 180.0 + epsilon)
+        return true;
+    
     // Get light info.
     Sphere lightSphere;
     lightSphere.position = vec3(inverseView * lights[light].position);
     lightSphere.radius = lights[light].distance;
     
-    // TODO: Frustum check.
-    return true;
+    // Frustum test.
+    return FrustumVsSphere(frustum, lightSphere);
 }
 
 void main () {
-    lightIndex = uint(lights[0].padding1);
+    lightIndex = 0;
     
     // TODO: Figure out which tile we are.
     

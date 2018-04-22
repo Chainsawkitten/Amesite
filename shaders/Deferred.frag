@@ -112,7 +112,7 @@ void main () {
         if (lightIndex == 0)
             break;
         
-        accumulatedLight += ApplyLight(diffuse, normal, position, specular, lightIndex);
+        accumulatedLight += ApplyLight(diffuse, normal, position, specular, lightIndex - 1);
     }
     
     fragmentColor = vec4(accumulatedLight, 1.0);
