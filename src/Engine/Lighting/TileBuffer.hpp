@@ -10,10 +10,6 @@ class Shader;
 class ShaderProgram;
 
 /// Holds the framebuffer that stores the light indices for each tile.
-/**
- * x is tile index.
- * y is light number.
- */
 class TileBuffer {
     public:
         /// Create new tile buffer.
