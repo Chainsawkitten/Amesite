@@ -1,5 +1,6 @@
 #pragma once
 
+#include <GL/glew.h>
 #include <glm/glm.hpp>
 
 /// Holds the framebuffer that stores the light indices for each tile.
@@ -13,4 +14,14 @@ class TileBuffer {
         
         /// Destructor.
         ~TileBuffer();
+        
+    private:
+        // Size of teach tile.
+        static const unsigned short mTileSize = 8;
+        
+        // Max amount of lights per tile.
+        static const unsigned short mMaxLights = 16;
+        
+        GLuint mTexture;
+        GLuint mFrameBufferObject;
 };

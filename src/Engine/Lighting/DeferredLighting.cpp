@@ -22,6 +22,8 @@
 #include "../Physics/Frustum.hpp"
 #include "../System/DebugDrawingSystem.hpp"
 
+#include "TileBuffer.hpp"
+
 #include "../Profiling/CPUProfiling.hpp"
 #include <string>
 
@@ -80,6 +82,9 @@ DeferredLighting::DeferredLighting(const glm::vec2& size) {
     
     // Get light buffer index.
     mLightBufferIndex = mShaderProgram->GetUniformBlockIndex("light_data");
+    
+    // Create tile buffer.
+    mTileBuffer = new TileBuffer(size);
 }
 
 DeferredLighting::~DeferredLighting() {
@@ -99,6 +104,8 @@ DeferredLighting::~DeferredLighting() {
     Resources().FreeShader(mFragmentShader);
     
     Resources().FreeSquare();
+    
+    delete mTileBuffer;
 }
 
 void DeferredLighting::SetTarget() {

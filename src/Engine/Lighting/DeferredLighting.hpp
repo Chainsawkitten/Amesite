@@ -10,6 +10,7 @@ class Scene;
 class Entity;
 class Shader;
 class ShaderProgram;
+class TileBuffer;
 
 /// Holds the frame buffers used for deferred rendering.
 class DeferredLighting {
@@ -92,4 +93,6 @@ class DeferredLighting {
         } mLights[mLightCount];
         GLuint mLightBuffer;
         GLuint mLightBufferIndex;
+        
+        TileBuffer* mTileBuffer;
 };
