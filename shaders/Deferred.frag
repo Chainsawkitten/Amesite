@@ -119,7 +119,7 @@ void main () {
     // Count lights in the tile.
     uint lightCount = 0;
     for (uint i=0; i < maxTileLights; ++i) {
-        uint lightIndex = texelFetch(tLightTiles, ivec2(hTile * tileSize, vTile * tileSize + i), 0).r;
+        uint lightIndex = texelFetch(tLightTiles, ivec2(hTile, vTile * maxTileLights + i), 0).r;
         if (lightIndex == 0)
             break;
         

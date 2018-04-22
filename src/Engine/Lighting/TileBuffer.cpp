@@ -18,19 +18,19 @@ TileBuffer::TileBuffer(const glm::vec2& screenSize) {
     mSquare = Resources().CreateSquare();
     
     // Create the FBO
-    glGenFramebuffers(1, &mFrameBufferObject);
-    glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferObject);
+    glGenFramebuffers(1, &mFrameBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFrameBuffer);
     
     // Calculate buffer size.
     unsigned int screenWidth = static_cast<unsigned int>(screenSize.x);
     unsigned int screenHeight = static_cast<unsigned int>(screenSize.y);
-    unsigned int horizontalTiles = screenWidth / mTileSize + (screenWidth % mTileSize != 0);
-    unsigned int verticalTiles = screenHeight / mTileSize + (screenHeight % mTileSize != 0);
+    mHorizontalTiles = screenWidth / mTileSize + (screenWidth % mTileSize != 0);
+    mVerticalTiles = screenHeight / mTileSize + (screenHeight % mTileSize != 0);
     
     // Create texture.
     glGenTextures(1, &mTexture);
     glBindTexture(GL_TEXTURE_2D, mTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8UI, horizontalTiles, verticalTiles * mMaxLights, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8UI, mHorizontalTiles, mVerticalTiles * mMaxLights, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, nullptr);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture, 0);
@@ -48,8 +48,8 @@ TileBuffer::TileBuffer(const glm::vec2& screenSize) {
 }
 
 TileBuffer::~TileBuffer() {
-    if (mFrameBufferObject != 0)
-        glDeleteFramebuffers(1, &mFrameBufferObject);
+    if (mFrameBuffer != 0)
+        glDeleteFramebuffers(1, &mFrameBuffer);
     
     glDeleteTextures(1, &mTexture);
     
@@ -62,4 +62,20 @@ TileBuffer::~TileBuffer() {
 
 GLuint TileBuffer::GetTexture() const {
     return mTexture;
+}
+
+void TileBuffer::Calculate() {
+    mShaderProgram->Use();
+    
+    // Set framebuffer.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFrameBuffer);
+    
+    // Clear framebuffer.
+    glViewport(0, 0, mHorizontalTiles, mVerticalTiles * mMaxLights);
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    glBindVertexArray(mSquare->GetVertexArray());
+    
+    // Calculate light tiles.
+    glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
 }

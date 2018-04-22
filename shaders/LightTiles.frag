@@ -7,5 +7,5 @@ out uint lightIndex;
 
 void main () {
     // TODO: Actually calculate this.
-    lightIndex = 0;
+    lightIndex = 1;
 }

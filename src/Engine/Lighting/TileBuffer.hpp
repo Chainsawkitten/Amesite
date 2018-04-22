@@ -27,6 +27,9 @@ class TileBuffer {
          */
         GLuint GetTexture() const;
         
+        /// Determine which lights contribute to each tile.
+        void Calculate();
+        
     private:
         // Size of teach tile.
         static const unsigned short mTileSize = 8;
@@ -35,11 +38,14 @@ class TileBuffer {
         static const unsigned short mMaxLights = 16;
         
         GLuint mTexture;
-        GLuint mFrameBufferObject;
+        GLuint mFrameBuffer;
         
         Geometry::Square* mSquare;
         
         ShaderProgram* mShaderProgram;
         Shader* mVertexShader;
         Shader* mFragmentShader;
+        
+        unsigned int mHorizontalTiles;
+        unsigned int mVerticalTiles;
 };

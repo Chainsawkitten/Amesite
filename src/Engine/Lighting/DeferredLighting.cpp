@@ -1,5 +1,4 @@
 #include "DeferredLighting.hpp"
-#include "../Util/Log.hpp"
 
 #include "../Resources.hpp"
 #include "../Geometry/Square.hpp"
@@ -21,9 +20,11 @@
 #include "../Physics/Sphere.hpp"
 #include "../Physics/Frustum.hpp"
 #include "../System/DebugDrawingSystem.hpp"
+#include "../RenderTarget.hpp"
 
 #include "TileBuffer.hpp"
 
+#include "../Util/Log.hpp"
 #include "../Profiling/CPUProfiling.hpp"
 #include <string>
 
@@ -146,7 +147,7 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
     glEnable(GL_DEPTH_TEST);
 }
 
-void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, bool showLightVolumes) {
+void DeferredLighting::Render(Scene& scene, RenderTarget* renderTarget, Entity* camera, const glm::vec2& screenSize, bool showLightVolumes) {
     // Get the camera matrices.
     glm::mat4 view = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
     glm::mat4 projection = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
@@ -157,11 +158,15 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_ALWAYS);
     
+    // Determine which lights contribute to each tile.
+    mTileBuffer->Calculate();
+    
     // Blending enabled for handling multiple light sources
     glEnablei(GL_BLEND, 0);
     glBlendEquationi(0, GL_FUNC_ADD);
     glBlendFunci(0, GL_ONE, GL_ONE);
     
+    renderTarget->SetTarget();
     mShaderProgram->Use();
     
     // Bind textures.
