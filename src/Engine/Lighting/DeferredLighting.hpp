@@ -62,6 +62,8 @@ class DeferredLighting {
         
 	private:
         static void AttachTexture(GLuint texture, unsigned int width, unsigned int height, GLenum attachment, GLint internalFormat);
+        
+        unsigned int UpdateLightBuffer(Scene& scene, const glm::mat4& view, const glm::mat4& projection, bool showLightVolumes);
         void BindForReading();
         void BindForTexReading();
         void SetReadBuffer(TEXTURE_TYPE textureType);

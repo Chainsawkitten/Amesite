@@ -147,6 +147,12 @@ void DeferredLighting::ShowTextures(const glm::vec2& size) {
 }
 
 void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& screenSize, bool showLightVolumes) {
+    // Get the camera matrices.
+    glm::mat4 view = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
+    glm::mat4 projection = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
+    
+    unsigned int lightIndex = UpdateLightBuffer(scene, view, projection, showLightVolumes);
+    
     // Set depth testing to always pass.
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_ALWAYS);
@@ -158,7 +164,13 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     
     mShaderProgram->Use();
     
+    // Bind textures.
     BindForReading();
+    glActiveTexture(GL_TEXTURE0 + NUM_TEXTURES + 1);
+    glBindTexture(GL_TEXTURE_2D, mTileBuffer->GetTexture());
+    
+    // Clear framebuffer.
+    glViewport(0, 0, mSize.x, mSize.y);
     glClear(GL_COLOR_BUFFER_BIT);
     
     glBindVertexArray(mSquare->GetVertexArray());
@@ -171,98 +183,10 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
     glUniform1i(mShaderProgram->GetUniformLocation("tLightTiles"), DeferredLighting::NUM_TEXTURES + 1);
     
-    // Bind light tiles textures.
-    glActiveTexture(GL_TEXTURE0 + NUM_TEXTURES + 1);
-    glBindTexture(GL_TEXTURE_2D, mTileBuffer->GetTexture());
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(projection)[0][0]);
     
-    // Get the camera matrices.
-    glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
-    glm::mat4 projectionMat = camera->GetComponent<Component::Lens>()->GetProjection(screenSize);
-    glm::mat4 viewProjectionMat(projectionMat * viewMat);
-    
-    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("inverseProjectionMatrix"), 1, GL_FALSE, &glm::inverse(projectionMat)[0][0]);
-    
-    unsigned int lightIndex = 0U;
-    
-    // Render all directional lights.
-    std::vector<Component::DirectionalLight*>& directionalLights = scene.GetAll<Component::DirectionalLight>();
-    for (Component::DirectionalLight* light : directionalLights) {
-        Entity* lightEntity = light->entity;
-        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
-        if (transform != nullptr) {
-            glm::vec4 direction = glm::vec4(transform->GetWorldDirection(), 0.f);
-            mLights[lightIndex].position = viewMat * -direction;
-            mLights[lightIndex].intensities = light->color;
-            mLights[lightIndex].attenuation = 1.f;
-            mLights[lightIndex].direction = glm::vec3(0.f, 0.f, 0.f);
-            mLights[lightIndex].ambientCoefficient = light->ambientCoefficient;
-            mLights[lightIndex].coneAngle = 0.f;
-            mLights[lightIndex].distance = 0.f;
-            
-            ++lightIndex;
-        }
-    }
-    
-    // At which point lights should be cut off (no longer contribute).
-    const double cutOff = 0.002;
-    
-    // Render all spot lights.
-    std::vector<Component::SpotLight*>& spotLights = scene.GetAll<Component::SpotLight>();
-    for (Component::SpotLight* light : spotLights) {
-        Entity* lightEntity = light->entity;
-        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
-        if (transform != nullptr) {
-            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation * light->intensity);
-            glm::vec4 direction = viewMat * glm::vec4(transform->GetWorldDirection(), 0.f);
-            mLights[lightIndex].position = viewMat * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0));
-            mLights[lightIndex].intensities = light->color * light->intensity;
-            mLights[lightIndex].attenuation = light->attenuation;
-            mLights[lightIndex].direction = glm::vec3(direction);
-            mLights[lightIndex].ambientCoefficient = light->ambientCoefficient;
-            mLights[lightIndex].coneAngle = light->coneAngle;
-            mLights[lightIndex].distance = scale;
-            
-            ++lightIndex;
-        }
-    }
-    
-    Physics::Frustum frustum(viewProjectionMat);
-    
-    // Render all point lights.
-    std::vector<Component::PointLight*>& pointLights = scene.GetAll<Component::PointLight>();
-    for (Component::PointLight* light : pointLights) {
-        Entity* lightEntity = light->entity;
-        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
-        if (transform != nullptr) {
-            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation * light->intensity);
-            Physics::Sphere sphere(transform->GetWorldPosition(), scale);
-            
-            if (frustum.Collide(sphere)) {
-                glm::vec4 position = glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0);
-                mLights[lightIndex].position = viewMat * position;
-                mLights[lightIndex].intensities = light->color * light->intensity;
-                mLights[lightIndex].attenuation = light->attenuation;
-                mLights[lightIndex].direction = glm::vec3(1.f, 0.f, 0.f);
-                mLights[lightIndex].ambientCoefficient = light->ambientCoefficient;
-                mLights[lightIndex].coneAngle = 180.f;
-                mLights[lightIndex].distance = scale;
-                
-                ++lightIndex;
-                
-                if (showLightVolumes)
-                    System::DebugDrawingSystem::GetActiveInstance()->AddSphere(glm::vec3(position), scale, glm::vec3(1.0f, 1.0f, 1.0f));
-            }
-        }
-    }
-    
+    // Draw lights.
     if (lightIndex != 0U) {
-        // Update uniform buffer.
-        glBindBuffer(GL_UNIFORM_BUFFER, mLightBuffer);
-        GLvoid* data = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
-        memcpy(data, mLights, sizeof(Light) * mLightCount);
-        glUnmapBuffer(GL_UNIFORM_BUFFER);
-        
-        // Draw lights.
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, mLightBuffer);
         mShaderProgram->BindUniformBlock(mLightBufferIndex, 0);
         glUniform1i(mShaderProgram->GetUniformLocation("lightCount"), lightIndex);
@@ -283,6 +207,93 @@ void DeferredLighting::AttachTexture(GLuint texture, unsigned int width, unsigne
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture, 0);
+}
+
+unsigned int DeferredLighting::UpdateLightBuffer(Scene& scene, const glm::mat4& view, const glm::mat4& projection, bool showLightVolumes) {
+    glm::mat4 viewProjection(projection * view);
+    
+    unsigned int lightIndex = 0U;
+    
+    // Update all directional lights.
+    std::vector<Component::DirectionalLight*>& directionalLights = scene.GetAll<Component::DirectionalLight>();
+    for (Component::DirectionalLight* light : directionalLights) {
+        Entity* lightEntity = light->entity;
+        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
+        if (transform != nullptr) {
+            glm::vec4 direction = glm::vec4(transform->GetWorldDirection(), 0.f);
+            mLights[lightIndex].position = view * -direction;
+            mLights[lightIndex].intensities = light->color;
+            mLights[lightIndex].attenuation = 1.f;
+            mLights[lightIndex].direction = glm::vec3(0.f, 0.f, 0.f);
+            mLights[lightIndex].ambientCoefficient = light->ambientCoefficient;
+            mLights[lightIndex].coneAngle = 0.f;
+            mLights[lightIndex].distance = 0.f;
+            
+            ++lightIndex;
+        }
+    }
+    
+    // At which point lights should be cut off (no longer contribute).
+    const double cutOff = 0.002;
+    
+    // Update all spot lights.
+    std::vector<Component::SpotLight*>& spotLights = scene.GetAll<Component::SpotLight>();
+    for (Component::SpotLight* light : spotLights) {
+        Entity* lightEntity = light->entity;
+        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
+        if (transform != nullptr) {
+            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation * light->intensity);
+            glm::vec4 direction = view * glm::vec4(transform->GetWorldDirection(), 0.f);
+            mLights[lightIndex].position = view * (glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0));
+            mLights[lightIndex].intensities = light->color * light->intensity;
+            mLights[lightIndex].attenuation = light->attenuation;
+            mLights[lightIndex].direction = glm::vec3(direction);
+            mLights[lightIndex].ambientCoefficient = light->ambientCoefficient;
+            mLights[lightIndex].coneAngle = light->coneAngle;
+            mLights[lightIndex].distance = scale;
+            
+            ++lightIndex;
+        }
+    }
+    
+    Physics::Frustum frustum(viewProjection);
+    
+    // Update all point lights.
+    std::vector<Component::PointLight*>& pointLights = scene.GetAll<Component::PointLight>();
+    for (Component::PointLight* light : pointLights) {
+        Entity* lightEntity = light->entity;
+        Component::Transform* transform = lightEntity->GetComponent<Component::Transform>();
+        if (transform != nullptr) {
+            float scale = sqrt((1.0 / cutOff - 1.0) / light->attenuation * light->intensity);
+            Physics::Sphere sphere(transform->GetWorldPosition(), scale);
+            
+            if (frustum.Collide(sphere)) {
+                glm::vec4 position = glm::vec4(glm::vec3(transform->modelMatrix[3][0], transform->modelMatrix[3][1], transform->modelMatrix[3][2]), 1.0);
+                mLights[lightIndex].position = view * position;
+                mLights[lightIndex].intensities = light->color * light->intensity;
+                mLights[lightIndex].attenuation = light->attenuation;
+                mLights[lightIndex].direction = glm::vec3(1.f, 0.f, 0.f);
+                mLights[lightIndex].ambientCoefficient = light->ambientCoefficient;
+                mLights[lightIndex].coneAngle = 180.f;
+                mLights[lightIndex].distance = scale;
+                
+                ++lightIndex;
+                
+                if (showLightVolumes)
+                    System::DebugDrawingSystem::GetActiveInstance()->AddSphere(glm::vec3(position), scale, glm::vec3(1.0f, 1.0f, 1.0f));
+            }
+        }
+    }
+    
+    // Update uniform buffer.
+    if (lightIndex != 0U) {
+        glBindBuffer(GL_UNIFORM_BUFFER, mLightBuffer);
+        GLvoid* data = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
+        memcpy(data, mLights, sizeof(Light) * mLightCount);
+        glUnmapBuffer(GL_UNIFORM_BUFFER);
+    }
+    
+    return lightIndex;
 }
 
 void DeferredLighting::BindForReading() {
