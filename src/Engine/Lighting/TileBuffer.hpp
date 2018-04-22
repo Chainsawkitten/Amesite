@@ -3,7 +3,17 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+namespace Geometry {
+    class Square;
+}
+class Shader;
+class ShaderProgram;
+
 /// Holds the framebuffer that stores the light indices for each tile.
+/**
+ * x is tile index.
+ * y is light number.
+ */
 class TileBuffer {
     public:
         /// Create new tile buffer.
@@ -24,4 +34,10 @@ class TileBuffer {
         
         GLuint mTexture;
         GLuint mFrameBufferObject;
+        
+        Geometry::Square* mSquare;
+        
+        ShaderProgram* mShaderProgram;
+        Shader* mVertexShader;
+        Shader* mFragmentShader;
 };

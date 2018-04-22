@@ -151,6 +151,7 @@ set(EMBEDDED_INPUT
     ../../shaders/Texture2D.frag
     ../../shaders/Font.vert
     ../../shaders/Font.frag
+    ../../shaders/LightTiles.frag
     ../../shaders/Text3D.frag
     ../../shaders/SingleColor3D.frag
     ../../shaders/Post.vert
