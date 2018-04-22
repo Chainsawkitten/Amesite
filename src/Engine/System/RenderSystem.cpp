@@ -22,6 +22,7 @@
 #include "../Profiling/GPUProfiling.hpp"
 
 #include "../Lighting/DeferredLighting.hpp"
+#include "../Lighting/TileBuffer.hpp"
 #include "../RenderTarget.hpp"
 #include "../Physics/Frustum.hpp"
 
@@ -119,4 +120,8 @@ void RenderSystem::Render(Scene& scene, RenderTarget* renderTarget, const glm::v
             mDeferredLighting->Render(scene, renderTarget, camera, screenSize, showLightVolumes);
         }
     }
+}
+
+void RenderSystem::ShowLightTiles() {
+    mDeferredLighting->GetTileBuffer()->Draw();
 }

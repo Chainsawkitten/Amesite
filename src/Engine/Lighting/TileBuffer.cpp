@@ -6,17 +6,22 @@
 #include "../Shader/ShaderProgram.hpp"
 #include "Post.vert.hpp"
 #include "LightTiles.frag.hpp"
+#include "LightTilesDebug.frag.hpp"
 
 #include "../Util/Log.hpp"
 
 TileBuffer::TileBuffer(const glm::vec2& screenSize, GLuint lightBuffer) {
     mLightBuffer = lightBuffer;
     mSquare = Resources().CreateSquare();
+    mScreenSize = screenSize;
     
     // Create shader program.
     mVertexShader = Resources().CreateShader(POST_VERT, POST_VERT_LENGTH, GL_VERTEX_SHADER);
     mFragmentShader = Resources().CreateShader(LIGHTTILES_FRAG, LIGHTTILES_FRAG_LENGTH, GL_FRAGMENT_SHADER);
     mShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mFragmentShader });
+    
+    mDebugFragmentShader = Resources().CreateShader(LIGHTTILESDEBUG_FRAG, LIGHTTILESDEBUG_FRAG_LENGTH, GL_FRAGMENT_SHADER);
+    mDebugShaderProgram = Resources().CreateShaderProgram({ mVertexShader, mDebugFragmentShader });
     
     // Get light buffer index.
     mLightBufferIndex = mShaderProgram->GetUniformBlockIndex("light_data");
@@ -58,14 +63,13 @@ TileBuffer::~TileBuffer() {
     glDeleteTextures(1, &mTexture);
     
     Resources().FreeShaderProgram(mShaderProgram);
+    Resources().FreeShaderProgram(mDebugShaderProgram);
+    
     Resources().FreeShader(mVertexShader);
     Resources().FreeShader(mFragmentShader);
+    Resources().FreeShader(mDebugFragmentShader);
     
     Resources().FreeSquare();
-}
-
-GLuint TileBuffer::GetTexture() const {
-    return mTexture;
 }
 
 void TileBuffer::Calculate(unsigned int lightCount) {
@@ -90,4 +94,30 @@ void TileBuffer::Calculate(unsigned int lightCount) {
     
     // Calculate light tiles.
     glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+}
+
+void TileBuffer::Draw() {
+    mDebugShaderProgram->Use();
+    
+    // Top-right corner.
+    glm::uvec2 screenPos(mScreenSize.x - mHorizontalTiles, mScreenSize.y - mVerticalTiles);
+    glViewport(screenPos.x, screenPos.y, mHorizontalTiles, mVerticalTiles);
+    
+    BindForReading(GL_TEXTURE0);
+    
+    // Set uniforms.
+    glUniform1i(mDebugShaderProgram->GetUniformLocation("tLightTiles"), 0);
+    glUniform2uiv(mDebugShaderProgram->GetUniformLocation("screenPos"), 1, &screenPos[0]);
+    
+    // Render.
+    glBindVertexArray(mSquare->GetVertexArray());
+    glDrawElements(GL_TRIANGLES, mSquare->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+    
+    // Reset viewport.
+    glViewport(0, 0, mScreenSize.x, mScreenSize.y);
+}
+
+void TileBuffer::BindForReading(GLuint textureUnit) {
+    glActiveTexture(textureUnit);
+    glBindTexture(GL_TEXTURE_2D, mTexture);
 }

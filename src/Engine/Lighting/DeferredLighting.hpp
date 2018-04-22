@@ -62,6 +62,12 @@ class DeferredLighting {
 		 */
 		void Render(Scene& scene, RenderTarget* renderTarget, Entity* camera, const glm::vec2& screenSize, bool showLightVolumes = false);
         
+        /// Get the tile buffer.
+        /**
+         * @return The tile buffer.
+         */
+        TileBuffer* GetTileBuffer() const;
+        
 	private:
         static void AttachTexture(GLuint texture, unsigned int width, unsigned int height, GLenum attachment, GLint internalFormat);
         

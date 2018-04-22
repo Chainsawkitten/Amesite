@@ -23,6 +23,7 @@ GameSettings::GameSettings() {
     AddBoolSetting("Refractions", "Graphics", "Water Refractions", true);
     AddDoubleSetting("Gamma", "Graphics", "Brightness", 2.2);
     AddBoolSetting("Dithering", "Graphics", "Dithering", true);
+    AddBoolSetting("Tiles", "Graphics", "Visualize Tiles", false);
     
     AddDoubleSetting("Audio Volume", "Sound", "Volume", 1.0);
     

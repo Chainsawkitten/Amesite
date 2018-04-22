@@ -60,6 +60,7 @@ int main() {
         if (Input()->Triggered(InputHandler::ANYONE, InputHandler::PROFILE)) {
             profiling = !profiling;
             Profiling().SetActive(profiling);
+            GameSettings::GetInstance().SetBool("Tiles", profiling);
         }
         
         if (profiling)
@@ -108,6 +109,7 @@ int main() {
     
     glfwTerminate();
     
+    GameSettings::GetInstance().SetBool("Tiles", false);
     GameSettings::GetInstance().Save();
     
     Log() << "Game ended - " << time(nullptr) << "\n";

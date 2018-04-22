@@ -506,6 +506,9 @@ void MainScene::Update(float deltaTime) {
     // Debug drawing.
     mDebugDrawingSystem.Update(deltaTime);
     mDebugDrawingSystem.Render(mMainCamera->body);
+    
+    if (GameSettings::GetInstance().GetBool("Tiles"))
+        mRenderSystem.ShowLightTiles();
 }
 
 void MainScene::PreallocateTextures() {

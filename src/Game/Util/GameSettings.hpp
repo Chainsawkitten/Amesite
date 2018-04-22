@@ -22,6 +22,7 @@
  * Refractions            | Water refractions.                  | bool   | true
  * Gamma                  | Gamma brightness.                   | double | 2.2
  * Dithering              | Whether to use dithering.           | bool   | true
+ * Tiles                  | Whether to visualize light tiles.   | bool   | false
  * Audio Volume           | How loud to play sounds.            | double | 1.0
  * Aim Deadzone           | Deadzone on controller aim vector.  | double | 0.3
  * Move Deadzone          | Deadzone on controller move vector. | double | 0.3

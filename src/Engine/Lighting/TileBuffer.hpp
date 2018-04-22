@@ -22,17 +22,20 @@ class TileBuffer {
         /// Destructor.
         ~TileBuffer();
         
-        /// Get the tile buffer texture.
-        /**
-         * @return The tile buffer texture.
-         */
-        GLuint GetTexture() const;
-        
         /// Determine which lights contribute to each tile.
         /**
          * @param lightCount The number of lights currently in view.
          */
         void Calculate(unsigned int lightCount);
+        
+        /// Render a debug view of the tile buffer.
+        void Draw();
+        
+        /// Bind tile buffer for reading.
+        /**
+         * @param textureUnit Which texture unit to bind to.
+         */
+        void BindForReading(GLuint textureUnit);
         
     private:
         // Size of teach tile.
@@ -50,9 +53,14 @@ class TileBuffer {
         Shader* mVertexShader;
         Shader* mFragmentShader;
         
+        ShaderProgram* mDebugShaderProgram;
+        Shader* mDebugFragmentShader;
+        
         unsigned int mHorizontalTiles;
         unsigned int mVerticalTiles;
         
         GLuint mLightBuffer;
         GLuint mLightBufferIndex;
+        
+        glm::vec2 mScreenSize;
 };

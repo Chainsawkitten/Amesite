@@ -28,7 +28,10 @@ namespace System {
              * @param showLightVolumes Show light volumes as spheres.
              */
             void Render(Scene& scene, RenderTarget* renderTarget, const glm::vec2& screenSize, const glm::vec4& clippingPlane = glm::vec4(0.f, 0.f, 0.f, 0.f), bool showLightVolumes = false);
-
+            
+            /// Visualize the light tiles.
+            void ShowLightTiles();
+            
         private:
             Shader* mVertexShader;
             Shader* mFragmentShader;

@@ -171,8 +171,7 @@ void DeferredLighting::Render(Scene& scene, RenderTarget* renderTarget, Entity* 
     
     // Bind textures.
     BindForReading();
-    glActiveTexture(GL_TEXTURE0 + NUM_TEXTURES + 1);
-    glBindTexture(GL_TEXTURE_2D, mTileBuffer->GetTexture());
+    mTileBuffer->BindForReading(GL_TEXTURE0 + DeferredLighting::NUM_TEXTURES + 1);
     
     // Clear framebuffer.
     glViewport(0, 0, mSize.x, mSize.y);
@@ -204,6 +203,10 @@ void DeferredLighting::Render(Scene& scene, RenderTarget* renderTarget, Entity* 
     // Reset blending and depth function to standard values.
     glDisablei(GL_BLEND, 0);
     glDepthFunc(GL_LESS);
+}
+
+TileBuffer* DeferredLighting::GetTileBuffer() const {
+    return mTileBuffer;
 }
 
 void DeferredLighting::AttachTexture(GLuint texture, unsigned int width, unsigned int height, GLenum attachment, GLint internalFormat) {
