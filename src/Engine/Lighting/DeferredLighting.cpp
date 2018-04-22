@@ -159,7 +159,7 @@ void DeferredLighting::Render(Scene& scene, RenderTarget* renderTarget, Entity* 
     glDepthFunc(GL_ALWAYS);
     
     // Determine which lights contribute to each tile.
-    mTileBuffer->Calculate(lightIndex);
+    mTileBuffer->Calculate(lightIndex, view, projection);
     
     // Blending enabled for handling multiple light sources
     glEnablei(GL_BLEND, 0);

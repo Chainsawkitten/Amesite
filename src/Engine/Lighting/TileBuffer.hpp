@@ -25,8 +25,10 @@ class TileBuffer {
         /// Determine which lights contribute to each tile.
         /**
          * @param lightCount The number of lights currently in view.
+         * @param view The camera's view matrix.
+         * @param projection The camera's projection matrix.
          */
-        void Calculate(unsigned int lightCount);
+        void Calculate(unsigned int lightCount, const glm::mat4& view, const glm::mat4& projection);
         
         /// Render a debug view of the tile buffer.
         void Draw();

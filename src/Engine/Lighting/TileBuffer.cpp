@@ -72,7 +72,7 @@ TileBuffer::~TileBuffer() {
     Resources().FreeSquare();
 }
 
-void TileBuffer::Calculate(unsigned int lightCount) {
+void TileBuffer::Calculate(unsigned int lightCount, const glm::mat4& view, const glm::mat4& projection) {
     mShaderProgram->Use();
     
     // Set framebuffer.
@@ -89,6 +89,8 @@ void TileBuffer::Calculate(unsigned int lightCount) {
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mLightBuffer);
     mShaderProgram->BindUniformBlock(mLightBufferIndex, 0);
     glUniform1i(mShaderProgram->GetUniformLocation("lightCount"), lightCount);
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("view"), 1, GL_FALSE, &view[0][0]);
+    glUniformMatrix4fv(mShaderProgram->GetUniformLocation("projection"), 1, GL_FALSE, &projection[0][0]);
     
     glBindVertexArray(mSquare->GetVertexArray());
     
