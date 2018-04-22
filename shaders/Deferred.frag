@@ -9,6 +9,7 @@ uniform sampler2D tNormals;
 uniform sampler2D tSpecular;
 uniform sampler2D tGlow;
 uniform sampler2D tDepth;
+uniform usampler2D tLightTiles;
 
 uniform mat4 inverseProjectionMatrix;
 
@@ -105,4 +106,11 @@ void main () {
     fragmentColor = vec4(accumulatedLight, 1.0);
     extraOut = vec4(texture(tGlow, texCoords).rgb, 1.0);
     gl_FragDepth = depth;
+    
+    // TEMP: EXTRA!
+    uint lightCount = texture(tLightTiles, texCoords).r;
+    uint maxTileLights = 16;
+    float ln = float(lightCount) / float(maxTileLights);
+    fragmentColor = vec4(ln, ln, ln, 1.0);
+    extraOut = vec4(0.0, 0.0, 0.0, 1.0);
 }

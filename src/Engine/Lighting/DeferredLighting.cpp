@@ -169,6 +169,11 @@ void DeferredLighting::Render(Scene& scene, Entity* camera, const glm::vec2& scr
     glUniform1i(mShaderProgram->GetUniformLocation("tSpecular"), DeferredLighting::SPECULAR);
     glUniform1i(mShaderProgram->GetUniformLocation("tGlow"), DeferredLighting::GLOW);
     glUniform1i(mShaderProgram->GetUniformLocation("tDepth"), DeferredLighting::NUM_TEXTURES);
+    glUniform1i(mShaderProgram->GetUniformLocation("tLightTiles"), DeferredLighting::NUM_TEXTURES + 1);
+    
+    // Bind light tiles textures.
+    glActiveTexture(GL_TEXTURE0 + NUM_TEXTURES + 1);
+    glBindTexture(GL_TEXTURE_2D, mTileBuffer->GetTexture());
     
     // Get the camera matrices.
     glm::mat4 viewMat = camera->GetComponent<Component::Transform>()->GetWorldCameraOrientation() * glm::translate(glm::mat4(), -camera->GetComponent<Component::Transform>()->position);
