@@ -60,3 +60,7 @@ TileBuffer::~TileBuffer() {
     
     Resources().FreeSquare();
 }
+
+GLuint TileBuffer::GetTexture() const {
+    return mTexture;
+}

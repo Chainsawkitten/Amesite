@@ -25,6 +25,12 @@ class TileBuffer {
         /// Destructor.
         ~TileBuffer();
         
+        /// Get the tile buffer texture.
+        /**
+         * @return The tile buffer texture.
+         */
+        GLuint GetTexture() const;
+        
     private:
         // Size of teach tile.
         static const unsigned short mTileSize = 8;
