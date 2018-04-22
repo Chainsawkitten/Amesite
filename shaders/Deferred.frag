@@ -40,7 +40,7 @@ layout(location = 0) out vec4 fragmentColor;
 layout(location = 1) out vec4 extraOut;
 
 // Apply ambient, diffuse and specular lighting.
-vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecular, int light) {
+vec3 ApplyLight(vec3 surfaceColor, vec3 normal, vec3 position, vec3 surfaceSpecular, uint light) {
     vec3 surfaceToLight;
     float attenuation = 1.0;
     
@@ -95,15 +95,24 @@ vec3 ReconstructPos(vec2 texCoord, float depth){
 }
 
 void main () {
+    // Read geometry buffers.
     float depth = texture(tDepth, texCoords).r;
     vec3 position = ReconstructPos(texCoords, depth);
     vec3 diffuse = texture(tDiffuse, texCoords).rgb;
     vec3 normal = normalize(texture(tNormals, texCoords).xyz);
     vec3 specular = texture(tSpecular, texCoords).xyz;
     
+    // Figure out which tile we're in.
+    uint hTile = uint(gl_FragCoord.x) / tileSize;
+    uint vTile = uint(gl_FragCoord.y) / tileSize;
+    
     vec3 accumulatedLight;
-    for (int i=0; i < lightCount; ++i) {
-        accumulatedLight += ApplyLight(diffuse, normal, position, specular, i);
+    for (uint i=0; i < maxTileLights; ++i) {
+        uint lightIndex = texelFetch(tLightTiles, ivec2(hTile, vTile * maxTileLights + i), 0).r;
+        if (lightIndex == 0)
+            break;
+        
+        accumulatedLight += ApplyLight(diffuse, normal, position, specular, lightIndex);
     }
     
     fragmentColor = vec4(accumulatedLight, 1.0);
@@ -112,24 +121,20 @@ void main () {
     
     // TEMP: EXTRA!
     
-    // Figure out which tile we're in.
-    uint hTile = uint(gl_FragCoord.x) / tileSize;
-    uint vTile = uint(gl_FragCoord.y) / tileSize;
-    
     // Count lights in the tile.
-    uint lightCount = 0;
+    /*uint lightCount = 0;
     for (uint i=0; i < maxTileLights; ++i) {
         uint lightIndex = texelFetch(tLightTiles, ivec2(hTile, vTile * maxTileLights + i), 0).r;
         if (lightIndex == 0)
             break;
         
         ++lightCount;
-    }
+    }*/
     
     //lightCount = texture(tLightTiles, texCoords).r;
     
     float ln = float(lightCount) / float(maxTileLights);
     //fragmentColor = vec4(float(hTile) / 240.0, float(vTile) / 135.0, ln, 0.0);
-    fragmentColor = vec4(ln, ln, ln, 1.0);
-    extraOut = vec4(0.0, 0.0, 0.0, 1.0);
+    /*fragmentColor = vec4(ln, ln, ln, 1.0);
+    extraOut = vec4(0.0, 0.0, 0.0, 1.0);*/
 }
