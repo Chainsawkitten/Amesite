@@ -15,6 +15,7 @@ set(ENGINE_SRCS
     Geometry/OBJModel.cpp
     Geometry/Map.cpp
     Lighting/DeferredLighting.cpp
+    Lighting/TileBuffer.cpp
     Shader/Shader.cpp
     Shader/ShaderProgram.cpp
     Util/FileSystem.cpp
@@ -85,6 +86,7 @@ set(ENGINE_HEADERS
     Geometry/OBJModel.hpp
     Geometry/Map.hpp
     Lighting/DeferredLighting.hpp
+    Lighting/TileBuffer.hpp
     Shader/Shader.hpp
     Shader/ShaderProgram.hpp
     Util/FileSystem.hpp
