@@ -30,7 +30,7 @@ TileBuffer::TileBuffer(const glm::vec2& screenSize) {
     // Create texture.
     glGenTextures(1, &mTexture);
     glBindTexture(GL_TEXTURE_2D, mTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8UI, horizontalTiles, verticalTiles * mMaxLights, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8UI, horizontalTiles, verticalTiles * mMaxLights, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, nullptr);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture, 0);
