@@ -22,6 +22,7 @@ layout (std140) uniform light_data {
 uniform int lightCount;
 
 uniform mat4 view;
+uniform mat4 inverseView;
 uniform mat4 projection;
 
 const uint tileSize = 8;
@@ -29,6 +30,13 @@ const uint maxTileLights = 16;
 
 out uint lightIndex;
 
+// Sphere using during frustum-sphere intersection test.
+struct Sphere {
+    vec3 position;
+    float radius;
+};
+
+// Frustum using during frustum-sphere intersection test.
 struct Frustum {
     vec4 planes[6];
 };
@@ -66,7 +74,12 @@ void ExtractFrustum(in mat4 matrix, out Frustum frustum) {
 }
 
 // Determine whether a light is visible inside a given tile using frustum culling.
-bool LightVisible(uint light) {
+bool LightVisible(in Frustum frustum, in uint light) {
+    // Get light info.
+    Sphere lightSphere;
+    lightSphere.position = vec3(inverseView * lights[light].position);
+    lightSphere.radius = lights[light].distance;
+    
     // TODO: Frustum check.
     return true;
 }
@@ -90,7 +103,7 @@ void main () {
     // Check which lights contribute to this tile.
     uint lightNumber = 0;
     for (uint i=0; i < lightCount; ++i) {
-        if (LightVisible(i)) {
+        if (LightVisible(frustum, i)) {
             if (lightNumber >= maxLightNumber) {
                 lightIndex = i + 1;
                 break;
