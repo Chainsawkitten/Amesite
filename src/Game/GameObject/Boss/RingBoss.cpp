@@ -204,30 +204,41 @@ void RingBoss::mUpdateFunction() {
 
         // Rotate
         Component::Transform* transformComponent = ring.node->GetComponent<Component::Transform>();
-        float minimumDistance = std::numeric_limits<float>().max();
-        glm::vec3 targetPlayerPosition;
+        Component::Physics* physics = ring.node->GetComponent<Component::Physics>();
 
-        glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
-        for (auto& player : HubInstance().mPlayers) {
-            if (player->Active()) {
-                float distanceToPlayer = glm::distance(player->GetPosition(), transformWorldPosition);
-                if (distanceToPlayer < minimumDistance) {
-                    minimumDistance = distanceToPlayer;
-                    targetPlayerPosition = player->GetPosition();
+        if (HubInstance().mPlayers.size() > 1) {
+            // Face the closest player if in multiplayer.
+            float minimumDistance = std::numeric_limits<float>().max();
+            glm::vec3 targetPlayerPosition;
+
+            glm::vec3 transformWorldPosition = transformComponent->GetWorldPosition();
+            for (auto& player : HubInstance().mPlayers) {
+                if (player->Active()) {
+                    float distanceToPlayer = glm::distance(player->GetPosition(), transformWorldPosition);
+                    if (distanceToPlayer < minimumDistance) {
+                        minimumDistance = distanceToPlayer;
+                        targetPlayerPosition = player->GetPosition();
+                    }
                 }
             }
-        }
 
-        glm::vec3 targetDirection = targetPlayerPosition - transformWorldPosition;
-        if (glm::length(targetDirection) > 0.001f) {
-            Component::Physics* physics = ring.node->GetComponent<Component::Physics>();
-            glm::vec3 worldDirection = transformComponent->GetWorldDirection();
-            float angle = glm::degrees(glm::acos(glm::dot(glm::normalize(targetDirection), worldDirection)));
-            if (glm::cross(glm::normalize(targetDirection), worldDirection).y > 0.f)
-                angle = -glm::min(angle / 360.f * 5.f, 0.2f);
-            else
-                angle = glm::min(angle / 360.f * 5.f, 0.2f);
-            physics->angularVelocity.y = angle;
+            glm::vec3 targetDirection = targetPlayerPosition - transformWorldPosition;
+            if (glm::length(targetDirection) > 0.001f) {
+                glm::vec3 worldDirection = transformComponent->GetWorldDirection();
+                float angle = glm::degrees(glm::acos(glm::dot(glm::normalize(targetDirection), worldDirection)));
+                if (glm::cross(glm::normalize(targetDirection), worldDirection).y > 0.f)
+                    angle = -glm::min(angle / 360.f * 5.f, 0.2f);
+                else
+                    angle = glm::min(angle / 360.f * 5.f, 0.2f);
+                physics->angularVelocity.y = angle;
+            }
+        } else {
+            // Spin around in singleplayer.
+            physics->angularVelocity.y = 0.1f;
+            Component::Health* health = body->GetComponent<Component::Health>();
+
+            // Regain health slower.
+            health->regainAmount = body->GetComponent<Component::Health>()->maxHealth / 20.f;
         }
     }
 }
