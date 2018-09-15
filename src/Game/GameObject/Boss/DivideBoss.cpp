@@ -24,6 +24,7 @@
 #include <Engine/Component/ParticleEmitter.hpp>
 #include <Engine/Component/Physics.hpp>
 
+#include "../../Util/Hub.hpp"
 #include "../../Util/ControlSchemes.hpp"
 #include "../../Util/GameEntityFactory.hpp"
 #include "../Enemy/Rocket.hpp"
@@ -83,9 +84,11 @@ void DivideBoss::mUpdateFunction() {
     SuperBoss::mUpdateFunction();
     Component::Health* healthComp = body->GetComponent<Component::Health>();
     float healthFactor = healthComp->health / healthComp->maxHealth;
-    if (healthFactor > mLastHpStep + 0.1)
-        mLastHpStep += 0.1f;
-    float nextHpStep = mLastHpStep - 0.1f;
+    // Make the boss a bit easier in singleplayer.
+    const float divideFactor = (HubInstance().mPlayers.size() > 1 ?  0.1f : 0.15f);
+    if (healthFactor > mLastHpStep + divideFactor)
+        mLastHpStep += divideFactor;
+    float nextHpStep = mLastHpStep - divideFactor;
     if (healthFactor < nextHpStep) {
         mLastHpStep = nextHpStep;
         for (int i = 0; i < 3; i++) {
